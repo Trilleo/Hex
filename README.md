@@ -11,7 +11,7 @@ Hex runs entirely on your client — it never needs to be installed on a server.
 
 - **Keybind shortcuts** — bind a key (optionally with Ctrl/Shift/Alt) to run a command or a sequence of
   commands/chat messages, with an optional delay between them. Configure bindings in-game via the Hex Keybinds
-  screen; open it with the rebindable keybind under Options → Controls.
+  screen; open it with the rebindable keybind under Options → Controls, or by running `/hexa keybinds`.
 
 *Hex is in early development — more features will be listed here as they land. See the
 [change log](CHANGELOG.md) for what's new in each release.*
