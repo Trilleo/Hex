@@ -6,9 +6,11 @@
 
 #### Keybinds
 
-+ Added keybind shortcuts: bind a key (optionally with Ctrl/Shift/Alt) to run a command or a sequence of
-  commands/chat messages, with an optional delay between them. Manage bindings in-game through the Hex Keybinds
-  screen, opened via a rebindable keybind in the vanilla Controls menu.
++ Added keybind shortcuts: bind a key (optionally with Ctrl/Shift/Alt) to run a sequence of commands/chat
+  messages. Each action has its own input and its own delay, so you can pace a sequence step by step, and
+  command inputs offer the same tab-completion as the chat box. Manage bindings in-game through the Hex Keybinds
+  screen, opened via a rebindable keybind in the vanilla Controls menu; press Edit on a binding to arrange its
+  actions.
 
 #### Commands
 

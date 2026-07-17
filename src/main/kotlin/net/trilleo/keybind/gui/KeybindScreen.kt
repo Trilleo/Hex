@@ -2,7 +2,6 @@ package net.trilleo.keybind.gui
 
 import com.mojang.blaze3d.platform.InputConstants
 import net.minecraft.client.gui.components.Button
-import net.minecraft.client.gui.components.EditBox
 import net.minecraft.client.gui.components.StringWidget
 import net.minecraft.client.gui.components.Tooltip
 import net.minecraft.client.gui.screens.Screen
@@ -56,10 +55,10 @@ class KeybindScreen(private val parent: Screen?) : Screen(Component.literal("Hex
 		val contentW = width - margin * 2
 		val gap = 6
 		val keyW = 120
-		val delayW = 40
+		val editW = 50
 		val toggleW = 40
 		val delW = 22
-		val cmdW = (contentW - keyW - delayW - toggleW - delW - gap * 4).coerceAtLeast(60)
+		val sumW = (contentW - keyW - editW - toggleW - delW - gap * 4).coerceAtLeast(60)
 
 		val start = page * rowsPerPage
 		val end = minOf(start + rowsPerPage, binds().size)
@@ -75,23 +74,15 @@ class KeybindScreen(private val parent: Screen?) : Screen(Component.literal("Hex
 			}.bounds(x, y, keyW, 20).tooltip(TIP_SET_KEY).build())
 			x += keyW + gap
 
-			val cmd = EditBox(font, x, y, cmdW, 20, Component.literal("Commands"))
-			cmd.setMaxLength(2000)
-			cmd.value = kb.commands.joinToString("; ")
-			cmd.setHint(Component.literal("/warp hub; /is"))
-			cmd.setTooltip(TIP_COMMANDS)
-			cmd.setResponder { text -> kb.commands = parseCommands(text) }
-			addRenderableWidget(cmd)
-			x += cmdW + gap
+			addRenderableWidget(
+				StringWidget(x, y, sumW, 20, Component.literal(KeybindFormat.summary(kb)), font)
+			)
+			x += sumW + gap
 
-			val delay = EditBox(font, x, y, delayW, 20, Component.literal("Delay"))
-			delay.setMaxLength(4)
-			delay.value = kb.delayTicks.toString()
-			delay.setHint(Component.literal("t"))
-			delay.setTooltip(TIP_DELAY)
-			delay.setResponder { text -> kb.delayTicks = text.toIntOrNull()?.coerceAtLeast(0) ?: 0 }
-			addRenderableWidget(delay)
-			x += delayW + gap
+			addRenderableWidget(Button.builder(Component.literal("Edit")) { _ ->
+				minecraft.setScreen(KeybindActionScreen(this, kb))
+			}.bounds(x, y, editW, 20).tooltip(TIP_EDIT).build())
+			x += editW + gap
 
 			addRenderableWidget(Button.builder(Component.literal(if (kb.enabled) "On" else "Off")) { _ ->
 				kb.enabled = !kb.enabled
@@ -132,9 +123,6 @@ class KeybindScreen(private val parent: Screen?) : Screen(Component.literal("Hex
 		}.bounds(width / 2 + 5, bottomY, 100, 20).tooltip(TIP_DONE).build())
 	}
 
-	private fun parseCommands(text: String): MutableList<String> =
-		text.split(";").map { it.trim() }.filter { it.isNotEmpty() }.toMutableList()
-
 	override fun keyPressed(event: KeyEvent): Boolean {
 		val cap = capturing
 		if (cap != null) {
@@ -171,11 +159,8 @@ class KeybindScreen(private val parent: Screen?) : Screen(Component.literal("Hex
 		val TIP_SET_KEY: Tooltip = Tooltip.create(
 			Component.literal("Click, then press a key to bind it.\nHold Ctrl/Shift/Alt for a combo. Esc cancels.")
 		)
-		val TIP_COMMANDS: Tooltip = Tooltip.create(
-			Component.literal("Lines to run, separated with ';'.\nStart with / for a command; anything else is sent as chat.")
-		)
-		val TIP_DELAY: Tooltip = Tooltip.create(
-			Component.literal("Ticks to wait between each line (20 ticks = 1 second).")
+		val TIP_EDIT: Tooltip = Tooltip.create(
+			Component.literal("Edit this shortcut's actions and their delays.")
 		)
 		val TIP_TOGGLE: Tooltip = Tooltip.create(Component.literal("Enable or disable this shortcut."))
 		val TIP_DELETE: Tooltip = Tooltip.create(Component.literal("Delete this shortcut."))

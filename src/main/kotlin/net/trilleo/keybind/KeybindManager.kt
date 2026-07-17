@@ -63,11 +63,11 @@ object KeybindManager {
 
 	private fun fire(kb: Keybind) {
 		var delay = 0
-		for (line in kb.commands) {
-			val trimmed = line.trim()
-			if (trimmed.isEmpty()) continue
+		for (action in kb.actions) {
+			delay += action.delayTicks.coerceAtLeast(0)   // gap to wait before this action
+			val trimmed = action.command.trim()
+			if (trimmed.isEmpty()) continue               // skip blank line, but keep its delay contribution
 			queue.add(Scheduled(delay, trimmed))
-			delay += kb.delayTicks.coerceAtLeast(0)
 		}
 	}
 

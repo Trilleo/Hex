@@ -19,10 +19,16 @@ class Keybind {
 	var shift: Boolean = false
 	var alt: Boolean = false
 
-	/** Each entry is one line: a leading `/` is sent as a command, otherwise as chat. */
+	/** The sequence of actions to run when the combo is pressed, each with its own command and delay. */
+	var actions: MutableList<KeybindAction> = mutableListOf()
+
+	/**
+	 * Legacy: the pre-per-action command list. Kept only so [KeybindConfig] can read old JSON and migrate
+	 * it into [actions]; no longer written or read at runtime.
+	 */
 	var commands: MutableList<String> = mutableListOf()
 
-	/** Ticks to wait between consecutive lines (0 = all in the same tick). */
+	/** Legacy: the pre-per-action single delay. Kept only for migration — see [commands]. */
 	var delayTicks: Int = 0
 
 	var enabled: Boolean = true

@@ -16,6 +16,19 @@ object KeybindFormat {
 		return sb.toString()
 	}
 
+	/**
+	 * Short one-line summary of a binding's actions for the list screen: the first command (truncated), with
+	 * a `(+N more)` suffix when there are extra actions, or `No actions` when empty.
+	 */
+	fun summary(kb: Keybind): String {
+		val nonEmpty = kb.actions.filter { it.command.isNotBlank() }
+		if (nonEmpty.isEmpty()) return "No actions"
+		val first = nonEmpty.first().command.trim()
+		val head = if (first.length > 28) first.take(27) + "…" else first
+		val extra = nonEmpty.size - 1
+		return if (extra > 0) "$head  (+$extra more)" else head
+	}
+
 	private fun keyName(keyCode: Int): String =
 		InputConstants.Type.KEYSYM.getOrCreate(keyCode).displayName.string
 
