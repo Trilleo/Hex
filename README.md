@@ -38,8 +38,8 @@ Hex updates itself from its [GitHub releases](https://github.com/Trilleo/Hex/rel
 - On startup it checks for a newer release in the background. If one exists, it downloads the new jar and shows a chat
   notice; the swap into your `mods` folder happens automatically when you next close Minecraft.
 - Run `/hexa update` to check immediately.
-- Manage it from the **Updates** tab of `/hexa config`: disable the startup check, opt in to prerelease builds, or
-  check for an update on the spot. (These are persisted to `config/hex/update.json` if you prefer to edit them by hand.)
+- Manage it from the **Updates** tab of `/hexa config`: disable the startup check, opt in to prerelease builds, or check
+  for an update on the spot. (These are persisted to `config/hex/update.json` if you prefer to edit them by hand.)
 
 If the automatic swap ever fails, the downloaded jar is left in `config/hex/update/` — drop it into your `mods`
 folder (and delete the old one) to update manually.
