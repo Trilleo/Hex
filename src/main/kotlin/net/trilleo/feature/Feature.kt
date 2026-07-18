@@ -4,6 +4,7 @@ import com.mojang.brigadier.builder.LiteralArgumentBuilder
 import net.fabricmc.fabric.api.client.command.v2.FabricClientCommandSource
 import net.minecraft.client.Minecraft
 import net.minecraft.network.chat.Component
+import net.trilleo.config.ConfigCategory
 
 /**
  * A self-contained mod feature (module). Implement this — usually as an `object` — and register it with
@@ -26,6 +27,12 @@ interface Feature {
 
     /** Add this feature's subcommands under the shared root `/hexa` command. */
     fun registerCommands(hex: LiteralArgumentBuilder<FabricClientCommandSource>) {}
+
+    /**
+     * Contribute this feature's settings tab to the `/hexa config` menu, or `null` (the default) for a
+     * feature with no user-facing settings. Collected by [Features.categories] each time the menu opens.
+     */
+    fun settingsCategory(): ConfigCategory? = null
 
     /** Called every client tick (`END_CLIENT_TICK`). Guard on `client.player` / `client.screen` as needed. */
     fun onClientTick(client: Minecraft) {}

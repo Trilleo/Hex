@@ -4,16 +4,29 @@
 
 ### New Features
 
+#### Config Menu
+
++ Added a config menu that gathers Hex's settings in one place, split into categories down the side. Open it with
+  `/hexa config`. A button on the menu jumps straight to the Keybinds screen.
+
 #### Auto-Update
 
 + Hex now keeps itself up to date from its GitHub releases. On startup it checks for a newer version in the
   background and, if one is found, downloads it and tells you to restart — the update is applied automatically the
   next time you close the game.
     + Run `/hexa update` to check on demand at any time.
-    + Edit `config/hex/update.json` to turn the startup check off (`enabled`) or to also receive prerelease builds
-      (`includePrereleases`).
+    + The **Updates** tab of `/hexa config` lets you turn the startup check off, opt in to prerelease builds, and
+      check for an update on the spot — no more editing `config/hex/update.json` by hand.
 
 ### Technical Details
+
+#### Config Menu
+
++ Added a reusable config-menu framework: a `Feature` contributes a settings tab by overriding
+  `settingsCategory()` and returning a `ConfigCategory.build("id", "Title") { toggle(...); action(...) }`, and the
+  `ConfigScreen` collects every enabled feature's category into the sidebar automatically. Entries are a small
+  sealed `ConfigEntry` hierarchy (`BooleanEntry`, `ActionEntry`), rendered with vanilla widgets like the keybinds
+  screens.
 
 #### Auto-Update
 
@@ -21,6 +34,8 @@
   dependency), compares tags with Fabric's `SemanticVersion`, and stages a verified jar under
   `config/hex/update/`. Because the running jar is file-locked by the JVM, the swap is performed on shutdown by a
   detached OS helper script that copies the new jar into `mods/` and removes the old one once the lock is released.
+    + The on-demand check is exposed as `UpdateFeature.checkNow()`, shared by the `/hexa update` command and the
+      config menu's "Check for updates now" button. Toggling an update setting in the menu persists it immediately.
 
 ## Version 1.1.0
 

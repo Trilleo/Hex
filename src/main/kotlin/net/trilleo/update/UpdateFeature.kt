@@ -6,6 +6,7 @@ import net.minecraft.ChatFormatting
 import net.minecraft.client.Minecraft
 import net.minecraft.network.chat.Component
 import net.trilleo.command.Commands
+import net.trilleo.config.ConfigCategory
 import net.trilleo.feature.Feature
 import org.slf4j.LoggerFactory
 
@@ -43,13 +44,37 @@ object UpdateFeature : Feature {
 
     override fun registerCommands(hex: LiteralArgumentBuilder<FabricClientCommandSource>) {
         hex.then(
-            Commands.literal("update").executes { ctx ->
-                val client = ctx.source.client
-                Commands.feedback(ctx.source, "Checking for updates…")
-                Thread({ runManualCheck(client) }, "Hex-UpdateCommand").apply { isDaemon = true }.start()
+            Commands.literal("update").executes { _ ->
+                checkNow()
                 1
             },
         )
+    }
+
+    override fun settingsCategory(): ConfigCategory = ConfigCategory.build("updates", "Updates") {
+        toggle(
+            "Auto-update on startup",
+            "Check GitHub for a newer release each launch and stage it automatically.",
+            get = { UpdateConfig.settings.enabled },
+            set = { UpdateConfig.settings.enabled = it; UpdateConfig.save() },
+        )
+        toggle(
+            "Include pre-releases",
+            "Treat GitHub pre-releases as updates too.",
+            get = { UpdateConfig.settings.includePrereleases },
+            set = { UpdateConfig.settings.includePrereleases = it; UpdateConfig.save() },
+        )
+        action("Check for updates now", "Check GitHub for a newer release right now.") { checkNow() }
+    }
+
+    /**
+     * Run an update check on demand, off-thread, reporting every outcome in chat. Shared by `/hexa update`
+     * and the "Check for updates now" button in the config menu.
+     */
+    fun checkNow() {
+        val client = Minecraft.getInstance()
+        send(client, line("Checking for updates…", ChatFormatting.GRAY))
+        Thread({ runManualCheck(client) }, "Hex-UpdateCommand").apply { isDaemon = true }.start()
     }
 
     override fun onShutdown() {

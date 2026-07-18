@@ -8,6 +8,8 @@ import net.fabricmc.fabric.api.client.message.v1.ClientReceiveMessageEvents
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayConnectionEvents
 import net.fabricmc.loader.api.FabricLoader
 import net.minecraft.network.chat.Component
+import net.trilleo.config.ConfigCategory
+import net.trilleo.config.gui.ConfigScreen
 import org.slf4j.LoggerFactory
 
 /**
@@ -32,6 +34,13 @@ object Features {
         features += fs
     }
 
+    /**
+     * Every enabled feature's settings tab, in registration order — the sidebar of the `/hexa config`
+     * menu. Rebuilt each call so it always reflects the current feature set.
+     */
+    fun categories(): List<ConfigCategory> =
+        features.filter { it.enabled }.mapNotNull { it.settingsCategory() }
+
     /** Initialize every feature and wire all Fabric events. Call once from `onInitializeClient`. */
     fun bootstrap() {
         features.forEach { it.onInit() }
@@ -42,6 +51,15 @@ object Features {
                 ctx.source.sendFeedback(rootHelp())
                 1
             }
+            // The universal config menu is owned centrally, not by any single feature. Defer to the next
+            // tick: opening a screen mid-command would be overridden when the chat screen closes.
+            hex.then(
+                ClientCommands.literal("config").executes { ctx ->
+                    val client = ctx.source.client
+                    client.execute { client.setScreen(ConfigScreen(null)) }
+                    1
+                },
+            )
             features.forEach { if (it.enabled) it.registerCommands(hex) }
             dispatcher.register(hex)
         }
@@ -74,8 +92,9 @@ object Features {
         val version = FabricLoader.getInstance().getModContainer("hex")
             .map { it.metadata.version.friendlyString }
             .orElse("?")
-        val subcommands = features.filter { it.enabled }.joinToString(", ") { it.id }
-        val suffix = if (subcommands.isEmpty()) "" else " — /hexa $subcommands"
+        // "config" is a central subcommand, not a feature id, so list it ahead of the feature ids.
+        val names = listOf("config") + features.filter { it.enabled }.map { it.id }
+        val suffix = " — /hexa ${names.joinToString(", ")}"
         return Component.literal("Hex v$version$suffix")
     }
 }
