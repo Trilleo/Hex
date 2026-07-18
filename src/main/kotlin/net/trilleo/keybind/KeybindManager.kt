@@ -3,7 +3,7 @@ package net.trilleo.keybind
 import com.mojang.blaze3d.platform.InputConstants
 import net.minecraft.client.Minecraft
 import net.minecraft.client.player.LocalPlayer
-import java.util.IdentityHashMap
+import java.util.*
 
 /**
  * Detects configured key combos each client tick and dispatches their command sequences.
@@ -15,89 +15,89 @@ import java.util.IdentityHashMap
  */
 object KeybindManager {
 
-	/** Bindings whose combo was down last tick — used to fire once per press (edge detection). */
-	private val held: MutableSet<Keybind> =
-		java.util.Collections.newSetFromMap(IdentityHashMap<Keybind, Boolean>())
+    /** Bindings whose combo was down last tick — used to fire once per press (edge detection). */
+    private val held: MutableSet<Keybind> =
+        java.util.Collections.newSetFromMap(IdentityHashMap<Keybind, Boolean>())
 
-	private class Scheduled(var ticksRemaining: Int, val line: String)
+    private class Scheduled(var ticksRemaining: Int, val line: String)
 
-	/** Pending command lines awaiting their delay. */
-	private val queue = ArrayList<Scheduled>()
+    /** Pending command lines awaiting their delay. */
+    private val queue = ArrayList<Scheduled>()
 
-	/** Called from the END_CLIENT_TICK handler. */
-	fun onEndTick(client: Minecraft) {
-		drainQueue(client)
-		detect(client)
-	}
+    /** Called from the END_CLIENT_TICK handler. */
+    fun onEndTick(client: Minecraft) {
+        drainQueue(client)
+        detect(client)
+    }
 
-	private fun detect(client: Minecraft) {
-		// Don't fire while typing, in a menu, or not in a world. Clear held so re-entering the world
-		// with a key still down doesn't immediately re-fire.
-		if (client.player == null || client.screen != null) {
-			held.clear()
-			return
-		}
+    private fun detect(client: Minecraft) {
+        // Don't fire while typing, in a menu, or not in a world. Clear held so re-entering the world
+        // with a key still down doesn't immediately re-fire.
+        if (client.player == null || client.screen != null) {
+            held.clear()
+            return
+        }
 
-		val window = client.window
-		val ctrl = InputConstants.isKeyDown(window, InputConstants.KEY_LCONTROL) ||
-			InputConstants.isKeyDown(window, InputConstants.KEY_RCONTROL)
-		val shift = InputConstants.isKeyDown(window, InputConstants.KEY_LSHIFT) ||
-			InputConstants.isKeyDown(window, InputConstants.KEY_RSHIFT)
-		val alt = InputConstants.isKeyDown(window, InputConstants.KEY_LALT) ||
-			InputConstants.isKeyDown(window, InputConstants.KEY_RALT)
+        val window = client.window
+        val ctrl = InputConstants.isKeyDown(window, InputConstants.KEY_LCONTROL) ||
+                InputConstants.isKeyDown(window, InputConstants.KEY_RCONTROL)
+        val shift = InputConstants.isKeyDown(window, InputConstants.KEY_LSHIFT) ||
+                InputConstants.isKeyDown(window, InputConstants.KEY_RSHIFT)
+        val alt = InputConstants.isKeyDown(window, InputConstants.KEY_LALT) ||
+                InputConstants.isKeyDown(window, InputConstants.KEY_RALT)
 
-		for (kb in KeybindConfig.keybinds) {
-			if (!kb.enabled || !kb.isBound) {
-				held.remove(kb)
-				continue
-			}
-			val match = InputConstants.isKeyDown(window, kb.keyCode) &&
-				kb.ctrl == ctrl && kb.shift == shift && kb.alt == alt
-			if (match) {
-				if (held.add(kb)) fire(kb)
-			} else {
-				held.remove(kb)
-			}
-		}
-	}
+        for (kb in KeybindConfig.keybinds) {
+            if (!kb.enabled || !kb.isBound) {
+                held.remove(kb)
+                continue
+            }
+            val match = InputConstants.isKeyDown(window, kb.keyCode) &&
+                    kb.ctrl == ctrl && kb.shift == shift && kb.alt == alt
+            if (match) {
+                if (held.add(kb)) fire(kb)
+            } else {
+                held.remove(kb)
+            }
+        }
+    }
 
-	private fun fire(kb: Keybind) {
-		var delay = 0
-		for (action in kb.actions) {
-			delay += action.delayTicks.coerceAtLeast(0)   // gap to wait before this action
-			val trimmed = action.command.trim()
-			if (trimmed.isEmpty()) continue               // skip blank line, but keep its delay contribution
-			queue.add(Scheduled(delay, trimmed))
-		}
-	}
+    private fun fire(kb: Keybind) {
+        var delay = 0
+        for (action in kb.actions) {
+            delay += action.delayTicks.coerceAtLeast(0)   // gap to wait before this action
+            val trimmed = action.command.trim()
+            if (trimmed.isEmpty()) continue               // skip blank line, but keep its delay contribution
+            queue.add(Scheduled(delay, trimmed))
+        }
+    }
 
-	private fun drainQueue(client: Minecraft) {
-		if (queue.isEmpty()) return
-		val player = client.player
-		if (player == null) {
-			queue.clear()
-			return
-		}
-		val ready = ArrayList<String>()
-		val it = queue.iterator()
-		while (it.hasNext()) {
-			val s = it.next()
-			if (s.ticksRemaining <= 0) {
-				ready.add(s.line)
-				it.remove()
-			} else {
-				s.ticksRemaining--
-			}
-		}
-		for (line in ready) execute(player, line)
-	}
+    private fun drainQueue(client: Minecraft) {
+        if (queue.isEmpty()) return
+        val player = client.player
+        if (player == null) {
+            queue.clear()
+            return
+        }
+        val ready = ArrayList<String>()
+        val it = queue.iterator()
+        while (it.hasNext()) {
+            val s = it.next()
+            if (s.ticksRemaining <= 0) {
+                ready.add(s.line)
+                it.remove()
+            } else {
+                s.ticksRemaining--
+            }
+        }
+        for (line in ready) execute(player, line)
+    }
 
-	private fun execute(player: LocalPlayer, line: String) {
-		val connection = player.connection
-		if (line.startsWith("/")) {
-			connection.sendCommand(line.substring(1))
-		} else {
-			connection.sendChat(line)
-		}
-	}
+    private fun execute(player: LocalPlayer, line: String) {
+        val connection = player.connection
+        if (line.startsWith("/")) {
+            connection.sendCommand(line.substring(1))
+        } else {
+            connection.sendChat(line)
+        }
+    }
 }

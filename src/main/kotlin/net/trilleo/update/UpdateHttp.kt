@@ -10,10 +10,10 @@ import java.time.Duration
  * mandatory — the GitHub API rejects requests without one.
  */
 internal object UpdateHttp {
-	val client: HttpClient = HttpClient.newBuilder()
-		.connectTimeout(Duration.ofSeconds(15))
-		.followRedirects(HttpClient.Redirect.NORMAL)
-		.build()
+    val client: HttpClient = HttpClient.newBuilder()
+        .connectTimeout(Duration.ofSeconds(15))
+        .followRedirects(HttpClient.Redirect.NORMAL)
+        .build()
 
-	const val USER_AGENT: String = "Hex-Updater (+https://github.com/Trilleo/Hex)"
+    const val USER_AGENT: String = "Hex-Updater (+https://github.com/Trilleo/Hex)"
 }

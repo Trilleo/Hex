@@ -10,26 +10,26 @@ import net.trilleo.config.JsonConfig
  * @property includePrereleases treat GitHub prereleases as available updates, not only stable releases.
  */
 data class UpdateSettings(
-	var enabled: Boolean = true,
-	var includePrereleases: Boolean = false,
+    var enabled: Boolean = true,
+    var includePrereleases: Boolean = false,
 )
 
 /** Loads and holds the singleton [UpdateSettings]. Call [load] once at feature init. */
 object UpdateConfig {
-	private val config = JsonConfig(
-		name = "update",
-		type = object : TypeToken<UpdateSettings>() {}.type,
-		default = { UpdateSettings() },
-	)
+    private val config = JsonConfig(
+        name = "update",
+        type = object : TypeToken<UpdateSettings>() {}.type,
+        default = { UpdateSettings() },
+    )
 
-	var settings: UpdateSettings = UpdateSettings()
-		private set
+    var settings: UpdateSettings = UpdateSettings()
+        private set
 
-	fun load() {
-		settings = config.load()
-	}
+    fun load() {
+        settings = config.load()
+    }
 
-	fun save() {
-		config.save(settings)
-	}
+    fun save() {
+        config.save(settings)
+    }
 }

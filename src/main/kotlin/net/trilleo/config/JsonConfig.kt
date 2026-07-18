@@ -25,41 +25,41 @@ import java.nio.file.Path
  * @param normalize repairs GSON's reflection gaps on a loaded value (no-op by default).
  */
 class JsonConfig<T : Any>(
-	name: String,
-	private val type: Type,
-	private val default: () -> T,
-	private val normalize: (T) -> Unit = {},
+    name: String,
+    private val type: Type,
+    private val default: () -> T,
+    private val normalize: (T) -> Unit = {},
 ) {
-	private val path: Path = FabricLoader.getInstance().configDir.resolve("hex").resolve("$name.json")
+    private val path: Path = FabricLoader.getInstance().configDir.resolve("hex").resolve("$name.json")
 
-	/** Reads the file, or returns a normalized [default] when it is missing or fails to parse. */
-	fun load(): T {
-		if (!Files.exists(path)) return default()
-		return try {
-			Files.newBufferedReader(path).use { reader ->
-				val loaded: T? = GSON.fromJson(reader, type)
-				(loaded ?: default()).also(normalize)
-			}
-		} catch (e: Exception) {
-			LOGGER.error("Failed to load config from {}, using defaults", path, e)
-			default()
-		}
-	}
+    /** Reads the file, or returns a normalized [default] when it is missing or fails to parse. */
+    fun load(): T {
+        if (!Files.exists(path)) return default()
+        return try {
+            Files.newBufferedReader(path).use { reader ->
+                val loaded: T? = GSON.fromJson(reader, type)
+                (loaded ?: default()).also(normalize)
+            }
+        } catch (e: Exception) {
+            LOGGER.error("Failed to load config from {}, using defaults", path, e)
+            default()
+        }
+    }
 
-	/** Writes [value] as pretty JSON, creating `config/hex/` if needed. Failures are logged, not thrown. */
-	fun save(value: T) {
-		try {
-			Files.createDirectories(path.parent)
-			Files.newBufferedWriter(path).use { writer -> GSON.toJson(value, writer) }
-		} catch (e: Exception) {
-			LOGGER.error("Failed to save config to {}", path, e)
-		}
-	}
+    /** Writes [value] as pretty JSON, creating `config/hex/` if needed. Failures are logged, not thrown. */
+    fun save(value: T) {
+        try {
+            Files.createDirectories(path.parent)
+            Files.newBufferedWriter(path).use { writer -> GSON.toJson(value, writer) }
+        } catch (e: Exception) {
+            LOGGER.error("Failed to save config to {}", path, e)
+        }
+    }
 
-	companion object {
-		private val LOGGER = LoggerFactory.getLogger("hex/config")
+    companion object {
+        private val LOGGER = LoggerFactory.getLogger("hex/config")
 
-		/** Shared, pretty-printing GSON instance for all config files. */
-		val GSON: Gson = GsonBuilder().setPrettyPrinting().create()
-	}
+        /** Shared, pretty-printing GSON instance for all config files. */
+        val GSON: Gson = GsonBuilder().setPrettyPrinting().create()
+    }
 }

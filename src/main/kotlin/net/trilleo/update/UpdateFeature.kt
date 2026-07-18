@@ -18,96 +18,97 @@ import org.slf4j.LoggerFactory
  * paths degrade to a notify-only message with the release link.
  */
 object UpdateFeature : Feature {
-	override val id: String = "update"
+    override val id: String = "update"
 
-	private val LOGGER = LoggerFactory.getLogger("hex/update")
+    private val LOGGER = LoggerFactory.getLogger("hex/update")
 
-	/** Set by the background check; surfaced once on the next world join. */
-	@Volatile
-	private var startupNotice: Component? = null
-	private var noticeShown = false
+    /** Set by the background check; surfaced once on the next world join. */
+    @Volatile
+    private var startupNotice: Component? = null
+    private var noticeShown = false
 
-	override fun onInit() {
-		UpdateConfig.load()
-		if (UpdateConfig.settings.enabled) {
-			Thread({ runStartupCheck() }, "Hex-UpdateChecker").apply { isDaemon = true }.start()
-		}
-	}
+    override fun onInit() {
+        UpdateConfig.load()
+        if (UpdateConfig.settings.enabled) {
+            Thread({ runStartupCheck() }, "Hex-UpdateChecker").apply { isDaemon = true }.start()
+        }
+    }
 
-	override fun onWorldJoin(client: Minecraft) {
-		if (noticeShown) return
-		val notice = startupNotice ?: return
-		noticeShown = true
-		client.execute { client.player?.sendSystemMessage(notice) }
-	}
+    override fun onWorldJoin(client: Minecraft) {
+        if (noticeShown) return
+        val notice = startupNotice ?: return
+        noticeShown = true
+        client.execute { client.player?.sendSystemMessage(notice) }
+    }
 
-	override fun registerCommands(hex: LiteralArgumentBuilder<FabricClientCommandSource>) {
-		hex.then(
-			Commands.literal("update").executes { ctx ->
-				val client = ctx.source.client
-				Commands.feedback(ctx.source, "Checking for updates…")
-				Thread({ runManualCheck(client) }, "Hex-UpdateCommand").apply { isDaemon = true }.start()
-				1
-			},
-		)
-	}
+    override fun registerCommands(hex: LiteralArgumentBuilder<FabricClientCommandSource>) {
+        hex.then(
+            Commands.literal("update").executes { ctx ->
+                val client = ctx.source.client
+                Commands.feedback(ctx.source, "Checking for updates…")
+                Thread({ runManualCheck(client) }, "Hex-UpdateCommand").apply { isDaemon = true }.start()
+                1
+            },
+        )
+    }
 
-	override fun onShutdown() {
-		UpdateConfig.save()
-		UpdateStaging.applyOnShutdown()
-	}
+    override fun onShutdown() {
+        UpdateConfig.save()
+        UpdateStaging.applyOnShutdown()
+    }
 
-	/** Background startup path: stage silently, then stash a notice for the next world join. */
-	private fun runStartupCheck() {
-		when (val status = UpdateChecker.check(UpdateConfig.settings.includePrereleases)) {
-			is UpdateStatus.Available -> startupNotice = stageAndDescribe(status)
-			is UpdateStatus.Failed -> LOGGER.info("Update check skipped: {}", status.reason)
-			UpdateStatus.UpToDate -> {}
-		}
-	}
+    /** Background startup path: stage silently, then stash a notice for the next world join. */
+    private fun runStartupCheck() {
+        when (val status = UpdateChecker.check(UpdateConfig.settings.includePrereleases)) {
+            is UpdateStatus.Available -> startupNotice = stageAndDescribe(status)
+            is UpdateStatus.Failed -> LOGGER.info("Update check skipped: {}", status.reason)
+            UpdateStatus.UpToDate -> {}
+        }
+    }
 
-	/** `/hexa update` path: report every outcome, including up-to-date and failures. */
-	private fun runManualCheck(client: Minecraft) {
-		when (val status = UpdateChecker.check(UpdateConfig.settings.includePrereleases)) {
-			is UpdateStatus.Available -> send(client, stageAndDescribe(status))
-			is UpdateStatus.Failed ->
-				send(client, line("Update check failed: ${status.reason}", ChatFormatting.RED))
-			UpdateStatus.UpToDate ->
-				send(client, line("Hex is up to date (v${UpdateChecker.currentVersion()}).", ChatFormatting.GREEN))
-		}
-	}
+    /** `/hexa update` path: report every outcome, including up-to-date and failures. */
+    private fun runManualCheck(client: Minecraft) {
+        when (val status = UpdateChecker.check(UpdateConfig.settings.includePrereleases)) {
+            is UpdateStatus.Available -> send(client, stageAndDescribe(status))
+            is UpdateStatus.Failed ->
+                send(client, line("Update check failed: ${status.reason}", ChatFormatting.RED))
 
-	/**
-	 * Download + stage an available update if it is not already staged, and return the line to show. Shared
-	 * by the startup and manual paths so both behave identically. Never throws — any failure degrades to
-	 * the notify-only link.
-	 */
-	private fun stageAndDescribe(status: UpdateStatus.Available): Component {
-		val version = status.version
-		if (UpdateStaging.hasPendingFor(version)) {
-			return line("Hex v$version is downloaded — restart to apply.", ChatFormatting.AQUA)
-		}
+            UpdateStatus.UpToDate ->
+                send(client, line("Hex is up to date (v${UpdateChecker.currentVersion()}).", ChatFormatting.GREEN))
+        }
+    }
 
-		val oldJar = UpdateStaging.currentJar()
-			?: return notifyOnly(status) // dev env: nothing to swap
-		val asset = UpdateDownloader.selectAsset(status.release)
-			?: return notifyOnly(status)
-		val staged = UpdateDownloader.download(asset)
-			?: return notifyOnly(status)
+    /**
+     * Download + stage an available update if it is not already staged, and return the line to show. Shared
+     * by the startup and manual paths so both behave identically. Never throws — any failure degrades to
+     * the notify-only link.
+     */
+    private fun stageAndDescribe(status: UpdateStatus.Available): Component {
+        val version = status.version
+        if (UpdateStaging.hasPendingFor(version)) {
+            return line("Hex v$version is downloaded — restart to apply.", ChatFormatting.AQUA)
+        }
 
-		UpdateStaging.markPending(version, staged, oldJar)
-		return line("Hex v$version downloaded — restart to apply.", ChatFormatting.AQUA)
-	}
+        val oldJar = UpdateStaging.currentJar()
+            ?: return notifyOnly(status) // dev env: nothing to swap
+        val asset = UpdateDownloader.selectAsset(status.release)
+            ?: return notifyOnly(status)
+        val staged = UpdateDownloader.download(asset)
+            ?: return notifyOnly(status)
 
-	private fun notifyOnly(status: UpdateStatus.Available): Component {
-		val url = status.release.htmlUrl ?: "https://github.com/Trilleo/Hex/releases"
-		return line("Hex v${status.version} is available: $url", ChatFormatting.AQUA)
-	}
+        UpdateStaging.markPending(version, staged, oldJar)
+        return line("Hex v$version downloaded — restart to apply.", ChatFormatting.AQUA)
+    }
 
-	private fun line(text: String, color: ChatFormatting): Component =
-		Component.literal("[Hex] $text").withStyle(color)
+    private fun notifyOnly(status: UpdateStatus.Available): Component {
+        val url = status.release.htmlUrl ?: "https://github.com/Trilleo/Hex/releases"
+        return line("Hex v${status.version} is available: $url", ChatFormatting.AQUA)
+    }
 
-	private fun send(client: Minecraft, message: Component) {
-		client.execute { client.player?.sendSystemMessage(message) }
-	}
+    private fun line(text: String, color: ChatFormatting): Component =
+        Component.literal("[Hex] $text").withStyle(color)
+
+    private fun send(client: Minecraft, message: Component) {
+        client.execute { client.player?.sendSystemMessage(message) }
+    }
 }

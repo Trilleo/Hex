@@ -15,33 +15,33 @@ import net.minecraft.network.chat.Component
  * toggle point for a module.
  */
 interface Feature {
-	/** Stable identifier, e.g. `"keybinds"`. Used for logging and as the `/hexa <id>` subcommand namespace. */
-	val id: String
+    /** Stable identifier, e.g. `"keybinds"`. Used for logging and as the `/hexa <id>` subcommand namespace. */
+    val id: String
 
-	/** When `false`, the feature is registered but receives no event/command dispatch. */
-	val enabled: Boolean get() = true
+    /** When `false`, the feature is registered but receives no event/command dispatch. */
+    val enabled: Boolean get() = true
 
-	/** Called once at startup, in registration order — register keymappings, load config, etc. */
-	fun onInit() {}
+    /** Called once at startup, in registration order — register keymappings, load config, etc. */
+    fun onInit() {}
 
-	/** Add this feature's subcommands under the shared root `/hexa` command. */
-	fun registerCommands(hex: LiteralArgumentBuilder<FabricClientCommandSource>) {}
+    /** Add this feature's subcommands under the shared root `/hexa` command. */
+    fun registerCommands(hex: LiteralArgumentBuilder<FabricClientCommandSource>) {}
 
-	/** Called every client tick (`END_CLIENT_TICK`). Guard on `client.player` / `client.screen` as needed. */
-	fun onClientTick(client: Minecraft) {}
+    /** Called every client tick (`END_CLIENT_TICK`). Guard on `client.player` / `client.screen` as needed. */
+    fun onClientTick(client: Minecraft) {}
 
-	/** The local player joined a world / server. */
-	fun onWorldJoin(client: Minecraft) {}
+    /** The local player joined a world / server. */
+    fun onWorldJoin(client: Minecraft) {}
 
-	/** The local player left the world. */
-	fun onWorldLeave(client: Minecraft) {}
+    /** The local player left the world. */
+    fun onWorldLeave(client: Minecraft) {}
 
-	/**
-	 * An incoming game chat message. Return `false` to swallow it (hide it from the chat), `true` to let
-	 * it through. Runs for every feature; a single `false` cancels the message.
-	 */
-	fun onChatReceive(message: Component): Boolean = true
+    /**
+     * An incoming game chat message. Return `false` to swallow it (hide it from the chat), `true` to let
+     * it through. Runs for every feature; a single `false` cancels the message.
+     */
+    fun onChatReceive(message: Component): Boolean = true
 
-	/** The client is stopping — flush any unsaved config here. */
-	fun onShutdown() {}
+    /** The client is stopping — flush any unsaved config here. */
+    fun onShutdown() {}
 }

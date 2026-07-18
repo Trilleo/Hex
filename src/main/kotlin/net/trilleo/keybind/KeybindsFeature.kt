@@ -18,42 +18,42 @@ import net.trilleo.keybind.gui.KeybindScreen
  * [KeybindScreen], reachable via the keymapping or the `/hexa keybinds` command.
  */
 object KeybindsFeature : Feature {
-	override val id: String = "keybinds"
+    override val id: String = "keybinds"
 
-	/** The rebindable key that opens the Keybinds screen. Unbound by default. */
-	private lateinit var openMenuKey: KeyMapping
+    /** The rebindable key that opens the Keybinds screen. Unbound by default. */
+    private lateinit var openMenuKey: KeyMapping
 
-	override fun onInit() {
-		KeybindConfig.load()
+    override fun onInit() {
+        KeybindConfig.load()
 
-		openMenuKey = KeyMapping(
-			"key.hex.open_menu",
-			InputConstants.UNKNOWN.value,
-			KeyMapping.Category.MISC,
-		)
-		KeyMappingHelper.registerKeyMapping(openMenuKey)
-	}
+        openMenuKey = KeyMapping(
+            "key.hex.open_menu",
+            InputConstants.UNKNOWN.value,
+            KeyMapping.Category.MISC,
+        )
+        KeyMappingHelper.registerKeyMapping(openMenuKey)
+    }
 
-	override fun onClientTick(client: Minecraft) {
-		while (openMenuKey.consumeClick()) {
-			client.setScreen(KeybindScreen(client.screen))
-		}
-		KeybindManager.onEndTick(client)
-	}
+    override fun onClientTick(client: Minecraft) {
+        while (openMenuKey.consumeClick()) {
+            client.setScreen(KeybindScreen(client.screen))
+        }
+        KeybindManager.onEndTick(client)
+    }
 
-	override fun registerCommands(hex: LiteralArgumentBuilder<FabricClientCommandSource>) {
-		hex.then(
-			Commands.literal("keybinds").executes { ctx ->
-				// Defer to the next tick: opening a screen mid-command would be overridden when the chat
-				// screen that ran the command closes.
-				val client = ctx.source.client
-				client.execute { client.setScreen(KeybindScreen(null)) }
-				1
-			},
-		)
-	}
+    override fun registerCommands(hex: LiteralArgumentBuilder<FabricClientCommandSource>) {
+        hex.then(
+            Commands.literal("keybinds").executes { ctx ->
+                // Defer to the next tick: opening a screen mid-command would be overridden when the chat
+                // screen that ran the command closes.
+                val client = ctx.source.client
+                client.execute { client.setScreen(KeybindScreen(null)) }
+                1
+            },
+        )
+    }
 
-	override fun onShutdown() {
-		KeybindConfig.save()
-	}
+    override fun onShutdown() {
+        KeybindConfig.save()
+    }
 }

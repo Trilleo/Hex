@@ -12,18 +12,17 @@ import org.slf4j.LoggerFactory
  * wires all Fabric events and commands. Adding a feature is a single [Features.register] line here.
  */
 object Hex : ClientModInitializer {
-	const val MOD_ID: String = "hex"
+    const val MOD_ID: String = "hex"
 
-	private val LOGGER = LoggerFactory.getLogger(MOD_ID)
+    private val LOGGER = LoggerFactory.getLogger(MOD_ID)
 
-	override fun onInitializeClient() {
-		Features.register(KeybindsFeature)
-		Features.register(UpdateFeature)
-		Features.bootstrap()
+    override fun onInitializeClient() {
+        Features.register(KeybindsFeature)
+        Features.register(UpdateFeature)
+        Features.bootstrap()
 
-		LOGGER.info("Hex initialized")
-	}
+        LOGGER.info("Hex initialized")
+    }
 
-	fun id(path: String): Identifier
-		= Identifier.fromNamespaceAndPath(MOD_ID, path)
+    fun id(path: String): Identifier = Identifier.fromNamespaceAndPath(MOD_ID, path)
 }

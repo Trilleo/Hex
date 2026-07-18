@@ -7,9 +7,9 @@ package net.trilleo.keybind
  * identity while editing them in place.
  */
 class KeybindAction {
-	/** One line: a leading `/` is sent as a command, otherwise as chat. */
-	var command: String = ""
+    /** One line: a leading `/` is sent as a command, otherwise as chat. */
+    var command: String = ""
 
-	/** Ticks to wait before this action runs, measured from the previous action (20 ticks = 1 second). */
-	var delayTicks: Int = 0
+    /** Ticks to wait before this action runs, measured from the previous action (20 ticks = 1 second). */
+    var delayTicks: Int = 0
 }
