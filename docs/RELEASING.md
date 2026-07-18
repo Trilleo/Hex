@@ -113,6 +113,11 @@ Example: releasing version `1.1.0`.
   and re-run the workflow, or delete and re-push the tag.
 - The mod jar from `build/libs/` is attached; the `-sources` jar is excluded.
 
+> **The in-game auto-updater depends on this asset.** Hex's update feature downloads the release asset whose name
+> starts with `hex`, ends in `.jar`, and is not the `-sources` jar (i.e. `hex-<version>.jar`). Keep that jar
+> attached to every release with that naming, or clients will fall back to a notify-only "update available" message
+> with no automatic download. Prereleases are only offered to users who opt in via `config/hex/update.json`.
+
 ## Fixing a botched release
 
 - **Wrong changelog / missing section**: fix `CHANGELOG.md`, commit, then move the tag and re-push it:

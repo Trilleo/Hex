@@ -2,6 +2,26 @@
 
 ## Unreleased
 
+### New Features
+
+#### Auto-Update
+
++ Hex now keeps itself up to date from its GitHub releases. On startup it checks for a newer version in the
+  background and, if one is found, downloads it and tells you to restart — the update is applied automatically the
+  next time you close the game.
+    + Run `/hexa update` to check on demand at any time.
+    + Edit `config/hex/update.json` to turn the startup check off (`enabled`) or to also receive prerelease builds
+      (`includePrereleases`).
+
+### Technical Details
+
+#### Auto-Update
+
++ Added an update feature that queries the `Trilleo/Hex` GitHub releases API (built-in `java.net.http`, no new
+  dependency), compares tags with Fabric's `SemanticVersion`, and stages a verified jar under
+  `config/hex/update/`. Because the running jar is file-locked by the JVM, the swap is performed on shutdown by a
+  detached OS helper script that copies the new jar into `mods/` and removes the old one once the lock is released.
+
 ## Version 1.1.0
 
 ### New Features
