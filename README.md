@@ -9,12 +9,11 @@ Hex runs entirely on your client — it never needs to be installed on a server.
 
 ## Features
 
-- **Keybind shortcuts** — bind a key (optionally with Ctrl/Shift/Alt) to run a sequence of commands/chat
-  messages, where each action has its own delay and the command inputs offer chat-style tab-completion. Configure
-  bindings in-game via the Hex Keybinds screen; open it with the rebindable keybind under Options → Controls, or
-  by running `/hexa keybinds`.
-- **Auto-update** — Hex checks its [GitHub releases](https://github.com/Trilleo/Hex/releases) on startup and, when
-  a newer version is out, downloads it and applies it automatically the next time you close the game. Run
+- **Keybind shortcuts** — bind a key (optionally with Ctrl/Shift/Alt) to run a sequence of commands/chat messages, where
+  each action has its own delay and the command inputs offer chat-style tab-completion. Configure bindings in-game via
+  the Hex Keybinds screen; open it with the rebindable keybind under Options → Controls, or by running `/hexa keybinds`.
+- **Auto-update** — Hex checks its [GitHub releases](https://github.com/Trilleo/Hex/releases) on startup and, when a
+  newer version is out, downloads it and applies it automatically the next time you close the game. Run
   `/hexa update` to check on demand. See [Updating](#updating).
 
 *Hex is in early development — more features will be listed here as they land. See the
@@ -33,8 +32,8 @@ Hex runs entirely on your client — it never needs to be installed on a server.
 
 Hex updates itself from its [GitHub releases](https://github.com/Trilleo/Hex/releases):
 
-- On startup it checks for a newer release in the background. If one exists, it downloads the new jar and shows a
-  chat notice; the swap into your `mods` folder happens automatically when you next close Minecraft.
+- On startup it checks for a newer release in the background. If one exists, it downloads the new jar and shows a chat
+  notice; the swap into your `mods` folder happens automatically when you next close Minecraft.
 - Run `/hexa update` to check immediately.
 - Settings live in `config/hex/update.json`: set `enabled` to `false` to disable the startup check, or
   `includePrereleases` to `true` to also receive prerelease builds.
