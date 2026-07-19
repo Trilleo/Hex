@@ -17,7 +17,8 @@
 #### Keybinds
 
 + Hex's keybinds now live under their own **Hex** category in Options → Controls instead of being mixed into
-  Misc — the "Open Hex Keybinds" bind and the freecam toggle are grouped together.
+  Misc — the config, keybinds and freecam binds are grouped together.
++ Added a rebindable keybind to open the Hex config menu (Options → Controls → Hex), alongside `/hexa config`.
 
 ### Technical Details
 

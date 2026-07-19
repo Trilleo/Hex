@@ -1,13 +1,17 @@
 package net.trilleo.feature
 
+import com.mojang.blaze3d.platform.InputConstants
 import net.fabricmc.fabric.api.client.command.v2.ClientCommandRegistrationCallback
 import net.fabricmc.fabric.api.client.command.v2.ClientCommands
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientLifecycleEvents
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents
+import net.fabricmc.fabric.api.client.keymapping.v1.KeyMappingHelper
 import net.fabricmc.fabric.api.client.message.v1.ClientReceiveMessageEvents
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayConnectionEvents
 import net.fabricmc.loader.api.FabricLoader
+import net.minecraft.client.KeyMapping
 import net.minecraft.network.chat.Component
+import net.trilleo.Hex
 import net.trilleo.config.ConfigCategory
 import net.trilleo.config.gui.ConfigScreen
 import org.slf4j.LoggerFactory
@@ -29,6 +33,9 @@ object Features {
 
     private val features = mutableListOf<Feature>()
 
+    /** Rebindable key that opens the universal `/hexa config` menu. Owned centrally; unbound by default. */
+    private lateinit var openConfigKey: KeyMapping
+
     /** Register one or more features. Call before [bootstrap]. */
     fun register(vararg fs: Feature) {
         features += fs
@@ -44,6 +51,11 @@ object Features {
     /** Initialize every feature and wire all Fabric events. Call once from `onInitializeClient`. */
     fun bootstrap() {
         features.forEach { it.onInit() }
+
+        // The universal config menu is owned centrally (like the /hexa config command), so its keybind is
+        // registered here rather than by any single feature. Shown under the shared "Hex" category.
+        openConfigKey = KeyMapping("key.hex.open_config", InputConstants.UNKNOWN.value, Hex.KEY_CATEGORY)
+        KeyMappingHelper.registerKeyMapping(openConfigKey)
 
         ClientCommandRegistrationCallback.EVENT.register { dispatcher, _ ->
             val hex = ClientCommands.literal("hexa")
@@ -65,6 +77,9 @@ object Features {
         }
 
         ClientTickEvents.END_CLIENT_TICK.register { client ->
+            while (openConfigKey.consumeClick()) {
+                client.setScreen(ConfigScreen(client.screen))
+            }
             features.forEach { if (it.enabled) it.onClientTick(client) }
         }
 

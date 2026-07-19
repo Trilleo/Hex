@@ -1,5 +1,6 @@
 {
   "key.category.hex.hex": "Hex",
+  "key.hex.open_config": "Open Hex Config",
   "key.hex.open_menu": "Open Hex Keybinds",
   "key.hex.freecam.toggle": "Toggle Freecam"
 }

@@ -9,8 +9,9 @@ Hex runs entirely on your client — it never needs to be installed on a server.
 
 ## Features
 
-- **Config menu** — a single, categorized menu for the mod's settings. Open it with `/hexa config`; each feature adds
-  its own tab down the side, and a button links straight to the Keybinds screen.
+- **Config menu** — a single, categorized menu for the mod's settings. Open it with `/hexa config` or a rebindable
+  keybind under Options → Controls → **Hex**; each feature adds its own tab down the side, and a button links
+  straight to the Keybinds screen.
 - **Keybind shortcuts** — bind a key (optionally with Ctrl/Shift/Alt) to run a sequence of commands/chat messages, where
   each action has its own delay and the command inputs offer chat-style tab-completion. Configure bindings in-game via
   the Hex Keybinds screen; open it with the rebindable keybind under Options → Controls, from the config menu, or by
