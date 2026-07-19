@@ -38,3 +38,16 @@ class ActionEntry(
     override val tooltip: Component?,
     val onClick: (Screen) -> Unit,
 ) : ConfigEntry
+
+/**
+ * A multiple-choice setting, rendered as a button that cycles through [options] on click. [get] returns the
+ * current option's index (read each time the screen is built) and [set] receives the next index on click,
+ * so a setter can persist immediately like [BooleanEntry].
+ */
+class CycleEntry(
+    override val label: Component,
+    override val tooltip: Component?,
+    val options: List<Component>,
+    val get: () -> Int,
+    val set: (Int) -> Unit,
+) : ConfigEntry

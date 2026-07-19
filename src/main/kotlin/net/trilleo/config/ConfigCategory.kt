@@ -49,5 +49,25 @@ class ConfigCategory(
         fun action(label: String, tooltip: String? = null, onClick: (Screen) -> Unit) {
             entries += ActionEntry(Component.literal(label), tooltip?.let(Component::literal), onClick)
         }
+
+        /**
+         * Add a multiple-choice cycler. [get] returns the current option index, [set] receives the next
+         * index on click; persist in [set] if the change should stick.
+         */
+        fun cycle(
+            label: String,
+            tooltip: String? = null,
+            options: List<String>,
+            get: () -> Int,
+            set: (Int) -> Unit,
+        ) {
+            entries += CycleEntry(
+                Component.literal(label),
+                tooltip?.let(Component::literal),
+                options.map(Component::literal),
+                get,
+                set,
+            )
+        }
     }
 }

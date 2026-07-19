@@ -15,6 +15,10 @@ Hex runs entirely on your client — it never needs to be installed on a server.
   each action has its own delay and the command inputs offer chat-style tab-completion. Configure bindings in-game via
   the Hex Keybinds screen; open it with the rebindable keybind under Options → Controls, from the config menu, or by
   running `/hexa keybinds`.
+- **Freecam** — press a keybind to detach the camera from your player and fly it around freely to observe your
+  surroundings (WASD to move, Space/Shift for up/down, the mouse to look, and the scroll wheel to change speed);
+  press it again to return. Your character stays in place. Bind it under Options → Controls → **Hex** and tune it
+  in the **Freecam** tab of `/hexa config`.
 - **Auto-update** — Hex checks its [GitHub releases](https://github.com/Trilleo/Hex/releases) on startup and, when a
   newer version is out, downloads it and applies it automatically the next time you close the game. Run
   `/hexa update` to check on demand, or manage it from the **Updates** tab of `/hexa config`. See [Updating](#updating).

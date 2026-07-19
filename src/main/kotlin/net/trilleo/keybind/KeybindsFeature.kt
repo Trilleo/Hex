@@ -6,6 +6,7 @@ import net.fabricmc.fabric.api.client.command.v2.FabricClientCommandSource
 import net.fabricmc.fabric.api.client.keymapping.v1.KeyMappingHelper
 import net.minecraft.client.KeyMapping
 import net.minecraft.client.Minecraft
+import net.trilleo.Hex
 import net.trilleo.command.Commands
 import net.trilleo.feature.Feature
 import net.trilleo.keybind.gui.KeybindScreen
@@ -29,7 +30,7 @@ object KeybindsFeature : Feature {
         openMenuKey = KeyMapping(
             "key.hex.open_menu",
             InputConstants.UNKNOWN.value,
-            KeyMapping.Category.MISC,
+            Hex.KEY_CATEGORY,
         )
         KeyMappingHelper.registerKeyMapping(openMenuKey)
     }

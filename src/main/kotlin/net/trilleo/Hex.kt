@@ -1,8 +1,10 @@
 package net.trilleo
 
 import net.fabricmc.api.ClientModInitializer
+import net.minecraft.client.KeyMapping
 import net.minecraft.resources.Identifier
 import net.trilleo.feature.Features
+import net.trilleo.freecam.FreecamFeature
 import net.trilleo.keybind.KeybindsFeature
 import net.trilleo.update.UpdateFeature
 import org.slf4j.LoggerFactory
@@ -16,8 +18,16 @@ object Hex : ClientModInitializer {
 
     private val LOGGER = LoggerFactory.getLogger(MOD_ID)
 
+    /**
+     * The dedicated "Hex" keybind category shown under Options → Controls. Registered once here (the
+     * factory throws on a duplicate id) and shared by every feature that owns a [KeyMapping], so all Hex
+     * binds group together instead of scattering into Misc.
+     */
+    val KEY_CATEGORY: KeyMapping.Category = KeyMapping.Category.register(id("hex"))
+
     override fun onInitializeClient() {
         Features.register(KeybindsFeature)
+        Features.register(FreecamFeature)
         Features.register(UpdateFeature)
         Features.bootstrap()
 

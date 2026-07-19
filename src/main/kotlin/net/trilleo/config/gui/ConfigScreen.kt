@@ -8,6 +8,7 @@ import net.minecraft.network.chat.Component
 import net.trilleo.config.ActionEntry
 import net.trilleo.config.BooleanEntry
 import net.trilleo.config.ConfigCategory
+import net.trilleo.config.CycleEntry
 import net.trilleo.feature.Features
 import net.trilleo.keybind.gui.KeybindScreen
 
@@ -113,6 +114,19 @@ class ConfigScreen(private val parent: Screen?) : Screen(Component.literal("Hex 
                     val button = Button.builder(entry.label) { _ ->
                         entry.onClick(this)
                     }.bounds(contentX, y, contentW, 20).build()
+                    entry.tooltip?.let { button.setTooltip(Tooltip.create(it)) }
+                    addRenderableWidget(button)
+                }
+
+                is CycleEntry -> {
+                    val valueW = 80
+                    val labelW = (contentW - valueW - GAP).coerceAtLeast(40)
+                    addRenderableWidget(StringWidget(contentX, y + 5, labelW, 12, entry.label, font))
+                    val current = entry.get().coerceIn(0, entry.options.size - 1)
+                    val button = Button.builder(entry.options[current]) { _ ->
+                        entry.set((current + 1) % entry.options.size)
+                        rebuild()
+                    }.bounds(contentX + labelW + GAP, y, valueW, 20).build()
                     entry.tooltip?.let { button.setTooltip(Tooltip.create(it)) }
                     addRenderableWidget(button)
                 }

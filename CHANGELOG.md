@@ -2,6 +2,35 @@
 
 ## Unreleased
 
+### New Features
+
+#### Freecam
+
++ Added a freecam: press its keybind to detach the camera from your player and fly it around freely to look at
+  your surroundings — WASD to move, Space/Shift for up/down, the mouse to look, and the scroll wheel to change
+  speed. Press it again to return to normal; your character stays put the whole time. The keybind lives under a
+  new **Hex** category in Options → Controls (unbound by default), and the **Freecam** tab of `/hexa config`
+  lets you enable/disable the feature and pick a base fly speed.
+
+### Improvements
+
+#### Keybinds
+
++ Hex's keybinds now live under their own **Hex** category in Options → Controls instead of being mixed into
+  Misc — the "Open Hex Keybinds" bind and the freecam toggle are grouped together.
+
+### Technical Details
+
+#### Freecam
+
++ Added the project's first mixins (`CameraMixin`, `ClientInputMixin`, `KeyboardInputMixin`,
+  `MouseHandlerMixin`). The camera is repositioned right after `Camera#alignWithEntity` — before the cull
+  frustum is built — so chunk culling follows the freecam wherever it flies; mouse look and scroll are
+  redirected, the move vector is forced to zero, and the key-press record is blanked so the real player never
+  moves or sends input to the server.
++ Added a reusable `CycleEntry` multiple-choice control to the config-menu framework (a new `ConfigEntry`
+  subtype plus a `cycle(...)` builder), and a dedicated "Hex" `KeyMapping.Category`.
+
 ## Version 1.2.0
 
 ### New Features
