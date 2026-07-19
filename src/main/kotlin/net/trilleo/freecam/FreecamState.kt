@@ -3,6 +3,8 @@ package net.trilleo.freecam
 import net.minecraft.client.CameraType
 import net.minecraft.client.Minecraft
 import net.minecraft.world.phys.Vec3
+import net.trilleo.freecam.FreecamState.pos
+import net.trilleo.freecam.FreecamState.prevPos
 import kotlin.math.cos
 import kotlin.math.sin
 import kotlin.math.sqrt

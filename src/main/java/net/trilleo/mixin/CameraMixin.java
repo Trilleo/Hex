@@ -28,12 +28,12 @@ public abstract class CameraMixin {
     protected abstract void setRotation(float yRot, float xRot);
 
     @Inject(
-        method = "update",
-        at = @At(
-            value = "INVOKE",
-            target = "Lnet/minecraft/client/Camera;alignWithEntity(F)V",
-            shift = At.Shift.AFTER
-        )
+            method = "update",
+            at = @At(
+                    value = "INVOKE",
+                    target = "Lnet/minecraft/client/Camera;alignWithEntity(F)V",
+                    shift = At.Shift.AFTER
+            )
     )
     private void hex$applyFreecam(DeltaTracker deltaTracker, CallbackInfo ci) {
         FreecamState state = FreecamState.INSTANCE;
