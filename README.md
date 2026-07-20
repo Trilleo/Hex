@@ -16,6 +16,10 @@ Hex runs entirely on your client — it never needs to be installed on a server.
   each action has its own delay and the command inputs offer chat-style tab-completion. Configure bindings in-game via
   the Hex Keybinds screen; open it with the rebindable keybind under Options → Controls, from the config menu, or by
   running `/hexa keybinds`.
+- **Control switch shortcuts** — bind a key combo to cycle one of Minecraft's own controls between two or more keys,
+  without leaving the game to rebind it. For example, switch **Attack/Destroy** between **Left Button** and **J** so
+  your clicks stop swinging. Mouse buttons work as well as keyboard keys; each switch is announced in chat, plays a
+  short sound, and is saved to your Minecraft options. Add one with **Add Switch** on the Hex Keybinds screen.
 - **Freecam** — press a keybind to detach the camera from your player and fly it around freely to observe your
   surroundings (WASD to move, Space/Shift for up/down, the mouse to look, and the scroll wheel to change speed); press
   it again to return. Your character stays in place. Bind it under Options → Controls → **Hex** and tune it in the

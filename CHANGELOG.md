@@ -2,6 +2,27 @@
 
 ## Unreleased
 
+### New Features
+
+#### Keybinds
+
++ Added control switch shortcuts: bind a key combo to cycle one of Minecraft's own controls between two or
+  more keys. For example, bind `Alt + /` to switch **Attack/Destroy** between **Left Button** and **J**, so
+  you can stop your clicks from swinging without leaving the game to rebind anything. Add one with the
+  **Add Switch** button on the Hex Keybinds screen, then pick the control and the keys to cycle through —
+  mouse buttons work as well as keyboard keys. Each switch shows the new binding in chat, plays a short
+  confirmation sound, and is saved to your Minecraft options just like a manual rebind, so it survives a
+  restart.
+
+### Technical Details
+
+#### Keybinds
+
++ Control switches reuse the existing keybind entry list and its per-tick combo detection; entries carry a
+  `type` discriminator, and configs written before this release load as command shortcuts unchanged.
++ Added a shared `Notify` helper for prefixed chat lines and UI sounds, replacing the update checker's
+  private copies — the mod previously had no sound playback at all.
+
 ## Version 1.3.0
 
 ### New Features

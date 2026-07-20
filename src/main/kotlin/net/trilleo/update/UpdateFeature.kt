@@ -8,6 +8,7 @@ import net.minecraft.network.chat.Component
 import net.trilleo.command.Commands
 import net.trilleo.config.ConfigCategory
 import net.trilleo.feature.Feature
+import net.trilleo.util.Notify
 import org.slf4j.LoggerFactory
 
 /**
@@ -39,7 +40,7 @@ object UpdateFeature : Feature {
         if (noticeShown) return
         val notice = startupNotice ?: return
         noticeShown = true
-        client.execute { client.player?.sendSystemMessage(notice) }
+        Notify.send(client, notice)
     }
 
     override fun registerCommands(hex: LiteralArgumentBuilder<FabricClientCommandSource>) {
@@ -73,7 +74,7 @@ object UpdateFeature : Feature {
      */
     fun checkNow() {
         val client = Minecraft.getInstance()
-        send(client, line("Checking for updates…", ChatFormatting.GRAY))
+        Notify.chat(client, "Checking for updates…", ChatFormatting.GRAY)
         Thread({ runManualCheck(client) }, "Hex-UpdateCommand").apply { isDaemon = true }.start()
     }
 
@@ -94,12 +95,12 @@ object UpdateFeature : Feature {
     /** `/hexa update` path: report every outcome, including up-to-date and failures. */
     private fun runManualCheck(client: Minecraft) {
         when (val status = UpdateChecker.check(UpdateConfig.settings.includePrereleases)) {
-            is UpdateStatus.Available -> send(client, stageAndDescribe(status))
+            is UpdateStatus.Available -> Notify.send(client, stageAndDescribe(status))
             is UpdateStatus.Failed ->
-                send(client, line("Update check failed: ${status.reason}", ChatFormatting.RED))
+                Notify.chat(client, "Update check failed: ${status.reason}", ChatFormatting.RED)
 
             UpdateStatus.UpToDate ->
-                send(client, line("Hex is up to date (v${UpdateChecker.currentVersion()}).", ChatFormatting.GREEN))
+                Notify.chat(client, "Hex is up to date (v${UpdateChecker.currentVersion()}).", ChatFormatting.GREEN)
         }
     }
 
@@ -111,7 +112,7 @@ object UpdateFeature : Feature {
     private fun stageAndDescribe(status: UpdateStatus.Available): Component {
         val version = status.version
         if (UpdateStaging.hasPendingFor(version)) {
-            return line("Hex v$version is downloaded — restart to apply.", ChatFormatting.AQUA)
+            return Notify.line("Hex v$version is downloaded — restart to apply.", ChatFormatting.AQUA)
         }
 
         val oldJar = UpdateStaging.currentJar()
@@ -122,18 +123,12 @@ object UpdateFeature : Feature {
             ?: return notifyOnly(status)
 
         UpdateStaging.markPending(version, staged, oldJar)
-        return line("Hex v$version downloaded — restart to apply.", ChatFormatting.AQUA)
+        return Notify.line("Hex v$version downloaded — restart to apply.", ChatFormatting.AQUA)
     }
 
     private fun notifyOnly(status: UpdateStatus.Available): Component {
         val url = status.release.htmlUrl ?: "https://github.com/Trilleo/Hex/releases"
-        return line("Hex v${status.version} is available: $url", ChatFormatting.AQUA)
+        return Notify.line("Hex v${status.version} is available: $url", ChatFormatting.AQUA)
     }
 
-    private fun line(text: String, color: ChatFormatting): Component =
-        Component.literal("[Hex] $text").withStyle(color)
-
-    private fun send(client: Minecraft, message: Component) {
-        client.execute { client.player?.sendSystemMessage(message) }
-    }
 }

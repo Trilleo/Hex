@@ -26,6 +26,15 @@ object KeybindConfig {
                 @Suppress("SENSELESS_COMPARISON")
                 if (kb.actions == null) kb.actions = mutableListOf()
 
+                // Pre-switch configs have no `type` at all, and GSON maps an unknown enum name to null too,
+                // so both cases fall back to the original command behaviour.
+                @Suppress("SENSELESS_COMPARISON")
+                if (kb.type == null) kb.type = KeybindType.COMMAND
+                @Suppress("SENSELESS_COMPARISON")
+                if (kb.switchTarget == null) kb.switchTarget = ""
+                @Suppress("SENSELESS_COMPARISON")
+                if (kb.switchKeys == null) kb.switchKeys = mutableListOf()
+
                 // Migrate legacy commands+delay into per-action steps (once). Old timing ran action i at
                 // i * delayTicks, so the first step waits 0 and every later step waits the old delay.
                 if (kb.actions.isEmpty() && kb.commands.isNotEmpty()) {

@@ -16,17 +16,39 @@ object KeybindFormat {
         return sb.toString()
     }
 
+    /** Short one-line summary of what a binding does, for the list screen. */
+    fun summary(kb: Keybind): String = when (kb.type) {
+        KeybindType.COMMAND -> commandSummary(kb)
+        KeybindType.CONTROL_SWITCH -> switchSummary(kb)
+    }
+
     /**
-     * Short one-line summary of a binding's actions for the list screen: the first command (truncated), with
-     * a `(+N more)` suffix when there are extra actions, or `No actions` when empty.
+     * The first command (truncated), with a `(+N more)` suffix when there are extra actions, or
+     * `No actions` when empty.
      */
-    fun summary(kb: Keybind): String {
+    private fun commandSummary(kb: Keybind): String {
         val nonEmpty = kb.actions.filter { it.command.isNotBlank() }
         if (nonEmpty.isEmpty()) return "No actions"
         val first = nonEmpty.first().command.trim()
         val head = if (first.length > 28) first.take(27) + "…" else first
         val extra = nonEmpty.size - 1
         return if (extra > 0) "$head  (+$extra more)" else head
+    }
+
+    /**
+     * The target control and the keys it cycles between, e.g. `Attack/Destroy: Left Button → J`. Reports
+     * the specific misconfiguration instead when the binding would not actually switch anything.
+     */
+    private fun switchSummary(kb: Keybind): String {
+        if (kb.switchTarget.isEmpty()) return "No control selected"
+        if (ControlSwitch.resolve(kb) == null) return "Missing control: ${kb.switchTarget}"
+        if (kb.switchKeys.size < 2) return "${ControlSwitch.targetLabel(kb)}: needs 2+ keys"
+
+        val target = ControlSwitch.targetLabel(kb)
+        // Only the first two keys fit alongside the control name; the rest are counted.
+        val shown = kb.switchKeys.take(2).joinToString(" → ") { ControlSwitch.keyLabel(it) }
+        val extra = kb.switchKeys.size - 2
+        return if (extra > 0) "$target: $shown  (+$extra more)" else "$target: $shown"
     }
 
     private fun keyName(keyCode: Int): String =

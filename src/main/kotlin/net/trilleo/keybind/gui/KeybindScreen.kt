@@ -10,6 +10,7 @@ import net.minecraft.network.chat.Component
 import net.trilleo.keybind.Keybind
 import net.trilleo.keybind.KeybindConfig
 import net.trilleo.keybind.KeybindFormat
+import net.trilleo.keybind.KeybindType
 
 /**
  * Config screen for managing keybind shortcuts. Built entirely from standard widgets (buttons and
@@ -79,9 +80,15 @@ class KeybindScreen(private val parent: Screen?) : Screen(Component.literal("Hex
             )
             x += sumW + gap
 
+            val editTip = if (kb.type == KeybindType.CONTROL_SWITCH) TIP_EDIT_SWITCH else TIP_EDIT
             addRenderableWidget(Button.builder(Component.literal("Edit")) { _ ->
-                minecraft.setScreen(KeybindActionScreen(this, kb))
-            }.bounds(x, y, editW, 20).tooltip(TIP_EDIT).build())
+                minecraft.setScreen(
+                    when (kb.type) {
+                        KeybindType.COMMAND -> KeybindActionScreen(this, kb)
+                        KeybindType.CONTROL_SWITCH -> ControlSwitchScreen(this, kb)
+                    }
+                )
+            }.bounds(x, y, editW, 20).tooltip(editTip).build())
             x += editW + gap
 
             addRenderableWidget(Button.builder(Component.literal(if (kb.enabled) "On" else "Off")) { _ ->
@@ -118,15 +125,31 @@ class KeybindScreen(private val parent: Screen?) : Screen(Component.literal("Hex
             }.bounds(margin + 122, bottomY, 20, 20).tooltip(TIP_NEXT).build())
         }
 
-        addRenderableWidget(Button.builder(Component.literal("Add Binding")) { _ ->
-            binds().add(Keybind())
-            page = pageCount() - 1
-            rebuild()
-        }.bounds(width / 2 - 105, bottomY, 100, 20).tooltip(TIP_ADD).build())
+        // Three buttons at 90 wide (rather than the old two at 100) so the row still clears the page
+        // controls on the left, which run to margin + 142.
+        val btnW = 90
+        val btnGap = 6
+        var bx = width / 2 - (btnW * 3 + btnGap * 2) / 2
+
+        addRenderableWidget(Button.builder(Component.literal("Add Command")) { _ ->
+            addBinding(KeybindType.COMMAND)
+        }.bounds(bx, bottomY, btnW, 20).tooltip(TIP_ADD_COMMAND).build())
+        bx += btnW + btnGap
+
+        addRenderableWidget(Button.builder(Component.literal("Add Switch")) { _ ->
+            addBinding(KeybindType.CONTROL_SWITCH)
+        }.bounds(bx, bottomY, btnW, 20).tooltip(TIP_ADD_SWITCH).build())
+        bx += btnW + btnGap
 
         addRenderableWidget(Button.builder(Component.literal("Done")) { _ ->
             onClose()
-        }.bounds(width / 2 + 5, bottomY, 100, 20).tooltip(TIP_DONE).build())
+        }.bounds(bx, bottomY, btnW, 20).tooltip(TIP_DONE).build())
+    }
+
+    private fun addBinding(type: KeybindType) {
+        binds().add(Keybind().apply { this.type = type })
+        page = pageCount() - 1
+        rebuild()
     }
 
     override fun keyPressed(event: KeyEvent): Boolean {
@@ -168,9 +191,17 @@ class KeybindScreen(private val parent: Screen?) : Screen(Component.literal("Hex
         val TIP_EDIT: Tooltip = Tooltip.create(
             Component.literal("Edit this shortcut's actions and their delays.")
         )
+        val TIP_EDIT_SWITCH: Tooltip = Tooltip.create(
+            Component.literal("Edit which control this shortcut switches, and between which keys.")
+        )
         val TIP_TOGGLE: Tooltip = Tooltip.create(Component.literal("Enable or disable this shortcut."))
         val TIP_DELETE: Tooltip = Tooltip.create(Component.literal("Delete this shortcut."))
-        val TIP_ADD: Tooltip = Tooltip.create(Component.literal("Add a new shortcut."))
+        val TIP_ADD_COMMAND: Tooltip = Tooltip.create(
+            Component.literal("Add a shortcut that runs commands or chat lines.")
+        )
+        val TIP_ADD_SWITCH: Tooltip = Tooltip.create(
+            Component.literal("Add a shortcut that cycles a Minecraft control between keys.")
+        )
         val TIP_DONE: Tooltip = Tooltip.create(Component.literal("Save and close."))
         val TIP_PREV: Tooltip = Tooltip.create(Component.literal("Previous page."))
         val TIP_NEXT: Tooltip = Tooltip.create(Component.literal("Next page."))

@@ -6,7 +6,8 @@ import net.minecraft.client.player.LocalPlayer
 import java.util.*
 
 /**
- * Detects configured key combos each client tick and dispatches their command sequences.
+ * Detects configured key combos each client tick and applies their effect — running a command sequence or
+ * cycling a Minecraft control, depending on the binding's [KeybindType].
  *
  * Detection is done by polling key state (rather than a mixin) so it naturally ignores input while a
  * screen or chat is focused, and is resilient to input-system changes. Modifier matching is *exact*:
@@ -54,14 +55,22 @@ object KeybindManager {
             val match = InputConstants.isKeyDown(window, kb.keyCode) &&
                     kb.ctrl == ctrl && kb.shift == shift && kb.alt == alt
             if (match) {
-                if (held.add(kb)) fire(kb)
+                if (held.add(kb)) fire(client, kb)
             } else {
                 held.remove(kb)
             }
         }
     }
 
-    private fun fire(kb: Keybind) {
+    /** Apply a binding's effect. Detection above is shared; only what happens on press differs by type. */
+    private fun fire(client: Minecraft, kb: Keybind) {
+        when (kb.type) {
+            KeybindType.COMMAND -> queueActions(kb)
+            KeybindType.CONTROL_SWITCH -> ControlSwitch.apply(client, kb)
+        }
+    }
+
+    private fun queueActions(kb: Keybind) {
         var delay = 0
         for (action in kb.actions) {
             delay += action.delayTicks.coerceAtLeast(0)   // gap to wait before this action
