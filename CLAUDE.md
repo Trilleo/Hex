@@ -16,11 +16,16 @@ Before finishing any task that changes the mod, do all of the following:
    - Skip changelog entries only for changes with no effect on the shipped mod or its workflow (e.g. fixing a typo
      in a doc).
 
-2. **Check the README** — if the change affects anything [README.md](README.md) mentions (features, installation,
-   dependencies, MC/Java version, build instructions, license), update it. New user-visible features get a line in
-   the Features section.
+2. **Document the feature** — every user-visible feature is described in [docs/FEATURES.md](docs/FEATURES.md). A new
+   feature gets its own `##` section there (what it does, how the player enables/configures it, any limitation);
+   a change to an existing feature updates that feature's section. Write for a player — implementation notes belong
+   in the changelog's `### Technical Details`, not here.
 
-3. **Check the docs folder** — if the change affects a workflow documented in [docs/](docs/) (e.g. the release
+3. **Check the README** — if the change affects anything [README.md](README.md) mentions (installation, dependencies,
+   MC/Java version, build instructions, license), update it. [README.md](README.md) carries only a one-line summary
+   per feature: add a bullet for a new feature, but keep the details in [docs/FEATURES.md](docs/FEATURES.md).
+
+4. **Check the docs folder** — if the change affects a workflow documented in [docs/](docs/) (e.g. the release
    process in [docs/RELEASING.md](docs/RELEASING.md)), update the affected doc in the same task.
 
 ## Project conventions

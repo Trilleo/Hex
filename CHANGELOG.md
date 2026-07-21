@@ -21,6 +21,12 @@
 + Removed stale references to the Cloth Config classes deleted in 1.5.0 from the config KDoc, including
   descriptions of a Save/Cancel step the menu no longer has.
 
+#### Documentation
+
++ Moved the full feature descriptions out of the README into a dedicated [docs/FEATURES.md](docs/FEATURES.md).
+  The README now carries a one-line summary per feature and links to the new doc, which is where each feature's
+  usage and configuration is documented from now on.
+
 ## Version 1.5.0
 
 ### New Features

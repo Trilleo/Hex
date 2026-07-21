@@ -9,34 +9,17 @@ Hex runs entirely on your client — it never needs to be installed on a server.
 
 ## Features
 
-- **Config menu** — a single, categorized menu for the mod's settings. Open it with `/hexa config` or a rebindable
-  keybind under Options → Controls → **Hex**. Each feature adds its own tab down the side, a search box filters settings
-  across all of them at once, every row has a reset button, and a button links straight to the Keybinds screen. Settings
-  apply as you change them, so you can drag a slider and watch the result.
-- **Config profiles & sharing** — keep whole named setups side by side and switch between them from the **Profiles**
-  tab; the settings you are leaving are saved into their own profile first. The same tab copies every setting to the
-  clipboard as text you can send to someone else or keep as a backup, and pastes one back.
-- **Keybind shortcuts** — bind a key (optionally with Ctrl/Shift/Alt) to run a sequence of commands/chat messages, where
-  each action has its own delay and the command inputs offer chat-style tab-completion. Configure bindings in-game via
-  the Hex Keybinds screen; open it with the rebindable keybind under Options → Controls, from the config menu, or by
-  running `/hexa keybinds`.
-- **Control switch shortcuts** — bind a key combo to cycle one of Minecraft's own controls between two or more keys,
-  without leaving the game to rebind it. For example, switch **Attack/Destroy** between **Left Button** and **J** so
-  your clicks stop swinging. Mouse buttons work as well as keyboard keys; each switch is announced in chat, plays a
-  short sound, and is saved to your Minecraft options. Add one with **Add Switch** on the Hex Keybinds screen.
-- **Freecam** — press a keybind to detach the camera from your player and fly it around freely to observe your
-  surroundings (WASD to move, Space/Shift for up/down, the mouse to look, and the scroll wheel to change speed); press
-  it again to return. Your character stays in place. Bind it under Options → Controls → **Hex** and tune it in the
-  **Freecam** tab of `/hexa config`.
-- **Hand display** — reposition your held item in first person and change how it swings. The **Hand** tab of
-  `/hexa config` has sliders for the main hand's position, scale and rotation, a swing-speed multiplier, and a switch to
-  hide the swing animation entirely. Everything is cosmetic: your attack cooldown, mining speed and reach are untouched.
-- **Auto-update** — Hex checks its [GitHub releases](https://github.com/Trilleo/Hex/releases) on startup and, when a
-  newer version is out, downloads it and applies it automatically the next time you close the game. Run
-  `/hexa update` to check on demand, or manage it from the **Updates** tab of `/hexa config`. See [Updating](#updating).
+- **Config menu** — one categorized settings menu, opened with `/hexa config` or a keybind.
+- **Config profiles & sharing** — named setups you can switch between, copy to the clipboard, and paste back.
+- **Keybind shortcuts** — bind a key combo to a delayed sequence of commands or chat messages.
+- **Control switch shortcuts** — cycle one of Minecraft's own controls between two or more keys in-game.
+- **Freecam** — detach the camera and fly it around while your character stays put.
+- **Hand display** — reposition and restyle your held item in first person, cosmetically.
+- **Auto-update** — Hex downloads new [releases](https://github.com/Trilleo/Hex/releases) itself and applies them on
+  exit. See [Updating](#updating).
 
-*Hex is in early development — more features will be listed here as they land. See the
-[change log](CHANGELOG.md) for what's new in each release.*
+*Hex is in early development — more features will land over time. See [Features](docs/FEATURES.md) for what each one
+does and how to configure it, and the [change log](CHANGELOG.md) for what's new in each release.*
 
 ## Installation
 
@@ -84,6 +67,7 @@ To launch a development client:
 
 ## Documentation
 
+- [Features](docs/FEATURES.md)
 - [Change log](CHANGELOG.md)
 - [Writing the changelog & releasing](docs/RELEASING.md)
 - [Commit structure](docs/COMMIT_STRUCTURE.md)
