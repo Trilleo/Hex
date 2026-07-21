@@ -31,12 +31,15 @@
 
 #### Config
 
-+ The `/hexa config` menu is now built on Cloth Config. It gains a search box that filters settings across
-  every tab, a properly scrolling list in place of the old page arrows, a per-setting reset arrow, and
-  **Cancel** to back out of changes you have not saved.
-+ Hex now appears in Mod Menu with a settings button that opens the same menu, if you have Mod Menu installed.
++ Rebuilt the `/hexa config` menu. It gains a search box that filters settings across every tab at once, a
+  properly scrolling list in place of the old page arrows, and a reset button on each row that lights up only
+  when that setting differs from its default.
++ Settings still apply the moment you change them, so you can drag a slider and watch the result rather than
+  hunting for a save button.
 + Every setting label and tooltip is now translatable rather than hardcoded English, so the menu can be
   translated. Tooltips are picked up automatically from the language file.
++ Hex still needs nothing but Fabric API and Fabric Language Kotlin — the new menu is built in, so there is no
+  extra config library to install.
 
 ### Fixes
 
@@ -52,24 +55,21 @@
 
 + Added a slider control to the config menu (`SliderEntry`), so settings can now take a number over a range
   instead of only a toggle or a fixed list of choices.
-+ Added Cloth Config as a required dependency and Mod Menu as an optional one. Cloth is **not** bundled, so it
-  has to be installed alongside Hex; the `depends` floor is deliberately loose so a Hex auto-update can never
-  land a jar that refuses to launch against an older Cloth.
-+ Replaced the hand-written `ConfigScreen` (242 lines of manual paging) with a translation layer from the
-  existing `ConfigCategory` / `ConfigEntry` model onto Cloth's builders. The model stays backend-agnostic, so
-  features describe settings in the mod's own vocabulary and only `ClothConfigFactory` knows Cloth exists.
-+ Added `ActionListEntry`, a hand-written Cloth entry, because Cloth has no button row. It mirrors
-  `BooleanListEntry` and draws through `extractRenderState`, matching this Minecraft build's render pipeline.
-+ Slider values are projected onto an integer notch grid and rounded back on the way out, since Cloth has no
-  double slider; this also keeps `0.01`-step sliders from drifting into values like `0.30000000000000004`.
++ Split the config system into a backend-agnostic settings model (`ConfigCategory` / `ConfigEntry`) and a
+  renderer. Features describe their settings in the mod's own vocabulary and never touch GUI code, so the
+  entire menu can be rewritten without a single feature changing.
++ Rewrote the menu as `HexConfigScreen` on vanilla's `ContainerObjectSelectionList`, which supplies scrolling,
+  the scrollbar and keyboard navigation. Rows draw through `extractContent` and the screen chrome through
+  `extractBackground`, matching this Minecraft build's extractor render pipeline.
++ Grew the entry model to eight row types — boolean, slider, cycle, enum, action, text, colour and keybind —
+  so features stop hand-rolling a sub-screen every time they need something other than a toggle.
++ Slider values are projected onto an integer notch grid and rounded to the precision the step implies, which
+  keeps `0.01`-step sliders from drifting into values like `0.30000000000000004`.
 + Added `ConfigRegistry` and `ConfigHandle`, which own every user-facing config generically — debounced
   writes, a central flush at shutdown, profile snapshot/restore, and clipboard export/import. `UpdateStaging`
   deliberately stays out of the registry: a half-downloaded jar is machine state, not a setting.
-+ Config entries now carry their default value, which is what drives Cloth's per-row reset arrow and removes
-  the need for each feature to hand-roll a reset action.
-+ Excluded `com.google.errorprone` from the Cloth dependency. Cloth pulls in `toml4j`, which drags gson's full
-  Maven metadata onto the runtime classpath along with build-time-only annotations that nothing needs at
-  runtime and that break `runClient` on networks without Maven Central access.
++ Config entries now carry their default value, which drives the per-row reset button and removes the need for
+  each feature to hand-roll a reset action.
 
 ## Version 1.4.0
 

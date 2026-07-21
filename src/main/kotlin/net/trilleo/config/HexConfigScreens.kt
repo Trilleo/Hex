@@ -2,7 +2,7 @@ package net.trilleo.config
 
 import net.minecraft.client.Minecraft
 import net.minecraft.client.gui.screens.Screen
-import net.trilleo.config.cloth.ClothConfigFactory
+import net.trilleo.config.gui.HexConfigScreen
 
 /**
  * The single way to open Hex's settings menu.
@@ -25,7 +25,7 @@ object HexConfigScreens {
     /** Builds the settings screen, returning to [parent] when it closes. */
     fun create(parent: Screen?): Screen {
         lastParent = parent
-        return ClothConfigFactory.create(parent)
+        return HexConfigScreen(parent)
     }
 
     /**

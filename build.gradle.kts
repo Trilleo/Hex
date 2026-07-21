@@ -15,8 +15,6 @@ repositories {
 	// Loom adds the essential maven repositories to download Minecraft and libraries from automatically.
 	// See https://docs.gradle.org/current/userguide/declaring_repositories.html
 	// for more information about repositories.
-	maven("https://maven.shedaniel.me/") { name = "Shedaniel" }
-	maven("https://maven.terraformersmc.com/releases/") { name = "TerraformersMC" }
 }
 
 dependencies {
@@ -27,29 +25,6 @@ dependencies {
 	// Fabric API. This is technically optional, but you probably want it anyway.
 	implementation("net.fabricmc.fabric-api:fabric-api:${providers.gradleProperty("fabric_api_version").get()}")
     implementation("net.fabricmc:fabric-language-kotlin:${providers.gradleProperty("fabric_kotlin_version").get()}")
-
-	// Cloth Config backs the settings menu and is a hard dependency — users install it themselves, it is not
-	// bundled. Both it and Mod Menu declare a Fabric API dependency of their own; without the exclusions Gradle
-	// resolves to whichever version is newer and silently replaces the fabric_api_version pinned above.
-	//
-	// The errorprone exclusion is not cosmetic: Cloth pulls in toml4j, which requests gson, which brings gson's
-	// full Maven metadata into the runtime classpath and with it error_prone_annotations. Those are build-time
-	// annotations that nothing needs at runtime, and leaving them in makes runClient fail outright on any
-	// network that cannot reach Maven Central.
-	implementation("me.shedaniel.cloth:cloth-config-fabric:${providers.gradleProperty("cloth_config_version").get()}") {
-		exclude(group = "net.fabricmc.fabric-api")
-		exclude(group = "com.google.errorprone")
-	}
-
-	// Mod Menu is optional at runtime: it is the only thing that reads the "modmenu" entrypoint, so with it
-	// absent the integration class is never loaded. compileOnly keeps it off the runtime classpath and out of
-	// the published POM; localRuntime puts it in the dev client so the mod-list button can be tested.
-	compileOnly("com.terraformersmc:modmenu:${providers.gradleProperty("modmenu_version").get()}") {
-		exclude(group = "net.fabricmc.fabric-api")
-	}
-	localRuntime("com.terraformersmc:modmenu:${providers.gradleProperty("modmenu_version").get()}") {
-		exclude(group = "net.fabricmc.fabric-api")
-	}
 }
 
 tasks.processResources {
@@ -57,7 +32,6 @@ tasks.processResources {
 		"version" to version,
 		"minecraft_version" to providers.gradleProperty("minecraft_version").get(),
 		"loader_version" to providers.gradleProperty("loader_version").get(),
-		"cloth_config_min_version" to providers.gradleProperty("cloth_config_min_version").get(),
 	)
 	props.forEach { (k, v) -> inputs.property(k, v) }
 

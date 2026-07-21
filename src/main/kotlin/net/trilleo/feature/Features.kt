@@ -16,7 +16,6 @@ import net.trilleo.config.ConfigCategory
 import net.trilleo.config.ConfigProfiles
 import net.trilleo.config.ConfigRegistry
 import net.trilleo.config.HexConfigScreens
-import net.trilleo.config.cloth.LivePreview
 import org.slf4j.LoggerFactory
 
 /**
@@ -90,8 +89,6 @@ object Features {
             // Ahead of feature dispatch, and outside the enabled check: a disabled feature's pending config
             // write still has to land.
             ConfigRegistry.tick()
-            // Pushes the open settings menu's values into live state so sliders preview as you drag.
-            LivePreview.tick(client)
 
             while (openConfigKey.consumeClick()) {
                 client.setScreen(HexConfigScreens.create(client.screen))

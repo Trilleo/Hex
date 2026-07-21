@@ -9,10 +9,10 @@ Hex runs entirely on your client — it never needs to be installed on a server.
 
 ## Features
 
-- **Config menu** — a single, categorized menu for the mod's settings, built on Cloth Config. Open it with
-  `/hexa config`, a rebindable keybind under Options → Controls → **Hex**, or the settings button next to Hex in Mod
-  Menu. Each feature adds its own tab down the side, a search box filters settings across all of them, and a button
-  links straight to the Keybinds screen.
+- **Config menu** — a single, categorized menu for the mod's settings. Open it with `/hexa config` or a rebindable
+  keybind under Options → Controls → **Hex**. Each feature adds its own tab down the side, a search box filters
+  settings across all of them at once, every row has a reset button, and a button links straight to the Keybinds
+  screen. Settings apply as you change them, so you can drag a slider and watch the result.
 - **Config profiles & sharing** — keep whole named setups side by side and switch between them from the **Profiles**
   tab; the settings you are leaving are saved into their own profile first. The same tab copies every setting to the
   clipboard as text you can send to someone else or keep as a backup, and pastes one back.
@@ -44,12 +44,8 @@ Hex runs entirely on your client — it never needs to be installed on a server.
 2. Download the following mods and drop them into your `mods` folder:
     - [Fabric API](https://modrinth.com/mod/fabric-api)
     - [Fabric Language Kotlin](https://modrinth.com/mod/fabric-language-kotlin)
-    - [Cloth Config API](https://modrinth.com/mod/cloth-config) — the settings menu is built on it, so Hex will not
-      start without it
     - Hex, from the [releases page](https://github.com/Trilleo/Hex/releases)
-3. Optionally add [Mod Menu](https://modrinth.com/mod/modmenu) to get a settings button next to Hex in the mod list. Hex
-   works fine without it.
-4. Launch the game with the Fabric profile.
+3. Launch the game with the Fabric profile.
 
 ## Updating
 

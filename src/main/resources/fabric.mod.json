@@ -20,12 +20,6 @@
         "value": "net.trilleo.Hex",
         "adapter": "kotlin"
       }
-    ],
-    "modmenu": [
-      {
-        "value": "net.trilleo.config.integration.HexModMenu",
-        "adapter": "kotlin"
-      }
     ]
   },
   "mixins": [
@@ -36,10 +30,6 @@
     "minecraft": "~${minecraft_version}",
     "java": ">=25",
     "fabric-api": "*",
-    "fabric-language-kotlin": "*",
-    "cloth-config": ">=${cloth_config_min_version}"
-  },
-  "suggests": {
-    "modmenu": "*"
+    "fabric-language-kotlin": "*"
   }
 }
