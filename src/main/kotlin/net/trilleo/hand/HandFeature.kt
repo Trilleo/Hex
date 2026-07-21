@@ -18,70 +18,67 @@ import java.util.Locale
 object HandFeature : Feature {
     override val id: String = "hand"
 
+    /** Default values for the settings rows; a renderer offers "reset" against these. */
+    private val defaults = HandSettings()
+
     override fun onInit() {
         HandConfig.load()
     }
 
-    override fun onShutdown() {
-        HandConfig.save()
-    }
-
-    override fun settingsCategory(): ConfigCategory = ConfigCategory.build("hand", "Hand") {
+    override fun settingsCategory(): ConfigCategory = ConfigCategory.build("hand") {
         toggle(
-            "Enabled",
-            "Master switch. When off, your hand is drawn exactly as vanilla and the settings below are " +
-                "kept but ignored.",
+            "enabled",
+            default = defaults.enabled,
             get = { HandConfig.settings.enabled },
             set = { HandConfig.settings.enabled = it; HandConfig.save() },
         )
 
-        offset("Position X", "Moves the main hand right (positive) or left (negative).",
+        offset("offset_x", defaults.offsetX,
             get = { HandConfig.settings.offsetX }, set = { HandConfig.settings.offsetX = it })
-        offset("Position Y", "Moves the main hand up (positive) or down (negative).",
+        offset("offset_y", defaults.offsetY,
             get = { HandConfig.settings.offsetY }, set = { HandConfig.settings.offsetY = it })
-        offset("Position Z", "Moves the main hand away from (positive) or towards (negative) the camera.",
+        offset("offset_z", defaults.offsetZ,
             get = { HandConfig.settings.offsetZ }, set = { HandConfig.settings.offsetZ = it })
 
         slider(
-            "Scale",
-            "Size of the main-hand arm and item.",
+            "scale",
             min = HandSettings.SCALE_MIN,
             max = HandSettings.SCALE_MAX,
             step = HandSettings.SCALE_STEP,
+            default = defaults.scale,
             get = { HandConfig.settings.scale },
-            set = { HandConfig.settings.scale = it; HandConfig.save() },
+            set = { HandConfig.settings.scale = it; HandConfig.markDirty() },
             format = { String.format(Locale.ROOT, "%.2fx", it) },
         )
 
-        rotation("Rotation X", "Tilts the main hand up and down.",
+        rotation("rotation_x", defaults.rotationX,
             get = { HandConfig.settings.rotationX }, set = { HandConfig.settings.rotationX = it })
-        rotation("Rotation Y", "Turns the main hand left and right.",
+        rotation("rotation_y", defaults.rotationY,
             get = { HandConfig.settings.rotationY }, set = { HandConfig.settings.rotationY = it })
-        rotation("Rotation Z", "Rolls the main hand around its own axis.",
+        rotation("rotation_z", defaults.rotationZ,
             get = { HandConfig.settings.rotationZ }, set = { HandConfig.settings.rotationZ = it })
 
         toggle(
-            "Disable swing animation",
-            "Hides the first-person swing entirely. Attacking, mining and item use are unaffected — only " +
-                "the animation is hidden.",
+            "disable_swing",
+            default = defaults.disableSwing,
             get = { HandConfig.settings.disableSwing },
             set = { HandConfig.settings.disableSwing = it; HandConfig.save() },
         )
 
         slider(
-            "Swing speed",
-            "How fast the swing animation plays. This is cosmetic: your attack cooldown and mining speed " +
-                "are unchanged. Has no effect while the swing animation is disabled, and also applies to " +
-                "your own third-person model.",
+            "swing_speed",
             min = HandSettings.SWING_SPEED_MIN,
             max = HandSettings.SWING_SPEED_MAX,
             step = HandSettings.SWING_SPEED_STEP,
+            default = defaults.swingSpeed,
             get = { HandConfig.settings.swingSpeed },
-            set = { HandConfig.settings.swingSpeed = it; HandConfig.save() },
+            set = { HandConfig.settings.swingSpeed = it; HandConfig.markDirty() },
             format = { String.format(Locale.ROOT, "%.2fx", it) },
         )
 
-        action("Reset to defaults", "Restores every display setting above to its default value.") { screen ->
+        // Kept alongside the per-row reset a renderer offers: this restores the whole tab in one click,
+        // which is the useful thing after experimenting with several sliders at once.
+        action("reset") { screen ->
             HandConfig.settings.resetToDefaults()
             HandConfig.save()
             // Re-init the open screen so every slider handle jumps back to its default position; the
@@ -91,36 +88,38 @@ object HandFeature : Feature {
         }
     }
 
-    /** A position slider — the three axes differ only in label, getter and setter. */
+    /** A position slider — the three axes differ only in key, default, getter and setter. */
     private fun ConfigCategory.Builder.offset(
-        label: String,
-        tooltip: String,
+        key: String,
+        default: Double,
         get: () -> Double,
         set: (Double) -> Unit,
     ) = slider(
-        label,
-        tooltip,
+        key,
         min = HandSettings.OFFSET_MIN,
         max = HandSettings.OFFSET_MAX,
         step = HandSettings.OFFSET_STEP,
+        default = default,
         get = get,
-        set = { set(it); HandConfig.save() },
+        // markDirty, not save: a slider setter fires every frame of a drag, and writing the file that often
+        // would hammer the disk. ConfigRegistry batches it into one write once the drag settles.
+        set = { set(it); HandConfig.markDirty() },
     )
 
     /** A rotation slider, shown in whole degrees. */
     private fun ConfigCategory.Builder.rotation(
-        label: String,
-        tooltip: String,
+        key: String,
+        default: Double,
         get: () -> Double,
         set: (Double) -> Unit,
     ) = slider(
-        label,
-        tooltip,
+        key,
         min = HandSettings.ROTATION_MIN,
         max = HandSettings.ROTATION_MAX,
         step = HandSettings.ROTATION_STEP,
+        default = default,
         get = get,
-        set = { set(it); HandConfig.save() },
+        set = { set(it); HandConfig.markDirty() },
         format = { "${it.toInt()}°" },
     )
 }

@@ -1,6 +1,8 @@
 package net.trilleo.update
 
 import com.google.gson.reflect.TypeToken
+import net.trilleo.config.ConfigHandle
+import net.trilleo.config.ConfigRegistry
 import net.trilleo.config.JsonConfig
 
 /**
@@ -25,11 +27,15 @@ object UpdateConfig {
     var settings: UpdateSettings = UpdateSettings()
         private set
 
-    fun load() {
-        settings = config.load()
-    }
+    private val handle = ConfigRegistry.register(
+        ConfigHandle(config, adopt = { settings = it }, current = { settings }),
+    )
 
-    fun save() {
-        config.save(settings)
-    }
+    fun load() = handle.loadInitial()
+
+    /** Writes immediately. Prefer [markDirty] from anything that fires repeatedly. */
+    fun save() = handle.saveNow()
+
+    /** Records that settings changed; the write is batched and lands about a second later. */
+    fun markDirty() = handle.markDirty()
 }

@@ -13,7 +13,10 @@ import net.minecraft.client.KeyMapping
 import net.minecraft.network.chat.Component
 import net.trilleo.Hex
 import net.trilleo.config.ConfigCategory
-import net.trilleo.config.gui.ConfigScreen
+import net.trilleo.config.ConfigProfiles
+import net.trilleo.config.ConfigRegistry
+import net.trilleo.config.HexConfigScreens
+import net.trilleo.config.cloth.LivePreview
 import org.slf4j.LoggerFactory
 
 /**
@@ -50,7 +53,15 @@ object Features {
 
     /** Initialize every feature and wire all Fabric events. Call once from `onInitializeClient`. */
     fun bootstrap() {
+        // Before the features: their configs register with ConfigRegistry as they initialise, and the
+        // profile bookkeeping wants to know which profile is active from the very first frame.
+        ConfigProfiles.load()
+
         features.forEach { it.onInit() }
+
+        // Only now are the feature configs registered and loaded, so only now can the active profile be
+        // seeded from them.
+        ConfigProfiles.ensureActiveSnapshot()
 
         // The universal config menu is owned centrally (like the /hexa config command), so its keybind is
         // registered here rather than by any single feature. Shown under the shared "Hex" category.
@@ -67,8 +78,7 @@ object Features {
             // tick: opening a screen mid-command would be overridden when the chat screen closes.
             hex.then(
                 ClientCommands.literal("config").executes { ctx ->
-                    val client = ctx.source.client
-                    client.execute { client.setScreen(ConfigScreen(null)) }
+                    HexConfigScreens.open(ctx.source.client, null)
                     1
                 },
             )
@@ -77,8 +87,14 @@ object Features {
         }
 
         ClientTickEvents.END_CLIENT_TICK.register { client ->
+            // Ahead of feature dispatch, and outside the enabled check: a disabled feature's pending config
+            // write still has to land.
+            ConfigRegistry.tick()
+            // Pushes the open settings menu's values into live state so sliders preview as you drag.
+            LivePreview.tick(client)
+
             while (openConfigKey.consumeClick()) {
-                client.setScreen(ConfigScreen(client.screen))
+                client.setScreen(HexConfigScreens.create(client.screen))
             }
             features.forEach { if (it.enabled) it.onClientTick(client) }
         }
@@ -96,7 +112,10 @@ object Features {
         }
 
         ClientLifecycleEvents.CLIENT_STOPPING.register {
+            // Features first, then the flush: a feature that mutates settings while shutting down still gets
+            // those changes written.
             features.forEach { it.onShutdown() }
+            ConfigRegistry.flushAll()
         }
 
         LOGGER.info("Bootstrapped {} feature(s)", features.size)

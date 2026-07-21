@@ -1,6 +1,7 @@
 package net.trilleo.config
 
 import net.minecraft.client.gui.screens.Screen
+import net.minecraft.locale.Language
 import net.minecraft.network.chat.Component
 import java.util.Locale
 
@@ -9,17 +10,24 @@ import java.util.Locale
  * contributes one by overriding [net.trilleo.feature.Feature.settingsCategory]; the menu collects every
  * enabled feature's category into the sidebar automatically.
  *
+ * Labels are translation keys rather than literal English, derived from the category [id] and each entry's
+ * key so call sites never repeat a prefix:
+ * ```
+ * hex.config.category.<id>            the tab title
+ * hex.config.<id>.<key>               an entry's label
+ * hex.config.<id>.<key>.tooltip       its tooltip, if the lang file defines one
+ * ```
  * Build one with the [build] DSL rather than the constructor:
  * ```
- * ConfigCategory.build("updates", "Updates") {
- *     toggle("Auto-update on startup", "Check GitHub for a newer release on launch.",
+ * ConfigCategory.build("updates") {
+ *     toggle("enabled", default = true,
  *            get = { UpdateConfig.settings.enabled },
  *            set = { UpdateConfig.settings.enabled = it; UpdateConfig.save() })
- *     action("Check for updates now", "Run an update check immediately.") { UpdateFeature.checkNow() }
+ *     action("check_now") { UpdateFeature.checkNow() }
  * }
  * ```
  *
- * @param id stable identifier for the category (logging / future addressing), e.g. `"updates"`.
+ * @param id stable identifier for the category, e.g. `"updates"`; also the translation-key prefix.
  * @param title the tab label shown in the sidebar.
  * @param entries the rows, in display order.
  */
@@ -29,73 +37,150 @@ class ConfigCategory(
     val entries: List<ConfigEntry>,
 ) {
     companion object {
-        /** Build a category with the [Builder] DSL. */
-        fun build(id: String, title: String, block: Builder.() -> Unit): ConfigCategory {
-            val builder = Builder()
-            builder.block()
-            return ConfigCategory(id, Component.literal(title), builder.entries)
-        }
+        /** Build a category with the [Builder] DSL. The title comes from `hex.config.category.<id>`. */
+        fun build(id: String, block: Builder.() -> Unit): ConfigCategory =
+            ConfigCategory(id, Component.translatable("hex.config.category.$id"), Builder(id).apply(block).entries)
     }
 
-    /** Collects [ConfigEntry] rows for [build]; one call per row. */
-    class Builder {
+    /**
+     * Collects [ConfigEntry] rows for [build]; one call per row.
+     *
+     * Every method takes the entry's key, not its text. Tooltips are implicit: a row gets one exactly when
+     * the language file defines `<label key>.tooltip`, so adding help text is a lang-file edit with no code
+     * change. Overloads taking a [Component] outright exist for genuinely dynamic labels, such as a saved
+     * profile's name, which have no translation key.
+     */
+    class Builder(private val categoryId: String) {
         val entries: MutableList<ConfigEntry> = mutableListOf()
 
-        /** Add a boolean toggle. [set] runs on each flip, so persist there if the change should stick. */
-        fun toggle(label: String, tooltip: String? = null, get: () -> Boolean, set: (Boolean) -> Unit) {
-            entries += BooleanEntry(Component.literal(label), tooltip?.let(Component::literal), get, set)
+        /** The translation key for an entry, e.g. `hex.config.hand.offset_x`. */
+        private fun keyOf(key: String) = "hex.config.$categoryId.$key"
+
+        private fun label(key: String): Component = Component.translatable(keyOf(key))
+
+        /**
+         * The tooltip for an entry, or null when the language file has no `.tooltip` key for it.
+         * [Component.translatable] renders the raw key when a translation is missing, so absence has to be
+         * detected up front rather than discovered as a stray `hex.config.…` string on screen.
+         */
+        private fun tooltip(key: String): Component? {
+            val tooltipKey = "${keyOf(key)}.tooltip"
+            return if (Language.getInstance().has(tooltipKey)) Component.translatable(tooltipKey) else null
+        }
+
+        /** Add a boolean toggle. [set] runs on each flip, so persist (or mark dirty) there. */
+        fun toggle(key: String, default: Boolean, get: () -> Boolean, set: (Boolean) -> Unit) {
+            entries += BooleanEntry(label(key), tooltip(key), default, get, set)
         }
 
         /** Add an action button. [onClick] receives the live [Screen] for opening sub-screens. */
-        fun action(label: String, tooltip: String? = null, onClick: (Screen) -> Unit) {
-            entries += ActionEntry(Component.literal(label), tooltip?.let(Component::literal), onClick)
+        fun action(key: String, onClick: (Screen) -> Unit) {
+            entries += ActionEntry(label(key), tooltip(key), onClick)
+        }
+
+        /** Add an action button whose label is computed rather than translated. */
+        fun action(label: Component, tooltip: Component? = null, onClick: (Screen) -> Unit) {
+            entries += ActionEntry(label, tooltip, onClick)
         }
 
         /**
-         * Add a multiple-choice cycler. [get] returns the current option index, [set] receives the next
-         * index on click; persist in [set] if the change should stick.
+         * Add a multiple-choice cycler over pre-rendered [options]. Prefer [enum] for a fixed set of
+         * choices; this exists for dynamic ones such as saved profile names.
          */
         fun cycle(
-            label: String,
-            tooltip: String? = null,
-            options: List<String>,
+            label: Component,
+            tooltip: Component? = null,
+            options: List<Component>,
+            default: Int,
             get: () -> Int,
             set: (Int) -> Unit,
         ) {
-            entries += CycleEntry(
-                Component.literal(label),
-                tooltip?.let(Component::literal),
-                options.map(Component::literal),
-                get,
-                set,
-            )
+            entries += CycleEntry(label, tooltip, options, default, get, set)
         }
 
         /**
-         * Add a numeric slider over `[min, max]`, snapped to [step]. [set] fires continuously while the
-         * handle is dragged, so keep it cheap. [format] renders the value on the handle; it defaults to
-         * two decimals.
+         * Add a numeric slider over `[min, max]`, snapped to [step]. [set] can fire continuously while the
+         * handle is dragged, so mark the config dirty there rather than writing the file. [format] renders
+         * the value on the handle; it defaults to two decimals.
          */
         fun slider(
-            label: String,
-            tooltip: String? = null,
+            key: String,
             min: Double,
             max: Double,
             step: Double,
+            default: Double,
             get: () -> Double,
             set: (Double) -> Unit,
             // Locale.ROOT so the decimal separator is a dot regardless of the client's language.
             format: (Double) -> String = { String.format(Locale.ROOT, "%.2f", it) },
         ) {
             entries += SliderEntry(
-                Component.literal(label),
-                tooltip?.let(Component::literal),
+                label(key),
+                tooltip(key),
                 min,
                 max,
                 step,
+                default,
                 get,
                 set,
                 { Component.literal(format(it)) },
+            )
+        }
+
+        /** Add a free-text field. [validate] returns an error message for a bad value, or null. */
+        fun text(
+            key: String,
+            default: String,
+            get: () -> String,
+            set: (String) -> Unit,
+            validate: (String) -> Component? = { null },
+        ) {
+            entries += TextEntry(label(key), tooltip(key), default, get, set, validate)
+        }
+
+        /** Add a colour picker over an `"#RRGGBB"` (or `"#AARRGGBB"`) string. */
+        fun color(
+            key: String,
+            default: String,
+            alpha: Boolean = false,
+            get: () -> String,
+            set: (String) -> Unit,
+        ) {
+            entries += ColorEntry(label(key), tooltip(key), default, alpha, get, set)
+        }
+
+        /** Add a key-combination capture row. */
+        fun keybind(key: String, default: KeyCombo, get: () -> KeyCombo, set: (KeyCombo) -> Unit) {
+            entries += KeybindEntry(label(key), tooltip(key), default, get, set)
+        }
+
+        /**
+         * Add a choice over an enum's constants. Each constant is named by
+         * `hex.config.<category>.<key>.<constant lowercased>`, so the options translate alongside the label.
+         */
+        inline fun <reified T : Enum<T>> enum(
+            key: String,
+            default: T,
+            noinline get: () -> T,
+            noinline set: (T) -> Unit,
+        ) = enumOf(T::class.java, key, default, get, set)
+
+        /** Non-reified backing for [enum]; call that instead. */
+        fun <T : Enum<T>> enumOf(
+            type: Class<T>,
+            key: String,
+            default: T,
+            get: () -> T,
+            set: (T) -> Unit,
+        ) {
+            entries += EnumEntry(
+                label(key),
+                tooltip(key),
+                type,
+                default,
+                get,
+                set,
+                { Component.translatable("${keyOf(key)}.${it.name.lowercase(Locale.ROOT)}") },
             )
         }
     }

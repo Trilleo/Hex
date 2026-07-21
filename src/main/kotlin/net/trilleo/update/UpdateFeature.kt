@@ -52,20 +52,23 @@ object UpdateFeature : Feature {
         )
     }
 
-    override fun settingsCategory(): ConfigCategory = ConfigCategory.build("updates", "Updates") {
+    /** Default values for the settings rows; a renderer offers "reset" against these. */
+    private val defaults = UpdateSettings()
+
+    override fun settingsCategory(): ConfigCategory = ConfigCategory.build("updates") {
         toggle(
-            "Auto-update on startup",
-            "Check GitHub for a newer release each launch and stage it automatically.",
+            "enabled",
+            default = defaults.enabled,
             get = { UpdateConfig.settings.enabled },
             set = { UpdateConfig.settings.enabled = it; UpdateConfig.save() },
         )
         toggle(
-            "Include pre-releases",
-            "Treat GitHub pre-releases as updates too.",
+            "include_prereleases",
+            default = defaults.includePrereleases,
             get = { UpdateConfig.settings.includePrereleases },
             set = { UpdateConfig.settings.includePrereleases = it; UpdateConfig.save() },
         )
-        action("Check for updates now", "Check GitHub for a newer release right now.") { checkNow() }
+        action("check_now") { checkNow() }
     }
 
     /**
@@ -79,7 +82,8 @@ object UpdateFeature : Feature {
     }
 
     override fun onShutdown() {
-        UpdateConfig.save()
+        // Settings are flushed centrally by ConfigRegistry; only the jar swap belongs here. UpdateStaging
+        // deliberately stays outside the registry — a half-downloaded update is machine state, not a setting.
         UpdateStaging.applyOnShutdown()
     }
 

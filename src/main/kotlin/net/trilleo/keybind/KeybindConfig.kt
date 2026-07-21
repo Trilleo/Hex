@@ -1,6 +1,8 @@
 package net.trilleo.keybind
 
 import com.google.gson.reflect.TypeToken
+import net.trilleo.config.ConfigHandle
+import net.trilleo.config.ConfigRegistry
 import net.trilleo.config.JsonConfig
 
 /**
@@ -17,7 +19,7 @@ object KeybindConfig {
         name = "keybinds",
         type = object : TypeToken<MutableList<Keybind>>() {}.type,
         default = { mutableListOf<Keybind>() },
-        normalize = { list ->
+        normalizer = { list ->
             list.forEach { kb ->
                 @Suppress("SENSELESS_COMPARISON")
                 if (kb.commands == null) kb.commands = mutableListOf()
@@ -55,12 +57,25 @@ object KeybindConfig {
     /** The live, mutable list of bindings. Edited in place by the GUI; read each tick by the manager. */
     val keybinds: MutableList<Keybind> = mutableListOf()
 
-    fun load() {
-        keybinds.clear()
-        keybinds.addAll(file.load())
-    }
+    // Unlike the other configs, this one is refilled in place rather than swapped: the GUI and
+    // KeybindManager both hold [keybinds] by reference, so rebinding it would leave them editing a list
+    // nothing else reads.
+    private val handle = ConfigRegistry.register(
+        ConfigHandle(
+            file,
+            adopt = { loaded ->
+                keybinds.clear()
+                keybinds.addAll(loaded)
+            },
+            current = { keybinds },
+        ),
+    )
 
-    fun save() {
-        file.save(keybinds)
-    }
+    fun load() = handle.loadInitial()
+
+    /** Writes immediately. Prefer [markDirty] from anything that fires repeatedly. */
+    fun save() = handle.saveNow()
+
+    /** Records that the bindings changed; the write is batched and lands about a second later. */
+    fun markDirty() = handle.markDirty()
 }

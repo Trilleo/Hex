@@ -49,14 +49,13 @@ object FreecamFeature : Feature {
         FreecamState.deactivate(client)
     }
 
-    override fun onShutdown() {
-        FreecamConfig.save()
-    }
+    /** Default values for the settings rows; a renderer offers "reset" against these. */
+    private val defaults = FreecamSettings()
 
-    override fun settingsCategory(): ConfigCategory = ConfigCategory.build("freecam", "Freecam") {
+    override fun settingsCategory(): ConfigCategory = ConfigCategory.build("freecam") {
         toggle(
-            "Enabled",
-            "Master switch for the freecam feature and its keybind.",
+            "enabled",
+            default = defaults.enabled,
             get = { FreecamConfig.settings.enabled },
             set = {
                 FreecamConfig.settings.enabled = it
@@ -65,13 +64,12 @@ object FreecamFeature : Feature {
                 if (!it) FreecamState.deactivate(Minecraft.getInstance())
             },
         )
-        cycle(
-            "Fly speed",
-            "Base camera fly speed. Scroll the mouse wheel while flying to fine-tune it.",
-            options = FlySpeed.entries.map { it.displayName },
-            get = { FreecamConfig.settings.flySpeed.ordinal },
+        enum(
+            "fly_speed",
+            default = defaults.flySpeed,
+            get = { FreecamConfig.settings.flySpeed },
             set = {
-                FreecamConfig.settings.flySpeed = FlySpeed.entries[it]
+                FreecamConfig.settings.flySpeed = it
                 FreecamConfig.save()
             },
         )

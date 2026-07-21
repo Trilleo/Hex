@@ -8,6 +8,7 @@ import net.minecraft.client.KeyMapping
 import net.minecraft.client.Minecraft
 import net.trilleo.Hex
 import net.trilleo.command.Commands
+import net.trilleo.config.ConfigCategory
 import net.trilleo.feature.Feature
 import net.trilleo.keybind.gui.KeybindScreen
 
@@ -54,7 +55,12 @@ object KeybindsFeature : Feature {
         )
     }
 
-    override fun onShutdown() {
-        KeybindConfig.save()
+    /**
+     * A single row linking through to [KeybindScreen]. Custom shortcuts are a dynamic, add-and-remove list
+     * with in-place key capture, which no config-menu row type expresses — so the settings menu offers the
+     * door and the editor stays its own screen.
+     */
+    override fun settingsCategory(): ConfigCategory = ConfigCategory.build("keybinds") {
+        action("open_screen") { screen -> Minecraft.getInstance().setScreen(KeybindScreen(screen)) }
     }
 }

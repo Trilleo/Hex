@@ -14,12 +14,60 @@
   unchanged, and other players still see you swing normally. Note that swing speed also applies to your own
   model in third person, while disabling the animation affects first person only.
 
+#### Config
+
++ Added config profiles: the new **Profiles** tab of `/hexa config` keeps whole named setups side by side.
+  Switch between them from the **Active profile** picker — the settings you are leaving are saved into their
+  own profile first, so nothing is lost. Create one from your current settings by typing a name into **New
+  profile name**, and remove one with **Delete this profile**.
++ Added settings sharing: **Copy settings to clipboard** puts every Hex setting into a block of text you can
+  paste to someone else or keep as a backup, and **Paste settings from clipboard** loads one back. Settings
+  the pasted text does not mention are left alone, and text that is not a Hex export is reported in chat
+  rather than doing anything.
+
+### Improvements
+
+#### Config
+
++ The `/hexa config` menu is now built on Cloth Config. It gains a search box that filters settings across
+  every tab, a properly scrolling list in place of the old page arrows, a per-setting reset arrow, and
+  **Cancel** to back out of changes you have not saved.
++ Hex now appears in Mod Menu with a settings button that opens the same menu, if you have Mod Menu installed.
++ Every setting label and tooltip is now translatable rather than hardcoded English, so the menu can be
+  translated. Tooltips are picked up automatically from the language file.
+
+### Fixes
+
+#### Config
+
++ Dragging a slider no longer rewrites the config file on every frame of the drag. Changes are now batched
+  and written about a second after you stop, and still flushed immediately when you close the menu, switch
+  profile or quit the game.
+
 ### Technical Details
 
 #### Config
 
 + Added a slider control to the config menu (`SliderEntry`), so settings can now take a number over a range
   instead of only a toggle or a fixed list of choices.
++ Added Cloth Config as a required dependency and Mod Menu as an optional one. Cloth is **not** bundled, so it
+  has to be installed alongside Hex; the `depends` floor is deliberately loose so a Hex auto-update can never
+  land a jar that refuses to launch against an older Cloth.
++ Replaced the hand-written `ConfigScreen` (242 lines of manual paging) with a translation layer from the
+  existing `ConfigCategory` / `ConfigEntry` model onto Cloth's builders. The model stays backend-agnostic, so
+  features describe settings in the mod's own vocabulary and only `ClothConfigFactory` knows Cloth exists.
++ Added `ActionListEntry`, a hand-written Cloth entry, because Cloth has no button row. It mirrors
+  `BooleanListEntry` and draws through `extractRenderState`, matching this Minecraft build's render pipeline.
++ Slider values are projected onto an integer notch grid and rounded back on the way out, since Cloth has no
+  double slider; this also keeps `0.01`-step sliders from drifting into values like `0.30000000000000004`.
++ Added `ConfigRegistry` and `ConfigHandle`, which own every user-facing config generically — debounced
+  writes, a central flush at shutdown, profile snapshot/restore, and clipboard export/import. `UpdateStaging`
+  deliberately stays out of the registry: a half-downloaded jar is machine state, not a setting.
++ Config entries now carry their default value, which is what drives Cloth's per-row reset arrow and removes
+  the need for each feature to hand-roll a reset action.
++ Excluded `com.google.errorprone` from the Cloth dependency. Cloth pulls in `toml4j`, which drags gson's full
+  Maven metadata onto the runtime classpath along with build-time-only annotations that nothing needs at
+  runtime and that break `runClient` on networks without Maven Central access.
 
 ## Version 1.4.0
 

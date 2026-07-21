@@ -1,6 +1,8 @@
 package net.trilleo.hand
 
 import com.google.gson.reflect.TypeToken
+import net.trilleo.config.ConfigHandle
+import net.trilleo.config.ConfigRegistry
 import net.trilleo.config.JsonConfig
 
 /**
@@ -71,11 +73,15 @@ object HandConfig {
         name = "hand",
         type = object : TypeToken<HandSettings>() {}.type,
         default = { HandSettings() },
-        normalize = ::normalize,
+        normalizer = ::normalize,
     )
 
     var settings: HandSettings = HandSettings()
         private set
+
+    private val handle = ConfigRegistry.register(
+        ConfigHandle(config, adopt = { settings = it }, current = { settings }),
+    )
 
     /**
      * Repairs a loaded value. GSON ignores Kotlin constructor defaults, so a field absent from the JSON is
@@ -103,11 +109,11 @@ object HandConfig {
         }
     }
 
-    fun load() {
-        settings = config.load()
-    }
+    fun load() = handle.loadInitial()
 
-    fun save() {
-        config.save(settings)
-    }
+    /** Writes immediately. Prefer [markDirty] from anything that fires repeatedly, such as a slider drag. */
+    fun save() = handle.saveNow()
+
+    /** Records that settings changed; the write is batched and lands about a second later. */
+    fun markDirty() = handle.markDirty()
 }
