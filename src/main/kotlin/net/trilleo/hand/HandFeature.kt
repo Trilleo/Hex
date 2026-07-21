@@ -3,7 +3,7 @@ package net.trilleo.hand
 import net.minecraft.client.Minecraft
 import net.trilleo.config.ConfigCategory
 import net.trilleo.feature.Feature
-import java.util.Locale
+import java.util.*
 
 /**
  * Customises how your held item is drawn in first person: where the main hand sits (position, scale,
@@ -33,11 +33,14 @@ object HandFeature : Feature {
             set = { HandConfig.settings.enabled = it; HandConfig.save() },
         )
 
-        offset("offset_x", defaults.offsetX,
+        offset(
+            "offset_x", defaults.offsetX,
             get = { HandConfig.settings.offsetX }, set = { HandConfig.settings.offsetX = it })
-        offset("offset_y", defaults.offsetY,
+        offset(
+            "offset_y", defaults.offsetY,
             get = { HandConfig.settings.offsetY }, set = { HandConfig.settings.offsetY = it })
-        offset("offset_z", defaults.offsetZ,
+        offset(
+            "offset_z", defaults.offsetZ,
             get = { HandConfig.settings.offsetZ }, set = { HandConfig.settings.offsetZ = it })
 
         slider(
@@ -51,11 +54,14 @@ object HandFeature : Feature {
             format = { String.format(Locale.ROOT, "%.2fx", it) },
         )
 
-        rotation("rotation_x", defaults.rotationX,
+        rotation(
+            "rotation_x", defaults.rotationX,
             get = { HandConfig.settings.rotationX }, set = { HandConfig.settings.rotationX = it })
-        rotation("rotation_y", defaults.rotationY,
+        rotation(
+            "rotation_y", defaults.rotationY,
             get = { HandConfig.settings.rotationY }, set = { HandConfig.settings.rotationY = it })
-        rotation("rotation_z", defaults.rotationZ,
+        rotation(
+            "rotation_z", defaults.rotationZ,
             get = { HandConfig.settings.rotationZ }, set = { HandConfig.settings.rotationZ = it })
 
         toggle(

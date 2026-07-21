@@ -22,12 +22,12 @@ object HandState {
         if (!active) return false
         val settings = HandConfig.settings
         return settings.offsetX != 0.0 ||
-            settings.offsetY != 0.0 ||
-            settings.offsetZ != 0.0 ||
-            settings.scale != 1.0 ||
-            settings.rotationX != 0.0 ||
-            settings.rotationY != 0.0 ||
-            settings.rotationZ != 0.0
+                settings.offsetY != 0.0 ||
+                settings.offsetZ != 0.0 ||
+                settings.scale != 1.0 ||
+                settings.rotationX != 0.0 ||
+                settings.rotationY != 0.0 ||
+                settings.rotationZ != 0.0
     }
 
     val offsetX: Float get() = HandConfig.settings.offsetX.toFloat()

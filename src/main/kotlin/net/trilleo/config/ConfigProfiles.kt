@@ -11,7 +11,7 @@ import net.trilleo.util.Notify
 import org.slf4j.LoggerFactory
 import java.nio.file.Files
 import java.nio.file.Path
-import java.util.Locale
+import java.util.*
 
 /** Which profile is active and which ones exist, persisted at `config/hex/profiles.json`. */
 data class ProfileSettings(

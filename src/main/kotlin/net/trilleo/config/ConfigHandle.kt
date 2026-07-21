@@ -1,6 +1,7 @@
 package net.trilleo.config
 
 import com.google.gson.JsonElement
+import net.trilleo.config.ConfigHandle.Companion.CLEAN
 import java.nio.file.Files
 import java.nio.file.Path
 
@@ -107,7 +108,9 @@ class ConfigHandle<T : Any>(
      */
     fun importTree(element: JsonElement): Boolean = runCatching {
         val value: T? = JsonConfig.GSON.fromJson(element, json.typeToken())
-        if (value == null) false else { replace(value); true }
+        if (value == null) false else {
+            replace(value); true
+        }
     }.getOrDefault(false)
 
     /** Called once per client tick by [ConfigRegistry]; performs the debounced write when it comes due. */

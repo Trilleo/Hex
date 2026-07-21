@@ -3,7 +3,7 @@ package net.trilleo.config
 import net.minecraft.client.gui.screens.Screen
 import net.minecraft.locale.Language
 import net.minecraft.network.chat.Component
-import java.util.Locale
+import java.util.*
 
 /**
  * A named group of [ConfigEntry] rows — one tab in the `/hexa config` menu. A [net.trilleo.feature.Feature]

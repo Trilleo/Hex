@@ -3,17 +3,14 @@
   "key.hex.open_config": "Open Hex Config",
   "key.hex.open_menu": "Open Hex Keybinds",
   "key.hex.freecam.toggle": "Toggle Freecam",
-
   "hex.config.title": "Hex Config",
   "hex.config.on": "On",
   "hex.config.off": "Off",
-
   "hex.config.category.hand": "Hand",
   "hex.config.category.freecam": "Freecam",
   "hex.config.category.updates": "Updates",
   "hex.config.category.keybinds": "Keybinds",
   "hex.config.category.profiles": "Profiles",
-
   "hex.config.hand.enabled": "Enabled",
   "hex.config.hand.enabled.tooltip": "Master switch. When off, your hand is drawn exactly as vanilla and the settings below are kept but ignored.",
   "hex.config.hand.offset_x": "Position X",
@@ -36,7 +33,6 @@
   "hex.config.hand.swing_speed.tooltip": "How fast the swing animation plays. This is cosmetic: your attack cooldown and mining speed are unchanged. Has no effect while the swing animation is disabled, and also applies to your own third-person model.",
   "hex.config.hand.reset": "Reset to defaults",
   "hex.config.hand.reset.tooltip": "Restores every display setting above to its default value.",
-
   "hex.config.freecam.enabled": "Enabled",
   "hex.config.freecam.enabled.tooltip": "Master switch for the freecam feature and its keybind.",
   "hex.config.freecam.fly_speed": "Fly speed",
@@ -45,17 +41,14 @@
   "hex.config.freecam.fly_speed.normal": "Normal",
   "hex.config.freecam.fly_speed.fast": "Fast",
   "hex.config.freecam.fly_speed.turbo": "Turbo",
-
   "hex.config.updates.enabled": "Auto-update on startup",
   "hex.config.updates.enabled.tooltip": "Check GitHub for a newer release each launch and stage it automatically.",
   "hex.config.updates.include_prereleases": "Include pre-releases",
   "hex.config.updates.include_prereleases.tooltip": "Treat GitHub pre-releases as updates too.",
   "hex.config.updates.check_now": "Check for updates now",
   "hex.config.updates.check_now.tooltip": "Check GitHub for a newer release right now.",
-
   "hex.config.keybinds.open_screen": "Edit keybinds…",
   "hex.config.keybinds.open_screen.tooltip": "Open the keybind editor to add, edit and remove custom shortcuts.",
-
   "hex.config.profiles.active": "Active profile",
   "hex.config.profiles.active.tooltip": "Every Hex setting is saved per profile. Switching stores your current settings into the profile you are leaving first, so nothing is lost.",
   "hex.config.profiles.new_name": "New profile name",
