@@ -4,27 +4,12 @@ import com.mojang.blaze3d.platform.InputConstants
 import net.minecraft.ChatFormatting
 import net.minecraft.client.Minecraft
 import net.minecraft.client.gui.GuiGraphicsExtractor
-import net.minecraft.client.gui.components.AbstractSliderButton
-import net.minecraft.client.gui.components.AbstractWidget
-import net.minecraft.client.gui.components.Button
-import net.minecraft.client.gui.components.ContainerObjectSelectionList
-import net.minecraft.client.gui.components.EditBox
-import net.minecraft.client.gui.components.Tooltip
+import net.minecraft.client.gui.components.*
 import net.minecraft.client.gui.narration.NarratableEntry
 import net.minecraft.client.gui.screens.Screen
 import net.minecraft.network.chat.Component
-import net.trilleo.config.ActionEntry
-import net.trilleo.config.BooleanEntry
-import net.trilleo.config.ColorEntry
-import net.trilleo.config.ConfigCategory
-import net.trilleo.config.ConfigEntry
-import net.trilleo.config.CycleEntry
-import net.trilleo.config.EnumEntry
-import net.trilleo.config.KeyCombo
-import net.trilleo.config.KeybindEntry
-import net.trilleo.config.SliderEntry
-import net.trilleo.config.TextEntry
-import java.util.Locale
+import net.trilleo.config.*
+import java.util.*
 import kotlin.math.roundToInt
 import kotlin.math.roundToLong
 
@@ -517,7 +502,7 @@ class ConfigEntryList(
             if (query.isBlank()) return true
             val needle = query.lowercase(Locale.ROOT)
             return entry.label.string.lowercase(Locale.ROOT).contains(needle) ||
-                entry.tooltip?.string?.lowercase(Locale.ROOT)?.contains(needle) == true
+                    entry.tooltip?.string?.lowercase(Locale.ROOT)?.contains(needle) == true
         }
 
         /** Categories reduced to just the entries matching [query], dropping any left empty. */
