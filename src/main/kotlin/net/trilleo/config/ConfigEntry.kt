@@ -9,8 +9,8 @@ import net.minecraft.network.chat.Component
  * nothing else.
  *
  * This is a backend-agnostic description of a setting, deliberately free of any GUI-toolkit types — it says
- * what the setting *is*, not how it is drawn. [net.trilleo.config.cloth.ClothConfigFactory] translates it
- * into Cloth Config widgets, and could be joined by another renderer without any feature changing.
+ * what the setting *is*, not how it is drawn. [net.trilleo.config.gui.ConfigEntryList] turns each one into a
+ * widget row, and could be replaced wholesale without any feature changing.
  *
  * Every value-carrying entry reports its `default`, which is what lets a renderer offer "reset this row"
  * without each feature hand-rolling its own reset action.

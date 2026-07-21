@@ -2,6 +2,25 @@
 
 ## Unreleased
 
+### Fixes
+
+#### Config
+
++ Fixed most of `/hexa config` being empty. Every tab except **Keybinds** showed no settings at all, and
+  switching tabs did nothing — the **Hand**, **Freecam**, **Updates** and **Profiles** tabs are all usable
+  again.
+
+### Technical Details
+
+#### Config
+
++ Fixed the crash behind the empty tabs: `ResettableRow` attached its tooltip from an `init` block that called
+  down into the subclass, which runs before the subclass's widgets exist, so every row carrying a value threw
+  an NPE while being built. Rows now attach their own tooltip where the widget is constructed. Only
+  action-button rows were unaffected, which is why the Keybinds tab alone kept working.
++ Removed stale references to the Cloth Config classes deleted in 1.5.0 from the config KDoc, including
+  descriptions of a Save/Cancel step the menu no longer has.
+
 ## Version 1.5.0
 
 ### New Features

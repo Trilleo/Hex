@@ -245,12 +245,11 @@ object ConfigProfiles {
      * The Profiles tab.
      *
      * Not a [net.trilleo.feature.Feature]: it has no lifecycle, no keybind and no commands, and the config
-     * menu is already owned centrally alongside `/hexa config`. [ClothConfigFactory] appends it after the
-     * feature tabs.
+     * menu is already owned centrally alongside `/hexa config`.
+     * [net.trilleo.config.gui.HexConfigScreen] appends it after the feature tabs.
      *
-     * Switching and creating are ordinary settings rows, so they commit on Save like everything else.
-     * Exporting, importing and deleting are buttons, because they are commands rather than values — they
-     * take effect the moment they are pressed.
+     * Every row here acts the moment you use it, like the rest of the menu — picking a profile switches to
+     * it, and exporting, importing and deleting take effect on the click.
      */
     fun category(): ConfigCategory = ConfigCategory.build("profiles") {
         val profiles = names()

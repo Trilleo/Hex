@@ -155,7 +155,7 @@ class ConfigEntryList(
      */
     private abstract class ResettableRow(
         entryLabel: Component,
-        tooltip: Component?,
+        rowTooltip: Component?,
         private val isDefault: () -> Boolean,
         onReset: () -> Unit,
     ) : Row() {
@@ -166,12 +166,14 @@ class ConfigEntryList(
             .tooltip(Tooltip.create(Component.translatable("hex.config.reset_entry")))
             .build()
 
-        init {
-            tooltip?.let { applyTooltip(it) }
-        }
-
-        /** Subclasses attach the row tooltip to their own control, where the user will hover. */
-        protected abstract fun applyTooltip(tooltip: Component)
+        /**
+         * The row's hover text, for the subclass to hang on whichever control the user will point at.
+         *
+         * Applied by each subclass rather than from an `init` block here: a base-class initialiser runs
+         * before the subclass's properties exist, so reaching into the subclass from one hands it a widget
+         * that is still null.
+         */
+        protected val rowTooltip: Tooltip? = rowTooltip?.let(Tooltip::create)
 
         protected fun drawReset(
             extractor: GuiGraphicsExtractor,
@@ -195,10 +197,9 @@ class ConfigEntryList(
             entry.set(!entry.get())
             button.message = onOff(entry.get())
         }.bounds(0, 0, CONTROL_WIDTH, WIDGET_HEIGHT).build()
+            .apply { this@BooleanRow.rowTooltip?.let(::setTooltip) }
 
         override val widgets: List<AbstractWidget> = listOf(toggle, resetButton)
-
-        override fun applyTooltip(tooltip: Component) = toggle.setTooltip(Tooltip.create(tooltip))
 
         override fun layout(extractor: GuiGraphicsExtractor, mouseX: Int, mouseY: Int, delta: Float) {
             // Re-read every frame: a profile switch or reset can change the value from outside this row.
@@ -241,11 +242,9 @@ class ConfigEntryList(
                     updateMessage()
                 }
             }
-        }
+        }.apply { this@SliderRow.rowTooltip?.let(::setTooltip) }
 
         override val widgets: List<AbstractWidget> = listOf(slider, resetButton)
-
-        override fun applyTooltip(tooltip: Component) = slider.setTooltip(Tooltip.create(tooltip))
 
         override fun layout(extractor: GuiGraphicsExtractor, mouseX: Int, mouseY: Int, delta: Float) {
             // Only sync while the handle is idle; doing it mid-drag would fight the user's mouse.
@@ -292,10 +291,9 @@ class ConfigEntryList(
         private val button: Button = Button.builder(current()) {
             if (entry.options.isNotEmpty()) entry.set((entry.get() + 1) % entry.options.size)
         }.bounds(0, 0, CONTROL_WIDTH, WIDGET_HEIGHT).build()
+            .apply { this@CycleRow.rowTooltip?.let(::setTooltip) }
 
         override val widgets: List<AbstractWidget> = listOf(button, resetButton)
-
-        override fun applyTooltip(tooltip: Component) = button.setTooltip(Tooltip.create(tooltip))
 
         override fun layout(extractor: GuiGraphicsExtractor, mouseX: Int, mouseY: Int, delta: Float) {
             button.message = current()
@@ -322,10 +320,9 @@ class ConfigEntryList(
                 entry.set(constants[next])
             }
         }.bounds(0, 0, CONTROL_WIDTH, WIDGET_HEIGHT).build()
+            .apply { this@EnumRow.rowTooltip?.let(::setTooltip) }
 
         override val widgets: List<AbstractWidget> = listOf(button, resetButton)
-
-        override fun applyTooltip(tooltip: Component) = button.setTooltip(Tooltip.create(tooltip))
 
         override fun layout(extractor: GuiGraphicsExtractor, mouseX: Int, mouseY: Int, delta: Float) {
             button.message = entry.nameOf(entry.get())
@@ -362,11 +359,10 @@ class ConfigEntryList(
             value = entry.get()
             setMaxLength(256)
             setResponder { text -> if (entry.validate(text) == null) entry.set(text) }
+            this@TextRow.rowTooltip?.let(::setTooltip)
         }
 
         override val widgets: List<AbstractWidget> = listOf(field, resetButton)
-
-        override fun applyTooltip(tooltip: Component) = field.setTooltip(Tooltip.create(tooltip))
 
         override fun layout(extractor: GuiGraphicsExtractor, mouseX: Int, mouseY: Int, delta: Float) {
             if (!field.isFocused && field.value != entry.get()) field.value = entry.get()
@@ -394,11 +390,10 @@ class ConfigEntryList(
             value = entry.get()
             setMaxLength(9)
             setResponder { text -> if (parse(text) != null) entry.set(text) }
+            this@ColorRow.rowTooltip?.let(::setTooltip)
         }
 
         override val widgets: List<AbstractWidget> = listOf(field, resetButton)
-
-        override fun applyTooltip(tooltip: Component) = field.setTooltip(Tooltip.create(tooltip))
 
         override fun layout(extractor: GuiGraphicsExtractor, mouseX: Int, mouseY: Int, delta: Float) {
             if (!field.isFocused && field.value != entry.get()) field.value = entry.get()
@@ -437,10 +432,9 @@ class ConfigEntryList(
         private val button: Button = Button.builder(describe(entry.get())) {
             listening = true
         }.bounds(0, 0, CONTROL_WIDTH, WIDGET_HEIGHT).build()
+            .apply { this@KeybindRow.rowTooltip?.let(::setTooltip) }
 
         override val widgets: List<AbstractWidget> = listOf(button, resetButton)
-
-        override fun applyTooltip(tooltip: Component) = button.setTooltip(Tooltip.create(tooltip))
 
         override fun keyPressed(event: net.minecraft.client.input.KeyEvent): Boolean {
             if (!listening) return super.keyPressed(event)

@@ -42,9 +42,8 @@ object HexConfigScreens {
      * Replaces the open menu with a freshly built one.
      *
      * Required after anything that swaps config values underneath the GUI — switching profile, importing
-     * from the clipboard. Cloth reads each row's value when the row is constructed and writes it back on
-     * Save, so continuing to use the old screen would push the pre-switch values straight back over the
-     * ones just loaded.
+     * from the clipboard. Rows capture their widget's value when they are built, so a stale screen would go
+     * on showing (and writing back) the settings from before the swap.
      */
     fun rebuild() {
         val client = Minecraft.getInstance()
