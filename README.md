@@ -10,9 +10,9 @@ Hex runs entirely on your client — it never needs to be installed on a server.
 ## Features
 
 - **Config menu** — a single, categorized menu for the mod's settings. Open it with `/hexa config` or a rebindable
-  keybind under Options → Controls → **Hex**. Each feature adds its own tab down the side, a search box filters
-  settings across all of them at once, every row has a reset button, and a button links straight to the Keybinds
-  screen. Settings apply as you change them, so you can drag a slider and watch the result.
+  keybind under Options → Controls → **Hex**. Each feature adds its own tab down the side, a search box filters settings
+  across all of them at once, every row has a reset button, and a button links straight to the Keybinds screen. Settings
+  apply as you change them, so you can drag a slider and watch the result.
 - **Config profiles & sharing** — keep whole named setups side by side and switch between them from the **Profiles**
   tab; the settings you are leaving are saved into their own profile first. The same tab copies every setting to the
   clipboard as text you can send to someone else or keep as a backup, and pastes one back.
