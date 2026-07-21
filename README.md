@@ -29,9 +29,8 @@ Hex runs entirely on your client — it never needs to be installed on a server.
   it again to return. Your character stays in place. Bind it under Options → Controls → **Hex** and tune it in the
   **Freecam** tab of `/hexa config`.
 - **Hand display** — reposition your held item in first person and change how it swings. The **Hand** tab of
-  `/hexa config` has sliders for the main hand's position, scale and rotation, a swing-speed multiplier, and a switch
-  to hide the swing animation entirely. Everything is cosmetic: your attack cooldown, mining speed and reach are
-  untouched.
+  `/hexa config` has sliders for the main hand's position, scale and rotation, a swing-speed multiplier, and a switch to
+  hide the swing animation entirely. Everything is cosmetic: your attack cooldown, mining speed and reach are untouched.
 - **Auto-update** — Hex checks its [GitHub releases](https://github.com/Trilleo/Hex/releases) on startup and, when a
   newer version is out, downloads it and applies it automatically the next time you close the game. Run
   `/hexa update` to check on demand, or manage it from the **Updates** tab of `/hexa config`. See [Updating](#updating).
@@ -48,8 +47,8 @@ Hex runs entirely on your client — it never needs to be installed on a server.
     - [Cloth Config API](https://modrinth.com/mod/cloth-config) — the settings menu is built on it, so Hex will not
       start without it
     - Hex, from the [releases page](https://github.com/Trilleo/Hex/releases)
-3. Optionally add [Mod Menu](https://modrinth.com/mod/modmenu) to get a settings button next to Hex in the mod list.
-   Hex works fine without it.
+3. Optionally add [Mod Menu](https://modrinth.com/mod/modmenu) to get a settings button next to Hex in the mod list. Hex
+   works fine without it.
 4. Launch the game with the Fabric profile.
 
 ## Updating
