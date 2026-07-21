@@ -5,6 +5,7 @@ import net.minecraft.client.KeyMapping
 import net.minecraft.resources.Identifier
 import net.trilleo.feature.Features
 import net.trilleo.freecam.FreecamFeature
+import net.trilleo.hand.HandFeature
 import net.trilleo.keybind.KeybindsFeature
 import net.trilleo.update.UpdateFeature
 import org.slf4j.LoggerFactory
@@ -28,6 +29,7 @@ object Hex : ClientModInitializer {
     override fun onInitializeClient() {
         Features.register(KeybindsFeature)
         Features.register(FreecamFeature)
+        Features.register(HandFeature)
         Features.register(UpdateFeature)
         Features.bootstrap()
 

@@ -2,6 +2,7 @@ package net.trilleo.config
 
 import net.minecraft.client.gui.screens.Screen
 import net.minecraft.network.chat.Component
+import java.util.Locale
 
 /**
  * A named group of [ConfigEntry] rows — one tab in the `/hexa config` menu. A [net.trilleo.feature.Feature]
@@ -67,6 +68,34 @@ class ConfigCategory(
                 options.map(Component::literal),
                 get,
                 set,
+            )
+        }
+
+        /**
+         * Add a numeric slider over `[min, max]`, snapped to [step]. [set] fires continuously while the
+         * handle is dragged, so keep it cheap. [format] renders the value on the handle; it defaults to
+         * two decimals.
+         */
+        fun slider(
+            label: String,
+            tooltip: String? = null,
+            min: Double,
+            max: Double,
+            step: Double,
+            get: () -> Double,
+            set: (Double) -> Unit,
+            // Locale.ROOT so the decimal separator is a dot regardless of the client's language.
+            format: (Double) -> String = { String.format(Locale.ROOT, "%.2f", it) },
+        ) {
+            entries += SliderEntry(
+                Component.literal(label),
+                tooltip?.let(Component::literal),
+                min,
+                max,
+                step,
+                get,
+                set,
+                { Component.literal(format(it)) },
             )
         }
     }

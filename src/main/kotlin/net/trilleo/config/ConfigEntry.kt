@@ -51,3 +51,22 @@ class CycleEntry(
     val get: () -> Int,
     val set: (Int) -> Unit,
 ) : ConfigEntry
+
+/**
+ * A numeric setting, rendered as a drag slider over `[min, max]` snapped to [step]. [format] turns the
+ * current value into the slider's label (e.g. `"1.25x"`).
+ *
+ * Unlike the other entries, [set] fires continuously while the handle is dragged rather than once per
+ * click — so a setter that persists must be cheap enough to run every frame of a drag. Values are read
+ * through [get] only when the screen is built; the live value during a drag lives in the widget.
+ */
+class SliderEntry(
+    override val label: Component,
+    override val tooltip: Component?,
+    val min: Double,
+    val max: Double,
+    val step: Double,
+    val get: () -> Double,
+    val set: (Double) -> Unit,
+    val format: (Double) -> Component,
+) : ConfigEntry

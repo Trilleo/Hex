@@ -2,6 +2,25 @@
 
 ## Unreleased
 
+### New Features
+
+#### Hand
+
++ Added main hand display settings: the new **Hand** tab of `/hexa config` moves your held item around in first
+  person with **Position X/Y/Z** sliders, resizes it with **Scale**, and turns it with **Rotation X/Y/Z**. A
+  **Reset to defaults** button puts everything back.
++ Added a **Swing speed** slider to make the swing animation play faster or slower, and a **Disable swing
+  animation** switch to hide it completely. Both are purely visual — your attack cooldown and mining speed are
+  unchanged, and other players still see you swing normally. Note that swing speed also applies to your own
+  model in third person, while disabling the animation affects first person only.
+
+### Technical Details
+
+#### Config
+
++ Added a slider control to the config menu (`SliderEntry`), so settings can now take a number over a range
+  instead of only a toggle or a fixed list of choices.
+
 ## Version 1.4.0
 
 ### New Features

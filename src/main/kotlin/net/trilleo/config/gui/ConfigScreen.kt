@@ -1,5 +1,6 @@
 package net.trilleo.config.gui
 
+import net.minecraft.client.gui.components.AbstractSliderButton
 import net.minecraft.client.gui.components.Button
 import net.minecraft.client.gui.components.StringWidget
 import net.minecraft.client.gui.components.Tooltip
@@ -9,6 +10,7 @@ import net.trilleo.config.ActionEntry
 import net.trilleo.config.BooleanEntry
 import net.trilleo.config.ConfigCategory
 import net.trilleo.config.CycleEntry
+import net.trilleo.config.SliderEntry
 import net.trilleo.feature.Features
 import net.trilleo.keybind.gui.KeybindScreen
 
@@ -130,6 +132,56 @@ class ConfigScreen(private val parent: Screen?) : Screen(Component.literal("Hex 
                     entry.tooltip?.let { button.setTooltip(Tooltip.create(it)) }
                     addRenderableWidget(button)
                 }
+
+                is SliderEntry -> {
+                    val valueW = 80
+                    val labelW = (contentW - valueW - GAP).coerceAtLeast(40)
+                    addRenderableWidget(StringWidget(contentX, y + 5, labelW, 12, entry.label, font))
+                    val slider = EntrySlider(contentX + labelW + GAP, y, valueW, entry)
+                    entry.tooltip?.let { slider.setTooltip(Tooltip.create(it)) }
+                    addRenderableWidget(slider)
+                }
+            }
+        }
+    }
+
+    /**
+     * The [SliderEntry] control. Deliberately does **not** call [rebuild] from [applyValue]: unlike the
+     * click-driven entries, this fires on every frame of a drag, and rebuilding would dispose the widget
+     * mid-drag and drop the mouse capture.
+     */
+    private class EntrySlider(
+        x: Int,
+        y: Int,
+        width: Int,
+        private val entry: SliderEntry,
+    ) : AbstractSliderButton(x, y, width, 20, Component.empty(), toFraction(entry, entry.get())) {
+
+        init {
+            updateMessage()
+        }
+
+        /** The snapped real value the handle currently sits on. */
+        private fun current(): Double {
+            val raw = entry.min + value * (entry.max - entry.min)
+            val snapped = Math.round(raw / entry.step) * entry.step
+            return snapped.coerceIn(entry.min, entry.max)
+        }
+
+        override fun updateMessage() {
+            setMessage(entry.format(current()))
+        }
+
+        override fun applyValue() {
+            entry.set(current())
+        }
+
+        private companion object {
+            /** Maps a real value into the widget's 0..1 space. */
+            fun toFraction(entry: SliderEntry, value: Double): Double {
+                val span = entry.max - entry.min
+                if (span <= 0.0) return 0.0
+                return ((value - entry.min) / span).coerceIn(0.0, 1.0)
             }
         }
     }

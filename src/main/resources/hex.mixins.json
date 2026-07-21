@@ -6,7 +6,9 @@
   "client": [
     "CameraMixin",
     "ClientInputMixin",
+    "ItemInHandRendererMixin",
     "KeyboardInputMixin",
+    "LivingEntityMixin",
     "MouseHandlerMixin"
   ],
   "injectors": {
