@@ -10,7 +10,8 @@ Hex runs entirely on your client — it never needs to be installed on a server.
 ## Features
 
 - **Config menu** — one categorized settings menu, opened with `/hexa config` or a keybind.
-- **Config profiles** — named setups you can switch between by hand or automatically per server, plus sharing via the clipboard.
+- **Config profiles** — named setups you can switch between by hand or automatically per server, plus sharing via the
+  clipboard.
 - **Keybind shortcuts** — bind a key combo to a delayed sequence of commands or chat messages.
 - **Control switch shortcuts** — cycle one of Minecraft's own controls between two or more keys in-game.
 - **Attack mode switch** — a keybind that flips Minecraft's Attack/Destroy between hold and toggle in-game.
