@@ -60,7 +60,8 @@ object KeybindConfig {
     // Unlike the other configs, this one is refilled in place rather than swapped: the GUI and
     // KeybindManager both hold [keybinds] by reference, so rebinding it would leave them editing a list
     // nothing else reads.
-    private val handle = ConfigRegistry.register(
+    /** Exposed so the settings menu can offer this tab a reset button. */
+    val handle = ConfigRegistry.register(
         ConfigHandle(
             file,
             adopt = { loaded ->

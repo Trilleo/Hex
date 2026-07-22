@@ -16,6 +16,8 @@ import net.trilleo.config.ConfigCategory
 import net.trilleo.config.ConfigProfiles
 import net.trilleo.config.ConfigRegistry
 import net.trilleo.config.HexConfigScreens
+import net.trilleo.config.ProfileAutoSwitch
+import net.trilleo.config.VanillaKeysConfig
 import org.slf4j.LoggerFactory
 
 /**
@@ -58,6 +60,10 @@ object Features {
 
         features.forEach { it.onInit() }
 
+        // Not a feature — it belongs to the profile system — but it registers a config like one, so it has
+        // to load alongside them and before the active profile is seeded.
+        VanillaKeysConfig.load()
+
         // Only now are the feature configs registered and loaded, so only now can the active profile be
         // seeded from them.
         ConfigProfiles.ensureActiveSnapshot()
@@ -89,6 +95,10 @@ object Features {
             // Ahead of feature dispatch, and outside the enabled check: a disabled feature's pending config
             // write still has to land.
             ConfigRegistry.tick()
+            // Key bindings read from a profile at startup wait for the options to exist; this is where they
+            // finally land.
+            VanillaKeysConfig.tick()
+            ProfileAutoSwitch.tick(client)
 
             while (openConfigKey.consumeClick()) {
                 client.setScreen(HexConfigScreens.create(client.screen))
@@ -97,10 +107,14 @@ object Features {
         }
 
         ClientPlayConnectionEvents.JOIN.register { _, _, client ->
+            // Ahead of the features and outside the enabled check: profiles are not a feature, and the
+            // profile that is about to be adopted decides what the features see.
+            ProfileAutoSwitch.onJoin()
             features.forEach { if (it.enabled) it.onWorldJoin(client) }
         }
 
         ClientPlayConnectionEvents.DISCONNECT.register { _, client ->
+            ProfileAutoSwitch.onDisconnect()
             features.forEach { if (it.enabled) it.onWorldLeave(client) }
         }
 

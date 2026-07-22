@@ -39,14 +39,22 @@ object HexConfigScreens {
     }
 
     /**
-     * Replaces the open menu with a freshly built one.
+     * Rebuilds the open menu's widgets from the current config values.
      *
      * Required after anything that swaps config values underneath the GUI — switching profile, importing
      * from the clipboard. Rows capture their widget's value when they are built, so a stale screen would go
      * on showing (and writing back) the settings from before the swap.
+     *
+     * The open screen is *reused* rather than replaced when there is one. `rebuildWidgets` re-runs `init`,
+     * which discards every row and builds fresh ones — all this needs — while the screen's own fields
+     * survive, so the user keeps their selected tab and search text. Constructing a new screen would reset
+     * both and dump them back on the first tab after every profile switch.
      */
     fun rebuild() {
         val client = Minecraft.getInstance()
-        client.execute { client.setScreen(create(lastParent)) }
+        client.execute {
+            val open = client.screen
+            if (open is HexConfigScreen) open.refresh() else client.setScreen(create(lastParent))
+        }
     }
 }

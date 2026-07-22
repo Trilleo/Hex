@@ -12,11 +12,61 @@ Options → Controls → **Hex**. Each feature adds its own tab down the side, a
 them at once, every row has a reset button, and a button links straight to the Keybinds screen. Settings apply as you
 change them, so you can drag a slider and watch the result.
 
-## Config profiles & sharing
+**Reset tab** in the footer restores everything on the current tab to its defaults, including that feature's own
+on/off switch. It asks first, and it only changes your live settings — your saved profile is untouched, so
+**Discard** on the Profiles screen brings them back.
 
-Keep whole named setups side by side and switch between them from the **Profiles** tab; the settings you are leaving are
-saved into their own profile first. The same tab copies every setting to the clipboard as text you can send to someone
-else or keep as a backup, and pastes one back.
+## Config profiles
+
+A profile is a complete set of Hex settings under a name. Open **Profiles…** from the config menu footer to see
+them all, each with its description and when it was last saved.
+
+Per profile you can **Switch** to it, copy it (**⧉**), rename or describe it (**✎**), or delete it (**✕**, with a
+confirmation; the last remaining profile cannot be deleted). **New** creates one from the settings you have now.
+
+**Saving is explicit.** Changing a setting takes effect immediately but does *not* write it into your profile — a
+`*` next to the profile's name means your settings have moved away from what it holds. **Save** folds them in;
+**Discard** reloads the profile as it was last saved. Switching to another profile while that `*` is showing asks
+whether to save or discard first, so nothing disappears without you choosing it.
+
+> Changed in this release: profiles used to be saved automatically whenever you switched away from one.
+
+### Switching automatically
+
+A profile can activate by itself when you arrive somewhere. Open **✎** on the profile and pick what it activates
+on:
+
+- **a server** — matches the address you connected to. `hypixel.net` also matches `mc.hypixel.net`.
+- **singleplayer** — any single-player world.
+- **a Skyblock island** — matches the island name shown on Hypixel's scoreboard, e.g. `private island` or `hub`.
+  This one resolves a few seconds after joining, since the scoreboard is empty at first.
+
+If two profiles claim the same place, the one higher in the list wins. Switching to a profile by hand turns
+auto-switching off until you disconnect, so it never overrides a deliberate choice. It is also skipped entirely
+while you have unsaved changes — you get a message instead, rather than losing them.
+
+### Minecraft's key bindings
+
+**MC keys** on the Profiles screen makes profiles carry Minecraft's own key bindings too, so a profile is a whole
+control setup rather than just the Hex half of one.
+
+It is **off by default**, because Minecraft keeps every mod's bindings in one place and Hex cannot tell them
+apart. With it on, a profile saved while another mod was bound to `G` will put that mod back on `G` when the
+profile is restored — even if you have since rebound it in that mod's own screen. Leave it off unless you want
+that.
+
+Note that with this on, using a control-switch shortcut counts as changing your settings, so it will mark the
+profile as having unsaved changes.
+
+### Sharing and backups
+
+**Copy to clipboard** copies every Hex setting as text you can send to someone else or keep as a backup.
+**Paste from clipboard** takes one back, either **as a new profile** (keeping your current settings intact) or
+**over this profile**. A paste that came from a newer Hex than you are running is refused rather than partly
+applied, and one from a different version says so.
+
+**Reset all** restores every Hex setting to its default. Like the per-tab reset, it leaves your saved profiles
+alone, so **Discard** undoes it.
 
 ## Keybind shortcuts
 

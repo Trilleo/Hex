@@ -2,6 +2,75 @@
 
 ## Unreleased
 
+### New Features
+
+#### Config Profiles
+
++ Added a dedicated **Profiles** screen, reached from the button in the config menu's footer. Every profile is
+  listed with its description and when it was last saved, and each row can be switched to, copied, renamed or
+  deleted.
++ Added profile descriptions, so setups with similar names can be told apart.
++ Added automatic profile switching. A profile can be set to activate on a server (`hypixel.net` also matches
+  `mc.hypixel.net`), in singleplayer, or on a named Skyblock island, and it is applied when you get there.
++ Added optional capture of Minecraft's own key bindings, so a profile can carry your whole control setup.
+  Turn it on with **MC keys** on the Profiles screen — it is off by default.
++ Added **Import as a new profile**, so someone else's settings can be tried without overwriting your own.
+
+#### Config Menu
+
++ Added a **Reset tab** button that restores the settings on the current tab to their defaults, and a
+  **Reset all** button on the Profiles screen for every setting at once. Both confirm first, and neither
+  touches your saved profiles — **Discard** brings the settings back.
+
+### Improvements
+
+#### Config Profiles
+
++ **Changed how profiles are saved.** Profiles used to be written silently whenever you switched away from
+  one. Now the active profile is only written when you press **Save**, and a `*` next to its name means your
+  settings have moved away from what it holds. Switching with unsaved changes asks whether to save or discard
+  them first, and **Discard** reloads the profile as it was last saved.
++ Deleting a profile now asks for confirmation.
++ Pasting settings that came from a newer Hex now says so, instead of silently applying part of them, and a
+  paste from a different Hex version notes the mismatch.
+
+### Fixes
+
+#### Config Profiles
+
++ Fixed typing a new profile name creating a profile per keystroke — naming it `abc` also left behind `a` and
+  `ab`. Naming now happens on its own screen and commits once.
++ Fixed saving a profile silently making it the active one.
+
+#### Config Menu
+
++ Fixed switching profile dropping you back on the first tab and clearing your search.
+
+### Technical Details
+
+#### Config
+
++ Reworked `ProfileSettings` around a `ProfileEntry` list carrying name, description, timestamps and the
+  auto-switch rule. The old name-only `known` list is migrated by the normalizer on first load and then
+  cleared, the same way `KeybindConfig` retires its legacy command fields. The new shape is a *added* field
+  rather than a changed one on purpose: `JsonConfig.loadFrom` falls back to a fresh default on any parse
+  error, so redeclaring `known`'s element type would have silently emptied every existing profile list.
++ Added `ProfileDirtyTracker`, which compares the live configs against the active profile's snapshot by
+  value rather than tracking an edited flag — restores mark every config dirty as part of their work, and a
+  flag cannot tell "changed" from "changed back". `ConfigRegistry.flushCount` gates how often the comparison
+  runs.
++ Added `ConfigHandle.resetToDefault` and `ConfigRegistry.resetAll` on top of the previously unused
+  `JsonConfig.defaultValue`, and a `ConfigCategory.reset` hook so a tab declares its reset in one line.
++ Added `VanillaKeysConfig`, which reads the live options in `current` so snapshots and the dirty check see
+  the true bindings, and defers applying them to the first client tick because options do not exist while
+  configs load.
++ Added `SkyblockLocation`, a best-effort scoreboard-sidebar reader isolated so a Hypixel layout change
+  cannot affect anything but auto-switching.
++ `ConfigProfiles.switchTo` no longer captures the profile being left; `importFromString` returns a typed
+  `ImportResult` instead of a nullable count.
++ `HexConfigScreens.rebuild` now reuses the open screen via `rebuildWidgets` rather than constructing a new
+  one, which is what preserves the selected tab and search text.
+
 ## Version 1.5.1
 
 ### Fixes

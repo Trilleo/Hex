@@ -3,11 +3,12 @@ package net.trilleo.config.gui
 import net.minecraft.client.gui.GuiGraphicsExtractor
 import net.minecraft.client.gui.components.Button
 import net.minecraft.client.gui.components.EditBox
+import net.minecraft.client.gui.components.Tooltip
 import net.minecraft.client.gui.screens.Screen
 import net.minecraft.network.chat.Component
 import net.trilleo.config.ConfigCategory
-import net.trilleo.config.ConfigProfiles
 import net.trilleo.config.ConfigRegistry
+import net.trilleo.config.HexConfigScreens
 import net.trilleo.feature.Features
 
 /**
@@ -32,10 +33,11 @@ class HexConfigScreen(private val parent: Screen?) : Screen(Component.translatab
 
     private lateinit var list: ConfigEntryList
     private lateinit var search: EditBox
+    private lateinit var resetTabButton: Button
     private val tabButtons = mutableListOf<Button>()
 
     override fun init() {
-        categories = Features.categories() + ConfigProfiles.category()
+        categories = Features.categories()
         selected = selected.coerceIn(0, (categories.size - 1).coerceAtLeast(0))
         tabButtons.clear()
 
@@ -76,20 +78,73 @@ class HexConfigScreen(private val parent: Screen?) : Screen(Component.translatab
             addRenderableWidget(button)
         }
 
+        val footerY = height - FOOTER_HEIGHT + (FOOTER_HEIGHT - 20) / 2
+
+        // Profiles live on their own screen rather than as a tab: managing them is a list of setups with
+        // per-row actions and confirmations, which is not something the settings-row model can express.
+        addRenderableWidget(
+            Button.builder(PROFILES_LABEL) {
+                minecraft?.setScreen(ProfilesScreen(this))
+            }.bounds(MARGIN, footerY, PROFILES_WIDTH, 20).tooltip(PROFILES_TIP).build(),
+        )
+
         addRenderableWidget(
             Button.builder(Component.translatable("gui.done")) { onClose() }
-                .bounds(width / 2 - 100, height - FOOTER_HEIGHT + (FOOTER_HEIGHT - 20) / 2, 200, 20)
+                .bounds(width / 2 - 100, footerY, 200, 20)
                 .build(),
         )
 
+        // One reset button in a fixed place beats a reset row buried somewhere in each tab's list. It is
+        // hidden while searching, where the list spans categories and "this tab" means nothing.
+        resetTabButton = Button.builder(RESET_TAB_LABEL) { confirmResetTab() }
+            .bounds(width - MARGIN - RESET_TAB_WIDTH, footerY, RESET_TAB_WIDTH, 20)
+            .tooltip(RESET_TAB_TIP)
+            .build()
+        addRenderableWidget(resetTabButton)
+
         refreshTabs()
         refreshList()
+    }
+
+    /** Resets the visible tab's config after confirming, since a tab's worth of tuning is easy to lose. */
+    private fun confirmResetTab() {
+        val category = categories.getOrNull(selected) ?: return
+        val reset = category.reset ?: return
+        minecraft?.setScreen(
+            ConfirmActionScreen(
+                parent = this,
+                title = Component.translatable("hex.config.reset_tab.title"),
+                message = Component.translatable("hex.config.reset_tab.message", category.title),
+                detail = Component.translatable("hex.config.reset_tab.detail"),
+                choices = listOf(
+                    ConfirmActionScreen.Choice(RESET_TAB_LABEL) {
+                        reset()
+                        ConfigRegistry.flushAll()
+                        HexConfigScreens.rebuild()
+                    },
+                    ConfirmActionScreen.Choice(Component.translatable("gui.cancel"), null),
+                ),
+            ),
+        )
+    }
+
+    /**
+     * Rebuilds every widget from the current config values, keeping the selected tab and search text.
+     *
+     * Exists because `rebuildWidgets` is protected: [net.trilleo.config.HexConfigScreens.rebuild] needs to
+     * refresh this screen from the outside after a profile switch or an import swaps the values underneath it.
+     */
+    fun refresh() {
+        rebuildWidgets()
     }
 
     /** The active tab reads as selected by being non-interactive, matching the rest of the game's menus. */
     private fun refreshTabs() {
         tabButtons.forEachIndexed { index, button ->
             button.active = query.isNotEmpty() || index != selected
+        }
+        if (::resetTabButton.isInitialized) {
+            resetTabButton.visible = query.isEmpty() && categories.getOrNull(selected)?.reset != null
         }
     }
 
@@ -156,8 +211,14 @@ class HexConfigScreen(private val parent: Screen?) : Screen(Component.translatab
         const val TAB_HEIGHT = 20
         const val TAB_GAP = 2
         const val SEARCH_WIDTH = 140
+        const val PROFILES_WIDTH = 80
+        const val RESET_TAB_WIDTH = 80
 
         val SEARCH_LABEL: Component = Component.translatable("hex.config.search")
+        val PROFILES_LABEL: Component = Component.translatable("hex.config.profiles_button")
+        val RESET_TAB_LABEL: Component = Component.translatable("hex.config.reset_tab")
+        val PROFILES_TIP: Tooltip = Tooltip.create(Component.translatable("hex.config.profiles_button.tooltip"))
+        val RESET_TAB_TIP: Tooltip = Tooltip.create(Component.translatable("hex.config.reset_tab.tooltip"))
 
         const val PANEL_COLOR = 0xC0101010.toInt()
         const val SIDEBAR_COLOR = 0x80000000.toInt()

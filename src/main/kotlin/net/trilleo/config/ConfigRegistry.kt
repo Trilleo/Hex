@@ -19,6 +19,20 @@ import java.nio.file.Path
 object ConfigRegistry {
     private val handles = mutableListOf<ConfigHandle<*>>()
 
+    /**
+     * How many config writes have happened, bumped by [ConfigHandle.saveNow].
+     *
+     * [ProfileDirtyTracker] watches this so it only re-compares settings against the active profile when
+     * something was actually written, rather than serializing every config on every tick.
+     */
+    @Volatile
+    internal var flushCount: Int = 0
+        private set
+
+    internal fun noteFlush() {
+        flushCount++
+    }
+
     /** Registers and returns [handle], so a config can write `private val handle = ConfigRegistry.register(...)`. */
     fun <T : Any> register(handle: ConfigHandle<T>): ConfigHandle<T> {
         handles += handle
@@ -34,6 +48,7 @@ object ConfigRegistry {
     /** Advances the debounce timers; any config whose changes have settled is written now. */
     fun tick() {
         handles.forEach { it.tickDown() }
+        ProfileDirtyTracker.refreshIfChanged()
     }
 
     /** Writes every config with unsaved changes immediately. */
@@ -44,6 +59,17 @@ object ConfigRegistry {
     /** Re-reads every config from disk, discarding unsaved changes. */
     fun reloadAll() {
         handles.forEach { it.reload() }
+    }
+
+    /**
+     * Restores every config to its stock values.
+     *
+     * This touches live state only — no profile snapshot is rewritten, so the active profile simply reads as
+     * modified afterwards and discarding brings the saved settings back. That recoverability is the point:
+     * a mis-clicked "reset everything" must not be able to destroy a saved profile.
+     */
+    fun resetAll() {
+        handles.forEach { it.resetToDefault() }
     }
 
     /** Copies every config's live value into [dir], capturing the current setup as a profile snapshot. */

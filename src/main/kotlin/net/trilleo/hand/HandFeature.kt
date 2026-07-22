@@ -82,16 +82,11 @@ object HandFeature : Feature {
             format = { String.format(Locale.ROOT, "%.2fx", it) },
         )
 
-        // Kept alongside the per-row reset a renderer offers: this restores the whole tab in one click,
-        // which is the useful thing after experimenting with several sliders at once.
-        action("reset") { screen ->
-            HandConfig.settings.resetToDefaults()
-            HandConfig.save()
-            // Re-init the open screen so every slider handle jumps back to its default position; the
-            // sliders read their value only when built. Screen.rebuildWidgets is protected, so go through
-            // setScreen with the same instance.
-            Minecraft.getInstance().setScreen(screen)
-        }
+        // The tab's reset button, drawn in the menu footer alongside every other tab's. This replaces the
+        // hand-rolled reset row that used to sit at the bottom of this list, and unlike that one it also
+        // resets the enabled toggle — a reset that quietly leaves some settings behind is the more
+        // surprising of the two behaviours.
+        resetsTo(HandConfig.handle)
     }
 
     /** A position slider — the three axes differ only in key, default, getter and setter. */

@@ -73,5 +73,6 @@ object FreecamFeature : Feature {
                 FreecamConfig.save()
             },
         )
+        resetsTo(FreecamConfig.handle)
     }
 }

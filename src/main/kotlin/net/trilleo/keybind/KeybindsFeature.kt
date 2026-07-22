@@ -62,5 +62,8 @@ object KeybindsFeature : Feature {
      */
     override fun settingsCategory(): ConfigCategory = ConfigCategory.build("keybinds") {
         action("open_screen") { screen -> Minecraft.getInstance().setScreen(KeybindScreen(screen)) }
+        // Resetting here removes every custom shortcut, which is drastic but is what "reset this tab" has to
+        // mean when the tab's only content is the shortcut list.
+        resetsTo(KeybindConfig.handle)
     }
 }

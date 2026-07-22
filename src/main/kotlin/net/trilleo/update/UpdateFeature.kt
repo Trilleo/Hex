@@ -69,6 +69,7 @@ object UpdateFeature : Feature {
             set = { UpdateConfig.settings.includePrereleases = it; UpdateConfig.save() },
         )
         action("check_now") { checkNow() }
+        resetsTo(UpdateConfig.handle)
     }
 
     /**

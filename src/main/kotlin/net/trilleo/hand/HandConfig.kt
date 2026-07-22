@@ -34,20 +34,6 @@ data class HandSettings(
     var disableSwing: Boolean = false,
     var swingSpeed: Double = 1.0,
 ) {
-    /** Restores every display value to its default, leaving [enabled] alone. */
-    fun resetToDefaults() {
-        val defaults = HandSettings()
-        offsetX = defaults.offsetX
-        offsetY = defaults.offsetY
-        offsetZ = defaults.offsetZ
-        scale = defaults.scale
-        rotationX = defaults.rotationX
-        rotationY = defaults.rotationY
-        rotationZ = defaults.rotationZ
-        disableSwing = defaults.disableSwing
-        swingSpeed = defaults.swingSpeed
-    }
-
     companion object {
         const val OFFSET_MIN: Double = -1.0
         const val OFFSET_MAX: Double = 1.0
@@ -79,7 +65,8 @@ object HandConfig {
     var settings: HandSettings = HandSettings()
         private set
 
-    private val handle = ConfigRegistry.register(
+    /** Exposed so the settings menu can offer this tab a reset button. */
+    val handle = ConfigRegistry.register(
         ConfigHandle(config, adopt = { settings = it }, current = { settings }),
     )
 

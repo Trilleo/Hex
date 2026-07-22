@@ -62,6 +62,7 @@ class ConfigHandle<T : Any>(
     fun saveNow() {
         ticksUntilFlush = CLEAN
         json.save(current())
+        ConfigRegistry.noteFlush()
     }
 
     /** Re-reads the file into live state, discarding unsaved changes, and fires [afterReload]. */
@@ -80,6 +81,17 @@ class ConfigHandle<T : Any>(
         adopt(value)
         markDirty()
         afterReload()
+    }
+
+    /**
+     * Restores this config to its stock values, exactly as if the file had never existed.
+     *
+     * Deliberately routed through [replace] rather than deleting the file: that normalizes, adopts and fires
+     * [afterReload], so a reset behaves like any other wholesale swap. The file itself is rewritten with the
+     * defaults on the next flush rather than removed, so nothing else has to cope with a missing file.
+     */
+    fun resetToDefault() {
+        replace(json.defaultValue())
     }
 
     /** Writes the live value into [dir] instead of the live config directory. Used to capture a profile. */

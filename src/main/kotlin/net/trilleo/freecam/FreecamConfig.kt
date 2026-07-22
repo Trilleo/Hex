@@ -41,7 +41,8 @@ object FreecamConfig {
     var settings: FreecamSettings = FreecamSettings()
         private set
 
-    private val handle = ConfigRegistry.register(
+    /** Exposed so the settings menu can offer this tab a reset button. */
+    val handle = ConfigRegistry.register(
         ConfigHandle(
             config,
             adopt = { settings = it },

@@ -30,16 +30,27 @@ import java.util.*
  * @param id stable identifier for the category, e.g. `"updates"`; also the translation-key prefix.
  * @param title the tab label shown in the sidebar.
  * @param entries the rows, in display order.
+ * @param reset restores this category's settings to stock, or null for a category that owns no single config
+ *   (the Keybinds tab, which is only a door to another screen). The menu renders this as one button in a
+ *   consistent place rather than each feature hand-rolling a reset row somewhere in its own list.
  */
 class ConfigCategory(
     val id: String,
     val title: Component,
     val entries: List<ConfigEntry>,
+    val reset: (() -> Unit)? = null,
 ) {
     companion object {
         /** Build a category with the [Builder] DSL. The title comes from `hex.config.category.<id>`. */
-        fun build(id: String, block: Builder.() -> Unit): ConfigCategory =
-            ConfigCategory(id, Component.translatable("hex.config.category.$id"), Builder(id).apply(block).entries)
+        fun build(id: String, block: Builder.() -> Unit): ConfigCategory {
+            val builder = Builder(id).apply(block)
+            return ConfigCategory(
+                id,
+                Component.translatable("hex.config.category.$id"),
+                builder.entries,
+                builder.reset,
+            )
+        }
     }
 
     /**
@@ -52,6 +63,20 @@ class ConfigCategory(
      */
     class Builder(private val categoryId: String) {
         val entries: MutableList<ConfigEntry> = mutableListOf()
+
+        /** What this tab's reset button does, set by [resetsTo]. */
+        var reset: (() -> Unit)? = null
+            private set
+
+        /**
+         * Gives this tab a reset button that restores [handle]'s config to its defaults.
+         *
+         * Note this resets the whole config, the feature's own enabled toggle included — "reset" that leaves
+         * some settings behind is the more surprising behaviour of the two.
+         */
+        fun resetsTo(handle: ConfigHandle<*>) {
+            reset = { handle.resetToDefault() }
+        }
 
         /** The translation key for an entry, e.g. `hex.config.hand.offset_x`. */
         private fun keyOf(key: String) = "hex.config.$categoryId.$key"
