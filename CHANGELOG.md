@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+## Version 1.7.2
+
 ### Fixes
 
 #### Hand Display
