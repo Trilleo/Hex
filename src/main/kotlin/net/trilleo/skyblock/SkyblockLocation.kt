@@ -5,6 +5,7 @@ import net.minecraft.world.scores.DisplaySlot
 import net.minecraft.world.scores.Objective
 import net.minecraft.world.scores.Scoreboard
 import net.trilleo.skyblock.SkyblockLocation.POLL_INTERVAL_TICKS
+import net.trilleo.util.TextClean
 import java.util.*
 
 /**
@@ -105,24 +106,10 @@ object SkyblockLocation {
     /**
      * Strips formatting codes and the invisible characters Hypixel appends.
      *
-     * Those trailing zero-width and non-breaking characters differ per line and per tick — they exist to
-     * make the scoreboard entries unique — so leaving them in would mean no two reads ever compared equal.
+     * Lives in [TextClean] because the reminder engine's chat matching wants exactly the same treatment —
+     * including the decision to keep ordinary spaces, which island names and chat patterns both depend on.
      */
-    private fun clean(raw: String): String {
-        val out = StringBuilder(raw.length)
-        var i = 0
-        while (i < raw.length) {
-            val ch = raw[i]
-            when {
-                ch == '§' -> i++ // also skip the code character that follows
-                ch == ' ' || ch == '​' || ch == '﻿' -> Unit
-                ch.isISOControl() -> Unit
-                else -> out.append(ch)
-            }
-            i++
-        }
-        return out.toString().trim()
-    }
+    private fun clean(raw: String): String = TextClean.strip(raw)
 
     private const val POLL_INTERVAL_TICKS = 20
 

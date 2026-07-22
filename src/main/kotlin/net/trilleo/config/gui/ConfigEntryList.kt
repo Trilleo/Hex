@@ -9,6 +9,7 @@ import net.minecraft.client.gui.narration.NarratableEntry
 import net.minecraft.client.gui.screens.Screen
 import net.minecraft.network.chat.Component
 import net.trilleo.config.*
+import net.trilleo.util.HexColor
 import java.util.*
 import kotlin.math.roundToInt
 import kotlin.math.roundToLong
@@ -50,8 +51,14 @@ class ConfigEntryList(
      *
      * [groups] is a category-title to entries mapping; a title is only drawn when there is more than one
      * group, which is what makes search results readable across tabs without adding noise to a single tab.
+     *
+     * Set [preserveScroll] when the rows are being rebuilt underneath a player who is part-way through
+     * editing them — a screen whose entry list changes shape in response to one of its own controls, such as
+     * a trigger kind that swaps which fields apply. Switching tabs or running a search should leave it off:
+     * there, the top of the new list is exactly where the player expects to land.
      */
-    fun show(groups: List<Pair<Component, List<ConfigEntry>>>) {
+    fun show(groups: List<Pair<Component, List<ConfigEntry>>>, preserveScroll: Boolean = false) {
+        val scroll = scrollAmount()
         clearEntries()
         val showHeadings = groups.size > 1
         for ((title, entries) in groups) {
@@ -59,7 +66,7 @@ class ConfigEntryList(
             entries.forEach { addEntry(rowFor(it)) }
         }
         visibleEntries = groups.sumOf { it.second.size }
-        setScrollAmount(0.0)
+        setScrollAmount(if (preserveScroll) scroll else 0.0)
     }
 
     private fun rowFor(entry: ConfigEntry): Row = when (entry) {
@@ -410,10 +417,10 @@ class ConfigEntryList(
 
         private companion object {
             const val SWATCH = 20
-            const val OPAQUE = 0xFF000000.toInt()
+            const val OPAQUE = HexColor.OPAQUE
             const val SWATCH_BORDER = 0xFF000000.toInt()
 
-            fun parse(text: String): Int? = text.removePrefix("#").toLongOrNull(16)?.toInt()
+            fun parse(text: String): Int? = HexColor.parse(text)
         }
     }
 

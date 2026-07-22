@@ -11,7 +11,6 @@ import net.trilleo.command.Commands
 import net.trilleo.config.ConfigCategory
 import net.trilleo.feature.Feature
 import net.trilleo.hand.gui.SwingItemsScreen
-import net.trilleo.skyblock.item.HeldItem
 import java.util.*
 
 /**
@@ -46,19 +45,9 @@ object HandFeature : Feature {
     }
 
     override fun onClientTick(client: Minecraft) {
-        // Unconditional, and ahead of everything else: the per-item rule is read from the render path every
-        // frame, and it stays live even when HandSettings.enabled is off, so this cache cannot be gated on
-        // the master switch.
-        HeldItem.tick(client)
-
         while (toggleSwingItemKey.consumeClick()) {
             SwingItems.toggleHeld(client)
         }
-    }
-
-    override fun onWorldLeave(client: Minecraft) {
-        // So an item from the last server cannot go on matching into the next one.
-        HeldItem.reset()
     }
 
     override fun registerCommands(hex: LiteralArgumentBuilder<FabricClientCommandSource>) {

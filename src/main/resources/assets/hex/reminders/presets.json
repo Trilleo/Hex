@@ -1,0 +1,70 @@
+{
+  "_format": [
+    "The bundled reminder catalogue. Each entry is copied into config/hex/reminders.json when the player adds",
+    "it, so `reminder` is exactly the shape that file uses and can be pasted straight into it.",
+    "",
+    "presetId  stable identity, never reused for a different preset. Names two lang keys:",
+    "          hex.reminders.preset.<presetId>.name and .desc",
+    "revision  bump whenever the definition below changes. An installed copy the player has NOT edited is",
+    "          updated in place on the next launch; an edited one is left alone and offered the update.",
+    "category  grouping in the browser. Names hex.reminders.presets.category.<category>",
+    "",
+    "trigger.kind   TIMER | CHAT_MATCH | ISLAND_ENTER | ISLAND_LEAVE | WORLD_JOIN | HELD_ITEM",
+    "trigger.value  regex (CHAT_MATCH) / island name (ISLAND_*) / Skyblock item id (HELD_ITEM)",
+    "trigger.seconds  delay between arming and firing; 0 fires immediately",
+    "trigger.repeat   rearm after firing",
+    "trigger.literal  CHAT_MATCH only: plain substring instead of a regex",
+    "text           supports $0-$9 for a CHAT_MATCH pattern's capture groups, and $$ for a literal $",
+    "conditions[]   kind: ON_SKYBLOCK | ON_ISLAND | NOT_ON_ISLAND | HOLDING_ITEM, plus a value",
+    "actions[]      kind: HUD | SOUND. A SOUND carries value (sound id), pitch and volume.",
+    "",
+    "IMPORTANT: every CHAT_MATCH pattern must be confirmed against live Hypixel before being added here.",
+    "A preset that silently never fires is worse than no preset, because a player cannot tell it apart from",
+    "a broken feature. The catalogue is deliberately small for that reason."
+  ],
+  "presets": [
+    {
+      "presetId": "forge_on_arrival",
+      "revision": 1,
+      "category": "mining",
+      "reminder": {
+        "name": "Check the forge",
+        "text": "Check your forge slots",
+        "trigger": {
+          "kind": "ISLAND_ENTER",
+          "value": "dwarven mines",
+          "seconds": 0,
+          "repeat": false,
+          "literal": false
+        },
+        "conditions": [],
+        "actions": [
+          { "kind": "HUD" }
+        ]
+      }
+    },
+    {
+      "presetId": "hourly_check",
+      "revision": 1,
+      "category": "general",
+      "reminder": {
+        "name": "Hourly check-in",
+        "text": "Check pets, forge and bazaar orders",
+        "trigger": {
+          "kind": "TIMER",
+          "value": "",
+          "seconds": 3600,
+          "repeat": true,
+          "literal": false
+        },
+        "conditions": [
+          { "kind": "ON_SKYBLOCK", "value": "" }
+        ],
+        "actions": [
+          { "kind": "HUD" },
+          { "kind": "SOUND", "value": "minecraft:block.note_block.pling", "pitch": 1.2, "volume": 0.8 }
+        ]
+      }
+    }
+  ]
+}

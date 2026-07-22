@@ -17,6 +17,7 @@ Hex runs entirely on your client — it never needs to be installed on a server.
 - **Freecam** — detach the camera and fly it around while your character stays put.
 - **Hand display** — reposition and restyle your held item in first person, cosmetically.
 - **Per-item swing** — hide the swing animation only while holding chosen Skyblock items, by ID or UUID.
+- **Reminders** — timers, chat triggers and location alerts on a movable HUD panel, with ready-made presets.
 - **Auto-update** — Hex downloads new [releases](https://github.com/Trilleo/Hex/releases) itself and applies them on
   exit. See [Updating](#updating).
 

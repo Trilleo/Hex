@@ -8,11 +8,14 @@ import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents
 import net.fabricmc.fabric.api.client.keymapping.v1.KeyMappingHelper
 import net.fabricmc.fabric.api.client.message.v1.ClientReceiveMessageEvents
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayConnectionEvents
+import net.fabricmc.fabric.api.client.rendering.v1.hud.HudElementRegistry
+import net.fabricmc.fabric.api.client.rendering.v1.hud.VanillaHudElements
 import net.fabricmc.loader.api.FabricLoader
 import net.minecraft.client.KeyMapping
 import net.minecraft.network.chat.Component
 import net.trilleo.Hex
 import net.trilleo.config.*
+import net.trilleo.skyblock.item.HeldItem
 import org.slf4j.LoggerFactory
 
 /**
@@ -94,11 +97,27 @@ object Features {
             // finally land.
             VanillaKeysConfig.tick()
             ProfileAutoSwitch.tick(client)
+            // Owned here rather than by any one feature: the held-item cache has several consumers now (the
+            // hand mixins and the reminder engine), and it has to stay live even when the feature that used
+            // to tick it is switched off.
+            HeldItem.tick(client)
 
             while (openConfigKey.consumeClick()) {
                 client.setScreen(HexConfigScreens.create(client.screen))
             }
             features.forEach { if (it.enabled) it.onClientTick(client) }
+        }
+
+        // Attached to the vanilla chat element rather than added first or last, because attaching relative to
+        // a vanilla element inherits its render condition — which for every vanilla element but SLEEP is
+        // `hideGui`, so F1 hides mod overlays too without a single feature checking for it. Before CHAT puts
+        // mod overlays above the scoreboard and title but below chat and the player list.
+        //
+        // Registered once here and gated at dispatch, never re-registered: `removeElement` exists but Fabric
+        // gives no ordering guarantee on re-adding, so a feature toggling `enabled` at runtime must not be
+        // able to move itself in the draw order.
+        HudElementRegistry.attachElementBefore(VanillaHudElements.CHAT, Hex.id("overlays")) { extractor, delta ->
+            features.forEach { if (it.enabled) it.onHudRender(extractor, delta) }
         }
 
         ClientPlayConnectionEvents.JOIN.register { _, _, client ->
@@ -110,6 +129,9 @@ object Features {
 
         ClientPlayConnectionEvents.DISCONNECT.register { _, client ->
             ProfileAutoSwitch.onDisconnect()
+            // Alongside the tick, and for the same reason: an item from the last server must not go on
+            // matching into the next one, whichever features happen to be enabled.
+            HeldItem.reset()
             features.forEach { if (it.enabled) it.onWorldLeave(client) }
         }
 

@@ -129,6 +129,84 @@ with the rest of the hand settings off. It needs Skyblock's own item data, so it
 other servers. Resetting the **Hand** tab leaves the list alone; it is stored separately at
 `config/hex/swing_items.json` if you would rather edit it by hand.
 
+## Reminders
+
+Skyblock is full of things that quietly run out — a booster cookie, a potion, a forge slot, an ability cooldown — and
+the only warning is a chat line that scrolls away seconds later. Reminders let you say "when *this* happens, tell me
+*then*", and shows what is pending on a panel you can put wherever you like.
+
+Open the list with **Reminders…** in the **Reminders** tab of `/hexa config`, or with `/hexa remind edit`. Each
+reminder has three parts.
+
+**What starts it.** Every reminder counts down, and the trigger decides when the countdown begins:
+
+- **Timer** — you start it, or it repeats on its own.
+- **Chat message** — a line of chat starts it. This is the powerful one: it can watch for "your potion has expired" or
+  "this ability is on cooldown for 30s" and start counting from there.
+- **Arriving at** / **Leaving island** — you reach or leave a named island, such as `dwarven mines`.
+- **Joining a world** — you log in.
+- **Holding an item** — you put a particular Skyblock item in your main hand.
+
+**When it speaks up.** *Remind me after* is the gap between the trigger and the reminder firing — write `0` to fire
+straight away, or something like `45s`, `20m`, `2h30m`, `4d`. Turn on **Repeat** for a reminder that starts itself
+again each time. **Conditions…** limit where it is allowed to fire, so a reminder that only matters in the Dwarven
+Mines stays quiet everywhere else; conditions are checked at the moment it fires, not when it started, so leaving an
+island silences its reminders rather than losing them.
+
+**What it does.** Show on the panel, play a sound, or both. Press **Test** in the editor to hear a sound before
+committing to it.
+
+Countdowns are real time, not game time. They keep running while you are logged out, so a four-day cookie is still
+counting when you come back — and anything that came due while you were away fires once, marked overdue, rather than
+firing every interval it missed.
+
+### Chat patterns
+
+A chat trigger matches with a regular expression unless you turn on **Plain text**, which compares it as ordinary
+text instead and is the easier choice when you just want to match some words. A pattern is case-sensitive; put `(?i)`
+at the start to ignore case.
+
+Anything you capture with `(…)` can be put in the message: `$1` is the first captured part, up to `$9`, and `$0` is
+the whole match. So a pattern of `on cooldown for (\d+)s` with the message `Ability ready in $1s` fills in the actual
+number. Write `$$` for a literal dollar sign; a `$5` the pattern has no fifth group for is left alone, so prices in
+your reminder text survive untouched.
+
+If a pattern turns out to be so expensive to match that it would slow the game down, Hex switches that reminder off
+and says which one in chat rather than letting it stutter every time you receive a message.
+
+### The panel
+
+**Panel position…** opens a screen where you drag the panel where you want it, or nudge it with the arrow keys —
+hold Shift to move further. It is placed as a fraction of the screen, so it stays put when you change resolution, go
+fullscreen, or change your GUI scale, and **Grow from** picks which corner stays anchored as reminders come and go.
+The rest of the **Reminders** tab covers scale, colours, how many rows to show, and whether to hide the panel off
+Skyblock. The panel hides with the rest of the HUD when you press F1.
+
+Bind **Dismiss Reminder** under Options → Controls → **Hex** to silence whatever is flashing without opening
+anything; **Snooze Reminder** pushes it back instead, by the amount set in the tab.
+
+### Presets
+
+**Presets…** is a small catalogue of ready-made reminders. Adding one copies it into your list, so you are free to
+edit it afterwards. If a later version of Hex ships a corrected version of a preset you have *not* edited, yours is
+updated in place — keeping its on/off state and any running countdown. If you *have* edited it, Hex leaves it alone
+and the editor offers **Reset to preset** for whenever you want the newer version.
+
+The catalogue is deliberately small: a preset whose chat pattern no longer matches is worse than no preset at all,
+because there is no way to tell it apart from a broken feature, so only patterns confirmed against live Hypixel are
+included.
+
+### Commands and files
+
+`/hexa remind in 5m check the forge` is the quickest way to set a one-off — it disappears by itself once it has
+fired. `/hexa remind list` shows what is counting down, and `/hexa remind edit`, `hud` and `presets` open the three
+screens. `/hexa remind dismiss` and `snooze` act on whatever is firing.
+
+Reminders live in `config/hex/reminders.json` and take part in config profiles and clipboard sharing. Their
+countdowns are kept separately in `config/hex/reminder_state.json`, which deliberately does *not* travel with a
+profile — switching profiles changes which reminders you have without resetting the timers you have running, and
+sharing your settings does not hand someone else your countdowns.
+
 ## Auto-update
 
 Hex checks its [GitHub releases](https://github.com/Trilleo/Hex/releases) on startup and, when a newer version is out,

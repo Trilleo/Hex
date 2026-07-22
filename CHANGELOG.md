@@ -13,12 +13,43 @@
   holding to the per-item swing list or removes it if it is already there, without opening a menu. Unbound by
   default; `/hexa hand toggle` does the same.
 
+#### Reminders
+
++ Added **Reminders**, a new feature that tells you when something is about to run out. Every reminder counts down;
+  what starts the countdown is up to you — a timer, a chat message, arriving at or leaving an island, joining a
+  world, or holding a particular Skyblock item. Edit them with **Reminders…** in the new **Reminders** tab of
+  `/hexa config`, or with `/hexa remind edit`.
++ Added **chat triggers**, which match a line of chat as a regular expression (or as plain text) and can start a
+  countdown from it. Anything captured with `(…)` can be inserted into the reminder's message with `$1` to `$9`, so
+  a pattern reading a cooldown out of a chat line can put the actual number on screen.
++ Added **conditions**, checked at the moment a reminder would fire rather than when it started, so a reminder can be
+  limited to one island and stays quiet elsewhere without losing its countdown.
++ Added a movable **reminder panel** showing everything that is counting down, with a live countdown per row and a
+  flash when one fires. Drag it into place with **Panel position…**, or nudge it with the arrow keys. It is anchored
+  as a fraction of the screen, so it survives a resolution, fullscreen or GUI-scale change, and it hides with the
+  rest of the HUD on F1.
++ Added per-reminder **sounds**, with a chosen sound event, pitch and volume, and a **Test** button to hear one
+  before committing to it.
++ Added a **preset catalogue**. Adding a preset copies it, so it can be edited freely; an unedited copy is updated in
+  place when a later version ships a correction, keeping its on/off state and running countdown, while an edited one
+  is left alone and offered **Reset to preset**.
++ Added `/hexa remind in <duration> <text>` for a one-off reminder that deletes itself once it has fired, plus
+  `list`, `edit`, `hud`, `presets`, `dismiss` and `snooze`.
++ Added **Dismiss Reminder**, **Snooze Reminder** and **Open Reminders** keybinds under Options → Controls → **Hex**,
+  unbound by default. Dismiss and snooze work even with the feature switched off, so a reminder already on screen can
+  always be silenced.
+
 ### Improvements
 
 #### Hand Display
 
 + Reworded the **Enabled** tooltip in the **Hand** tab to name what the switch actually governs, now that per-item
   swing rules keep working while it is off.
+
+#### Config Menu
+
++ The settings list can now keep its scroll position when its rows are rebuilt, so the reminder editor no longer
+  jumps to the top when a choice changes which fields apply.
 
 ### Technical Details
 
@@ -33,6 +64,38 @@
 
 + Added `swing_items.json`, registered with `ConfigRegistry` so the per-item list takes part in config profiles and
   clipboard export. Kept separate from `hand.json` so resetting the **Hand** tab does not clear the item list.
+
+#### Feature Framework
+
++ Added a `Feature.onHudRender` hook, dispatched from a single HUD element registered in `Features.bootstrap`.
+  It is attached before the vanilla chat element rather than added first or last, so it inherits vanilla's own
+  render condition and mod overlays hide with F1 without any feature checking for it.
++ Moved the main-hand item cache's tick and reset out of `HandFeature` and into `Features`, next to
+  `ProfileAutoSwitch.tick` and outside the per-feature enabled check. It has more than one consumer now, so a
+  shared cache no longer depends on one feature's master switch being on.
++ Extracted Hypixel text cleaning into `util.TextClean` and added `util.Duration` for parsing and formatting
+  human durations such as `2h30m`.
++ Generalised `Notify.uiSound` to play any registered sound with a pitch and volume, resolving it by id and
+  falling back to the standard UI click. The existing pitch-only call sites are unchanged.
++ Extracted hex colour parsing into `util.HexColor`, shared by the config menu's colour rows and the reminder panel.
+
+#### Reminders
+
++ Reminder definitions live in `reminders.json`, registered with `ConfigRegistry` so they join config profiles and
+  clipboard export. Live countdowns are kept apart in `reminder_state.json`, deliberately unregistered: a running
+  timer is machine state, and capturing it in a profile would reset every countdown on a profile switch and hand a
+  friend your timers when sharing settings.
++ Countdowns are stored as absolute wall-clock instants rather than tick counts, so they survive a relog, keep
+  running while the game is closed, and do not drift with server lag. A deadline missed while away fires once, marked
+  overdue, rather than replaying every interval in between.
++ User-written chat patterns are guarded three ways, since they run inside the shared chat event where a throw would
+  break chat for the whole mod and a hang would lock the client: the subject is capped at 256 characters, matching is
+  bounded by a read budget enforced through a counting `CharSequence` (which caps backtracking without a watchdog
+  thread), and the whole evaluation is wrapped so nothing escapes. A pattern that exhausts its budget disables its
+  reminder and says which one. Compiled patterns are cached, and a bad one is diagnosed once and never retried.
++ The trigger, condition and action models follow the existing `ItemRule` shape — an enum kind over one generic
+  string payload — so a new kind is an appended constant and one branch, with no config migration and no failure when
+  an older build reads a newer file.
 
 ## Version 1.6.0
 

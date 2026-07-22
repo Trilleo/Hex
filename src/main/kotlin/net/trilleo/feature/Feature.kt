@@ -2,7 +2,9 @@ package net.trilleo.feature
 
 import com.mojang.brigadier.builder.LiteralArgumentBuilder
 import net.fabricmc.fabric.api.client.command.v2.FabricClientCommandSource
+import net.minecraft.client.DeltaTracker
 import net.minecraft.client.Minecraft
+import net.minecraft.client.gui.GuiGraphicsExtractor
 import net.minecraft.network.chat.Component
 import net.trilleo.config.ConfigCategory
 
@@ -36,6 +38,19 @@ interface Feature {
 
     /** Called every client tick (`END_CLIENT_TICK`). Guard on `client.player` / `client.screen` as needed. */
     fun onClientTick(client: Minecraft) {}
+
+    /**
+     * Draw this feature's HUD overlay, once per frame.
+     *
+     * Runs on the render thread inside a HUD element attached to the vanilla chat layer, so it inherits
+     * vanilla's own render condition — nothing draws while the HUD is hidden with F1, and no feature has to
+     * check for that itself.
+     *
+     * This is a frame callback, not a tick: at a high frame rate it runs several times per tick, so do no
+     * work here beyond drawing. Anything that formats text, measures it, sorts, or reads config should
+     * happen in [onClientTick] and leave a prepared model behind for this to walk.
+     */
+    fun onHudRender(extractor: GuiGraphicsExtractor, delta: DeltaTracker) {}
 
     /** The local player joined a world / server. */
     fun onWorldJoin(client: Minecraft) {}

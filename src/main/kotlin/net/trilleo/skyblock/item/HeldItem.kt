@@ -22,10 +22,10 @@ import net.minecraft.world.item.ItemStack
  * leave this up to one tick (50 ms, roughly three frames) behind. That is acceptable precisely because the
  * only consumer is cosmetic; anything that must act on the current instant calls [refresh] instead.
  *
- * Ticked by [net.trilleo.hand.HandFeature], its only consumer, the same way
- * [net.trilleo.skyblock.SkyblockLocation] is ticked by [net.trilleo.config.ProfileAutoSwitch]. When a second
- * consumer appears, move that call into the `END_CLIENT_TICK` block in
- * [net.trilleo.feature.Features] next to `ProfileAutoSwitch.tick` so it is not owned by one feature.
+ * Ticked from the `END_CLIENT_TICK` block in [net.trilleo.feature.Features], next to `ProfileAutoSwitch.tick`
+ * and outside the per-feature `enabled` check. It began life ticked by [net.trilleo.hand.HandFeature], its
+ * only consumer then; the reminder engine is the second, so ownership moved here rather than leaving a shared
+ * cache at the mercy of one feature's master switch.
  */
 object HeldItem {
 
