@@ -60,7 +60,8 @@ profile as having unsaved changes.
 
 ### Sharing and backups
 
-**Copy to clipboard** copies every Hex setting as text you can send to someone else or keep as a backup.
+**Copy to clipboard** copies every profile-carried Hex setting as text you can send to someone else or keep as a
+backup. The **Updates** tab is left out — it is a property of your install, not of a loadout.
 **Paste from clipboard** takes one back, either **as a new profile** (keeping your current settings intact) or
 **over this profile**. A paste that came from a newer Hex than you are running is refused rather than partly
 applied, and one from a different version says so.
@@ -212,6 +213,12 @@ sharing your settings does not hand someone else your countdowns.
 Hex checks its [GitHub releases](https://github.com/Trilleo/Hex/releases) on startup and, when a newer version is out,
 downloads it and applies it automatically the next time you close the game. Run `/hexa update` to check on demand, or
 manage it from the **Updates** tab of `/hexa config`. See [Updating](../README.md#updating) for the full details.
+
+The **Updates** tab belongs to your installation rather than to a profile: switching, saving or pasting a profile
+never changes whether Hex updates itself, and the tab is not part of a **Copy to clipboard** blob.
+
+The result of the startup check reaches you in chat once you are in a world — including when a slow download means
+that is a while after you joined.
 
 ---
 

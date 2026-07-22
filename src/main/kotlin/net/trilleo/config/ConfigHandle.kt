@@ -25,12 +25,16 @@ import java.nio.file.Path
  * @param current reads the live value to be written.
  * @param afterReload side effects needed when the live value is replaced wholesale rather than edited —
  *   e.g. leaving freecam if a profile switch turned it off mid-flight. Not called on the initial load.
+ * @param global marks a setting that belongs to the installation rather than to a loadout: it still lives in
+ *   the menu, still flushes and still resets, but profiles neither capture nor restore it and it stays out of
+ *   the clipboard blob. See [ConfigRegistry.profiled].
  */
 class ConfigHandle<T : Any>(
     val json: JsonConfig<T>,
     private val adopt: (T) -> Unit,
     private val current: () -> T,
     private val afterReload: () -> Unit = {},
+    val global: Boolean = false,
 ) {
     /** Ticks remaining before an automatic flush, or [CLEAN] when there is nothing to write. */
     @Volatile

@@ -27,9 +27,16 @@ object UpdateConfig {
     var settings: UpdateSettings = UpdateSettings()
         private set
 
-    /** Exposed so the settings menu can offer this tab a reset button. */
+    /**
+     * Exposed so the settings menu can offer this tab a reset button.
+     *
+     * Registered as `global`: whether this install updates itself is a property of the install, not of a
+     * loadout. Captured in a profile it would be restored — and written back to the live file — on every
+     * switch, so a snapshot taken while [UpdateSettings.enabled] was off silently turned it off again for
+     * good, and the startup check then never ran no matter what the menu was set to.
+     */
     val handle = ConfigRegistry.register(
-        ConfigHandle(config, adopt = { settings = it }, current = { settings }),
+        ConfigHandle(config, adopt = { settings = it }, current = { settings }, global = true),
     )
 
     fun load() = handle.loadInitial()

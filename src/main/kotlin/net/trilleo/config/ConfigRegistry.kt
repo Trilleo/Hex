@@ -42,8 +42,19 @@ object ConfigRegistry {
     /** Every registered config, in registration order. */
     fun all(): List<ConfigHandle<*>> = handles
 
-    /** The config with this file base name, or null. Used to route an entry of an imported blob. */
-    fun byName(name: String): ConfigHandle<*>? = handles.firstOrNull { it.name == name }
+    /**
+     * The configs a profile owns — everything except those registered as [ConfigHandle.global].
+     *
+     * A global config is a property of this installation rather than of a loadout, so capturing it in a
+     * snapshot would mean switching profiles silently rewrites it. That is not a hypothetical: the updater's
+     * "check on startup" toggle used to be captured, so a profile snapshotted while it was off turned it back
+     * off on every switch — and since the switch also writes the restored values through to the live files, the
+     * setting stayed off across restarts with nothing in the menu to explain why.
+     */
+    fun profiled(): List<ConfigHandle<*>> = handles.filter { !it.global }
+
+    /** The profiled config with this file base name, or null. Used to route an entry of an imported blob. */
+    fun byName(name: String): ConfigHandle<*>? = profiled().firstOrNull { it.name == name }
 
     /** Advances the debounce timers; any config whose changes have settled is written now. */
     fun tick() {
@@ -72,14 +83,18 @@ object ConfigRegistry {
         handles.forEach { it.resetToDefault() }
     }
 
-    /** Copies every config's live value into [dir], capturing the current setup as a profile snapshot. */
+    /** Copies every profiled config's live value into [dir], capturing the current setup as a snapshot. */
     fun snapshotTo(dir: Path) {
-        handles.forEach { it.snapshotTo(dir) }
+        profiled().forEach { it.snapshotTo(dir) }
     }
 
     /**
-     * Adopts every config that [dir] has a file for, and returns how many were restored. Configs absent from
-     * the snapshot keep their current value.
+     * Adopts every profiled config that [dir] has a file for, and returns how many were restored. Configs
+     * absent from the snapshot keep their current value.
+     *
+     * A snapshot written before a config became [ConfigHandle.global] still holds a file for it; ignoring that
+     * file rather than deleting it is what makes the change safe to ship — an older Hex reading the same
+     * profile directory keeps working, and nothing has to migrate on disk.
      */
-    fun restoreFrom(dir: Path): Int = handles.count { it.restoreFrom(dir) }
+    fun restoreFrom(dir: Path): Int = profiled().count { it.restoreFrom(dir) }
 }

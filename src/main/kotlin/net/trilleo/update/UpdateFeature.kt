@@ -24,22 +24,32 @@ object UpdateFeature : Feature {
 
     private val LOGGER = LoggerFactory.getLogger("hex/update")
 
-    /** Set by the background check; surfaced once on the next world join. */
+    /** Set by the background check; surfaced once the player exists, then cleared. */
     @Volatile
     private var startupNotice: Component? = null
-    private var noticeShown = false
 
     override fun onInit() {
         UpdateConfig.load()
-        if (UpdateConfig.settings.enabled) {
-            Thread({ runStartupCheck() }, "Hex-UpdateChecker").apply { isDaemon = true }.start()
+        if (!UpdateConfig.settings.enabled) {
+            LOGGER.info("Startup update check is off; enable it under /hexa config → Updates")
+            return
         }
+        Thread({ runStartupCheck() }, "Hex-UpdateChecker").apply { isDaemon = true }.start()
     }
 
-    override fun onWorldJoin(client: Minecraft) {
-        if (noticeShown) return
+    /**
+     * Hands the startup check's result to the player as soon as there is one to hand it to.
+     *
+     * Delivered from the tick rather than from the world-join event, because the check is asynchronous and
+     * its result routinely lands *after* that event has fired — a slow release API, or a jar download over a
+     * thin connection, both outlast a join. Joining fires once per connection, so a notice that arrived a
+     * moment too late used to be dropped for the rest of the session, which made a check that had run and
+     * staged an update look like a feature that had stopped working.
+     */
+    override fun onClientTick(client: Minecraft) {
         val notice = startupNotice ?: return
-        noticeShown = true
+        if (client.player == null) return
+        startupNotice = null
         Notify.send(client, notice)
     }
 
@@ -88,12 +98,22 @@ object UpdateFeature : Feature {
         UpdateStaging.applyOnShutdown()
     }
 
-    /** Background startup path: stage silently, then stash a notice for the next world join. */
+    /**
+     * Background startup path: stage silently, then stash a notice for [onClientTick] to deliver.
+     *
+     * Every outcome is logged. Nothing here reaches the player until they are in a world, so without the log
+     * there is no way to tell a check that found nothing from one that never ran at all.
+     */
     private fun runStartupCheck() {
+        LOGGER.info("Checking for updates (current v{})", UpdateChecker.currentVersion())
         when (val status = UpdateChecker.check(UpdateConfig.settings.includePrereleases)) {
-            is UpdateStatus.Available -> startupNotice = stageAndDescribe(status)
+            is UpdateStatus.Available -> {
+                LOGGER.info("Hex v{} is available", status.version)
+                startupNotice = stageAndDescribe(status)
+            }
+
             is UpdateStatus.Failed -> LOGGER.info("Update check skipped: {}", status.reason)
-            UpdateStatus.UpToDate -> {}
+            UpdateStatus.UpToDate -> LOGGER.info("Hex is up to date")
         }
     }
 
@@ -121,17 +141,20 @@ object UpdateFeature : Feature {
         }
 
         val oldJar = UpdateStaging.currentJar()
-            ?: return notifyOnly(status) // dev env: nothing to swap
+            ?: return notifyOnly(status, "no swappable mods/ jar") // dev env: nothing to swap
         val asset = UpdateDownloader.selectAsset(status.release)
-            ?: return notifyOnly(status)
+            ?: return notifyOnly(status, "the release has no mod jar attached")
         val staged = UpdateDownloader.download(asset)
-            ?: return notifyOnly(status)
+            ?: return notifyOnly(status, "the download did not complete")
 
         UpdateStaging.markPending(version, staged, oldJar)
+        LOGGER.info("Staged Hex v{} at {}; it is applied on exit", version, staged)
         return Notify.line("Hex v$version downloaded — restart to apply.", ChatFormatting.AQUA)
     }
 
-    private fun notifyOnly(status: UpdateStatus.Available): Component {
+    /** The fallback line, plus why staging was skipped — the one thing a bug report needs and never has. */
+    private fun notifyOnly(status: UpdateStatus.Available, reason: String): Component {
+        LOGGER.info("Not staging Hex v{}: {}", status.version, reason)
         val url = status.release.htmlUrl ?: "https://github.com/Trilleo/Hex/releases"
         return Notify.line("Hex v${status.version} is available: $url", ChatFormatting.AQUA)
     }

@@ -76,7 +76,9 @@ object ProfileDirtyTracker {
      */
     private fun differs(dir: Path): Boolean {
         if (!Files.isDirectory(dir)) return false
-        return ConfigRegistry.all().any { handle ->
+        // Profiled only: a global config is never captured, so comparing it could only ever report a
+        // difference the user has no way to resolve.
+        return ConfigRegistry.profiled().any { handle ->
             val file = handle.json.fileIn(dir)
             if (!Files.exists(file)) return@any false
             val saved = runCatching { JsonParser.parseString(Files.readString(file)) }.getOrNull()

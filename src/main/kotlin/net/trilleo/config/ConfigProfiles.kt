@@ -251,8 +251,10 @@ object ConfigProfiles {
                 // switch did nothing, so say so.
                 LOGGER.warn("Profile '{}' has no saved settings; keeping the current ones", name)
             }
-            // Restoring adopts values into memory; write them through so the live files match.
-            ConfigRegistry.all().forEach { it.markDirty() }
+            // Restoring adopts values into memory; write them through so the live files match. Only the
+            // profiled configs were touched, so only those are rewritten — a global config must not have its
+            // live file stamped by a switch that never read it.
+            ConfigRegistry.profiled().forEach { it.markDirty() }
             ConfigRegistry.flushAll()
 
             settings.active = name
@@ -275,7 +277,7 @@ object ConfigProfiles {
             return@runCatching false
         }
         // Restoring adopts values into memory; write them through so the live files match.
-        ConfigRegistry.all().forEach { it.markDirty() }
+        ConfigRegistry.profiled().forEach { it.markDirty() }
         ConfigRegistry.flushAll()
         ProfileDirtyTracker.markClean()
         true
@@ -355,7 +357,7 @@ object ConfigProfiles {
             if (settings.active == name) {
                 settings.active = settings.profiles.first().name
                 ConfigRegistry.restoreFrom(profileDir(settings.active))
-                ConfigRegistry.all().forEach { it.markDirty() }
+                ConfigRegistry.profiled().forEach { it.markDirty() }
                 ConfigRegistry.flushAll()
                 ProfileDirtyTracker.markClean()
             }
@@ -373,10 +375,13 @@ object ConfigProfiles {
      * The profile's name and description ride along so the recipient can import it as a named profile rather
      * than only over their current one. Its auto-switch rule is left out on purpose — it describes where the
      * *sender* plays, and silently binding someone else's profile to a server would be a surprise.
+     *
+     * Only the profiled configs are exported, for the same reason they are the only ones snapshotted: a
+     * pasted blob must not be able to reach into how the recipient's install updates itself.
      */
     fun exportToString(): String {
         val configs = JsonObject()
-        ConfigRegistry.all().forEach { configs.add(it.name, it.exportTree()) }
+        ConfigRegistry.profiled().forEach { configs.add(it.name, it.exportTree()) }
 
         val active = activeEntry()
         val profile = JsonObject()
@@ -430,7 +435,9 @@ object ConfigProfiles {
         for ((name, element) in configs.entrySet()) {
             val handle = ConfigRegistry.byName(name)
             if (handle == null) {
-                LOGGER.warn("Ignoring unknown config '{}' in imported settings", name)
+                // Either genuinely unknown, or a config this version keeps out of profiles — a blob written by
+                // an older Hex still carries the ones that used to be captured.
+                LOGGER.warn("Ignoring config '{}' in imported settings: not a profiled setting", name)
                 continue
             }
             if (handle.importTree(element)) applied++ else LOGGER.warn("Could not apply imported '{}'", name)

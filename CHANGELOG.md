@@ -2,6 +2,34 @@
 
 ## Unreleased
 
+### Fixes
+
+#### Auto Update
+
++ Fixed Hex never checking for updates on startup, however the **Updates** tab was set. Its settings were captured
+  in config profiles, so switching profiles restored — and wrote back to disk — whatever the snapshot happened to
+  hold, silently turning the startup check off for good. `/hexa update` was unaffected, which is why the manual
+  check kept working. The **Updates** tab is now a property of your installation: profiles no longer capture,
+  restore or share it.
++ Fixed the result of the startup check being lost when it arrived after you had already joined a world — a slow
+  connection or a large download could outlast the join, and the message was then dropped for the rest of the
+  session even though the update had been downloaded. It is now delivered whenever you next have a world open.
+
+### Technical Details
+
+#### Config
+
++ `ConfigHandle` takes a `global` flag, and `ConfigRegistry.profiled()` returns everything without it. Snapshot,
+  restore, clipboard export/import and the unsaved-changes comparison all run over the profiled set; flush, tick
+  and reset still run over every config. Snapshots written before a config became global keep their now-ignored
+  file, so nothing has to migrate on disk and an older Hex reads the same directory unchanged.
+
+#### Auto Update
+
++ The startup check logs every outcome — the version it compared, whether one was found, whether it staged, and
+  why it fell back to a link when it did not. Previously only a failed check logged anything, so a check that ran
+  and a check that never started were indistinguishable.
+
 ## Version 1.7.2
 
 ### Fixes
