@@ -6,11 +6,7 @@ import net.minecraft.client.gui.components.Button
 import net.minecraft.client.gui.components.Tooltip
 import net.minecraft.client.gui.screens.Screen
 import net.minecraft.network.chat.Component
-import net.trilleo.config.ConfigProfiles
-import net.trilleo.config.ConfigRegistry
-import net.trilleo.config.HexConfigScreens
-import net.trilleo.config.ProfileAutoSwitch
-import net.trilleo.config.ProfileDirtyTracker
+import net.trilleo.config.*
 
 /**
  * The profile manager: every saved setup in one list, with switching, renaming, duplicating and deleting.

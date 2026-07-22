@@ -6,7 +6,6 @@ import com.google.gson.reflect.TypeToken
 import net.fabricmc.loader.api.FabricLoader
 import net.minecraft.ChatFormatting
 import net.minecraft.client.Minecraft
-import net.minecraft.network.chat.Component
 import net.trilleo.util.Notify
 import org.slf4j.LoggerFactory
 import java.nio.file.Files
@@ -312,7 +311,8 @@ object ConfigProfiles {
             val from = profileDir(source)
             val to = profileDir(target)
             Files.createDirectories(to)
-            if (source == settings.active) ConfigRegistry.snapshotTo(to) else from.toFile().copyRecursively(to.toFile(), overwrite = true)
+            if (source == settings.active) ConfigRegistry.snapshotTo(to) else from.toFile()
+                .copyRecursively(to.toFile(), overwrite = true)
 
             val now = System.currentTimeMillis()
             settings.profiles.add(

@@ -62,14 +62,12 @@
   "hex.profiles.status.saved": "%s — saved",
   "hex.profiles.status.unsaved": "%s — unsaved changes",
   "hex.profiles.unsaved_marker": " *",
-
   "hex.profiles.switch": "Switch",
   "hex.profiles.switch.tooltip": "Load this profile's settings.",
   "hex.profiles.duplicate.tooltip": "Make a copy of this profile.",
   "hex.profiles.edit.tooltip": "Rename this profile, describe it, or set when it activates by itself.",
   "hex.profiles.delete.tooltip": "Delete this profile and its saved settings.",
   "hex.profiles.delete.last.tooltip": "The last remaining profile cannot be deleted.",
-
   "hex.profiles.save": "Save",
   "hex.profiles.save.tooltip": "Store your current settings into the active profile.",
   "hex.profiles.discard": "Discard",
@@ -85,7 +83,6 @@
   "hex.profiles.capture_keys.on": "MC keys: on",
   "hex.profiles.capture_keys.off": "MC keys: off",
   "hex.profiles.capture_keys.tooltip": "Also save Minecraft's own key bindings in each profile. Off by default: this covers every binding, including other mods', so switching a profile can undo a rebind you made elsewhere.",
-
   "hex.profiles.new.title": "New profile",
   "hex.profiles.edit.title": "Edit profile",
   "hex.profiles.duplicate.title": "Copy profile",
@@ -100,33 +97,27 @@
   "hex.profiles.edit.error.unusable": "That name has no letters or digits in it.",
   "hex.profiles.edit.error.taken": "A profile with that name already exists.",
   "hex.profiles.edit.will_rename": "Will be saved as \"%s\".",
-
   "hex.profiles.auto.none": "Activates on: nothing (switch by hand)",
   "hex.profiles.auto.server": "Activates on: a server",
   "hex.profiles.auto.singleplayer": "Activates on: singleplayer",
   "hex.profiles.auto.island": "Activates on: a Skyblock island",
-
   "hex.profiles.switch_prompt.title": "Unsaved changes",
   "hex.profiles.switch_prompt.message": "Profile \"%s\" has changes you have not saved.",
   "hex.profiles.switch_prompt.detail": "Switching to \"%s\" will replace your current settings.",
   "hex.profiles.switch_prompt.save": "Save & switch",
   "hex.profiles.switch_prompt.discard": "Discard & switch",
-
   "hex.profiles.discard.title": "Discard changes?",
   "hex.profiles.discard.message": "Reload profile \"%s\" as it was last saved?",
   "hex.profiles.discard.detail": "Everything you have changed since then will be lost.",
-
   "hex.profiles.delete.title": "Delete profile?",
   "hex.profiles.delete.message": "Delete profile \"%s\"?",
   "hex.profiles.delete.detail": "Its saved settings are removed for good.",
-
   "hex.profiles.import.title": "Paste settings",
   "hex.profiles.import.message": "How should the settings on your clipboard be used?",
   "hex.profiles.import.detail": "Importing here replaces your current settings; importing as new keeps them.",
   "hex.profiles.import.as_new": "As a new profile",
   "hex.profiles.import.here": "Over this profile",
   "hex.profiles.import.new_title": "Name the imported profile",
-
   "hex.profiles.reset_all.title": "Reset everything?",
   "hex.profiles.reset_all.message": "Restore every Hex setting to its default?",
   "hex.profiles.reset_all.detail": "Your saved profiles are untouched — Discard brings the active one back."

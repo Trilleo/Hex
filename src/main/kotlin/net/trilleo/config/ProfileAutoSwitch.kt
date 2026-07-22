@@ -3,7 +3,7 @@ package net.trilleo.config
 import net.minecraft.client.Minecraft
 import net.trilleo.skyblock.SkyblockLocation
 import org.slf4j.LoggerFactory
-import java.util.Locale
+import java.util.*
 
 /**
  * Activates the profile that matches where the player is, so a Skyblock setup and a survival setup do not

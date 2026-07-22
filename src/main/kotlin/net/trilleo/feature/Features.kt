@@ -12,12 +12,7 @@ import net.fabricmc.loader.api.FabricLoader
 import net.minecraft.client.KeyMapping
 import net.minecraft.network.chat.Component
 import net.trilleo.Hex
-import net.trilleo.config.ConfigCategory
-import net.trilleo.config.ConfigProfiles
-import net.trilleo.config.ConfigRegistry
-import net.trilleo.config.HexConfigScreens
-import net.trilleo.config.ProfileAutoSwitch
-import net.trilleo.config.VanillaKeysConfig
+import net.trilleo.config.*
 import org.slf4j.LoggerFactory
 
 /**

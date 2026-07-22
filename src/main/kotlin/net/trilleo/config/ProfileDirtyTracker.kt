@@ -80,8 +80,8 @@ object ProfileDirtyTracker {
             val file = handle.json.fileIn(dir)
             if (!Files.exists(file)) return@any false
             val saved = runCatching { JsonParser.parseString(Files.readString(file)) }.getOrNull()
-                // An unparseable snapshot is not evidence of an edit; restoring it would fall back to
-                // defaults anyway, so treat it as nothing to compare against.
+            // An unparseable snapshot is not evidence of an edit; restoring it would fall back to
+            // defaults anyway, so treat it as nothing to compare against.
                 ?: return@any false
             saved != handle.exportTree()
         }

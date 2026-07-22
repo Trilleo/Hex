@@ -1,6 +1,5 @@
 package net.trilleo.hand
 
-import net.minecraft.client.Minecraft
 import net.trilleo.config.ConfigCategory
 import net.trilleo.feature.Feature
 import java.util.*

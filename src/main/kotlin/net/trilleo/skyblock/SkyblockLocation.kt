@@ -4,7 +4,8 @@ import net.minecraft.client.Minecraft
 import net.minecraft.world.scores.DisplaySlot
 import net.minecraft.world.scores.Objective
 import net.minecraft.world.scores.Scoreboard
-import java.util.Locale
+import net.trilleo.skyblock.SkyblockLocation.POLL_INTERVAL_TICKS
+import java.util.*
 
 /**
  * Where on Skyblock the player currently is, read from the scoreboard sidebar.
