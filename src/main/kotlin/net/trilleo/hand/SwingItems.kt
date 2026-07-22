@@ -13,7 +13,7 @@ import net.trilleo.util.Notify
  * add/remove flow the keybind, the command and the editor's "add held item" button all share.
  *
  * Deliberately **not** gated on [net.trilleo.skyblock.SkyblockLocation.onSkyblock]. A rule can only match an
- * item that already carries an `ExtraAttributes` id or uuid, and nothing outside Skyblock writes those — so
+ * item that already carries a Skyblock custom-data id or uuid, and nothing outside Skyblock writes those — so
  * the NBT is both a stronger and a cheaper signal than the scoreboard parse. Gating on the location reader as
  * well would inherit its weaknesses for nothing: it is null for the first seconds after joining, so the swing
  * would visibly flick back on at every login and server transfer, and it reads false whenever Hypixel changes

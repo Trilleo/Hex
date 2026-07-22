@@ -2,6 +2,23 @@
 
 ## Unreleased
 
+### Fixes
+
+#### Hand Display
+
++ Fixed **Toggle Swing For Held Item** replying **"That is not a Skyblock item"** for every item, including real
+  Skyblock ones. Per-item swing rules could not be added by keybind or by the editor's add button, and existing
+  rules never matched, so listed items still swung.
+
+### Technical Details
+
+#### Skyblock Items
+
++ Hypixel serves the component item format natively, and its `id` / `uuid` now sit at the root of
+  `minecraft:custom_data` rather than nested inside an `ExtraAttributes` compound. `SkyblockItem` read only the
+  nested compound, so every item looked vanilla. It now reads either layout, matching Skyblocker's `ItemUtils`.
+  `SkyblockItem.extraAttributes` is renamed to `attributes` to stop implying the old key.
+
 ## Version 1.7.1
 
 ### Fixes
