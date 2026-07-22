@@ -38,8 +38,16 @@ object HandState {
     val rotationY: Float get() = HandConfig.settings.rotationY.toFloat()
     val rotationZ: Float get() = HandConfig.settings.rotationZ.toFloat()
 
-    /** Whether the first-person swing animation should be held at rest. */
-    fun shouldSuppressSwing(): Boolean = active && HandConfig.settings.disableSwing
+    /**
+     * Whether the first-person swing animation should be held at rest.
+     *
+     * Two independent reasons can hide it: a per-item rule matching what is in the main hand, or the global
+     * `disable_swing` setting. The per-item half deliberately does **not** check [active] — the list has its
+     * own switch and its own config file, and someone turning off the hand *display* did not ask to lose a
+     * curated item list. See [SwingItems] for the cost of that call (three early-outs, no NBT).
+     */
+    fun shouldSuppressSwing(): Boolean =
+        SwingItems.suppressesHeldItem() || (active && HandConfig.settings.disableSwing)
 
     /**
      * Rescales the local player's swing animation length. [vanilla] is whatever the game computed (Haste

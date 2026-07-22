@@ -1,7 +1,17 @@
 package net.trilleo.hand
 
+import com.mojang.blaze3d.platform.InputConstants
+import com.mojang.brigadier.builder.LiteralArgumentBuilder
+import net.fabricmc.fabric.api.client.command.v2.FabricClientCommandSource
+import net.fabricmc.fabric.api.client.keymapping.v1.KeyMappingHelper
+import net.minecraft.client.KeyMapping
+import net.minecraft.client.Minecraft
+import net.trilleo.Hex
+import net.trilleo.command.Commands
 import net.trilleo.config.ConfigCategory
 import net.trilleo.feature.Feature
+import net.trilleo.hand.gui.SwingItemsScreen
+import net.trilleo.skyblock.item.HeldItem
 import java.util.*
 
 /**
@@ -20,8 +30,62 @@ object HandFeature : Feature {
     /** Default values for the settings rows; a renderer offers "reset" against these. */
     private val defaults = HandSettings()
 
+    /** Adds or removes the held item from the per-item swing list. Unbound by default. */
+    private lateinit var toggleSwingItemKey: KeyMapping
+
     override fun onInit() {
         HandConfig.load()
+        SwingItemsConfig.load()
+
+        toggleSwingItemKey = KeyMapping(
+            "key.hex.hand.toggle_swing_item",
+            InputConstants.UNKNOWN.value,
+            Hex.KEY_CATEGORY,
+        )
+        KeyMappingHelper.registerKeyMapping(toggleSwingItemKey)
+    }
+
+    override fun onClientTick(client: Minecraft) {
+        // Unconditional, and ahead of everything else: the per-item rule is read from the render path every
+        // frame, and it stays live even when HandSettings.enabled is off, so this cache cannot be gated on
+        // the master switch.
+        HeldItem.tick(client)
+
+        while (toggleSwingItemKey.consumeClick()) {
+            SwingItems.toggleHeld(client)
+        }
+    }
+
+    override fun onWorldLeave(client: Minecraft) {
+        // So an item from the last server cannot go on matching into the next one.
+        HeldItem.reset()
+    }
+
+    override fun registerCommands(hex: LiteralArgumentBuilder<FabricClientCommandSource>) {
+        hex.then(
+            Commands.literal("hand")
+                // A bare `/hexa hand` states its subcommands rather than guessing at one of them.
+                .executes { ctx ->
+                    Commands.feedback(ctx.source, "/hexa hand swing — edit the per-item swing list")
+                    Commands.feedback(ctx.source, "/hexa hand toggle — add or remove the held item")
+                    1
+                }
+                .then(
+                    Commands.literal("swing").executes { ctx ->
+                        // Deferred: opening a screen mid-command is undone when the chat screen that ran the
+                        // command closes.
+                        val client = ctx.source.client
+                        client.execute { client.setScreen(SwingItemsScreen(null)) }
+                        1
+                    },
+                )
+                .then(
+                    Commands.literal("toggle").executes { ctx ->
+                        SwingItems.toggleHeld(ctx.source.client)
+                        1
+                    },
+                ),
+        )
     }
 
     override fun settingsCategory(): ConfigCategory = ConfigCategory.build("hand") {
@@ -69,6 +133,16 @@ object HandFeature : Feature {
             get = { HandConfig.settings.disableSwing },
             set = { HandConfig.settings.disableSwing = it; HandConfig.save() },
         )
+
+        // Grouped with the two swing controls, since all three answer "when does my swing show?".
+        toggle(
+            "swing_items_enabled",
+            default = true,
+            get = { SwingItemsConfig.active },
+            set = { SwingItemsConfig.settings.enabled = it; SwingItemsConfig.save() },
+        )
+
+        action("swing_items") { screen -> Minecraft.getInstance().setScreen(SwingItemsScreen(screen)) }
 
         slider(
             "swing_speed",

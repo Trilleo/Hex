@@ -2,6 +2,38 @@
 
 ## Unreleased
 
+### New Features
+
+#### Hand Display
+
++ Added **per-item swing**. List Skyblock items — by item ID, which covers every copy, or by a single item's UUID —
+  and holding one in your main hand hides the swing animation, whatever the Hand tab's own swing switch says. Open
+  the list with **Per-item swing…** in the **Hand** tab of `/hexa config` or with `/hexa hand swing`.
++ Added a **Toggle Swing For Held Item** keybind under Options → Controls → **Hex**, which adds the item you are
+  holding to the per-item swing list or removes it if it is already there, without opening a menu. Unbound by
+  default; `/hexa hand toggle` does the same.
+
+### Improvements
+
+#### Hand Display
+
++ Reworded the **Enabled** tooltip in the **Hand** tab to name what the switch actually governs, now that per-item
+  swing rules keep working while it is off.
+
+### Technical Details
+
+#### Skyblock
+
++ Added a reusable Skyblock item system under `net.trilleo.skyblock.item`: a reader that pulls an item's
+  `ExtraAttributes` ID and UUID out of its custom-data component, a match-rule model that new match kinds can be
+  added to without migrating existing config files, and a main-hand cache invalidated on stack identity so the
+  per-frame swing hook never deep-copies NBT.
+
+#### Config
+
++ Added `swing_items.json`, registered with `ConfigRegistry` so the per-item list takes part in config profiles and
+  clipboard export. Kept separate from `hand.json` so resetting the **Hand** tab does not clear the item list.
+
 ## Version 1.6.0
 
 ### New Features

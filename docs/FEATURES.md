@@ -105,6 +105,30 @@ Reposition your held item in first person and change how it swings. The **Hand**
 the main hand's position, scale and rotation, a swing-speed multiplier, and a switch to hide the swing animation
 entirely. Everything is cosmetic: your attack cooldown, mining speed and reach are untouched.
 
+To hide the swing for only certain items rather than all of them, see [Per-item swing](#per-item-swing).
+
+## Per-item swing
+
+Some items look better swinging and some do not, and the Hand tab's swing switch is all or nothing. Per-item swing is
+the exception list: while you hold a listed Skyblock item in your main hand, the swing animation is hidden. Hold
+anything else and your normal hand settings apply again.
+
+Open the list with **Per-item swing…** in the **Hand** tab of `/hexa config`, or with `/hexa hand swing`. Each entry
+matches one of two ways:
+
+- **Item ID** — a Skyblock item ID such as `HYPERION`, matching every copy of that item, including one you buy later.
+- **UUID** — one specific item, so a second Hyperion is unaffected. Only unique (non-stackable) items have one.
+
+The quickest way to add something is to hold it and press **Add held item**, which picks the right kind for you and
+fills in the item's name. Faster still, bind **Toggle Swing For Held Item** under Options → Controls → **Hex**: pressing
+it adds whatever you are holding, or removes it if it is already listed, and says which in chat. `/hexa hand toggle`
+does the same thing without a keybind.
+
+The list has its own switch and works whether or not the Hand tab's master switch is on, so you can keep it running
+with the rest of the hand settings off. It needs Skyblock's own item data, so it does nothing for vanilla items or on
+other servers. Resetting the **Hand** tab leaves the list alone; it is stored separately at
+`config/hex/swing_items.json` if you would rather edit it by hand.
+
 ## Auto-update
 
 Hex checks its [GitHub releases](https://github.com/Trilleo/Hex/releases) on startup and, when a newer version is out,
