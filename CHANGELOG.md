@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+## Version 1.7.1
+
 ### Fixes
 
 #### Auto Update
