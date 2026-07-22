@@ -142,7 +142,6 @@
   "hex.swing_items.add_empty.tooltip": "Add a blank rule to type an ID into.",
   "hex.swing_items.done": "Done",
   "hex.swing_items.done.tooltip": "Save and close.",
-
   "hex.config.category.reminders": "Reminders",
   "hex.config.reminders.enabled": "Enabled",
   "hex.config.reminders.enabled.tooltip": "Master switch. When off, nothing counts down and the panel is hidden, but your reminders are kept.",
@@ -180,7 +179,6 @@
   "hex.config.reminders.flash_seconds.tooltip": "How long a reminder stays highlighted on the panel after it fires.",
   "hex.config.reminders.snooze_minutes": "Snooze for",
   "hex.config.reminders.snooze_minutes.tooltip": "How far the snooze keybind pushes a firing reminder back.",
-
   "hex.reminders.hud.title": "Reminder panel position",
   "hex.reminders.hud.hint": "Drag the panel, or nudge it with the arrow keys — hold Shift to move further.",
   "hex.reminders.hud.reset": "Reset position",
@@ -188,16 +186,13 @@
   "hex.reminders.hud.sample.1": "Booster cookie  2d 07h",
   "hex.reminders.hud.sample.2": "Forge: Refined Diamond  4:31",
   "hex.reminders.hud.sample.3": "Ability ready  12s",
-
   "key.hex.reminder.dismiss": "Dismiss Reminder",
   "key.hex.reminder.snooze": "Snooze Reminder",
   "key.hex.reminder.open": "Open Reminders",
-
   "hex.config.reminders.edit_list": "Reminders…",
   "hex.config.reminders.edit_list.tooltip": "Add, edit and delete your reminders.",
   "hex.config.reminders.presets": "Presets…",
   "hex.config.reminders.presets.tooltip": "Browse ready-made reminders and add the ones you want.",
-
   "hex.reminders.title": "Reminders",
   "hex.reminders.empty": "No reminders yet. Press Add, or take one from Presets.",
   "hex.reminders.add": "Add",
@@ -211,7 +206,6 @@
   "hex.reminders.delete.tooltip": "Delete this reminder and its countdown.",
   "hex.reminders.new_name": "New reminder",
   "hex.reminders.new_text": "Reminder",
-
   "hex.reminders.edit.title": "Edit reminder",
   "hex.reminders.edit.test": "Test",
   "hex.reminders.edit.done": "Done",
@@ -219,7 +213,6 @@
   "hex.reminders.edit.delay.too_long": "Longer than the seven-day maximum.",
   "hex.reminders.edit.sound.unknown": "No sound with that id.",
   "hex.reminders.edit.trigger_value.blank": "This trigger needs a value.",
-
   "hex.config.reminder_edit.enabled": "Enabled",
   "hex.config.reminder_edit.name": "Name",
   "hex.config.reminder_edit.name.tooltip": "What this reminder is called in the list.",
@@ -256,7 +249,6 @@
   "hex.config.reminder_edit.sound_volume": "Volume",
   "hex.config.reminder_edit.reset_preset": "Reset to preset",
   "hex.config.reminder_edit.reset_preset.tooltip": "Discard your changes and take the version that ships with the mod.",
-
   "hex.reminders.conditions.title": "Conditions",
   "hex.reminders.conditions.empty": "No conditions — this reminder always fires.",
   "hex.reminders.conditions.add": "Add",
@@ -267,7 +259,6 @@
   "hex.reminders.conditions.kind.on_island": "On island",
   "hex.reminders.conditions.kind.not_on_island": "Not on island",
   "hex.reminders.conditions.kind.holding_item": "Holding item",
-
   "hex.reminders.presets.title": "Reminder presets",
   "hex.reminders.presets.empty": "No presets in this build.",
   "hex.reminders.presets.add": "Add",

@@ -1,5 +1,6 @@
 package net.trilleo.hand
 
+import net.trilleo.hand.HandState.active
 import kotlin.math.roundToInt
 
 /**

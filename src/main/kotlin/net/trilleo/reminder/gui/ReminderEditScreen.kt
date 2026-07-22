@@ -168,7 +168,8 @@ class ReminderEditScreen(
         )
 
         action("conditions") { screen ->
-            Minecraft.getInstance().setScreen(ReminderConditionsScreen(screen, reminder, this@ReminderEditScreen::touch))
+            Minecraft.getInstance()
+                .setScreen(ReminderConditionsScreen(screen, reminder, this@ReminderEditScreen::touch))
         }
 
         // Actions are expressed as switches rather than as a list, because there are only two of them and a

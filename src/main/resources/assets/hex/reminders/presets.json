@@ -39,7 +39,9 @@
         },
         "conditions": [],
         "actions": [
-          { "kind": "HUD" }
+          {
+            "kind": "HUD"
+          }
         ]
       }
     },
@@ -58,11 +60,21 @@
           "literal": false
         },
         "conditions": [
-          { "kind": "ON_SKYBLOCK", "value": "" }
+          {
+            "kind": "ON_SKYBLOCK",
+            "value": ""
+          }
         ],
         "actions": [
-          { "kind": "HUD" },
-          { "kind": "SOUND", "value": "minecraft:block.note_block.pling", "pitch": 1.2, "volume": 0.8 }
+          {
+            "kind": "HUD"
+          },
+          {
+            "kind": "SOUND",
+            "value": "minecraft:block.note_block.pling",
+            "pitch": 1.2,
+            "volume": 0.8
+          }
         ]
       }
     }

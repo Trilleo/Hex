@@ -2,11 +2,7 @@ package net.trilleo.hand.gui
 
 import net.minecraft.client.Minecraft
 import net.minecraft.client.gui.GuiGraphicsExtractor
-import net.minecraft.client.gui.components.AbstractWidget
-import net.minecraft.client.gui.components.Button
-import net.minecraft.client.gui.components.ContainerObjectSelectionList
-import net.minecraft.client.gui.components.EditBox
-import net.minecraft.client.gui.components.Tooltip
+import net.minecraft.client.gui.components.*
 import net.minecraft.client.gui.narration.NarratableEntry
 import net.minecraft.network.chat.Component
 import net.trilleo.hand.SwingItemsConfig

@@ -2,6 +2,8 @@ package net.trilleo.reminder
 
 import net.minecraft.ChatFormatting
 import net.minecraft.client.Minecraft
+import net.trilleo.reminder.ReminderEngine.NO_CATCH_UP
+import net.trilleo.reminder.ReminderEngine.settle
 import net.trilleo.reminder.hud.ReminderHudModel
 import net.trilleo.reminder.model.Reminder
 import net.trilleo.reminder.model.TriggerKind
@@ -116,6 +118,7 @@ object ReminderEngine {
                 TriggerKind.TIMER -> if (reminder.trigger.repeat && ReminderState.of(reminder.id).phase == Phase.IDLE) {
                     arm(reminder, now, null)
                 }
+
                 else -> Unit
             }
         }
@@ -291,6 +294,10 @@ object ReminderEngine {
     fun disableForBadPattern(client: Minecraft, reminder: Reminder) {
         reminder.enabled = false
         ReminderConfig.markDirty()
-        Notify.chat(client, "Disabled reminder \"${reminder.name}\": its pattern is too costly to match.", ChatFormatting.RED)
+        Notify.chat(
+            client,
+            "Disabled reminder \"${reminder.name}\": its pattern is too costly to match.",
+            ChatFormatting.RED
+        )
     }
 }

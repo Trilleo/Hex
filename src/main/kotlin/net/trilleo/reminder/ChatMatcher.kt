@@ -1,5 +1,7 @@
 package net.trilleo.reminder
 
+import net.trilleo.reminder.ChatMatcher.BUDGET
+import net.trilleo.reminder.ChatMatcher.MAX_INPUT
 import org.slf4j.LoggerFactory
 import java.util.*
 import java.util.concurrent.ConcurrentHashMap
@@ -185,6 +187,7 @@ object ChatMatcher {
                     out.append(groups[next - '0'].orEmpty())
                     i += 2
                 }
+
                 else -> {
                     out.append(ch)
                     i++

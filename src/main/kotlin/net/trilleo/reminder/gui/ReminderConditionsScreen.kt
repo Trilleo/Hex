@@ -177,6 +177,7 @@ class ReminderConditionsScreen(
                 condition.value = when (condition.kind) {
                     ConditionKind.ON_ISLAND, ConditionKind.NOT_ON_ISLAND ->
                         condition.value.trim().lowercase(Locale.ROOT)
+
                     ConditionKind.HOLDING_ITEM -> condition.value.trim().uppercase(Locale.ROOT)
                     ConditionKind.ON_SKYBLOCK -> condition.value
                 }

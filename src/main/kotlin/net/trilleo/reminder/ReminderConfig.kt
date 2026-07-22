@@ -4,6 +4,7 @@ import com.google.gson.reflect.TypeToken
 import net.trilleo.config.ConfigHandle
 import net.trilleo.config.ConfigRegistry
 import net.trilleo.config.JsonConfig
+import net.trilleo.reminder.ReminderConfig.normalize
 import net.trilleo.reminder.hud.HudCorner
 import net.trilleo.reminder.hud.HudSettings
 import net.trilleo.reminder.hud.HudSort

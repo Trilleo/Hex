@@ -2,14 +2,16 @@ package net.trilleo.reminder.preset.gui
 
 import net.minecraft.client.Minecraft
 import net.minecraft.client.gui.GuiGraphicsExtractor
-import net.minecraft.client.gui.components.*
+import net.minecraft.client.gui.components.AbstractWidget
+import net.minecraft.client.gui.components.Button
+import net.minecraft.client.gui.components.ContainerObjectSelectionList
+import net.minecraft.client.gui.components.StringWidget
 import net.minecraft.client.gui.narration.NarratableEntry
 import net.minecraft.client.gui.screens.Screen
 import net.minecraft.network.chat.Component
 import net.trilleo.reminder.hud.ReminderHudModel
 import net.trilleo.reminder.preset.ReminderPreset
 import net.trilleo.reminder.preset.ReminderPresets
-import java.util.*
 
 /**
  * Browses the bundled preset catalogue and adds presets to the player's reminders.

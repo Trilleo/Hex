@@ -15,18 +15,13 @@ import net.trilleo.command.Commands
 import net.trilleo.config.ConfigCategory
 import net.trilleo.feature.Feature
 import net.trilleo.reminder.gui.RemindersScreen
-import net.trilleo.reminder.preset.PresetSync
-import net.trilleo.reminder.preset.ReminderPresets
-import net.trilleo.reminder.preset.gui.PresetsScreen
-import net.trilleo.reminder.hud.HudCorner
-import net.trilleo.reminder.hud.HudSettings
-import net.trilleo.reminder.hud.HudSort
-import net.trilleo.reminder.hud.ReminderHudModel
-import net.trilleo.reminder.hud.ReminderHudRenderer
-import net.trilleo.reminder.hud.ReminderHudScreen
+import net.trilleo.reminder.hud.*
 import net.trilleo.reminder.model.Reminder
 import net.trilleo.reminder.model.ReminderAction
 import net.trilleo.reminder.model.Trigger
+import net.trilleo.reminder.preset.PresetSync
+import net.trilleo.reminder.preset.ReminderPresets
+import net.trilleo.reminder.preset.gui.PresetsScreen
 import net.trilleo.util.Duration
 import net.trilleo.util.TextClean
 import java.util.*
@@ -168,7 +163,10 @@ object ReminderFeature : Feature {
         )
     }
 
-    private fun openScreen(source: FabricClientCommandSource, screen: () -> net.minecraft.client.gui.screens.Screen): Int {
+    private fun openScreen(
+        source: FabricClientCommandSource,
+        screen: () -> net.minecraft.client.gui.screens.Screen
+    ): Int {
         val client = source.client
         client.execute { client.setScreen(screen()) }
         return 1
@@ -192,7 +190,9 @@ object ReminderFeature : Feature {
             this.text = text
             ephemeral = true
             trigger = Trigger().apply { seconds = ms / 1000.0 }
-            actions = mutableListOf(ReminderAction(), ReminderAction().apply { kind = net.trilleo.reminder.model.ActionKind.SOUND })
+            actions = mutableListOf(
+                ReminderAction(),
+                ReminderAction().apply { kind = net.trilleo.reminder.model.ActionKind.SOUND })
         }
         ReminderConfig.settings.reminders.add(reminder)
         ReminderConfig.markDirty()
@@ -265,7 +265,9 @@ object ReminderFeature : Feature {
             step = 1.0,
             default = HudSettings().maxRows.toDouble(),
             get = { ReminderConfig.hud.maxRows.toDouble() },
-            set = { ReminderConfig.hud.maxRows = it.toInt(); ReminderHudModel.invalidate(); ReminderConfig.markDirty() },
+            set = {
+                ReminderConfig.hud.maxRows = it.toInt(); ReminderHudModel.invalidate(); ReminderConfig.markDirty()
+            },
             format = { it.toInt().toString() },
         )
 
