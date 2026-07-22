@@ -4,6 +4,13 @@
 
 ### New Features
 
+#### Attack Mode Switch
+
++ Added a **Cycle Attack Mode** keybind under Options → Controls → **Hex**, which flips Minecraft's
+  **Attack/Destroy** control between **Hold** and **Toggle** without leaving the game. Each switch is announced
+  in chat and plays a short sound — higher for **Toggle**, lower for **Hold** — and is saved to your Minecraft
+  options. Unbound by default.
+
 #### Config Profiles
 
 + Added a dedicated **Profiles** screen, reached from the button in the config menu's footer. Every profile is

@@ -3,6 +3,7 @@ package net.trilleo
 import net.fabricmc.api.ClientModInitializer
 import net.minecraft.client.KeyMapping
 import net.minecraft.resources.Identifier
+import net.trilleo.attack.AttackModeFeature
 import net.trilleo.feature.Features
 import net.trilleo.freecam.FreecamFeature
 import net.trilleo.hand.HandFeature
@@ -30,6 +31,7 @@ object Hex : ClientModInitializer {
         Features.register(KeybindsFeature)
         Features.register(FreecamFeature)
         Features.register(HandFeature)
+        Features.register(AttackModeFeature)
         Features.register(UpdateFeature)
         Features.bootstrap()
 

@@ -81,6 +81,17 @@ it. For example, switch **Attack/Destroy** between **Left Button** and **J** so 
 work as well as keyboard keys; each switch is announced in chat, plays a short sound, and is saved to your Minecraft
 options. Add one with **Add Switch** on the Hex Keybinds screen.
 
+## Attack mode switch
+
+Press a keybind to flip **Attack/Destroy** between **Hold** and **Toggle**, so you can switch mid-session instead of
+opening Options → Controls — hold to break a long line of blocks, toggle for a sustained fight. Each switch is announced
+in chat and plays a short sound, higher for **Toggle** and lower for **Hold**, so you can tell which mode you landed on
+without reading chat.
+
+This drives Minecraft's own **Attack/Destroy** mode setting, so the change shows up in the vanilla Controls screen and
+is saved to your Minecraft options. Switching always leaves you not attacking, even if the button was latched down at
+the time. Bind it under Options → Controls → **Hex**; while it is unbound the feature does nothing.
+
 ## Freecam
 
 Press a keybind to detach the camera from your player and fly it around freely to observe your surroundings (WASD to

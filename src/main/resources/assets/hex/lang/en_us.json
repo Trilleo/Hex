@@ -3,6 +3,7 @@
   "key.hex.open_config": "Open Hex Config",
   "key.hex.open_menu": "Open Hex Keybinds",
   "key.hex.freecam.toggle": "Toggle Freecam",
+  "key.hex.attack.cycle_mode": "Cycle Attack Mode",
   "hex.config.title": "Hex Config",
   "hex.config.on": "On",
   "hex.config.off": "Off",
