@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+## Version 1.7.0
+
 ### New Features
 
 #### Hand Display
