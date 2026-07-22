@@ -37,71 +37,91 @@ class ProfilesScreen(private val parent: Screen?) : Screen(Component.translatabl
         layoutFooter()
     }
 
-    private fun layoutFooter() {
-        val y = height - FOOTER_HEIGHT + (FOOTER_HEIGHT - BUTTON_HEIGHT) / 2 - ROW_TWO_LIFT
-        var x = MARGIN
+    /**
+     * How wide a button has to be to show [label] in full.
+     *
+     * Measured rather than fixed: labels here range from "New" to "Paste from clipboard", and a width that
+     * suits one truncates the other. Measuring also means a translation longer than the English keeps working
+     * without anyone having to re-tune a constant.
+     */
+    private fun buttonWidth(label: Component): Int =
+        (font.width(label) + BUTTON_PADDING).coerceAtLeast(MIN_BUTTON_WIDTH)
 
+    private fun layoutFooter() {
+        val done = Component.translatable("gui.done")
+        val keysLabel = if (ConfigProfiles.settings.captureVanillaKeys) KEYS_ON else KEYS_OFF
+
+        val y = height - FOOTER_HEIGHT + (FOOTER_HEIGHT - BUTTON_HEIGHT * 2 - GAP) / 2
+        val y2 = y + BUTTON_HEIGHT + GAP
+
+        // Each row keeps one button pinned to the right edge; the rest flow from the left.
+        val doneWidth = buttonWidth(done)
+        val resetWidth = buttonWidth(RESET_ALL)
+
+        var x = MARGIN
         saveButton = addRenderableWidget(
             Button.builder(SAVE) { saveActive() }
-                .bounds(x, y, WIDE_BUTTON, BUTTON_HEIGHT)
+                .bounds(x, y, buttonWidth(SAVE), BUTTON_HEIGHT)
                 .tooltip(TIP_SAVE)
                 .build(),
         )
-        x += WIDE_BUTTON + GAP
+        x += buttonWidth(SAVE) + GAP
 
         discardButton = addRenderableWidget(
             Button.builder(DISCARD) { discardActive() }
-                .bounds(x, y, WIDE_BUTTON, BUTTON_HEIGHT)
+                .bounds(x, y, buttonWidth(DISCARD), BUTTON_HEIGHT)
                 .tooltip(TIP_DISCARD)
                 .build(),
         )
-        x += WIDE_BUTTON + GAP
+        x += buttonWidth(DISCARD) + GAP
 
         addRenderableWidget(
             Button.builder(NEW) { requestNew() }
-                .bounds(x, y, NARROW_BUTTON, BUTTON_HEIGHT)
+                .bounds(x, y, buttonWidth(NEW), BUTTON_HEIGHT)
                 .tooltip(TIP_NEW)
                 .build(),
         )
 
-        // Second row: transfer and the destructive reset, kept away from the per-profile actions above.
-        val y2 = y + BUTTON_HEIGHT + GAP
-        var x2 = MARGIN
+        addRenderableWidget(
+            Button.builder(done) { onClose() }
+                .bounds(width - MARGIN - doneWidth, y, doneWidth, BUTTON_HEIGHT)
+                .build(),
+        )
 
+        // Second row: transfer and the destructive reset, kept away from the per-profile actions above.
+        var x2 = MARGIN
         addRenderableWidget(
             Button.builder(EXPORT) { export() }
-                .bounds(x2, y2, WIDE_BUTTON, BUTTON_HEIGHT)
+                .bounds(x2, y2, buttonWidth(EXPORT), BUTTON_HEIGHT)
                 .tooltip(TIP_EXPORT)
                 .build(),
         )
-        x2 += WIDE_BUTTON + GAP
+        x2 += buttonWidth(EXPORT) + GAP
 
         addRenderableWidget(
             Button.builder(IMPORT) { requestImport() }
-                .bounds(x2, y2, WIDE_BUTTON, BUTTON_HEIGHT)
+                .bounds(x2, y2, buttonWidth(IMPORT), BUTTON_HEIGHT)
                 .tooltip(TIP_IMPORT)
                 .build(),
         )
-        x2 += WIDE_BUTTON + GAP
+        x2 += buttonWidth(IMPORT) + GAP
 
+        // Squeezed if the row would otherwise run under Reset all on a narrow window. The tooltip still says
+        // what it does, so a clipped label is recoverable in a way an unreachable button is not.
+        val keysWidth = buttonWidth(keysLabel)
+            .coerceAtMost((width - MARGIN - resetWidth - GAP - x2).coerceAtLeast(MIN_BUTTON_WIDTH))
         addRenderableWidget(
-            Button.builder(if (ConfigProfiles.settings.captureVanillaKeys) KEYS_ON else KEYS_OFF) {
+            Button.builder(keysLabel) {
                 ConfigProfiles.settings.captureVanillaKeys = !ConfigProfiles.settings.captureVanillaKeys
                 ConfigProfiles.saveSettings()
                 refresh()
-            }.bounds(x2, y2, WIDE_BUTTON, BUTTON_HEIGHT).tooltip(TIP_KEYS).build(),
+            }.bounds(x2, y2, keysWidth, BUTTON_HEIGHT).tooltip(TIP_KEYS).build(),
         )
 
         addRenderableWidget(
             Button.builder(RESET_ALL) { requestResetAll() }
-                .bounds(width - MARGIN - WIDE_BUTTON, y2, WIDE_BUTTON, BUTTON_HEIGHT)
+                .bounds(width - MARGIN - resetWidth, y2, resetWidth, BUTTON_HEIGHT)
                 .tooltip(TIP_RESET_ALL)
-                .build(),
-        )
-
-        addRenderableWidget(
-            Button.builder(Component.translatable("gui.done")) { onClose() }
-                .bounds(width - MARGIN - NARROW_BUTTON, y, NARROW_BUTTON, BUTTON_HEIGHT)
                 .build(),
         )
 
@@ -466,9 +486,12 @@ class ProfilesScreen(private val parent: Screen?) : Screen(Component.translatabl
         const val MARGIN = 6
         const val GAP = 4
         const val BUTTON_HEIGHT = 20
-        const val WIDE_BUTTON = 108
-        const val NARROW_BUTTON = 60
-        const val ROW_TWO_LIFT = 12
+
+        /** Slack either side of a button's text, so the label never touches the border. */
+        const val BUTTON_PADDING = 14
+
+        /** Floor for a measured width, so a very short label still gives a comfortable click target. */
+        const val MIN_BUTTON_WIDTH = 44
 
         const val PANEL_COLOR = 0xC0101010.toInt()
         const val DIVIDER_COLOR = 0x60FFFFFF
