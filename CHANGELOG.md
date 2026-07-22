@@ -2,6 +2,14 @@
 
 ## Unreleased
 
+### Fixes
+
+#### Auto Update
+
++ Fixed a console window flashing up with **"The batch file cannot be found"** on Windows after quitting the game
+  with an update downloaded. The update itself was applied correctly; only the message was wrong. The updater now
+  runs without a window at all.
+
 ## Version 1.7.0
 
 ### New Features

@@ -110,11 +110,15 @@ object UpdateStaging {
                 add("if exist \"$old\" ( ping -n 2 127.0.0.1 >nul & goto delloop )")
             }
             add("del /f /q \"$staged\" >nul 2>&1")
-            add("del /f /q \"%~f0\" >nul 2>&1")
+            // cmd re-reads the batch file after every command, so a plain `del "%~f0"` makes the next read
+            // fail with "The batch file cannot be found" in a visible console. `(goto) 2>nul` tears down the
+            // batch context first, so the delete on the same line is the last thing cmd ever reads.
+            add("(goto) 2>nul & del /f /q \"%~f0\"")
         }
         Files.writeString(script, lines.joinToString("\r\n"))
-        // `start "" /min` detaches the script into its own process that survives this JVM exiting.
-        ProcessBuilder("cmd", "/c", "start", "", "/min", script.toString()).start()
+        // `start ""` detaches the script into its own process that survives this JVM exiting; `/b` keeps it
+        // from allocating a console window (ProcessBuilder already starts `cmd` itself with CREATE_NO_WINDOW).
+        ProcessBuilder("cmd", "/c", "start", "", "/b", script.toString()).start()
     }
 
     private fun spawnUnix(staged: Path, old: Path, newTarget: Path) {
