@@ -70,9 +70,9 @@ class ProfileEditScreen(
         // with the selected rule, so the height is not constant.
         val patternBlock = if (showPattern) PATTERN_GAP + FIELD_HEIGHT else 0
         val contentHeight = LABELLED_ROW + ERROR_ROW + ROW_GAP +
-            LABELLED_ROW + ROW_GAP +
-            LABELLED_ROW + patternBlock +
-            ACTION_GAP + FIELD_HEIGHT
+                LABELLED_ROW + ROW_GAP +
+                LABELLED_ROW + patternBlock +
+                ACTION_GAP + FIELD_HEIGHT
 
         // Never let the block start so high that it runs under the title.
         var y = maxOf((height - contentHeight) / 2, TITLE_TOP + TITLE_CLEARANCE)
