@@ -42,7 +42,7 @@ class Explanation(
 /**
  * Turns what has been typed plus where the player is into a ranked list.
  *
- * **Retrieve, then rank.** Scoring a candidate fully means a naive-Bayes pass over fourteen context features,
+ * **Retrieve, then rank.** Scoring a candidate fully means a naive-Bayes pass over seventeen context features,
  * which is four map lookups each — perfectly cheap for one candidate and about a millisecond for two thousand
  * of them, on a path that runs on every keystroke. So this does what every search system does: a cheap pass
  * over everything to find the plausible few dozen, then the expensive pass over only those. The cheap score

@@ -1,6 +1,7 @@
 package net.trilleo.config
 
 import net.minecraft.client.Minecraft
+import net.trilleo.skyblock.Sidebar
 import net.trilleo.skyblock.SkyblockLocation
 import org.slf4j.LoggerFactory
 import java.util.*
@@ -40,7 +41,7 @@ object ProfileAutoSwitch {
     fun onJoin() {
         ticksRemaining = WINDOW_TICKS
         lastIsland = null
-        SkyblockLocation.reset()
+        Sidebar.reset()
     }
 
     /** Clears session state so the next server starts from a clean slate. */
@@ -48,7 +49,7 @@ object ProfileAutoSwitch {
         ticksRemaining = 0
         manualOverride = false
         lastIsland = null
-        SkyblockLocation.reset()
+        Sidebar.reset()
     }
 
     /** Records that the player chose a profile themselves, which outranks every rule until they disconnect. */
@@ -66,8 +67,9 @@ object ProfileAutoSwitch {
         if (manualOverride) return
         if (client.level == null) return
 
-        SkyblockLocation.tick(client)
-
+        // The sidebar is read centrally in Features, ahead of this. It used to be polled from right here,
+        // which meant a player who picked a profile by hand froze the island — and everything else read off
+        // the sidebar — for the rest of the session, since this method returns above.
         val island = SkyblockLocation.current
         val islandChanged = island != null && island != lastIsland
         if (ticksRemaining <= 0 && !islandChanged) return

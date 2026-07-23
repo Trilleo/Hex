@@ -47,7 +47,7 @@ class WhyScreen(private val parent: Screen?, private val key: String) :
     /**
      * Assembles the whole explanation once, on open.
      *
-     * Once rather than per frame because this walks the model — a naive-Bayes pass over fourteen features and
+     * Once rather than per frame because this walks the model — a naive-Bayes pass over seventeen features and
      * a fresh context snapshot with its dozen tag reads. None of it changes while the screen is open, and
      * doing it per frame would make a static page the most expensive thing in the mod.
      */

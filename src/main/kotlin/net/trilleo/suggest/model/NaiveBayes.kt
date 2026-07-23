@@ -43,7 +43,7 @@ object NaiveBayes {
      * Every feature's contribution, largest first, for the "why was this suggested" view.
      *
      * Recomputed rather than cached from [logOdds]: this runs when a player opens one screen, and keeping the
-     * fourteen intermediate terms alive for every candidate of every keystroke to save that would be a poor
+     * seventeen intermediate terms alive for every candidate of every keystroke to save that would be a poor
      * trade.
      */
     fun contributions(key: String, ctx: ContextSnapshot, now: Long): List<Pair<String, Double>> {

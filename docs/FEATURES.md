@@ -234,10 +234,23 @@ same slash in the Dwarven Mines while holding a drill offers something else enti
 ### What it pays attention to
 
 Where you are (island and the patch of ground you are on), what is in your hand and what kind of thing it is, your
-hotbar and armour, how full your inventory is, the time of day, how long you have been online, the last two commands
-you ran, and whether chat has just asked you something. It learns which of those actually predict *your* commands and
-ignores the rest — and it learns how much to trust each one from which suggestions you pick, so it gets better at
-being useful to you specifically rather than to players in general.
+hotbar and armour, how full your inventory is, how long you have been online, the last two commands you ran, and
+whether chat has just asked you something. It learns which of those actually predict *your* commands and ignores the
+rest — and it learns how much to trust each one from which suggestions you pick, so it gets better at being useful to
+you specifically rather than to players in general.
+
+**It reads Skyblock's own calendar too**, straight off the scoreboard:
+
+- **The season.** A Skyblock year passes in about two and a half real days, so autumn comes round often enough to
+  learn from — which is what makes the Spooky Festival commands start appearing before you have thought of them.
+- **Skyblock time of day.** Not your clock — Skyblock's, which runs a full day every twenty real minutes. What you do
+  when it is dark on Skyblock has nothing to do with what you do at night where you live, and both get learned
+  separately. It takes the sun/moon marker as the answer when Hypixel shows one, rather than guessing from the hour.
+- **The running event.** The strongest signal of the lot. When the sidebar starts counting down the Dark Auction,
+  `/warp da` is very nearly something you have already announced — and after a couple of auctions Hex knows it.
+
+Rows in the list say which of these did the work, so a suggestion that turns up during a Dark Auction is labelled
+*dark auction*, and one that turns up because it is dark is labelled *night*.
 
 Suggestions the server offers are kept and re-ranked, never thrown away, so a command Hypixel added last week still
 appears — just in the right place in the list.

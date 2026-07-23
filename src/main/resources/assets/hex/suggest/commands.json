@@ -135,6 +135,14 @@
     "mining_gear": ["TITANIUM", "MITHRIL", "GEMSTONE"]
   },
 
+  "_events_comment": [
+    "Extra Skyblock event names to recognise on the scoreboard sidebar, matched as lower-cased substrings",
+    "against every line. Empty on purpose: the well-known events are built into SkyblockCalendar, and this",
+    "is the extension point for whatever Hypixel ships or renames next — an event name should be a data",
+    "edit, not a code change. A name that stops matching costs one context feature on one event, nothing more."
+  ],
+  "events": [],
+
   "cues": [
     { "tag": "party-invite", "phrases": ["has invited you to join their party"] },
     { "tag": "party-warp", "phrases": ["warped the party", "sent you to"] },

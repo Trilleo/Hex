@@ -67,6 +67,36 @@ class ContextSnapshot(val features: Map<String, String>) {
         /** Weekday or weekend. */
         const val DAY: String = "day"
 
+        /**
+         * The Skyblock season — `spring`, `summer`, `autumn`, `winter`.
+         *
+         * A different clock entirely from [HOUR], and worth both: a Skyblock year passes in about two and a
+         * half real days, so the season turns over often enough to be learned from within a week of play,
+         * and it is what makes the seasonal events predictable before they are announced.
+         *
+         * The season rather than the twelve-month name, because four categories can carry a habit and twelve
+         * mostly carry sparsity — most of what the calendar predicts lives at the coarser grain.
+         */
+        const val SB_SEASON: String = "sbseason"
+
+        /**
+         * Where in the Skyblock day it is — `night`, `dawn`, `day`, `dusk`.
+         *
+         * Skyblock's own clock, not the player's. What someone does when it is dark on Skyblock (anything
+         * that wants mobs) has nothing to do with what they do when it is dark where they live, and a
+         * Skyblock day lasts twenty real minutes, so this cycles several times an hour.
+         */
+        const val SB_TIME: String = "sbtime"
+
+        /**
+         * The Skyblock event the sidebar is naming — `dark auction`, `spooky festival`, and so on.
+         *
+         * The most direct statement of intent anywhere in the context. Everything else is circumstantial
+         * evidence about what the player might want; a Dark Auction countdown on screen is very nearly the
+         * player saying out loud that they are about to warp to it.
+         */
+        const val SB_EVENT: String = "sbevent"
+
         /** How long since joining this world: just-joined, early, or settled. */
         const val SESSION: String = "sess"
 
@@ -87,7 +117,7 @@ class ContextSnapshot(val features: Map<String, String>) {
         /** Every feature, in display order. The dashboard and the "why" view both walk this. */
         val ALL: List<String> = listOf(
             SERVER, ISLAND, CELL, HELD, HELD_KIND, HOTBAR, ARMOR,
-            FULLNESS, HOUR, DAY, SESSION, PREV1, PREV2, CUE,
+            FULLNESS, HOUR, DAY, SB_SEASON, SB_TIME, SB_EVENT, SESSION, PREV1, PREV2, CUE,
         )
 
         /** Human-readable names for the "why" view, so it never shows a three-letter key. */
@@ -102,6 +132,9 @@ class ContextSnapshot(val features: Map<String, String>) {
             FULLNESS to "inventory",
             HOUR to "time of day",
             DAY to "day",
+            SB_SEASON to "Skyblock season",
+            SB_TIME to "Skyblock time",
+            SB_EVENT to "Skyblock event",
             SESSION to "session",
             PREV1 to "last command",
             PREV2 to "command before",

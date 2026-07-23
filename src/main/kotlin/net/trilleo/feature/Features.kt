@@ -15,6 +15,7 @@ import net.minecraft.client.KeyMapping
 import net.minecraft.network.chat.Component
 import net.trilleo.Hex
 import net.trilleo.config.*
+import net.trilleo.skyblock.Sidebar
 import net.trilleo.skyblock.item.HeldItem
 import org.slf4j.LoggerFactory
 
@@ -96,6 +97,12 @@ object Features {
             // Key bindings read from a profile at startup wait for the options to exist; this is where they
             // finally land.
             VanillaKeysConfig.tick()
+            // Ahead of ProfileAutoSwitch, which reads the island it produces. Owned here rather than by any
+            // one feature for the same reason HeldItem is: profiles, reminders and command suggestions all
+            // read it now. It used to be ticked from inside ProfileAutoSwitch, which stopped ticking the
+            // moment the player chose a profile by hand — freezing the island, the Skyblock date and the
+            // event for every other reader too.
+            Sidebar.tick(client)
             ProfileAutoSwitch.tick(client)
             // Owned here rather than by any one feature: the held-item cache has several consumers now (the
             // hand mixins and the reminder engine), and it has to stay live even when the feature that used
@@ -129,9 +136,11 @@ object Features {
 
         ClientPlayConnectionEvents.DISCONNECT.register { _, client ->
             ProfileAutoSwitch.onDisconnect()
-            // Alongside the tick, and for the same reason: an item from the last server must not go on
-            // matching into the next one, whichever features happen to be enabled.
+            // Alongside the tick, and for the same reason: an item — or an island, or a Skyblock date — from
+            // the last server must not go on matching into the next one, whichever features happen to be
+            // enabled.
             HeldItem.reset()
+            Sidebar.reset()
             features.forEach { if (it.enabled) it.onWorldLeave(client) }
         }
 

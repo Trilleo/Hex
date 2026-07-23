@@ -16,6 +16,9 @@
       is confident, and how confident is a slider.
     + Typing just `/` offers what you are most likely to want *right now*, from where you are standing, what you
       are holding, what you just ran, and what chat said in the last few seconds.
+    + It reads Skyblock's own calendar as well — the season, whether it is night on Skyblock rather than where you
+      live, and whichever event the scoreboard is counting down. A Dark Auction timer on screen is very nearly you
+      announcing `/warp da`, and after a couple of them Hex has worked that out.
     + Suggestions the server offers are folded in and re-ranked rather than replaced, so a command added to
       Hypixel yesterday still appears — just in the right place.
     + Ships knowing the common Skyblock commands so the first session is not blank. Your own use overtakes that
@@ -37,6 +40,13 @@
 
 ### Fixes
 
+#### Config Profiles
+
++ Fixed the Skyblock island freezing for the rest of the session once you switched profile by hand. The sidebar was
+  polled from inside the auto-switch check, which returns early on a manual switch — so nothing that reads the
+  sidebar was updated again, and a reminder conditional on an island stopped firing after arriving there. The
+  sidebar is now read centrally, independently of whether auto-switching is still looking.
+
 #### Auto Update
 
 + Fixed Hex never checking for updates on startup, however the **Updates** tab was set. Its settings were captured
@@ -52,7 +62,7 @@
 
 #### Command Suggestions
 
-+ The ranker is a hybrid: recency-decayed counts, naive Bayes over fourteen categorical context features, and
++ The ranker is a hybrid: recency-decayed counts, naive Bayes over seventeen categorical context features, and
   an order-2 Markov chain each produce one signal, and a nine-parameter online logistic model learns how much
   to trust each of them for this player. It trains by softmax cross-entropy over the list that was actually on
   screen whenever something is taken from it — accepted from the popup, taken as an inline completion, or typed
@@ -64,7 +74,7 @@
   evidence stands behind them, which is what keeps a command typed once from becoming that island's most
   confident suggestion.
 + Candidate selection is retrieve-then-rank: a cheap pass over every key on match quality and raw frequency,
-  then the full fourteen-feature scoring over the surviving forty. Context is snapshotted once when chat opens
+  then the full seventeen-feature scoring over the surviving forty. Context is snapshotted once when chat opens
   rather than per keystroke — nothing it reads can change while the chat screen is up, and the hotbar and
   armour signatures cost a tag copy per stack.
 + `ChatScreenMixin` holds no logic; every injection is a one-line delegation to `SuggestSession`, which catches
@@ -76,6 +86,18 @@
 + The model is written to `config/hex/suggest/model.json` outside `ConfigRegistry` — debounced, on a daemon
   thread, and moved into place from a temporary file so a crash mid-write cannot truncate it. Pruning happens
   at save time, when the structure is being walked anyway.
+
+#### Skyblock
+
++ The scoreboard sidebar is now read once, centrally, by a new `Sidebar` object, with `SkyblockLocation` and the
+  new `SkyblockCalendar` as views over the lines it extracts. There are two interpretations of the same lines
+  now, and rebuilding every entry's string twice a second to answer two questions instead of one would be waste;
+  the extraction is the expensive part and the interpretation is a regular expression.
++ `SkyblockCalendar` reads the Skyblock date, the Skyblock clock and the named event. The date and time lines get
+  strict anchored patterns, because those formats are stable and a strict pattern that fails to match is the right
+  way to read a stable format; events get a substring vocabulary instead, extensible from the bundled catalogue,
+  because event lines carry timers and suffixes that vary per event and per Hypixel update. The sun/moon glyph is
+  preferred over the hour for the day/night split — it is Hypixel stating the answer rather than Hex inferring it.
 
 #### Config
 

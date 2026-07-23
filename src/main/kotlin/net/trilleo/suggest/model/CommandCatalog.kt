@@ -2,6 +2,7 @@ package net.trilleo.suggest.model
 
 import com.google.gson.reflect.TypeToken
 import net.trilleo.config.JsonConfig
+import net.trilleo.skyblock.SkyblockCalendar
 import net.trilleo.suggest.context.ChatCues
 import net.trilleo.suggest.context.ContextSources
 import org.slf4j.LoggerFactory
@@ -57,6 +58,14 @@ class CatalogFile {
     var itemKinds: MutableMap<String, MutableList<String>> = mutableMapOf()
 
     var cues: MutableList<CatalogCue> = mutableListOf()
+
+    /**
+     * Extra Skyblock event names to recognise on the scoreboard sidebar, on top of the built-in ones.
+     *
+     * Here rather than in code because Hypixel adds and renames events far faster than a mod ships, and an
+     * event name is exactly the kind of thing that should be a data edit.
+     */
+    var events: MutableList<String> = mutableListOf()
 }
 
 /**
@@ -125,6 +134,7 @@ object CommandCatalog {
         ContextSources.kindProvider = ::kindOf
         ChatCues.install(file.cues.filter { it.tag.isNotBlank() && it.phrases.isNotEmpty() }
             .map { ChatCues.Cue(it.tag, it.phrases.map { phrase -> phrase.lowercase(Locale.ROOT) }) })
+        SkyblockCalendar.installEvents(file.events)
 
         Ranker.cataloguePrior = { key -> priors[key] ?: 0.0 }
         Ranker.catalogueKeys = { priors.keys }
@@ -148,6 +158,8 @@ object CommandCatalog {
         if (file.itemKinds == null) file.itemKinds = mutableMapOf()
         @Suppress("SENSELESS_COMPARISON")
         if (file.cues == null) file.cues = mutableListOf()
+        @Suppress("SENSELESS_COMPARISON")
+        if (file.events == null) file.events = mutableListOf()
 
         file.commands.forEach { command ->
             @Suppress("SENSELESS_COMPARISON")

@@ -2,6 +2,7 @@ package net.trilleo.suggest.context
 
 import net.minecraft.client.Minecraft
 import net.minecraft.world.entity.EquipmentSlot
+import net.trilleo.skyblock.SkyblockCalendar
 import net.trilleo.skyblock.SkyblockLocation
 import net.trilleo.skyblock.item.HeldItem
 import net.trilleo.skyblock.item.SkyblockItem
@@ -66,6 +67,13 @@ object ContextSources {
         val now = LocalDateTime.now()
         put(ContextSnapshot.HOUR, read { "h${now.hour / HOUR_BUCKET}" })
         put(ContextSnapshot.DAY, read { if (isWeekend(now.dayOfWeek)) "weekend" else "weekday" })
+
+        // Skyblock's own calendar, which runs on a wholly different clock from the one above — a Skyblock day
+        // is twenty real minutes. Each field is read separately because each can be unavailable on its own.
+        put(ContextSnapshot.SB_SEASON, read { SkyblockCalendar.season })
+        put(ContextSnapshot.SB_TIME, read { SkyblockCalendar.phase })
+        put(ContextSnapshot.SB_EVENT, read { SkyblockCalendar.event })
+
         put(ContextSnapshot.SESSION, read { SessionMemory.phase() })
 
         put(ContextSnapshot.PREV1, SessionMemory.prev1)
