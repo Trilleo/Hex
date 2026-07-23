@@ -2,6 +2,39 @@
 
 ## Unreleased
 
+### New Features
+
+#### Command Suggestions
+
++ Added **Command Suggestions** — Hex learns which commands you run, where you run them and what you run them
+  after, and offers them back in the chat box. Everything is learned and stored on your own machine; nothing is
+  ever sent anywhere, and nothing is ever run for you.
+    + A ranked list above the chat box, ordered by what you actually use rather than alphabetically. Arrow keys
+      move, Tab accepts, Escape dismisses, and each row carries a one-word note on why it is there.
+    + Inline completion greys out the rest of the line as you type — including arguments Hypixel's own
+      tab-completion can never offer, like the warp you always mean by `/warp d`. It only appears when the guess
+      is confident, and how confident is a slider.
+    + Typing just `/` offers what you are most likely to want *right now*, from where you are standing, what you
+      are holding, what you just ran, and what chat said in the last few seconds.
+    + Suggestions the server offers are folded in and re-ranked rather than replaced, so a command added to
+      Hypixel yesterday still appears — just in the right place.
+    + Ships knowing the common Skyblock commands so the first session is not blank. Your own use overtakes that
+      within a few dozen commands, and it can be switched off entirely.
++ Added a screen showing everything that has been learned, reached from the **Command Suggestions** tab or
+  `/hexa suggest dashboard`. Every line shows how often you use it and what Hex has associated it with, and can
+  be pinned to the top, blocked, or forgotten. **?** on any row shows the full arithmetic behind that
+  suggestion — every signal, its value, and how much it counted for.
++ Added `/hexa suggest` — `stats`, `why <text>`, `forget <command>`, `clear confirm`, `pause`, `resume`, and
+  `dashboard`.
+
+#### Privacy
+
++ Command suggestions never record message text. `/msg`, `/w`, `/r`, `/pc` and the rest are learned as the
+  command and the recipient, and the message itself is discarded before anything is written; a command Hex does
+  not recognise learns at most its first word. Player names can be left out too, with one toggle.
++ What has been learned lives outside the config-profile system on purpose, so switching profiles cannot swap
+  it and **Copy to clipboard** cannot share it.
+
 ### Fixes
 
 #### Auto Update
@@ -16,6 +49,33 @@
   session even though the update had been downloaded. It is now delivered whenever you next have a world open.
 
 ### Technical Details
+
+#### Command Suggestions
+
++ The ranker is a hybrid: recency-decayed counts, naive Bayes over fourteen categorical context features, and
+  an order-2 Markov chain each produce one signal, and a nine-parameter online logistic model learns how much
+  to trust each of them for this player. It trains by softmax cross-entropy over the list that was actually on
+  screen whenever something is taken from it — accepted from the popup, taken as an inline completion, or typed
+  out in full while it was showing. Weights are pulled towards the shipped defaults each step, so the stock
+  behaviour is an attractor rather than only a starting point, and one strange week cannot run away with it.
++ Every learned count decays lazily rather than on a sweep: a counter stores when its weight was last correct
+  and every read discounts from there, so the model forgets at a configurable half-life with no periodic pass
+  over it at any size. Naive-Bayes terms are in pointwise-mutual-information form and shrunk by how much
+  evidence stands behind them, which is what keeps a command typed once from becoming that island's most
+  confident suggestion.
++ Candidate selection is retrieve-then-rank: a cheap pass over every key on match quality and raw frequency,
+  then the full fourteen-feature scoring over the surviving forty. Context is snapshotted once when chat opens
+  rather than per keystroke — nothing it reads can change while the chat screen is up, and the hotbar and
+  armour signatures cost a tag copy per stack.
++ `ChatScreenMixin` holds no logic; every injection is a one-line delegation to `SuggestSession`, which catches
+  everything and disables the feature for the rest of the session on the first exception, so a failure in
+  suggestions can never break chat. `CommandSuggestionsAccessor` reads vanilla's in-flight completion request
+  so the server's own suggestions can be re-ranked instead of discarded while Hex's popup is up; vanilla's
+  popup is suppressed with `setAllowSuggestions(false)` and handed back on the transition, once, rather than
+  per keystroke.
++ The model is written to `config/hex/suggest/model.json` outside `ConfigRegistry` — debounced, on a daemon
+  thread, and moved into place from a temporary file so a crash mid-write cannot truncate it. Pruning happens
+  at save time, when the structure is being walked anyway.
 
 #### Config
 

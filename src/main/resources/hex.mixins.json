@@ -5,7 +5,9 @@
   "mixins": [],
   "client": [
     "CameraMixin",
+    "ChatScreenMixin",
     "ClientInputMixin",
+    "CommandSuggestionsAccessor",
     "ItemInHandRendererMixin",
     "KeyboardInputMixin",
     "LivingEntityMixin",

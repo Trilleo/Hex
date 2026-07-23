@@ -9,6 +9,7 @@ import net.trilleo.freecam.FreecamFeature
 import net.trilleo.hand.HandFeature
 import net.trilleo.keybind.KeybindsFeature
 import net.trilleo.reminder.ReminderFeature
+import net.trilleo.suggest.SuggestFeature
 import net.trilleo.update.UpdateFeature
 import org.slf4j.LoggerFactory
 
@@ -34,6 +35,7 @@ object Hex : ClientModInitializer {
         Features.register(HandFeature)
         Features.register(AttackModeFeature)
         Features.register(ReminderFeature)
+        Features.register(SuggestFeature)
         Features.register(UpdateFeature)
         Features.bootstrap()
 
