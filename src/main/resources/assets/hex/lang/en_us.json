@@ -272,7 +272,6 @@
   "hex.reminders.preset.forge_on_arrival.desc": "Reminds you to look at your forge slots whenever you arrive in the Dwarven Mines.",
   "hex.reminders.preset.hourly_check.name": "Hourly check-in",
   "hex.reminders.preset.hourly_check.desc": "Every hour on Skyblock, a nudge to check pets, forge and bazaar orders.",
-
   "hex.config.category.suggest": "Command Suggestions",
   "hex.config.suggest.enabled": "Enabled",
   "hex.config.suggest.enabled.tooltip": "Suggest commands in the chat box, learned from the ones you actually use.",
@@ -306,7 +305,6 @@
   "hex.config.suggest.learn_player_names.tooltip": "Remember who you message and visit, so their names complete. Message text is never recorded either way.",
   "hex.config.suggest.forget_all": "Forget everything…",
   "hex.config.suggest.forget_all.tooltip": "Wipe every command Hex has learned. Your settings are kept.",
-
   "hex.suggest.title": "What Hex has learned",
   "hex.suggest.empty": "Nothing learned yet — run some commands and come back.",
   "hex.suggest.search": "Search",

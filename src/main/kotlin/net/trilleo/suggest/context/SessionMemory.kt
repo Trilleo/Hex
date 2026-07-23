@@ -1,5 +1,8 @@
 package net.trilleo.suggest.context
 
+import net.trilleo.suggest.context.SessionMemory.SETTLED_TICKS
+
+
 /**
  * The part of the context that is about *this* session rather than about the world — what you have already
  * run, and how long you have been here.
@@ -59,7 +62,11 @@ object SessionMemory {
         prev1 = key
         // Bounded, because a very long session with a script-happy player must not grow this without limit.
         if (usedThisSession.size >= MAX_SESSION_KEYS) {
-            usedThisSession.iterator().let { if (it.hasNext()) { it.next(); it.remove() } }
+            usedThisSession.iterator().let {
+                if (it.hasNext()) {
+                    it.next(); it.remove()
+                }
+            }
         }
         usedThisSession += key
     }

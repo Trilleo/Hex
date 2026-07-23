@@ -1,6 +1,7 @@
 package net.trilleo.suggest.model
 
 import net.trilleo.suggest.context.ContextSnapshot
+import net.trilleo.suggest.model.NaiveBayes.PRIOR_STRENGTH
 import kotlin.math.ln
 
 /**
@@ -68,9 +69,9 @@ object NaiveBayes {
         val alphaV = ALPHA * vocabulary
 
         val givenKey = (SuggestModel.jointCount(key, feature, value, now) + ALPHA) /
-            (SuggestModel.keyCount(key, now) + alphaV)
+                (SuggestModel.keyCount(key, now) + alphaV)
         val overall = (SuggestModel.marginalCount(feature, value, now) + ALPHA) /
-            (SuggestModel.total(now) + alphaV)
+                (SuggestModel.total(now) + alphaV)
 
         if (givenKey <= 0.0 || overall <= 0.0) return 0.0
         return ln(givenKey / overall).coerceIn(-MAX_TERM, MAX_TERM)

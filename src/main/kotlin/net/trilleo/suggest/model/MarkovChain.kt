@@ -2,6 +2,7 @@ package net.trilleo.suggest.model
 
 import net.trilleo.suggest.SuggestConfig
 import net.trilleo.suggest.context.ContextSnapshot
+import net.trilleo.suggest.model.MarkovChain.shrinkage
 import kotlin.math.ln
 
 /**

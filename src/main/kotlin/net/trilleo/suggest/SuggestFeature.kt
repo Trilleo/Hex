@@ -15,12 +15,7 @@ import net.trilleo.suggest.context.ChatCues
 import net.trilleo.suggest.context.ContextSnapshot
 import net.trilleo.suggest.context.ContextSources
 import net.trilleo.suggest.context.SessionMemory
-import net.trilleo.suggest.model.CommandCatalog
-import net.trilleo.suggest.model.CommandParser
-import net.trilleo.suggest.model.ModelStore
-import net.trilleo.suggest.model.Ranker
-import net.trilleo.suggest.model.SuggestModel
-import net.trilleo.suggest.model.Weights
+import net.trilleo.suggest.model.*
 import net.trilleo.suggest.ui.gui.SuggestScreen
 import net.trilleo.util.TextClean
 import org.slf4j.LoggerFactory
@@ -200,15 +195,15 @@ object SuggestFeature : Feature {
             Commands.feedback(
                 source,
                 "Nothing learned yet — run a few commands and check back. " +
-                    "${CommandCatalog.size} command(s) are suggested from the bundled catalogue meanwhile.",
+                        "${CommandCatalog.size} command(s) are suggested from the bundled catalogue meanwhile.",
             )
             return 1
         }
         Commands.feedback(
             source,
             "${summary.keys} command line(s) across ${summary.names} command(s), " +
-                "${String.format(Locale.ROOT, "%.1f", summary.observations)} weighted uses, " +
-                "${summary.trainingSteps} training step(s).",
+                    "${String.format(Locale.ROOT, "%.1f", summary.observations)} weighted uses, " +
+                    "${summary.trainingSteps} training step(s).",
         )
         summary.top.forEach { (key, weight) ->
             Commands.feedback(source, "  /$key — ${String.format(Locale.ROOT, "%.1f", weight)}")
@@ -255,7 +250,13 @@ object SuggestFeature : Feature {
             Commands.feedback(
                 source,
                 "  ${term.name}: ${String.format(Locale.ROOT, "%+.2f", term.contribution)}" +
-                    " (${String.format(Locale.ROOT, "%.2f", term.value)} × ${String.format(Locale.ROOT, "%.2f", term.weight)})",
+                        " (${String.format(Locale.ROOT, "%.2f", term.value)} × ${
+                            String.format(
+                                Locale.ROOT,
+                                "%.2f",
+                                term.weight
+                            )
+                        })",
             )
         }
         best.routine?.let { Commands.feedback(source, "  routine: $it") }

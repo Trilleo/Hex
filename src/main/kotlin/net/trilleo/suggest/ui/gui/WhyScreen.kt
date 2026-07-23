@@ -8,11 +8,7 @@ import net.minecraft.client.gui.screens.Screen
 import net.minecraft.network.chat.Component
 import net.trilleo.suggest.context.ContextSnapshot
 import net.trilleo.suggest.context.ContextSources
-import net.trilleo.suggest.model.Candidate
-import net.trilleo.suggest.model.MarkovChain
-import net.trilleo.suggest.model.NaiveBayes
-import net.trilleo.suggest.model.Ranker
-import net.trilleo.suggest.model.Weights
+import net.trilleo.suggest.model.*
 import java.util.*
 
 /**
@@ -94,7 +90,7 @@ class WhyScreen(private val parent: Screen?, private val key: String) :
                 val label = ContextSnapshot.LABELS[feature] ?: feature
                 val seen = context[feature].takeIf { it != ContextSnapshot.UNKNOWN } ?: "unknown"
                 out += String.format(Locale.ROOT, "  %-14s %+5.2f    now: %s", label, value, seen) to
-                    if (value > 0) BODY else MUTED
+                        if (value > 0) BODY else MUTED
             }
         }
         return out

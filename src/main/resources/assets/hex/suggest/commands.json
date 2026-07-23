@@ -14,127 +14,526 @@
     "prior  — 0..1, how strongly to suggest before the player has used it.",
     "bare   — false for commands that are useless without an argument, so they do not head the list alone."
   ],
-
   "commands": [
     {
       "name": "warp",
-      "slots": ["enum", "text"],
+      "slots": [
+        "enum",
+        "text"
+      ],
       "prior": 0.9,
       "bare": false,
       "values": [
-        "hub", "island", "home", "dungeon_hub", "crimson_isle", "nether", "the_end", "end",
-        "dwarven_mines", "mines", "deep_caverns", "deep", "gold_mine", "gold", "crystals",
-        "barn", "desert", "park", "jungle", "howl", "spider", "nest", "museum", "castle",
-        "crypt", "da", "forge", "garden", "rift", "arena", "jerry", "elizabeth", "wasteland",
-        "dragontail", "scarleton", "backwater", "glacite", "magma", "stronghold"
+        "hub",
+        "island",
+        "home",
+        "dungeon_hub",
+        "crimson_isle",
+        "nether",
+        "the_end",
+        "end",
+        "dwarven_mines",
+        "mines",
+        "deep_caverns",
+        "deep",
+        "gold_mine",
+        "gold",
+        "crystals",
+        "barn",
+        "desert",
+        "park",
+        "jungle",
+        "howl",
+        "spider",
+        "nest",
+        "museum",
+        "castle",
+        "crypt",
+        "da",
+        "forge",
+        "garden",
+        "rift",
+        "arena",
+        "jerry",
+        "elizabeth",
+        "wasteland",
+        "dragontail",
+        "scarleton",
+        "backwater",
+        "glacite",
+        "magma",
+        "stronghold"
       ]
     },
-    { "name": "hub", "prior": 0.7 },
-    { "name": "is", "prior": 0.8 },
-    { "name": "island", "prior": 0.6 },
-    { "name": "skyblock", "prior": 0.4 },
-    { "name": "sb", "prior": 0.4 },
-    { "name": "lobby", "prior": 0.4 },
-    { "name": "l", "prior": 0.3 },
-    { "name": "play", "slots": ["enum", "text"], "prior": 0.3, "bare": false, "values": ["skyblock", "bedwars", "duels"] },
-
-    { "name": "ah", "prior": 0.85 },
-    { "name": "bz", "prior": 0.8 },
-    { "name": "bazaar", "prior": 0.5 },
-    { "name": "bank", "prior": 0.5 },
-    { "name": "sacks", "prior": 0.6 },
-    { "name": "storage", "prior": 0.6 },
-    { "name": "ec", "prior": 0.5 },
-    { "name": "enderchest", "prior": 0.4 },
-    { "name": "wardrobe", "prior": 0.6 },
-    { "name": "pets", "prior": 0.6 },
-    { "name": "craft", "prior": 0.5 },
-    { "name": "trades", "prior": 0.4 },
-    { "name": "hotm", "prior": 0.6 },
-    { "name": "skills", "prior": 0.5 },
-    { "name": "collection", "prior": 0.4 },
-    { "name": "bestiary", "prior": 0.4 },
-    { "name": "museum", "prior": 0.4 },
-    { "name": "calendar", "prior": 0.35 },
-    { "name": "recipe", "slots": ["text"], "prior": 0.4, "bare": false },
-    { "name": "viewrecipe", "slots": ["text"], "prior": 0.3, "bare": false },
-    { "name": "gfs", "slots": ["enum", "text"], "prior": 0.5, "bare": false },
-
+    {
+      "name": "hub",
+      "prior": 0.7
+    },
+    {
+      "name": "is",
+      "prior": 0.8
+    },
+    {
+      "name": "island",
+      "prior": 0.6
+    },
+    {
+      "name": "skyblock",
+      "prior": 0.4
+    },
+    {
+      "name": "sb",
+      "prior": 0.4
+    },
+    {
+      "name": "lobby",
+      "prior": 0.4
+    },
+    {
+      "name": "l",
+      "prior": 0.3
+    },
+    {
+      "name": "play",
+      "slots": [
+        "enum",
+        "text"
+      ],
+      "prior": 0.3,
+      "bare": false,
+      "values": [
+        "skyblock",
+        "bedwars",
+        "duels"
+      ]
+    },
+    {
+      "name": "ah",
+      "prior": 0.85
+    },
+    {
+      "name": "bz",
+      "prior": 0.8
+    },
+    {
+      "name": "bazaar",
+      "prior": 0.5
+    },
+    {
+      "name": "bank",
+      "prior": 0.5
+    },
+    {
+      "name": "sacks",
+      "prior": 0.6
+    },
+    {
+      "name": "storage",
+      "prior": 0.6
+    },
+    {
+      "name": "ec",
+      "prior": 0.5
+    },
+    {
+      "name": "enderchest",
+      "prior": 0.4
+    },
+    {
+      "name": "wardrobe",
+      "prior": 0.6
+    },
+    {
+      "name": "pets",
+      "prior": 0.6
+    },
+    {
+      "name": "craft",
+      "prior": 0.5
+    },
+    {
+      "name": "trades",
+      "prior": 0.4
+    },
+    {
+      "name": "hotm",
+      "prior": 0.6
+    },
+    {
+      "name": "skills",
+      "prior": 0.5
+    },
+    {
+      "name": "collection",
+      "prior": 0.4
+    },
+    {
+      "name": "bestiary",
+      "prior": 0.4
+    },
+    {
+      "name": "museum",
+      "prior": 0.4
+    },
+    {
+      "name": "calendar",
+      "prior": 0.35
+    },
+    {
+      "name": "recipe",
+      "slots": [
+        "text"
+      ],
+      "prior": 0.4,
+      "bare": false
+    },
+    {
+      "name": "viewrecipe",
+      "slots": [
+        "text"
+      ],
+      "prior": 0.3,
+      "bare": false
+    },
+    {
+      "name": "gfs",
+      "slots": [
+        "enum",
+        "text"
+      ],
+      "prior": 0.5,
+      "bare": false
+    },
     {
       "name": "party",
-      "slots": ["enum", "player", "text"],
+      "slots": [
+        "enum",
+        "player",
+        "text"
+      ],
       "prior": 0.75,
       "values": [
-        "accept", "invite", "leave", "list", "kick", "warp", "disband",
-        "transfer", "promote", "demote", "mute", "settings", "private", "chat"
+        "accept",
+        "invite",
+        "leave",
+        "list",
+        "kick",
+        "warp",
+        "disband",
+        "transfer",
+        "promote",
+        "demote",
+        "mute",
+        "settings",
+        "private",
+        "chat"
       ]
     },
     {
       "name": "p",
-      "slots": ["enum", "player", "text"],
+      "slots": [
+        "enum",
+        "player",
+        "text"
+      ],
       "prior": 0.7,
-      "values": ["accept", "invite", "leave", "list", "kick", "warp", "disband", "chat"]
+      "values": [
+        "accept",
+        "invite",
+        "leave",
+        "list",
+        "kick",
+        "warp",
+        "disband",
+        "chat"
+      ]
     },
     {
       "name": "guild",
-      "slots": ["enum", "player", "text"],
+      "slots": [
+        "enum",
+        "player",
+        "text"
+      ],
       "prior": 0.5,
-      "values": ["accept", "invite", "leave", "list", "kick", "party", "online", "chat", "info"]
+      "values": [
+        "accept",
+        "invite",
+        "leave",
+        "list",
+        "kick",
+        "party",
+        "online",
+        "chat",
+        "info"
+      ]
     },
     {
       "name": "g",
-      "slots": ["enum", "player", "text"],
+      "slots": [
+        "enum",
+        "player",
+        "text"
+      ],
       "prior": 0.45,
-      "values": ["accept", "invite", "leave", "list", "online", "chat"]
+      "values": [
+        "accept",
+        "invite",
+        "leave",
+        "list",
+        "online",
+        "chat"
+      ]
     },
     {
       "name": "friend",
-      "slots": ["enum", "player", "text"],
+      "slots": [
+        "enum",
+        "player",
+        "text"
+      ],
       "prior": 0.45,
-      "values": ["add", "remove", "list", "requests", "accept", "deny"]
+      "values": [
+        "add",
+        "remove",
+        "list",
+        "requests",
+        "accept",
+        "deny"
+      ]
     },
     {
       "name": "f",
-      "slots": ["enum", "player", "text"],
+      "slots": [
+        "enum",
+        "player",
+        "text"
+      ],
       "prior": 0.4,
-      "values": ["add", "remove", "list", "requests", "accept"]
+      "values": [
+        "add",
+        "remove",
+        "list",
+        "requests",
+        "accept"
+      ]
     },
-    { "name": "visit", "slots": ["player", "text"], "prior": 0.5, "bare": true },
-    { "name": "chat", "slots": ["enum", "text"], "prior": 0.35, "bare": false, "values": ["a", "p", "g", "o", "all", "party", "guild", "officer"] },
-    { "name": "c", "slots": ["enum", "text"], "prior": 0.3, "bare": false, "values": ["a", "p", "g", "o"] },
-
-    { "name": "msg", "slots": ["player", "text"], "prior": 0.4, "bare": false },
-    { "name": "w", "slots": ["player", "text"], "prior": 0.35, "bare": false },
-    { "name": "tell", "slots": ["player", "text"], "prior": 0.2, "bare": false },
-    { "name": "r", "slots": ["text"], "prior": 0.4, "bare": false },
-    { "name": "reply", "slots": ["text"], "prior": 0.2, "bare": false },
-    { "name": "pc", "slots": ["text"], "prior": 0.3, "bare": false },
-    { "name": "gc", "slots": ["text"], "prior": 0.25, "bare": false },
-    { "name": "oc", "slots": ["text"], "prior": 0.15, "bare": false },
-    { "name": "ac", "slots": ["text"], "prior": 0.15, "bare": false },
-
-    { "name": "settings", "prior": 0.25 },
-    { "name": "togglemusic", "prior": 0.2 },
-    { "name": "tab", "prior": 0.2 }
+    {
+      "name": "visit",
+      "slots": [
+        "player",
+        "text"
+      ],
+      "prior": 0.5,
+      "bare": true
+    },
+    {
+      "name": "chat",
+      "slots": [
+        "enum",
+        "text"
+      ],
+      "prior": 0.35,
+      "bare": false,
+      "values": [
+        "a",
+        "p",
+        "g",
+        "o",
+        "all",
+        "party",
+        "guild",
+        "officer"
+      ]
+    },
+    {
+      "name": "c",
+      "slots": [
+        "enum",
+        "text"
+      ],
+      "prior": 0.3,
+      "bare": false,
+      "values": [
+        "a",
+        "p",
+        "g",
+        "o"
+      ]
+    },
+    {
+      "name": "msg",
+      "slots": [
+        "player",
+        "text"
+      ],
+      "prior": 0.4,
+      "bare": false
+    },
+    {
+      "name": "w",
+      "slots": [
+        "player",
+        "text"
+      ],
+      "prior": 0.35,
+      "bare": false
+    },
+    {
+      "name": "tell",
+      "slots": [
+        "player",
+        "text"
+      ],
+      "prior": 0.2,
+      "bare": false
+    },
+    {
+      "name": "r",
+      "slots": [
+        "text"
+      ],
+      "prior": 0.4,
+      "bare": false
+    },
+    {
+      "name": "reply",
+      "slots": [
+        "text"
+      ],
+      "prior": 0.2,
+      "bare": false
+    },
+    {
+      "name": "pc",
+      "slots": [
+        "text"
+      ],
+      "prior": 0.3,
+      "bare": false
+    },
+    {
+      "name": "gc",
+      "slots": [
+        "text"
+      ],
+      "prior": 0.25,
+      "bare": false
+    },
+    {
+      "name": "oc",
+      "slots": [
+        "text"
+      ],
+      "prior": 0.15,
+      "bare": false
+    },
+    {
+      "name": "ac",
+      "slots": [
+        "text"
+      ],
+      "prior": 0.15,
+      "bare": false
+    },
+    {
+      "name": "settings",
+      "prior": 0.25
+    },
+    {
+      "name": "togglemusic",
+      "prior": 0.2
+    },
+    {
+      "name": "tab",
+      "prior": 0.2
+    }
   ],
-
   "subcommands": [
-    { "name": "party", "sub": "chat", "slots": ["enum", "text"] },
-    { "name": "p", "sub": "chat", "slots": ["enum", "text"] },
-    { "name": "guild", "sub": "chat", "slots": ["enum", "text"] },
-    { "name": "g", "sub": "chat", "slots": ["enum", "text"] }
+    {
+      "name": "party",
+      "sub": "chat",
+      "slots": [
+        "enum",
+        "text"
+      ]
+    },
+    {
+      "name": "p",
+      "sub": "chat",
+      "slots": [
+        "enum",
+        "text"
+      ]
+    },
+    {
+      "name": "guild",
+      "sub": "chat",
+      "slots": [
+        "enum",
+        "text"
+      ]
+    },
+    {
+      "name": "g",
+      "sub": "chat",
+      "slots": [
+        "enum",
+        "text"
+      ]
+    }
   ],
-
   "itemKinds": {
-    "mining": ["PICKAXE", "DRILL", "GAUNTLET", "PICKONIMBUS"],
-    "fishing": ["ROD", "LURE", "SPONGE"],
-    "farming": ["HOE", "AXE_", "COCO_CHOPPER", "FUNGI_CUTTER"],
-    "combat": ["SWORD", "SCYTHE", "BLADE", "CLEAVER", "AXE", "EDGE", "HYPERION", "VALKYRIE", "SCYLLA", "ASTRAEA"],
-    "ranged": ["BOW", "CROSSBOW", "TERMINATOR", "JUJU", "ARTISANAL"],
-    "travel": ["AOTV", "AOTE", "ASPECT_OF_THE_END", "ASPECT_OF_THE_VOID", "WITHER_SKULL", "SKYBLOCK_MENU"],
-    "mining_gear": ["TITANIUM", "MITHRIL", "GEMSTONE"]
+    "mining": [
+      "PICKAXE",
+      "DRILL",
+      "GAUNTLET",
+      "PICKONIMBUS"
+    ],
+    "fishing": [
+      "ROD",
+      "LURE",
+      "SPONGE"
+    ],
+    "farming": [
+      "HOE",
+      "AXE_",
+      "COCO_CHOPPER",
+      "FUNGI_CUTTER"
+    ],
+    "combat": [
+      "SWORD",
+      "SCYTHE",
+      "BLADE",
+      "CLEAVER",
+      "AXE",
+      "EDGE",
+      "HYPERION",
+      "VALKYRIE",
+      "SCYLLA",
+      "ASTRAEA"
+    ],
+    "ranged": [
+      "BOW",
+      "CROSSBOW",
+      "TERMINATOR",
+      "JUJU",
+      "ARTISANAL"
+    ],
+    "travel": [
+      "AOTV",
+      "AOTE",
+      "ASPECT_OF_THE_END",
+      "ASPECT_OF_THE_VOID",
+      "WITHER_SKULL",
+      "SKYBLOCK_MENU"
+    ],
+    "mining_gear": [
+      "TITANIUM",
+      "MITHRIL",
+      "GEMSTONE"
+    ]
   },
-
   "_events_comment": [
     "Extra Skyblock event names to recognise on the scoreboard sidebar, matched as lower-cased substrings",
     "against every line. Empty on purpose: the well-known events are built into SkyblockCalendar, and this",
@@ -142,18 +541,79 @@
     "edit, not a code change. A name that stops matching costs one context feature on one event, nothing more."
   ],
   "events": [],
-
   "cues": [
-    { "tag": "party-invite", "phrases": ["has invited you to join their party"] },
-    { "tag": "party-warp", "phrases": ["warped the party", "sent you to"] },
-    { "tag": "guild-invite", "phrases": ["has invited you to join their guild"] },
-    { "tag": "visit-request", "phrases": ["has requested to visit your island"] },
-    { "tag": "coop-invite", "phrases": ["has invited you to join their co-op"] },
-    { "tag": "auction-sold", "phrases": ["your auction for", "was bought by"] },
-    { "tag": "auction-outbid", "phrases": ["you were outbid", "outbid you"] },
-    { "tag": "bazaar-filled", "phrases": ["bazaar! your", "order was filled"] },
-    { "tag": "dungeon-invite", "phrases": ["party finder", "joined the dungeon group"] },
-    { "tag": "island-full", "phrases": ["your inventory is full"] },
-    { "tag": "mining-reset", "phrases": ["the forge", "commission complete", "commissions"] }
+    {
+      "tag": "party-invite",
+      "phrases": [
+        "has invited you to join their party"
+      ]
+    },
+    {
+      "tag": "party-warp",
+      "phrases": [
+        "warped the party",
+        "sent you to"
+      ]
+    },
+    {
+      "tag": "guild-invite",
+      "phrases": [
+        "has invited you to join their guild"
+      ]
+    },
+    {
+      "tag": "visit-request",
+      "phrases": [
+        "has requested to visit your island"
+      ]
+    },
+    {
+      "tag": "coop-invite",
+      "phrases": [
+        "has invited you to join their co-op"
+      ]
+    },
+    {
+      "tag": "auction-sold",
+      "phrases": [
+        "your auction for",
+        "was bought by"
+      ]
+    },
+    {
+      "tag": "auction-outbid",
+      "phrases": [
+        "you were outbid",
+        "outbid you"
+      ]
+    },
+    {
+      "tag": "bazaar-filled",
+      "phrases": [
+        "bazaar! your",
+        "order was filled"
+      ]
+    },
+    {
+      "tag": "dungeon-invite",
+      "phrases": [
+        "party finder",
+        "joined the dungeon group"
+      ]
+    },
+    {
+      "tag": "island-full",
+      "phrases": [
+        "your inventory is full"
+      ]
+    },
+    {
+      "tag": "mining-reset",
+      "phrases": [
+        "the forge",
+        "commission complete",
+        "commissions"
+      ]
+    }
   ]
 }

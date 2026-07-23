@@ -1,5 +1,7 @@
 package net.trilleo.suggest.context
 
+import net.trilleo.suggest.context.ChatCues.BUILTIN
+import net.trilleo.suggest.context.ChatCues.WINDOW_MS
 import java.util.*
 
 /**

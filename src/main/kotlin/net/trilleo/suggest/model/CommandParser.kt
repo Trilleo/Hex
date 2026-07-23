@@ -1,5 +1,7 @@
 package net.trilleo.suggest.model
 
+import net.trilleo.suggest.model.CommandParser.DEFAULT_SLOTS
+import net.trilleo.suggest.model.CommandParser.learnableValue
 import java.util.*
 
 /**

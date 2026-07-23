@@ -1,5 +1,8 @@
 package net.trilleo.suggest.model
 
+import net.trilleo.suggest.model.Weights.LAMBDA
+import net.trilleo.suggest.model.Weights.LEARNABLE
+import net.trilleo.suggest.model.Weights.w
 import kotlin.math.exp
 
 /**

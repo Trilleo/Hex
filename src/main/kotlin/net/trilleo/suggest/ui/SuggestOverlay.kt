@@ -116,9 +116,15 @@ object SuggestOverlay {
             ContextSnapshot.CUE -> "chat"
             // The event and the Skyblock clock name themselves rather than being labelled: "dark auction" and
             // "night" say far more, in the same space, than "event" and "time" would.
-            ContextSnapshot.SB_EVENT -> context[ContextSnapshot.SB_EVENT].takeIf { it != ContextSnapshot.UNKNOWN } ?: "event"
-            ContextSnapshot.SB_TIME -> context[ContextSnapshot.SB_TIME].takeIf { it != ContextSnapshot.UNKNOWN } ?: "time"
-            ContextSnapshot.SB_SEASON -> context[ContextSnapshot.SB_SEASON].takeIf { it != ContextSnapshot.UNKNOWN } ?: "season"
+            ContextSnapshot.SB_EVENT -> context[ContextSnapshot.SB_EVENT].takeIf { it != ContextSnapshot.UNKNOWN }
+                ?: "event"
+
+            ContextSnapshot.SB_TIME -> context[ContextSnapshot.SB_TIME].takeIf { it != ContextSnapshot.UNKNOWN }
+                ?: "time"
+
+            ContextSnapshot.SB_SEASON -> context[ContextSnapshot.SB_SEASON].takeIf { it != ContextSnapshot.UNKNOWN }
+                ?: "season"
+
             ContextSnapshot.HOUR, ContextSnapshot.DAY -> "usually"
             ContextSnapshot.SESSION -> "on join"
             ContextSnapshot.PREV1, ContextSnapshot.PREV2 -> "next"

@@ -9,7 +9,7 @@ import java.util.concurrent.CompletableFuture;
 
 /**
  * Exposes the in-flight completion request vanilla has asked the server for.
- *
+ * <p>
  * Hex hides vanilla's own suggestion popup while it has something better to offer, and that would silently
  * throw away every completion the <em>server</em> knows about — on Hypixel, the only source that knows a
  * command added last week exists. Reading the pending future lets those be folded back in as candidates and

@@ -3,6 +3,8 @@ package net.trilleo.suggest.model
 import com.google.gson.reflect.TypeToken
 import net.trilleo.config.JsonConfig
 import net.trilleo.suggest.SuggestConfig
+import net.trilleo.suggest.model.ModelStore.CLEAN
+import net.trilleo.suggest.model.ModelStore.DEBOUNCE_TICKS
 import org.slf4j.LoggerFactory
 import java.nio.file.Files
 import java.nio.file.Path

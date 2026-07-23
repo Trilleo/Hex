@@ -8,6 +8,9 @@ import net.minecraft.client.gui.components.EditBox
 import net.minecraft.client.input.KeyEvent
 import net.minecraft.client.input.MouseButtonEvent
 import net.trilleo.mixin.CommandSuggestionsAccessor
+import net.trilleo.suggest.SuggestSession.impression
+import net.trilleo.suggest.SuggestSession.panicked
+import net.trilleo.suggest.SuggestSession.refresh
 import net.trilleo.suggest.context.ContextSnapshot
 import net.trilleo.suggest.context.ContextSources
 import net.trilleo.suggest.model.Candidate
@@ -197,7 +200,7 @@ object SuggestSession {
         if (GhostText.showing() != null) {
             val tab = event.key() == GLFW.GLFW_KEY_TAB && tabAccepts()
             val arrow = event.key() == GLFW.GLFW_KEY_RIGHT && arrowAccepts() &&
-                box.cursorPosition == box.value.length
+                    box.cursorPosition == box.value.length
             if (tab || arrow) {
                 acceptGhost()
                 return true
