@@ -19,8 +19,8 @@ Hex runs entirely on your client — it never needs to be installed on a server.
 - **Hand display** — reposition and restyle your held item in first person, cosmetically.
 - **Per-item swing** — hide the swing animation only while holding chosen Skyblock items, by ID or UUID.
 - **Reminders** — timers, chat triggers and location alerts on a movable HUD panel, with ready-made presets.
-- **Command suggestions** — learns the commands you use and completes them in chat, ranked by where you are, what
-  you are holding and what you just ran. All on your machine; message text is never recorded.
+- **Command suggestions** — learns the commands you use and completes them in chat, ranked by where you are, what you
+  are holding and what you just ran. All on your machine; message text is never recorded.
 - **Auto-update** — Hex downloads new [releases](https://github.com/Trilleo/Hex/releases) itself and applies them on
   exit. See [Updating](#updating).
 
