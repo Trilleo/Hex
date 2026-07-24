@@ -411,6 +411,7 @@
   "hex.config.suggest.learn_player_names": "Learn player names",
   "hex.config.suggest.learn_player_names.tooltip": "Remember who you message and visit, so their names complete. Message text is never recorded either way.",
   "hex.config.suggest.forget_all": "Forget everything…",
+  "hex.suggest.forget_all.tooltip": "Wipe every command Hex has learned. Your settings are kept.",
   "hex.config.suggest.forget_all.tooltip": "Wipe every command Hex has learned. Your settings are kept.",
   "hex.suggest.title": "What Hex has learned",
   "hex.suggest.empty": "Nothing learned yet — run some commands and come back.",

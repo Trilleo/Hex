@@ -36,6 +36,13 @@
   **Add reminder** in the region editor builds one in a click. Renaming a region updates every reminder that
   named it.
 
+### Fixes
+
+#### Command Suggestions
+
++ Fixed the **Forget everything** button on the learned-commands screen showing a raw
+  `hex.suggest.forget_all.tooltip` line instead of its tooltip.
+
 ### Technical Details
 
 + Region previews are drawn with `net.minecraft.gizmos`, the game's own world-space shape system, collected
