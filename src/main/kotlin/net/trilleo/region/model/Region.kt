@@ -145,14 +145,14 @@ class Region {
     fun contains(pos: Vec3, margin: Double = 0.0): Boolean = when (shape) {
         RegionShape.BOX ->
             pos.x >= minX - margin && pos.x <= maxX + margin &&
-                pos.y >= minY - margin && pos.y <= maxY + margin &&
-                pos.z >= minZ - margin && pos.z <= maxZ + margin
+                    pos.y >= minY - margin && pos.y <= maxY + margin &&
+                    pos.z >= minZ - margin && pos.z <= maxZ + margin
 
         RegionShape.CYLINDER -> {
             val center = center()
             val reach = radius() + margin
             pos.y >= minY - margin && pos.y <= maxY + margin &&
-                square(pos.x - center.x) + square(pos.z - center.z) <= square(reach)
+                    square(pos.x - center.x) + square(pos.z - center.z) <= square(reach)
         }
 
         RegionShape.SPHERE -> {

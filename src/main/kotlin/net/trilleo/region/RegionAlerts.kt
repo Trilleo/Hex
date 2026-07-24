@@ -1,8 +1,8 @@
 package net.trilleo.region
 
 import net.minecraft.client.Minecraft
-import net.trilleo.reminder.ReminderActions
 import net.trilleo.region.model.Region
+import net.trilleo.reminder.ReminderActions
 
 /**
  * Fires a region's own title and sound.

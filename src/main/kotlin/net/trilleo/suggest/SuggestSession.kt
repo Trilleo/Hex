@@ -11,6 +11,8 @@ import net.trilleo.mixin.CommandSuggestionsAccessor
 import net.trilleo.suggest.SuggestSession.impression
 import net.trilleo.suggest.SuggestSession.panicked
 import net.trilleo.suggest.SuggestSession.refresh
+import net.trilleo.suggest.SuggestSession.restoreVanilla
+import net.trilleo.suggest.SuggestSession.suppressVanilla
 import net.trilleo.suggest.context.ContextSnapshot
 import net.trilleo.suggest.context.ContextSources
 import net.trilleo.suggest.model.Candidate

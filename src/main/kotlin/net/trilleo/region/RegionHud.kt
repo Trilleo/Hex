@@ -66,7 +66,12 @@ object RegionHud {
         }
 
         val hint = when (mode) {
-            CaptureMode.CORNERS -> hintFor(markKey, "hex.regions.capture.hint.mark", "hex.regions.capture.hint.mark_cmd")
+            CaptureMode.CORNERS -> hintFor(
+                markKey,
+                "hex.regions.capture.hint.mark",
+                "hex.regions.capture.hint.mark_cmd"
+            )
+
             CaptureMode.WALK -> hintFor(walkKey, "hex.regions.capture.hint.walk", "hex.regions.capture.hint.walk_cmd")
         }
 

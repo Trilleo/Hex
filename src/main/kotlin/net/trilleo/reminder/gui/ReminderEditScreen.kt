@@ -7,6 +7,7 @@ import net.minecraft.client.gui.screens.Screen
 import net.minecraft.network.chat.Component
 import net.trilleo.config.ConfigCategory
 import net.trilleo.config.gui.ConfigEntryList
+import net.trilleo.region.RegionConfig
 import net.trilleo.reminder.ChatMatcher
 import net.trilleo.reminder.ReminderActions
 import net.trilleo.reminder.ReminderConfig
@@ -16,7 +17,6 @@ import net.trilleo.reminder.model.ActionKind
 import net.trilleo.reminder.model.Reminder
 import net.trilleo.reminder.model.ReminderAction
 import net.trilleo.reminder.model.TriggerKind
-import net.trilleo.region.RegionConfig
 import net.trilleo.util.Duration
 import net.trilleo.util.Notify
 import java.util.*

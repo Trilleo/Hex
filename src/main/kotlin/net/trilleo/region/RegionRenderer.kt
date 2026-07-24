@@ -117,8 +117,20 @@ object RegionRenderer {
         val radius = region.radius()
         val stroke = color or OPAQUE
 
-        onTop(Gizmos.circle(Vec3(center.x, region.minY, center.z), radius.toFloat(), GizmoStyle.stroke(stroke, STROKE_WIDTH)))
-        onTop(Gizmos.circle(Vec3(center.x, region.maxY, center.z), radius.toFloat(), GizmoStyle.stroke(stroke, STROKE_WIDTH)))
+        onTop(
+            Gizmos.circle(
+                Vec3(center.x, region.minY, center.z),
+                radius.toFloat(),
+                GizmoStyle.stroke(stroke, STROKE_WIDTH)
+            )
+        )
+        onTop(
+            Gizmos.circle(
+                Vec3(center.x, region.maxY, center.z),
+                radius.toFloat(),
+                GizmoStyle.stroke(stroke, STROKE_WIDTH)
+            )
+        )
 
         listOf(
             Vec3(center.x + radius, 0.0, center.z),

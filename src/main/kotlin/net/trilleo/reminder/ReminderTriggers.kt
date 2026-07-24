@@ -1,7 +1,7 @@
 package net.trilleo.reminder
 
-import net.trilleo.reminder.model.TriggerKind
 import net.trilleo.region.RegionTracker
+import net.trilleo.reminder.model.TriggerKind
 import net.trilleo.skyblock.SkyblockLocation
 import net.trilleo.skyblock.item.HeldItem
 

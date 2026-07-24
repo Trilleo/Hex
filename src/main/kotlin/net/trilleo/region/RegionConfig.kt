@@ -5,10 +5,10 @@ import net.minecraft.world.phys.Vec3
 import net.trilleo.config.ConfigHandle
 import net.trilleo.config.ConfigRegistry
 import net.trilleo.config.JsonConfig
-import net.trilleo.reminder.model.ActionKind
-import net.trilleo.reminder.model.ReminderAction
 import net.trilleo.region.model.Region
 import net.trilleo.region.model.RegionShape
+import net.trilleo.reminder.model.ActionKind
+import net.trilleo.reminder.model.ReminderAction
 import java.util.*
 
 /**

@@ -165,7 +165,7 @@ object ReminderConfig {
             if (condition.value == null) condition.value = ""
             condition.value = when (condition.kind) {
                 ConditionKind.ON_ISLAND, ConditionKind.NOT_ON_ISLAND,
-                // Region names are folded by RegionConfig's own normalizer for exactly this comparison.
+                    // Region names are folded by RegionConfig's own normalizer for exactly this comparison.
                 ConditionKind.IN_REGION, ConditionKind.NOT_IN_REGION,
                     -> condition.value.trim().lowercase(Locale.ROOT)
 

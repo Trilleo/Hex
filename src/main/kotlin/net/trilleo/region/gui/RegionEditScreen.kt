@@ -8,20 +8,15 @@ import net.minecraft.network.chat.Component
 import net.minecraft.world.phys.Vec3
 import net.trilleo.config.ConfigCategory
 import net.trilleo.config.gui.ConfigEntryList
-import net.trilleo.reminder.ReminderConfig
-import net.trilleo.reminder.gui.ReminderEditScreen
-import net.trilleo.reminder.gui.RemindersScreen
-import net.trilleo.reminder.model.ActionKind
-import net.trilleo.reminder.model.ConditionKind
-import net.trilleo.reminder.model.Reminder
-import net.trilleo.reminder.model.ReminderAction
-import net.trilleo.reminder.model.Trigger
-import net.trilleo.reminder.model.TriggerKind
 import net.trilleo.region.RegionAlerts
 import net.trilleo.region.RegionConfig
 import net.trilleo.region.RegionRenderer
 import net.trilleo.region.model.Region
 import net.trilleo.region.model.RegionShape
+import net.trilleo.reminder.ReminderConfig
+import net.trilleo.reminder.gui.ReminderEditScreen
+import net.trilleo.reminder.gui.RemindersScreen
+import net.trilleo.reminder.model.*
 import net.trilleo.util.Notify
 import java.util.*
 
