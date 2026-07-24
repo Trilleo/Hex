@@ -164,7 +164,11 @@ object ReminderConfig {
             @Suppress("SENSELESS_COMPARISON")
             if (condition.value == null) condition.value = ""
             condition.value = when (condition.kind) {
-                ConditionKind.ON_ISLAND, ConditionKind.NOT_ON_ISLAND -> condition.value.trim().lowercase(Locale.ROOT)
+                ConditionKind.ON_ISLAND, ConditionKind.NOT_ON_ISLAND,
+                // Region names are folded by RegionConfig's own normalizer for exactly this comparison.
+                ConditionKind.IN_REGION, ConditionKind.NOT_IN_REGION,
+                    -> condition.value.trim().lowercase(Locale.ROOT)
+
                 ConditionKind.HOLDING_ITEM -> condition.value.trim().uppercase(Locale.ROOT)
                 ConditionKind.ON_SKYBLOCK -> condition.value
             }
@@ -172,17 +176,7 @@ object ReminderConfig {
         // A condition needing a value it does not have can never hold, and would wedge the reminder silently.
         reminder.conditions.removeAll { it.usesValue() && it.value.isEmpty() }
 
-        reminder.actions.forEach { action ->
-            @Suppress("SENSELESS_COMPARISON")
-            if (action.kind == null) action.kind = ActionKind.HUD
-            @Suppress("SENSELESS_COMPARISON")
-            if (action.value == null) action.value = ReminderAction.DEFAULT_SOUND
-            if (action.kind == ActionKind.SOUND && action.value.isBlank()) {
-                action.value = ReminderAction.DEFAULT_SOUND
-            }
-            action.pitch = action.pitch.sane(1.0).coerceIn(ReminderAction.PITCH_MIN, ReminderAction.PITCH_MAX)
-            action.volume = action.volume.sane(1.0).coerceIn(ReminderAction.VOLUME_MIN, ReminderAction.VOLUME_MAX)
-        }
+        reminder.actions.forEach { it.normalize() }
         // A reminder that fires and does nothing is indistinguishable from one that never fired.
         if (reminder.actions.isEmpty()) reminder.actions.add(ReminderAction())
 
@@ -203,8 +197,12 @@ object ReminderConfig {
 
         trigger.seconds = trigger.seconds.sane(0.0).coerceIn(0.0, Trigger.MAX_SECONDS)
         trigger.value = when (trigger.kind) {
-            // Folded so matching is a plain `==` against the already-folded SkyblockLocation / HeldItem values.
-            TriggerKind.ISLAND_ENTER, TriggerKind.ISLAND_LEAVE -> trigger.value.trim().lowercase(Locale.ROOT)
+            // Folded so matching is a plain `==` against the already-folded SkyblockLocation / HeldItem /
+            // Region values.
+            TriggerKind.ISLAND_ENTER, TriggerKind.ISLAND_LEAVE,
+            TriggerKind.REGION_ENTER, TriggerKind.REGION_LEAVE,
+                -> trigger.value.trim().lowercase(Locale.ROOT)
+
             TriggerKind.HELD_ITEM -> trigger.value.trim().uppercase(Locale.ROOT)
             // Left exactly as typed: a regular expression is case-sensitive by design, and folding one would
             // silently change what it matches. The editor suggests `(?i)` for callers who want otherwise.

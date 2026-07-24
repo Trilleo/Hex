@@ -55,6 +55,14 @@ class ReminderRuntimeState {
      */
     var resolvedText: String = ""
 
+    /**
+     * The reminder's title subtitle with its capture groups substituted, resolved alongside [resolvedText].
+     *
+     * Separate rather than derived at fire time because the groups themselves are not kept: they belong to a
+     * chat line that scrolled away when the reminder was armed, possibly sessions ago.
+     */
+    var resolvedSubtitle: String = ""
+
     var lastFiredEpochMs: Long = 0L
 }
 
@@ -154,6 +162,8 @@ object ReminderState {
             if (entry.phase == null) entry.phase = Phase.IDLE
             @Suppress("SENSELESS_COMPARISON")
             if (entry.resolvedText == null) entry.resolvedText = ""
+            @Suppress("SENSELESS_COMPARISON")
+            if (entry.resolvedSubtitle == null) entry.resolvedSubtitle = ""
             if (entry.firesAtEpochMs < 0L) entry.firesAtEpochMs = 0L
             if (entry.remainingMs < 0L) entry.remainingMs = 0L
         }

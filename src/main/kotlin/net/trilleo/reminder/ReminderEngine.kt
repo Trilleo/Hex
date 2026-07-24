@@ -5,6 +5,7 @@ import net.minecraft.client.Minecraft
 import net.trilleo.reminder.ReminderEngine.NO_CATCH_UP
 import net.trilleo.reminder.ReminderEngine.settle
 import net.trilleo.reminder.hud.ReminderHudModel
+import net.trilleo.reminder.model.ActionKind
 import net.trilleo.reminder.model.Reminder
 import net.trilleo.reminder.model.TriggerKind
 import net.trilleo.util.Notify
@@ -181,6 +182,9 @@ object ReminderEngine {
         state.phase = Phase.ARMED
         state.firesAtEpochMs = now + (reminder.trigger.seconds * 1000.0).toLong()
         state.resolvedText = ChatMatcher.substitute(reminder.text, groups)
+        // The title's second line gets the same treatment, so a captured number can go on either line.
+        val subtitle = reminder.actions.firstOrNull { it.kind == ActionKind.TITLE }?.subtitle.orEmpty()
+        state.resolvedSubtitle = ChatMatcher.substitute(subtitle, groups)
         ReminderState.markDirty()
     }
 

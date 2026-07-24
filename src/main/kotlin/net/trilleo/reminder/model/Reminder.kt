@@ -79,13 +79,6 @@ class Reminder {
         into.conditions = conditions.mapTo(mutableListOf()) { source ->
             Condition().also { it.kind = source.kind; it.value = source.value }
         }
-        into.actions = actions.mapTo(mutableListOf()) { source ->
-            ReminderAction().also {
-                it.kind = source.kind
-                it.value = source.value
-                it.pitch = source.pitch
-                it.volume = source.volume
-            }
-        }
+        into.actions = actions.mapTo(mutableListOf()) { it.copy() }
     }
 }

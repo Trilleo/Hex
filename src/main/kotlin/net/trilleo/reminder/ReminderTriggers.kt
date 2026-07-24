@@ -1,6 +1,7 @@
 package net.trilleo.reminder
 
 import net.trilleo.reminder.model.TriggerKind
+import net.trilleo.region.RegionTracker
 import net.trilleo.skyblock.SkyblockLocation
 import net.trilleo.skyblock.item.HeldItem
 
@@ -46,5 +47,10 @@ object ReminderTriggers {
             if (held != null) arm(TriggerKind.HELD_ITEM, held)
             lastHeldId = held
         }
+
+        // Region crossings are detected by the Regions feature, which owns the geometry and the hysteresis;
+        // this only forwards what it queued. No edge state is kept here, because the edge has already been
+        // decided by the time it reaches the queue.
+        RegionTracker.drainEdges(arm)
     }
 }

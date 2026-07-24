@@ -175,8 +175,9 @@ class ReminderConditionsScreen(
             /** Matches the normalizer's folding, so a value typed here works without waiting for a reload. */
             private fun foldValue() {
                 condition.value = when (condition.kind) {
-                    ConditionKind.ON_ISLAND, ConditionKind.NOT_ON_ISLAND ->
-                        condition.value.trim().lowercase(Locale.ROOT)
+                    ConditionKind.ON_ISLAND, ConditionKind.NOT_ON_ISLAND,
+                    ConditionKind.IN_REGION, ConditionKind.NOT_IN_REGION,
+                        -> condition.value.trim().lowercase(Locale.ROOT)
 
                     ConditionKind.HOLDING_ITEM -> condition.value.trim().uppercase(Locale.ROOT)
                     ConditionKind.ON_SKYBLOCK -> condition.value

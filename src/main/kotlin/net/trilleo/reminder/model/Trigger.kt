@@ -25,6 +25,12 @@ enum class TriggerKind {
 
     /** Armed when the main hand starts holding the Skyblock item named by [Trigger.value]. */
     HELD_ITEM,
+
+    /** Armed on walking into the [net.trilleo.region.model.Region] named by [Trigger.value]. */
+    REGION_ENTER,
+
+    /** Armed on walking out of the [net.trilleo.region.model.Region] named by [Trigger.value]. */
+    REGION_LEAVE,
 }
 
 /**
@@ -69,7 +75,9 @@ class Trigger {
     /** Whether this kind reads [value] at all — the editor hides the field for the kinds that do not. */
     fun usesValue(): Boolean = when (kind) {
         TriggerKind.TIMER, TriggerKind.WORLD_JOIN -> false
-        TriggerKind.CHAT_MATCH, TriggerKind.ISLAND_ENTER, TriggerKind.ISLAND_LEAVE, TriggerKind.HELD_ITEM -> true
+        TriggerKind.CHAT_MATCH, TriggerKind.ISLAND_ENTER, TriggerKind.ISLAND_LEAVE, TriggerKind.HELD_ITEM,
+        TriggerKind.REGION_ENTER, TriggerKind.REGION_LEAVE,
+            -> true
     }
 
     companion object {

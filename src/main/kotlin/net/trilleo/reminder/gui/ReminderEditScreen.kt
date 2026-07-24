@@ -16,6 +16,7 @@ import net.trilleo.reminder.model.ActionKind
 import net.trilleo.reminder.model.Reminder
 import net.trilleo.reminder.model.ReminderAction
 import net.trilleo.reminder.model.TriggerKind
+import net.trilleo.region.RegionConfig
 import net.trilleo.util.Duration
 import net.trilleo.util.Notify
 import java.util.*
@@ -186,6 +187,37 @@ class ReminderEditScreen(
             get = { reminder.actions.any { it.kind == ActionKind.SOUND } },
             set = { setAction(ActionKind.SOUND, it); rebuild() },
         )
+        toggle(
+            "action_title",
+            default = false,
+            get = { reminder.actions.any { it.kind == ActionKind.TITLE } },
+            set = { setAction(ActionKind.TITLE, it); rebuild() },
+        )
+
+        titleAction()?.let { title ->
+            text(
+                "title_subtitle",
+                default = "",
+                get = { title.subtitle },
+                set = { title.subtitle = it; touch() },
+            )
+            color(
+                "title_color",
+                default = "#FFFFFF",
+                get = { title.titleColor.ifBlank { "#FFFFFF" } },
+                set = { title.titleColor = it; touch() },
+            )
+            slider(
+                "title_seconds",
+                min = ReminderAction.TITLE_SECONDS_MIN,
+                max = ReminderAction.TITLE_SECONDS_MAX,
+                step = 0.5,
+                default = ReminderAction.DEFAULT_TITLE_SECONDS,
+                get = { title.titleSeconds },
+                set = { title.titleSeconds = it; touch() },
+                format = { String.format(Locale.ROOT, "%.1fs", it) },
+            )
+        }
 
         soundAction()?.let { sound ->
             text(
@@ -229,11 +261,21 @@ class ReminderEditScreen(
         TriggerKind.CHAT_MATCH -> "trigger_pattern"
         TriggerKind.ISLAND_ENTER, TriggerKind.ISLAND_LEAVE -> "trigger_island"
         TriggerKind.HELD_ITEM -> "trigger_item"
+        TriggerKind.REGION_ENTER, TriggerKind.REGION_LEAVE -> "trigger_region"
         TriggerKind.TIMER, TriggerKind.WORLD_JOIN -> "trigger_value"
     }
 
     private fun validateTriggerValue(value: String): Component? {
         if (value.isBlank()) return Component.translatable("hex.reminders.edit.trigger_value.blank")
+
+        // A region trigger names something that has to exist: unlike an island, which Hypixel supplies, a
+        // region only exists because the player drew one, so a typo here silently never fires. Reported as a
+        // warning the field still accepts, because the region may be drawn after the reminder.
+        if (reminder.trigger.kind == TriggerKind.REGION_ENTER || reminder.trigger.kind == TriggerKind.REGION_LEAVE) {
+            val known = RegionConfig.byName(value.trim().lowercase(Locale.ROOT)) != null
+            return if (known) null else Component.translatable("hex.reminders.edit.trigger_region.unknown")
+        }
+
         if (reminder.trigger.kind != TriggerKind.CHAT_MATCH || reminder.trigger.literal) return null
         // The one place a bad pattern can be reported to the person who wrote it.
         val error = ChatMatcher.compileError(value) ?: return null
@@ -254,6 +296,8 @@ class ReminderEditScreen(
     }
 
     private fun soundAction(): ReminderAction? = reminder.actions.firstOrNull { it.kind == ActionKind.SOUND }
+
+    private fun titleAction(): ReminderAction? = reminder.actions.firstOrNull { it.kind == ActionKind.TITLE }
 
     /** Fires the reminder's actions now, so a sound choice can be heard before committing to it. */
     private fun test() {

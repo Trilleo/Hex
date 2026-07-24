@@ -114,6 +114,15 @@ object FreecamState {
         speedMultiplier = (speedMultiplier * factor).coerceIn(MIN_SPEED_MULT, MAX_SPEED_MULT)
     }
 
+    /**
+     * The camera's position as of this tick, without interpolation.
+     *
+     * For callers on the client tick that want the exact flown-to point rather than a smoothed one — region
+     * capture marks corners with this, which is what lets a player fly to the top of a room and pin it there
+     * instead of building a tower to stand on.
+     */
+    val position: Vec3 get() = pos
+
     /** Camera position for this frame, interpolated between the previous and current tick positions. */
     fun interpolatedPos(partialTick: Float): Vec3 {
         val t = partialTick.toDouble()

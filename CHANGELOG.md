@@ -2,6 +2,51 @@
 
 ## Unreleased
 
+### New Features
+
+#### Regions
+
++ Added **Regions** — areas you draw on an island that announce themselves with a title and a sound when you
+  walk into them. An island is a big place, and "you are in the Hub" is rarely the thing worth saying.
+    + Three ways to draw one, none of which involve typing coordinates. **Region Here** makes a region around
+      where you stand in a single keypress. **Mark Region Corner** sets two opposite corners — and while the
+      freecam is flying it marks the *camera*, so the top corner of a room can be pinned from the air instead
+      of built up to. **Walk Region** records the outline you walk and takes the box around it.
+    + **Box, cylinder or sphere**, switchable at any time without drawing the region again. A region stores one
+      box and the shape decides how it is read.
+    + A customisable title with its own colour, an optional subtitle and a hold time, a sound with the usual id,
+      pitch and volume, and a separate message for leaving.
+    + **Preview** draws every region on the island as a real shape in the world, labelled, optionally through
+      walls, and stays on after the menu closes so you can walk around and look. The region open in the editor
+      is always drawn, so a box changes shape behind the menu as you type sizes into it.
+    + A **cooldown** per region, so a region across a doorway does not announce itself every time you step
+      through, and an **exit margin** so standing on a boundary cannot make one stutter.
+    + Regions record the island they were made on and only fire there, since coordinates repeat across islands.
+      One made off Skyblock matches anywhere, so they work in singleplayer too.
+    + `/hexa region here [radius] [name]`, `mark`, `walk`, `cancel`, `list`, `preview` and `edit`, and five
+      rebindable keys under Options → Controls → **Hex**.
+
+#### Reminders
+
++ Added **Show as a title** to reminders — any reminder can now put its message across the middle of the screen,
+  with its own colour, an optional subtitle and a hold time, instead of or alongside the panel row and the
+  sound. Capture groups from a chat trigger fill in the subtitle as well as the message.
++ Added **Entering a region** and **Leaving a region** triggers, and **In region** / **Not in region**
+  conditions, so the whole countdown, repeat, condition and snooze machinery can hang off an area you drew.
+  **Add reminder** in the region editor builds one in a click. Renaming a region updates every reminder that
+  named it.
+
+### Technical Details
+
++ Region previews are drawn with `net.minecraft.gizmos`, the game's own world-space shape system, collected
+  through the public `Minecraft.collectPerTickGizmos()`. The mod gains a world preview without a renderer, a
+  mixin, or a render pipeline of its own.
++ Regions and reminders share one action model and one runner: a region holds the same `ReminderAction` list a
+  reminder does and fires through the same `ReminderActions.run`, so there is a single implementation of
+  "turn an action into a title or a sound" rather than one per feature.
++ Regions are stored separately in `config/hex/regions.json`, registered with the config registry, so they join
+  config profiles and clipboard sharing while the Regions tab's reset button leaves a hand-drawn set alone.
+
 ## Version 1.8.0
 
 ### New Features

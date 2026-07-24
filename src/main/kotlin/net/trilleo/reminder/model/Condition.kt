@@ -1,5 +1,6 @@
 package net.trilleo.reminder.model
 
+import net.trilleo.region.RegionTracker
 import net.trilleo.skyblock.SkyblockLocation
 import net.trilleo.skyblock.item.HeldItem
 
@@ -21,6 +22,12 @@ enum class ConditionKind {
 
     /** True while the main hand holds the Skyblock item named by [Condition.value]. */
     HOLDING_ITEM,
+
+    /** True while the player stands inside the [net.trilleo.region.model.Region] named by [Condition.value]. */
+    IN_REGION,
+
+    /** True while the player stands anywhere but inside the region named by [Condition.value]. */
+    NOT_IN_REGION,
 }
 
 /**
@@ -60,6 +67,10 @@ class Condition {
             ConditionKind.ON_ISLAND -> island != null && island == value
             ConditionKind.NOT_ON_ISLAND -> island != null && island != value
             ConditionKind.HOLDING_ITEM -> HeldItem.id != null && HeldItem.id == value
+            // Asked of the tracker rather than recomputed, so a condition agrees with the alert the same
+            // region just fired instead of disagreeing by a tick on the boundary.
+            ConditionKind.IN_REGION -> RegionTracker.isInsideNamed(value)
+            ConditionKind.NOT_IN_REGION -> !RegionTracker.isInsideNamed(value)
         }
     }
 }
