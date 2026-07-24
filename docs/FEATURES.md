@@ -393,6 +393,31 @@ never changes whether Hex updates itself, and the tab is not part of a **Copy to
 The result of the startup check reaches you in chat once you are in a world — including when a slow download means
 that is a while after you joined.
 
+## Language
+
+Hex speaks **English** and **简体中文 (Simplified Chinese)**. There is no setting to change: the mod follows
+Minecraft's own language, so picking a language in Options → Language switches Hex's menus, tooltips, keybind
+names and reminder presets along with the rest of the game. Anything a translation has not caught up with falls
+back to English rather than going blank.
+
+Three kinds of text stay in English on purpose, because they are matched against Hypixel rather than read:
+
+- **Island names** in a reminder's Island field or an **On island** condition, and in a profile's island rule —
+  these are compared to the scoreboard, which Hypixel writes in English. Type `dwarven mines`, not the
+  translated name.
+- **Skyblock item IDs** in the per-item swing list and the **Holding an item** trigger, such as `HYPERION`.
+- **Chat patterns** for a chat-triggered reminder, which have to match the message as the server sent it.
+
+Region and reminder *names* are yours — they are stored as you type them, in any language, and the panel and
+titles render them as-is.
+
+Two things are still English everywhere, and will be translated in a later release: the **keybind editor**
+screens reached from **Edit keybinds…**, and the lines Hex prints into chat, including the `/hexa` command
+output.
+
+Adding another language means dropping a translated file into the mod; see
+[Translations](TRANSLATIONS.md) if you want to contribute one.
+
 ---
 
 ## Adding a feature to this file

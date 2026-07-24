@@ -24,6 +24,7 @@ Hex runs entirely on your client — it never needs to be installed on a server.
   are holding and what you just ran. All on your machine; message text is never recorded.
 - **Auto-update** — Hex downloads new [releases](https://github.com/Trilleo/Hex/releases) itself and applies them on
   exit. See [Updating](#updating).
+- **Languages** — English and 简体中文, following Minecraft's own language setting.
 
 *Hex is in early development — more features will land over time. See [Features](docs/FEATURES.md) for what each one
 does and how to configure it, and the [change log](CHANGELOG.md) for what's new in each release.*
@@ -78,6 +79,7 @@ To launch a development client:
 
 - [Features](docs/FEATURES.md)
 - [Change log](CHANGELOG.md)
+- [Translations](docs/TRANSLATIONS.md)
 - [Writing the changelog & releasing](docs/RELEASING.md)
 - [Commit structure](docs/COMMIT_STRUCTURE.md)
 

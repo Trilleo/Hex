@@ -4,6 +4,18 @@
 
 ### New Features
 
+#### Language
+
++ Added a **Simplified Chinese (简体中文)** translation, covering every menu, tooltip, confirmation, keybind name
+  and reminder preset the mod ships. Hex follows Minecraft's own language setting, so there is nothing to
+  configure — pick a language in Options → Language and the mod follows.
+    + Text that is matched against Hypixel rather than read stays in English by design: island names typed into
+      a reminder, condition or profile rule are compared to the English scoreboard, item IDs are item IDs, and
+      a chat pattern has to match the message as the server sent it. Your own region and reminder names are
+      stored as you type them, in any language.
+    + Not yet covered: the keybind editor screens and the lines Hex prints into chat, which never went through
+      translation keys and so stay English for now.
+
 #### Regions
 
 + Added **Regions** — areas you draw on an island that announce themselves with a title and a sound when you
@@ -53,6 +65,10 @@
   "turn an action into a title or a sound" rather than one per feature.
 + Regions are stored separately in `config/hex/regions.json`, registered with the config registry, so they join
   config profiles and clipboard sharing while the Regions tab's reset button leaves a hand-drawn set alone.
++ Language files are now a set rather than a single file, and [docs/TRANSLATIONS.md](docs/TRANSLATIONS.md)
+  states the invariant that holds them together: every locale carries the same key set, in the same order, with
+  matching `%s` placeholders. It ships the parity check that proves it, since a key missing from one file
+  renders as its raw id and is invisible to anyone testing in English.
 
 ## Version 1.8.0
 
