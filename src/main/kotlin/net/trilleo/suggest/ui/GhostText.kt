@@ -22,6 +22,10 @@ import net.trilleo.suggest.model.Fuzzy
  *     suffix, however well it scored;
  *  2. the cursor must be at the end of the line, since text after the cursor makes the suffix a lie;
  *  3. the ranker must clear the player's confidence threshold, so it stays quiet when the field is close.
+ *
+ * The third is the only one of those about certainty rather than about drawing, and it is the one [show]
+ * lifts: a player who has moved the highlight onto a suggestion has asked for that guess, so there is nothing
+ * left to be conservative about.
  */
 object GhostText {
 
@@ -42,12 +46,26 @@ object GhostText {
      * @param confidence the ranker's softmax confidence in the leader.
      */
     fun apply(input: EditBox, typed: String, ranked: List<Candidate>, confidence: Double) {
-        if (!SuggestConfig.ghostText) return clear(input)
         val best = ranked.firstOrNull() ?: return clear(input)
         if (confidence < SuggestConfig.settings.confidence) return clear(input)
+        show(input, typed, best)
+    }
+
+    /**
+     * Shows [candidate]'s completion whatever the ranker made of it, or clears when it cannot be drawn.
+     *
+     * For when the player has pointed at a suggestion themselves: moving the highlight down the popup is a
+     * request rather than a guess, and the confidence gate in [apply] exists only to keep *unasked-for*
+     * guesses quiet. The two conditions that remain are the ones that are about drawing rather than about
+     * certainty — a completion has to be a suffix, and there must be nothing after the cursor for it to be a
+     * suffix of.
+     */
+    fun show(input: EditBox, typed: String, candidate: Candidate?) {
+        if (!SuggestConfig.ghostText) return clear(input)
+        if (candidate == null) return clear(input)
         if (input.cursorPosition != input.value.length) return clear(input)
 
-        val completion = Fuzzy.completionOf(typed, best.key) ?: return clear(input)
+        val completion = Fuzzy.completionOf(typed, candidate.key) ?: return clear(input)
         current = completion
         input.setSuggestion(completion)
     }

@@ -1,6 +1,7 @@
 package net.trilleo.suggest.ui
 
 import net.minecraft.client.Minecraft
+import net.minecraft.client.gui.Font
 import net.minecraft.client.gui.GuiGraphicsExtractor
 import net.minecraft.client.gui.components.EditBox
 import net.trilleo.suggest.context.ContextSnapshot
@@ -11,12 +12,18 @@ import net.trilleo.suggest.model.Weights
 /**
  * One drawn row of the popup.
  *
- * @property text the whole command line, as it would be inserted.
+ * **For drawing only.** [text] is the whole command line as it would be inserted *unless* it did not fit the
+ * chat box, in which case it is cut short and ends in an ellipsis — so what gets accepted is always read back
+ * off the [net.trilleo.suggest.model.Candidate], never off a row.
+ *
+ * @property text the command line to draw, cut to fit the box.
  * @property typedLength how many leading characters the player has already typed, drawn brighter than the
  *   rest so the completion reads as a completion rather than as an unrelated line that happens to be listed.
  *   Zero when the candidate is not a literal continuation of what was typed — a fuzzy match — in which case
  *   there is no meaningful prefix to highlight.
  * @property hint one word on why this is here, right-aligned. Empty for the ordinary case.
+ * @property width exactly what this row puts on screen, text and hint together, measured the same way it is
+ *   drawn.
  */
 class OverlayRow(
     val text: String,
@@ -54,22 +61,71 @@ object SuggestOverlay {
     /** Room for the hint column, so a long line and a hint cannot overlap. */
     private const val HINT_GAP = 8
 
+    /** Marks a line that had to be cut to fit the chat box. */
+    private const val ELLIPSIS = "…"
+
+    /**
+     * No row is cut below this, so a wide hint on a narrow box cannot reduce a line to its cut mark.
+     *
+     * A row this short would overflow rather than be trimmed to nothing, which is the better failure of the
+     * two: a suggestion running past the edge of a box that is already too narrow to hold anything is at
+     * least still readable.
+     */
+    private const val MIN_TEXT_WIDTH = 40
+
     /**
      * Prepares the rows for [candidates]. Called when the candidate list changes, never per frame.
      *
      * @param typed the command text without its slash, for deciding how much of each row to highlight.
+     * @param available how much width the popup has, which is the chat box's inner width. Hex's candidates
+     *   are whole command lines rather than the single token vanilla completes, so they are the one popup
+     *   that can genuinely be wider than the box it sits on — `/party invite SomebodysLongName` with a hint
+     *   beside it is an ordinary suggestion, not a pathological one. Anything that does not fit is cut here,
+     *   once, rather than being allowed to draw outside the popup's own background.
      */
-    fun rows(candidates: List<Candidate>, typed: String, context: ContextSnapshot, now: Long): List<OverlayRow> {
+    fun rows(
+        candidates: List<Candidate>,
+        typed: String,
+        context: ContextSnapshot,
+        now: Long,
+        available: Int,
+    ): List<OverlayRow> {
         if (candidates.isEmpty()) return emptyList()
         val font = Minecraft.getInstance().font
+        // What a row may occupy, once the popup's own padding is taken out of the width it has to sit in.
+        val room = (available - PADDING * 2).coerceAtLeast(MIN_TEXT_WIDTH)
+
         return candidates.map { candidate ->
-            val text = "/${candidate.key}"
-            val prefix = if (candidate.key.startsWith(typed, ignoreCase = true)) typed.length + 1 else 0
             val hint = hintFor(candidate, context, now)
-            val width = font.width(text) + if (hint.isEmpty()) 0 else HINT_GAP + font.width(hint)
-            OverlayRow(text, prefix, hint, width)
+            val hintWidth = if (hint.isEmpty()) 0 else HINT_GAP + font.width(hint)
+            val budget = (room - hintWidth).coerceAtLeast(MIN_TEXT_WIDTH)
+
+            var text = "/${candidate.key}"
+            var prefix = if (candidate.key.startsWith(typed, ignoreCase = true)) typed.length + 1 else 0
+            if (font.width(text) > budget) {
+                text = font.plainSubstrByWidth(text, (budget - font.width(ELLIPSIS)).coerceAtLeast(0)) + ELLIPSIS
+                // The ellipsis is not something the player typed, so the highlight stops before it.
+                prefix = prefix.coerceAtMost(text.length - ELLIPSIS.length)
+            }
+
+            OverlayRow(text, prefix, hint, measure(font, text, prefix) + hintWidth)
         }
     }
+
+    /**
+     * Exactly what [draw] will put on screen for a row's text.
+     *
+     * Measured the same way it is drawn — as two segments when there is a typed prefix — because
+     * [Font.width] rounds up to a whole pixel. Measuring the line once and drawing it in two pieces can
+     * therefore differ by a pixel, which is a pixel of text hanging outside the background it is supposed to
+     * sit on.
+     */
+    private fun measure(font: Font, text: String, typedLength: Int): Int =
+        if (typedLength in 1 until text.length) {
+            font.width(text.substring(0, typedLength)) + font.width(text.substring(typedLength))
+        } else {
+            font.width(text)
+        }
 
     /**
      * One word on why this candidate is in the list.
@@ -144,7 +200,7 @@ object SuggestOverlay {
         val font = Minecraft.getInstance().font
 
         val contentWidth = rows.maxOf { it.width }
-        val left = input.getScreenX(0) - PADDING
+        val left = leftOf(input, contentWidth)
         val height = rows.size * LINE_HEIGHT
         val top = input.y - height - PADDING
 
@@ -181,11 +237,26 @@ object SuggestOverlay {
         }
     }
 
+    /**
+     * Where the popup's left edge goes.
+     *
+     * The start of the line, pulled back when the widest row would otherwise run off the right of the chat
+     * box, and never off the left of the screen — the same clamp vanilla applies to its own popup, which is
+     * the other half of "sit exactly where vanilla's would". Rows are already cut to the box in [rows], so
+     * this has nothing to do in the ordinary case; it is what keeps the list on screen when the window has
+     * been resized since they were measured.
+     */
+    private fun leftOf(input: EditBox, contentWidth: Int): Int {
+        val start = input.getScreenX(0)
+        val rightmost = start + input.innerWidth - (contentWidth + PADDING * 2)
+        return (start - PADDING).coerceAtMost(rightmost).coerceAtLeast(0)
+    }
+
     /** Which row [mouseY] is over, or -1. Used for click-to-accept. */
     fun rowAt(input: EditBox, rows: List<OverlayRow>, mouseX: Double, mouseY: Double): Int {
         if (rows.isEmpty()) return -1
         val contentWidth = rows.maxOf { it.width }
-        val left = input.getScreenX(0) - PADDING
+        val left = leftOf(input, contentWidth)
         val height = rows.size * LINE_HEIGHT
         val top = input.y - height - PADDING
 

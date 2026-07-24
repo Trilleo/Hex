@@ -52,11 +52,32 @@
 
 #### Command Suggestions
 
++ Fixed the suggestion list drawing on top of Minecraft's own, which is what made it look like entries were
+  spilling out of the box: the two lists have different widths and different lengths, so the one underneath
+  showed through wherever Hex's was narrower or shorter. Only one list is on screen now, whatever you type.
++ Fixed a suggestion longer than the chat box running off the edge of the screen. Lines that do not fit are
+  now shortened with an ellipsis, and the list itself is kept on screen — accepting one still types the whole
+  command, ellipsis or not.
++ Fixed the greyed-out inline completion staying on the first suggestion while the highlight moved down the
+  list, so **→** took a different command from the one highlighted. It now follows the highlight.
++ The right arrow takes the highlighted suggestion out of the list, not just the inline completion. **Accept
+  with** is documented as choosing the key for both, and set to *Right arrow* there had been no way to take a
+  row from the list at all short of clicking it.
 + Fixed the **Forget everything** button on the learned-commands screen showing a raw
   `hex.suggest.forget_all.tooltip` line instead of its tooltip.
 
 ### Technical Details
 
++ Vanilla's suggestion popup is now switched off on every refresh rather than once on the transition.
+  `ChatScreen.onEdited` calls `setAllowSuggestions(true)` and re-asks on every keystroke *before* Hex is given
+  the edit, and a completion that needs no server round trip — a command name, which is most of what gets
+  typed — resolves inside that call, so vanilla had rebuilt its list by the time Hex was asked to refresh.
+  `showSuggestions` does not consult the flag either, so a Tab reaching vanilla rebuilt the list regardless;
+  Hex's popup now consumes Tab whether or not Tab is the accept key. Restoring vanilla's popup still happens
+  once on the transition, since that one costs a suggestion request.
++ Overlay rows are measured the way they are drawn — as two segments when part of the line is highlighted as
+  already typed — because `Font.width` rounds up to a whole pixel and the sum of two rounded halves can exceed
+  the rounded whole, leaving a pixel of text outside the popup's background.
 + Region previews are drawn with `net.minecraft.gizmos`, the game's own world-space shape system, collected
   through the public `Minecraft.collectPerTickGizmos()`. The mod gains a world preview without a renderer, a
   mixin, or a render pipeline of its own.

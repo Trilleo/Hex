@@ -42,7 +42,16 @@ import java.util.concurrent.CompletableFuture
  * [CommandSuggestions.setAllowSuggestions]`(false)`, which both blanks vanilla's list and makes vanilla's own
  * async callback decline to re-show it when the server replies. When Hex has nothing, the flag goes back and
  * `updateCommandInfo()` re-asks — once, on the transition, never per keystroke, since vanilla already asks on
- * every edit of its own accord. The `suppressing` flag exists purely so that transition happens once.
+ * every edit of its own accord. The `suppressing` flag exists purely so that handing back happens once.
+ *
+ * **Suppression has to be re-asserted, restoring does not.** `ChatScreen.onEdited` sets the flag back to true
+ * and re-asks on *every* keystroke, before this class is given the edit, and a completion that resolves
+ * without asking the server — a command name, which is most of what gets typed — resolves inside that call,
+ * so vanilla has rebuilt its popup by the time Hex is asked to refresh. Suppressing only on the transition
+ * therefore suppresses the first keystroke and leaves both popups drawn over each other for every keystroke
+ * after it. Vanilla's `showSuggestions` does not consult the flag either, so a Tab that reaches vanilla
+ * rebuilds the list whatever Hex has said. Hence [suppressVanilla] runs on every refresh — it is two field
+ * writes — while [restoreVanilla], which costs a suggestion request, keeps its guard.
  */
 object SuggestSession {
     private val LOGGER = LoggerFactory.getLogger("hex/suggest")
@@ -189,7 +198,19 @@ object SuggestSession {
                     dismiss(); return true
                 }
 
-                GLFW.GLFW_KEY_TAB -> if (tabAccepts()) {
+                // Consumed whether or not it is the accept key. Vanilla's own Tab handler rebuilds its
+                // suggestion list without consulting the flag Hex switched off, so letting Tab through while
+                // Hex's popup is up puts a second list on screen underneath this one.
+                GLFW.GLFW_KEY_TAB -> {
+                    if (tabAccepts()) accept(selected)
+                    return true
+                }
+
+                // The other half of the accept-key setting, which is documented as taking "the highlighted
+                // suggestion or the inline completion" — without this the arrow only ever reached the ghost
+                // text below, so a player who set it to the arrow could not take a row at all unless the
+                // ranker happened to be confident enough to be showing one.
+                GLFW.GLFW_KEY_RIGHT -> if (arrowAccepts() && box.cursorPosition == box.value.length) {
                     accept(selected); return true
                 }
             }
@@ -296,7 +317,7 @@ object SuggestSession {
             ?.let { key -> ranked.indexOfFirst { it.key == key } }
             ?.takeIf { it >= 0 }
             ?: 0
-        rows = SuggestOverlay.rows(ranked, typed, context, now)
+        rows = SuggestOverlay.rows(ranked, typed, context, now, box.innerWidth)
         impression = ranked
 
         suppressVanilla()
@@ -310,8 +331,11 @@ object SuggestSession {
         restoreVanilla()
     }
 
+    /**
+     * Blanks vanilla's popup for as long as Hex has one of its own. Runs on every refresh rather than once on
+     * the transition — see this object's documentation for what puts vanilla's list back.
+     */
     private fun suppressVanilla() {
-        if (suppressing) return
         vanilla?.setAllowSuggestions(false)
         suppressing = true
     }
@@ -378,6 +402,10 @@ object SuggestSession {
         if (rows.isEmpty()) return
         // Wraps, so holding Down cycles rather than sticking at the bottom.
         selected = ((selected + delta) % rows.size + rows.size) % rows.size
+        // The inline completion follows the highlight. Leaving it on the leader while the highlight is three
+        // rows down puts two different answers on screen at once, and makes the accept key take the one that
+        // is not highlighted.
+        input?.let { GhostText.show(it, typed, ranked.getOrNull(selected)) }
     }
 
     private fun dismiss() {

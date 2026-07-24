@@ -304,12 +304,14 @@ Enter.
 ### The three ways it helps
 
 **The list.** Start typing a command and a ranked list appears above the chat box, ordered by what you actually use
-rather than alphabetically. **↑/↓** move through it, **Tab** takes the highlighted one, **Escape** dismisses it
-without closing chat, and clicking a row picks it. Each row carries a small note on the right — *here*, *next*,
-*often*, *holding* — saying in one word why it made the list.
+rather than alphabetically. **↑/↓** move through it, **Tab** or **→** takes the highlighted one — whichever you have
+set under **Accept with** — **Escape** dismisses it without closing chat, and clicking a row picks it. Each row
+carries a small note on the right — *here*, *next*, *often*, *holding* — saying in one word why it made the list. A
+line too long for the chat box is shortened with an ellipsis; what gets typed in is always the whole thing.
 
 **Inline completion.** As you type, the rest of the line appears greyed out ahead of the cursor; **Tab** or **→**
-accepts it. This is where it beats Hypixel's own tab-completion, which knows the command `/warp` exists but has no
+accepts it. It follows the list: arrow down to another suggestion and the greyed-out text becomes that one, so what
+is highlighted and what is written ahead of the cursor are never two different answers. This is where it beats Hypixel's own tab-completion, which knows the command `/warp` exists but has no
 idea that when *you* type `/warp d` you mean `dungeon_hub`. It only appears when the guess is a confident one — how
 confident is the **Inline threshold** slider.
 
