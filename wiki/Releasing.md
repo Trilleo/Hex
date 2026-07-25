@@ -35,12 +35,12 @@ the jar attached.
 + Fixed timer resetting when switching islands.
 ```
 
-| Level | Heading | Purpose |
-|---|---|---|
-| `##` | `Unreleased` / `Version X.Y.Z` | One section per release; `Unreleased` collects entries during development |
-| `###` | Category | `New Features`, `Improvements`, `Fixes`, `Technical Details`, `Removed Features` |
-| `####` | Feature area | `Fishing`, `Mining`, `Dungeon`, `GUI`, `Misc`, … — free-form; `Misc` is the catch-all |
-| `+` | Entry | One change per bullet; indent `+` sub-bullets for details |
+| Level  | Heading                        | Purpose                                                                               |
+|--------|--------------------------------|---------------------------------------------------------------------------------------|
+| `##`   | `Unreleased` / `Version X.Y.Z` | One section per release; `Unreleased` collects entries during development             |
+| `###`  | Category                       | `New Features`, `Improvements`, `Fixes`, `Technical Details`, `Removed Features`      |
+| `####` | Feature area                   | `Fishing`, `Mining`, `Dungeon`, `GUI`, `Misc`, … — free-form; `Misc` is the catch-all |
+| `+`    | Entry                          | One change per bullet; indent `+` sub-bullets for details                             |
 
 Rules of thumb:
 

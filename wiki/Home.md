@@ -11,23 +11,23 @@ anywhere, and it has no server-side half — there is nothing to install for you
 
 ## What Hex does
 
-| Feature | In one line |
-|---|---|
-| [Config menu](Configuration) | One categorized settings menu, opened four different ways |
-| [Config profiles](Config-Profiles) | Named setups you switch by hand or automatically per server or island |
-| [Keybind shortcuts](Keybind-Shortcuts) | A key combo runs a delayed sequence of commands or chat messages |
-| [Control switches](Control-Switches) | Cycle one of Minecraft's own controls between two or more keys, in-game |
-| [Attack mode switch](Attack-Mode-Switch) | Flip Attack/Destroy between hold and toggle with a keypress |
-| [Freecam](Freecam) | Detach the camera and fly it around while your character stays put |
-| [Hand display](Hand-Display) | Reposition and restyle your held item in first person, cosmetically |
-| [Per-item swing](Per-Item-Swing) | Hide the swing animation only while holding chosen Skyblock items |
-| [Item customization](Item-Customization) | Rename, recolour, reskin or de-glint one specific item, client-side |
-| [Chroma text](Chroma-Text) | Flowing rainbow colour for item names, whole or from `&z` onward |
-| [Reminders](Reminders) | Timers, chat triggers and location alerts on a movable HUD panel |
-| [Regions](Regions) | Areas you draw that announce themselves when you walk in |
-| [Command suggestions](Command-Suggestions) | Learns the commands you use and completes them, ranked by context |
-| [Auto-update](Updating) | Hex downloads new releases itself and applies them on exit |
-| [Languages](Languages) | English and 简体中文, following Minecraft's own language setting |
+| Feature                                    | In one line                                                             |
+|--------------------------------------------|-------------------------------------------------------------------------|
+| [Config menu](Configuration)               | One categorized settings menu, opened four different ways               |
+| [Config profiles](Config-Profiles)         | Named setups you switch by hand or automatically per server or island   |
+| [Keybind shortcuts](Keybind-Shortcuts)     | A key combo runs a delayed sequence of commands or chat messages        |
+| [Control switches](Control-Switches)       | Cycle one of Minecraft's own controls between two or more keys, in-game |
+| [Attack mode switch](Attack-Mode-Switch)   | Flip Attack/Destroy between hold and toggle with a keypress             |
+| [Freecam](Freecam)                         | Detach the camera and fly it around while your character stays put      |
+| [Hand display](Hand-Display)               | Reposition and restyle your held item in first person, cosmetically     |
+| [Per-item swing](Per-Item-Swing)           | Hide the swing animation only while holding chosen Skyblock items       |
+| [Item customization](Item-Customization)   | Rename, recolour, reskin or de-glint one specific item, client-side     |
+| [Chroma text](Chroma-Text)                 | Flowing rainbow colour for item names, whole or from `&z` onward        |
+| [Reminders](Reminders)                     | Timers, chat triggers and location alerts on a movable HUD panel        |
+| [Regions](Regions)                         | Areas you draw that announce themselves when you walk in                |
+| [Command suggestions](Command-Suggestions) | Learns the commands you use and completes them, ranked by context       |
+| [Auto-update](Updating)                    | Hex downloads new releases itself and applies them on exit              |
+| [Languages](Languages)                     | English and 简体中文, following Minecraft's own language setting        |
 
 ## Quick reference
 
@@ -54,6 +54,7 @@ endorsed by Hypixel.
 
 ## Status and licence
 
-Hex is in **early development** — features land regularly, and the [changelog](https://github.com/Trilleo/Hex/blob/master/CHANGELOG.md)
+Hex is in **early development** — features land regularly, and
+the [changelog](https://github.com/Trilleo/Hex/blob/master/CHANGELOG.md)
 is the record of what changed when. The mod is released into the public domain under
 [CC0 1.0](https://github.com/Trilleo/Hex/blob/master/LICENSE).

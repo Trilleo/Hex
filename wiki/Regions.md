@@ -49,11 +49,11 @@ say.
 
 A region stores a box, and the **Shape** setting decides how that box is read:
 
-| Shape | Is | Good for |
-|---|---|---|
-| **Box** | The box itself | Rooms, platforms, corridors |
-| **Cylinder** | A circle of the box's width, the box's height tall | "Anywhere near this spot" |
-| **Sphere** | A ball inside the box | True proximity, when height matters as much as distance |
+| Shape        | Is                                                 | Good for                                                |
+|--------------|----------------------------------------------------|---------------------------------------------------------|
+| **Box**      | The box itself                                     | Rooms, platforms, corridors                             |
+| **Cylinder** | A circle of the box's width, the box's height tall | "Anywhere near this spot"                               |
+| **Sphere**   | A ball inside the box                              | True proximity, when height matters as much as distance |
 
 Switching shape never asks you to draw the region again. A cylinder and a sphere take the largest size that fits
 **inside** the box, so a cylinder is round rather than oval — the editor shows the radius you actually get.

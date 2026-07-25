@@ -2,10 +2,10 @@
 
 Hex ships one language file per locale in `src/main/resources/assets/hex/lang/`:
 
-| File | Locale | Role |
-|---|---|---|
-| `en_us.json` | English (US) | **Source of truth** — new keys are added here first |
-| `zh_cn.json` | Simplified Chinese (简体中文) | Translation |
+| File         | Locale                        | Role                                                |
+|--------------|-------------------------------|-----------------------------------------------------|
+| `en_us.json` | English (US)                  | **Source of truth** — new keys are added here first |
+| `zh_cn.json` | Simplified Chinese (简体中文) | Translation                                         |
 
 Minecraft picks the file matching the player's language and falls back to `en_us.json` for anything it cannot find. A
 missing key does not crash — it silently renders as the raw key id (`hex.config.hand.scale`) in whatever screen it

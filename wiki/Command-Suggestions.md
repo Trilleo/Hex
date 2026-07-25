@@ -12,12 +12,12 @@ Hex watches which commands you run, learns your habits, and offers them back the
 Start typing a command and a ranked list appears above the chat box, ordered by what you actually use rather than
 alphabetically.
 
-| Key | Does |
-|---|---|
-| **↑ / ↓** | Move through the list |
+| Key              | Does                                                               |
+|------------------|--------------------------------------------------------------------|
+| **↑ / ↓**        | Move through the list                                              |
 | **Tab** or **→** | Take the highlighted one (whichever you set under **Accept with**) |
-| **Escape** | Dismiss the list without closing chat |
-| **Click** | Pick that row |
+| **Escape**       | Dismiss the list without closing chat                              |
+| **Click**        | Pick that row                                                      |
 
 Each row carries a small note on the right — *here*, *next*, *often*, *holding* — saying in one word why it made the
 list. A line too long for the chat box is shortened with an ellipsis; what gets typed in is always the whole thing.
@@ -66,12 +66,12 @@ in general.
 
 Hypixel scatters this one, so Hex looks everywhere it is stated:
 
-| Source | Gives |
-|---|---|
+| Source                            | Gives                                                                                |
+|-----------------------------------|--------------------------------------------------------------------------------------|
 | **Player list** (`Event:` widget) | The Skyblock-wide event on every island, and how long is left — the best of the four |
-| **Boss bar** | The only place a mining event (`2X POWDER`, `GOBLIN RAID`) shows up |
-| **Scoreboard** | The island events that reach it |
-| **Chat** | Shouts an event's start before anything else knows |
+| **Boss bar**                      | The only place a mining event (`2X POWDER`, `GOBLIN RAID`) shows up                  |
+| **Scoreboard**                    | The island events that reach it                                                      |
+| **Chat**                          | Shouts an event's start before anything else knows                                   |
 
 If you have turned Hypixel's tab-list widgets off, **turning them back on makes this noticeably sharper.**
 
@@ -104,13 +104,13 @@ Nobody gets a copy of your command history by asking for your settings.
 holds, with how often you use it, when you last did, and what it has associated the command with — *island: dwarven
 mines*, *holding: TITANIUM_DRILL*. Anything wrong can be fixed on the spot:
 
-| Control | Does |
-|---|---|
-| **☆** | Pin a command to the top of every list it appears in |
-| **○** | Block one — never suggested, never recorded again |
-| **✕** | Forget it |
-| **?** | Show the full arithmetic: every signal, what it was worth, how much it counted for |
-| **Forget everything** | Wipe the lot. Your settings are kept. |
+| Control               | Does                                                                               |
+|-----------------------|------------------------------------------------------------------------------------|
+| **☆**                | Pin a command to the top of every list it appears in                               |
+| **○**                 | Block one — never suggested, never recorded again                                  |
+| **✕**                | Forget it                                                                          |
+| **?**                 | Show the full arithmetic: every signal, what it was worth, how much it counted for |
+| **Forget everything** | Wipe the lot. Your settings are kept.                                              |
 
 `/hexa suggest why <text>` prints the same arithmetic in chat, for the situation you are actually in.
 
@@ -118,16 +118,16 @@ mines*, *holding: TITANIUM_DRILL*. Anything wrong can be fixed on the spot:
 
 All in the **Command Suggestions** tab of `/hexa config`:
 
-| Setting | Notes |
-|---|---|
-| **Enabled** | Plus a switch for each of the three surfaces separately |
-| **Keep learning** | Pause to keep the suggestions you have while recording nothing new. Also `/hexa suggest pause` |
-| **List length** | How many rows the list shows |
-| **Inline threshold** | How confident a guess must be before it is written ahead of your cursor |
-| **Adapts** | How fast old habits fade. *Quickly* suits play that changes week to week; *slowly* suits a settled routine |
-| **Accept with** | Tab, the right arrow, or either |
+| Setting                    | Notes                                                                                                                                                                                            |
+|----------------------------|--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| **Enabled**                | Plus a switch for each of the three surfaces separately                                                                                                                                          |
+| **Keep learning**          | Pause to keep the suggestions you have while recording nothing new. Also `/hexa suggest pause`                                                                                                   |
+| **List length**            | How many rows the list shows                                                                                                                                                                     |
+| **Inline threshold**       | How confident a guess must be before it is written ahead of your cursor                                                                                                                          |
+| **Adapts**                 | How fast old habits fade. *Quickly* suits play that changes week to week; *slowly* suits a settled routine                                                                                       |
+| **Accept with**            | Tab, the right arrow, or either                                                                                                                                                                  |
 | **Suggest known commands** | Hex ships knowing the common Skyblock commands so your first session is not blank. Your own use overtakes that within a few dozen commands; switch it off to start from a completely clean slate |
-| **Learn player names** | Off means the recipient of a `/msg` is not recorded either |
+| **Learn player names**     | Off means the recipient of a `/msg` is not recorded either                                                                                                                                       |
 
 Turn the feature off and the chat box behaves **exactly as vanilla** again, server tab-completion included.
 

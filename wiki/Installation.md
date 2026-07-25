@@ -5,13 +5,13 @@ do not need it.
 
 ## Requirements
 
-| Requirement | Version |
-|---|---|
-| Minecraft | **26.1.2** |
-| Java | **25** or newer |
-| Fabric Loader | **0.19.3** or newer |
-| [Fabric API](https://modrinth.com/mod/fabric-api) | Built for 26.1.2 (`0.155.0+26.1.2` or newer) |
-| [Fabric Language Kotlin](https://modrinth.com/mod/fabric-language-kotlin) | `1.13.13+kotlin.2.4.10` or newer |
+| Requirement                                                               | Version                                      |
+|---------------------------------------------------------------------------|----------------------------------------------|
+| Minecraft                                                                 | **26.1.2**                                   |
+| Java                                                                      | **25** or newer                              |
+| Fabric Loader                                                             | **0.19.3** or newer                          |
+| [Fabric API](https://modrinth.com/mod/fabric-api)                         | Built for 26.1.2 (`0.155.0+26.1.2` or newer) |
+| [Fabric Language Kotlin](https://modrinth.com/mod/fabric-language-kotlin) | `1.13.13+kotlin.2.4.10` or newer             |
 
 [Mod Menu](https://modrinth.com/mod/modmenu) is **optional**. With it installed, its settings button on Hex's entry in
 the mod list opens Hex's config menu. Without it, Hex behaves identically — it is neither bundled nor required.
@@ -23,9 +23,9 @@ the mod list opens Hex's config menu. Without it, Hex behaves identically — it
 3. **Download Hex** from the [releases page](https://github.com/Trilleo/Hex/releases). Take the file named
    `hex-<version>.jar`; ignore the `-sources` jar, which is for developers.
 4. **Drop all three jars into your `mods` folder.**
-   - Windows: `%APPDATA%\.minecraft\mods`
-   - macOS: `~/Library/Application Support/minecraft/mods`
-   - Linux: `~/.minecraft/mods`
+    - Windows: `%APPDATA%\.minecraft\mods`
+    - macOS: `~/Library/Application Support/minecraft/mods`
+    - Linux: `~/.minecraft/mods`
 5. **Launch the game** with the Fabric profile.
 
 ## Checking it worked
@@ -36,8 +36,8 @@ Join a world or server and run:
 /hexa
 ```
 
-Hex replies with its version and the list of available subcommands. If the command does not exist, the mod did not load
-— see [Troubleshooting](Troubleshooting).
+Hex replies with its version and the list of available subcommands. If the command does not exist, the mod did not
+load — see [Troubleshooting](Troubleshooting).
 
 You can also open the settings menu without joining anything: from the title screen, press **Options** and click the
 small **□** button next to **Done**.

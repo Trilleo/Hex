@@ -55,13 +55,13 @@ docs/                            contributor documentation
 
 Current values:
 
-| Property | Value |
-|---|---|
-| `minecraft_version` | 26.1.2 |
-| `loader_version` | 0.19.3 |
-| `fabric_api_version` | 0.155.0+26.1.2 |
-| `fabric_kotlin_version` | 1.13.13+kotlin.2.4.10 |
-| `modmenu_version` | 18.0.0-beta.1 (compile-only) |
+| Property                | Value                        |
+|-------------------------|------------------------------|
+| `minecraft_version`     | 26.1.2                       |
+| `loader_version`        | 0.19.3                       |
+| `fabric_api_version`    | 0.155.0+26.1.2               |
+| `fabric_kotlin_version` | 1.13.13+kotlin.2.4.10        |
+| `modmenu_version`       | 18.0.0-beta.1 (compile-only) |
 
 Mod Menu is `compileOnly`: it is never bundled, never listed in `depends`, and the only class that touches its API is
 the entrypoint — which Fabric loads lazily, so nothing resolves those types unless Mod Menu is actually installed.
@@ -76,8 +76,8 @@ ready while it is failing.
 
 ## IDE notes
 
-IntelliJ IDEA is the usual choice: open the folder, let it import the Gradle project, and use the generated
-**Minecraft Client** run configuration. The Gradle **configuration cache is deliberately disabled** in
+IntelliJ IDEA is the usual choice: open the folder, let it import the Gradle project, and use the generated **Minecraft
+Client** run configuration. The Gradle **configuration cache is deliberately disabled** in
 `gradle.properties` because IDEA is not yet fully compatible with it.
 
 ## Next

@@ -22,10 +22,10 @@ Three ways, easiest first:
 
 ## The two ways an entry matches
 
-| Match | Matches | Use when |
-|---|---|---|
-| **Item ID** | Every copy of that Skyblock item, e.g. `HYPERION` — including one you buy later | You never want that *kind* of item to swing |
-| **UUID** | One specific item; a second Hyperion is unaffected | You have two of something and want them to differ |
+| Match       | Matches                                                                         | Use when                                          |
+|-------------|---------------------------------------------------------------------------------|---------------------------------------------------|
+| **Item ID** | Every copy of that Skyblock item, e.g. `HYPERION` — including one you buy later | You never want that *kind* of item to swing       |
+| **UUID**    | One specific item; a second Hyperion is unaffected                              | You have two of something and want them to differ |
 
 Only **unique (non-stackable)** items have a UUID, since that is what Hypixel assigns them to.
 

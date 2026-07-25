@@ -14,8 +14,8 @@ your item exactly as it was.
 
 ### Does Hex send my data anywhere?
 
-The only network traffic Hex makes is to **GitHub**, to check for and download a new release
-([auto-update](Updating)) — and you can turn that off. Everything else, including everything
+The only network traffic Hex makes is to **GitHub**, to check for and download a new release ([auto-update](Updating)) —
+and you can turn that off. Everything else, including everything
 [command suggestions](Command-Suggestions) learns, stays in `config/hex/` on your machine.
 
 ### Does it work outside Skyblock?

@@ -3,6 +3,7 @@
 **[Home](Home)**
 
 **Getting started**
+
 - [Installation](Installation)
 - [Updating](Updating)
 - [Configuration](Configuration)
@@ -11,6 +12,7 @@
 - [Config files](Config-Files)
 
 **Features**
+
 - [Config profiles](Config-Profiles)
 - [Keybind shortcuts](Keybind-Shortcuts)
 - [Control switches](Control-Switches)
@@ -26,10 +28,12 @@
 - [Languages](Languages)
 
 **Help**
+
 - [FAQ](FAQ)
 - [Troubleshooting](Troubleshooting)
 
 **Development**
+
 - [Building from source](Building-from-Source)
 - [Architecture](Architecture)
 - [Adding a feature](Adding-a-Feature)

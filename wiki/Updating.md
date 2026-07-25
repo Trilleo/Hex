@@ -17,11 +17,11 @@ are playing.
 
 Everything is on the **Updates** tab of `/hexa config`:
 
-| Setting | What it does |
-|---|---|
-| **Check on startup** | Turn the background check off entirely. |
+| Setting                 | What it does                                          |
+|-------------------------|-------------------------------------------------------|
+| **Check on startup**    | Turn the background check off entirely.               |
 | **Include prereleases** | Opt in to prerelease builds as well as full releases. |
-| **Check now** | Run the check immediately, without restarting. |
+| **Check now**           | Run the check immediately, without restarting.        |
 
 `/hexa update` does the same as **Check now** from chat.
 
@@ -45,7 +45,7 @@ notices become noise.
 
 ## Downgrading
 
-Delete the current jar from `mods`, drop in an older `hex-<version>.jar` from the releases page, and turn off
-**Check on startup** so it is not immediately updated again. Config files from a newer version are read by an older
-one on a best-effort basis: unknown fields are ignored rather than crashing, but a setting that only exists in the newer
-version is lost when the older one saves over the file.
+Delete the current jar from `mods`, drop in an older `hex-<version>.jar` from the releases page, and turn off **Check on
+startup** so it is not immediately updated again. Config files from a newer version are read by an older one on a
+best-effort basis: unknown fields are ignored rather than crashing, but a setting that only exists in the newer version
+is lost when the older one saves over the file.

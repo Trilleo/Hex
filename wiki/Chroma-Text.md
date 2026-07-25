@@ -24,10 +24,10 @@ leaves the first word grey and flows the second.
 Two settings on the **Item Customization** tab of `/hexa config`. Both apply to **every chroma name at once** — one item
 flowing at a different rate from the item beside it reads as a glitch rather than a choice.
 
-| Setting | Range | Effect |
-|---|---|---|
-| **Chroma speed** | 0.5 – 20 seconds | How long one full trip through the rainbow takes. Lower is faster. |
-| **Chroma width** | — | How many characters one full rainbow spans. Low: a short name holds every colour at once. High: the name drifts through one colour at a time. |
+| Setting          | Range            | Effect                                                                                                                                        |
+|------------------|------------------|-----------------------------------------------------------------------------------------------------------------------------------------------|
+| **Chroma speed** | 0.5 – 20 seconds | How long one full trip through the rainbow takes. Lower is faster.                                                                            |
+| **Chroma width** | —                | How many characters one full rainbow spans. Low: a short name holds every colour at once. High: the name drifts through one colour at a time. |
 
 ## Where it shows
 

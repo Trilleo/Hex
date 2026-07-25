@@ -36,14 +36,14 @@ Every commit message follows:
 <tag>: <message>
 ```
 
-| Tag | Usage | Example |
-|---|---|---|
-| **Feature** | Brand-new functionality | `Feature: Add Sea Creature Kill Timer` |
-| **Fix** | Bugs, crashes, logic errors | `Fix: Resolve timer reset on island switch` |
-| **Improvement** | Refining existing code, UX or performance | `Improvement: Add sound feedback to overlay` |
-| **Internal** | Documentation, comments, repo maintenance | `Internal: Update COMMIT_STRUCTURE instructions` |
-| **Backend** | Build system, dependency or configuration updates | `Backend: Update Gradle to 9.6.1` |
-| **Update** | Mod version changes | `Update: Mod version 1.9.2 release` |
+| Tag             | Usage                                             | Example                                          |
+|-----------------|---------------------------------------------------|--------------------------------------------------|
+| **Feature**     | Brand-new functionality                           | `Feature: Add Sea Creature Kill Timer`           |
+| **Fix**         | Bugs, crashes, logic errors                       | `Fix: Resolve timer reset on island switch`      |
+| **Improvement** | Refining existing code, UX or performance         | `Improvement: Add sound feedback to overlay`     |
+| **Internal**    | Documentation, comments, repo maintenance         | `Internal: Update COMMIT_STRUCTURE instructions` |
+| **Backend**     | Build system, dependency or configuration updates | `Backend: Update Gradle to 9.6.1`                |
+| **Update**      | Mod version changes                               | `Update: Mod version 1.9.2 release`              |
 
 Practices:
 
@@ -55,13 +55,13 @@ Practices:
 
 Tags map onto changelog categories:
 
-| Tag | Changelog category |
-|---|---|
-| Feature | `### New Features` |
-| Improvement | `### Improvements` |
-| Fix | `### Fixes` |
+| Tag                | Changelog category      |
+|--------------------|-------------------------|
+| Feature            | `### New Features`      |
+| Improvement        | `### Improvements`      |
+| Fix                | `### Fixes`             |
 | Backend / Internal | `### Technical Details` |
-| Update | Usually no entry |
+| Update             | Usually no entry        |
 
 ## Pull requests
 

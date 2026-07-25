@@ -9,17 +9,17 @@ Run `/hexa` on its own to see the mod version and which subcommands exist. Runni
 
 ## Overview
 
-| Command | What it does |
-|---|---|
-| `/hexa` | Version and the list of subcommands |
-| `/hexa config` | Open the [config menu](Configuration) |
-| `/hexa keybinds` | Open the [Keybinds](Keybind-Shortcuts) screen |
-| `/hexa hand …` | [Per-item swing](Per-Item-Swing) list |
-| `/hexa item …` | [Item customization](Item-Customization) list |
-| `/hexa remind …` | [Reminders](Reminders) |
-| `/hexa region …` | [Regions](Regions) |
-| `/hexa suggest …` | [Command suggestions](Command-Suggestions) |
-| `/hexa update` | Check for a [mod update](Updating) now |
+| Command           | What it does                                  |
+|-------------------|-----------------------------------------------|
+| `/hexa`           | Version and the list of subcommands           |
+| `/hexa config`    | Open the [config menu](Configuration)         |
+| `/hexa keybinds`  | Open the [Keybinds](Keybind-Shortcuts) screen |
+| `/hexa hand …`    | [Per-item swing](Per-Item-Swing) list         |
+| `/hexa item …`    | [Item customization](Item-Customization) list |
+| `/hexa remind …`  | [Reminders](Reminders)                        |
+| `/hexa region …`  | [Regions](Regions)                            |
+| `/hexa suggest …` | [Command suggestions](Command-Suggestions)    |
+| `/hexa update`    | Check for a [mod update](Updating) now        |
 
 ## Config and keybinds
 

@@ -8,30 +8,30 @@ it. Anything you never bind simply does nothing.
 
 ## The keys
 
-| Key | What it does | More |
-|---|---|---|
-| **Open Hex Config** | Opens the settings menu | [Configuration](Configuration) |
-| **Open Hex Keybinds** | Opens the Keybinds screen | [Keybind shortcuts](Keybind-Shortcuts) |
-| **Toggle Freecam** | Detach / reattach the camera | [Freecam](Freecam) |
-| **Cycle Attack Mode** | Flip Attack/Destroy between Hold and Toggle | [Attack mode switch](Attack-Mode-Switch) |
-| **Toggle Swing For Held Item** | Add or remove the held item from the swing list | [Per-item swing](Per-Item-Swing) |
-| **Customize Hovered Item** | Open the editor for the item under the cursor | [Item customization](Item-Customization) |
-| **Open Reminders** | Opens the reminders list | [Reminders](Reminders) |
-| **Dismiss Reminder** | Silence whatever is firing | [Reminders](Reminders) |
-| **Snooze Reminder** | Push the firing reminder back | [Reminders](Reminders) |
-| **Open Regions** | Opens the regions list | [Regions](Regions) |
-| **Region Here** | A region centred on where you stand | [Regions](Regions) |
-| **Mark Region Corner** | Set one corner, then the opposite one | [Regions](Regions) |
-| **Walk Region** | Start/stop recording the outline you walk | [Regions](Regions) |
-| **Toggle Region Preview** | Draw every region on the island in the world | [Regions](Regions) |
+| Key                            | What it does                                    | More                                     |
+|--------------------------------|-------------------------------------------------|------------------------------------------|
+| **Open Hex Config**            | Opens the settings menu                         | [Configuration](Configuration)           |
+| **Open Hex Keybinds**          | Opens the Keybinds screen                       | [Keybind shortcuts](Keybind-Shortcuts)   |
+| **Toggle Freecam**             | Detach / reattach the camera                    | [Freecam](Freecam)                       |
+| **Cycle Attack Mode**          | Flip Attack/Destroy between Hold and Toggle     | [Attack mode switch](Attack-Mode-Switch) |
+| **Toggle Swing For Held Item** | Add or remove the held item from the swing list | [Per-item swing](Per-Item-Swing)         |
+| **Customize Hovered Item**     | Open the editor for the item under the cursor   | [Item customization](Item-Customization) |
+| **Open Reminders**             | Opens the reminders list                        | [Reminders](Reminders)                   |
+| **Dismiss Reminder**           | Silence whatever is firing                      | [Reminders](Reminders)                   |
+| **Snooze Reminder**            | Push the firing reminder back                   | [Reminders](Reminders)                   |
+| **Open Regions**               | Opens the regions list                          | [Regions](Regions)                       |
+| **Region Here**                | A region centred on where you stand             | [Regions](Regions)                       |
+| **Mark Region Corner**         | Set one corner, then the opposite one           | [Regions](Regions)                       |
+| **Walk Region**                | Start/stop recording the outline you walk       | [Regions](Regions)                       |
+| **Toggle Region Preview**      | Draw every region on the island in the world    | [Regions](Regions)                       |
 
 ## Two different things called "keybinds"
 
 This trips people up, so it is worth stating plainly:
 
 - **Hex's own keys** — the table above. Bound in Minecraft's own Controls screen, one key each, no modifiers.
-- **[Keybind shortcuts](Keybind-Shortcuts)** — a Hex *feature*, where a key combo (optionally with Ctrl/Shift/Alt) runs a
-  sequence of commands or chat messages. Configured on the Hex Keybinds screen, not in Minecraft's Controls.
+- **[Keybind shortcuts](Keybind-Shortcuts)** — a Hex *feature*, where a key combo (optionally with Ctrl/Shift/Alt) runs
+  a sequence of commands or chat messages. Configured on the Hex Keybinds screen, not in Minecraft's Controls.
 
 Hex also has [control switches](Control-Switches), which let a key combo *rebind* one of Minecraft's own controls
 mid-game.

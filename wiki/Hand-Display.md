@@ -10,14 +10,14 @@ changes.
 
 The **Hand** tab of `/hexa config`:
 
-| Setting | What it changes |
-|---|---|
-| **Enabled** | Master switch for the hand settings |
-| **Position** | Where the main-hand item sits, on each axis |
-| **Scale** | How large it is drawn |
-| **Rotation** | Its angle |
-| **Swing speed** | A multiplier on the swing animation's speed |
-| **Hide swing** | Removes the swing animation entirely |
+| Setting             | What it changes                                 |
+|---------------------|-------------------------------------------------|
+| **Enabled**         | Master switch for the hand settings             |
+| **Position**        | Where the main-hand item sits, on each axis     |
+| **Scale**           | How large it is drawn                           |
+| **Rotation**        | Its angle                                       |
+| **Swing speed**     | A multiplier on the swing animation's speed     |
+| **Hide swing**      | Removes the swing animation entirely            |
 | **Per-item swing…** | Opens the [per-item swing](Per-Item-Swing) list |
 
 Settings apply live, so you can drag a slider and watch your hand move behind the menu.

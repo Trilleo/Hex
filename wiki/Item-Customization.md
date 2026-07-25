@@ -22,15 +22,15 @@ Pick a key you never press in a chest.
 
 It shows the item **before and after side by side**, with its live name underneath, and offers:
 
-| Field | What it does |
-|---|---|
-| **Name** | What to call it. `&` + a colour or format code works — `&6` gold, `&l` bold, `&z` [chroma](Chroma-Text). Blank keeps Hypixel's name. |
-| **Name colour** | Colours the whole name. |
-| **Chroma name** | The whole name flows through the rainbow — see [Chroma text](Chroma-Text). |
-| **Enchant glint** | Always, never, or unchanged. Cosmetic only; enchantments are untouched. |
-| **Item model** | A model to draw instead, e.g. `minecraft:diamond_sword`. Models from your resource packs work too. |
-| **Head texture** | A player-head skin: a texture hash, a `textures.minecraft.net` link, or the base64 value copied from an item. |
-| **Dye colour** | Recolours a dyeable model such as leather armour. Does nothing on a model that cannot be dyed. |
+| Field             | What it does                                                                                                                         |
+|-------------------|--------------------------------------------------------------------------------------------------------------------------------------|
+| **Name**          | What to call it. `&` + a colour or format code works — `&6` gold, `&l` bold, `&z` [chroma](Chroma-Text). Blank keeps Hypixel's name. |
+| **Name colour**   | Colours the whole name.                                                                                                              |
+| **Chroma name**   | The whole name flows through the rainbow — see [Chroma text](Chroma-Text).                                                           |
+| **Enchant glint** | Always, never, or unchanged. Cosmetic only; enchantments are untouched.                                                              |
+| **Item model**    | A model to draw instead, e.g. `minecraft:diamond_sword`. Models from your resource packs work too.                                   |
+| **Head texture**  | A player-head skin: a texture hash, a `textures.minecraft.net` link, or the base64 value copied from an item.                        |
+| **Dye colour**    | Recolours a dyeable model such as leather armour. Does nothing on a model that cannot be dyed.                                       |
 
 **Every field is "blank means leave it alone"**, so an item you only renamed keeps everything else about its appearance.
 Each customization also has its own switch, for turning one off without losing what you set up.

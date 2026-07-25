@@ -9,13 +9,13 @@ saved.
 
 ## Managing profiles
 
-| Control | What it does |
-|---|---|
-| **Switch** | Make this profile the active one |
-| **⧉** | Copy it |
-| **✎** | Rename it, describe it, set what it auto-switches on |
-| **✕** | Delete it (asks first; the last remaining profile cannot be deleted) |
-| **New** | Create a profile from the settings you have right now |
+| Control    | What it does                                                         |
+|------------|----------------------------------------------------------------------|
+| **Switch** | Make this profile the active one                                     |
+| **⧉**      | Copy it                                                              |
+| **✎**     | Rename it, describe it, set what it auto-switches on                 |
+| **✕**     | Delete it (asks first; the last remaining profile cannot be deleted) |
+| **New**    | Create a profile from the settings you have right now                |
 
 ## Saving is explicit
 
@@ -40,15 +40,15 @@ A profile can activate by itself when you arrive somewhere. Open **✎** on the 
 - **A Skyblock island** — matches the island you are on, e.g. `private island` or `hub`.
 
 Hex asks Hypixel which island you are on rather than reading the scoreboard, so an island rule names the **whole
-island** (`hub`), not the smaller area you happen to be standing in (`village`). It resolves a moment after you join,
-so a switch lands a beat after the world loads.
+island** (`hub`), not the smaller area you happen to be standing in (`village`). It resolves a moment after you join, so
+a switch lands a beat after the world loads.
 
 Three things shape how this behaves:
 
 - **Order wins.** If two profiles claim the same place, the one higher in the list is used.
 - **A manual switch turns auto-switching off** until you disconnect, so it never overrides a deliberate choice.
-- **Unsaved changes block it entirely.** You get a message instead of a switch — losing an unsaved setup to a warp
-  would be worse than not switching.
+- **Unsaved changes block it entirely.** You get a message instead of a switch — losing an unsaved setup to a warp would
+  be worse than not switching.
 
 Island names are typed in **English**, because they are compared to what Hypixel reports. See [Languages](Languages).
 
@@ -93,6 +93,6 @@ Your **live** settings stay where they always were, at `config/hex/<name>.json`.
 under `config/hex/profiles/<profile>/`, and `config/hex/profiles.json` records which profiles exist and which is active.
 Nothing about the on-disk layout changes for someone who never opens this screen.
 
-A profile that has no file for some config leaves that config alone rather than resetting it, so a partial profile —
-one pasted from an older version, say — inherits the rest of your settings instead of blanking them. See
+A profile that has no file for some config leaves that config alone rather than resetting it, so a partial profile — one
+pasted from an older version, say — inherits the rest of your settings instead of blanking them. See
 [Config files](Config-Files).

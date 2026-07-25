@@ -19,7 +19,9 @@ object MyFeature : Feature {
     }
 
     override fun onClientTick(client: Minecraft) {
-        while (myKey.consumeClick()) { … }
+        while (myKey.consumeClick()) {
+            …
+        }
     }
 
     override fun registerCommands(hex: LiteralArgumentBuilder<FabricClientCommandSource>) {
@@ -27,9 +29,10 @@ object MyFeature : Feature {
     }
 
     override fun settingsCategory(): ConfigCategory = ConfigCategory.build("mything") {
-        toggle("enabled", default = true,
-               get = { MyConfig.settings.enabled },
-               set = { MyConfig.settings.enabled = it; MyConfig.save() })
+        toggle(
+            "enabled", default = true,
+            get = { MyConfig.settings.enabled },
+            set = { MyConfig.settings.enabled = it; MyConfig.save() })
     }
 }
 ```

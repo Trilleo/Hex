@@ -10,20 +10,20 @@ back into your body.
 
 While the camera is detached:
 
-| Input | Does |
-|---|---|
-| **WASD** | Move the camera horizontally |
-| **Space / Shift** | Up / down |
-| **Mouse** | Look around |
-| **Scroll wheel** | Fine-tune the fly speed |
+| Input             | Does                         |
+|-------------------|------------------------------|
+| **WASD**          | Move the camera horizontally |
+| **Space / Shift** | Up / down                    |
+| **Mouse**         | Look around                  |
+| **Scroll wheel**  | Fine-tune the fly speed      |
 
 ## Settings
 
 The **Freecam** tab of `/hexa config`:
 
-| Setting | Notes |
-|---|---|
-| **Enabled** | Master switch. With it off, the keybind is inert. |
+| Setting       | Notes                                                                                                       |
+|---------------|-------------------------------------------------------------------------------------------------------------|
+| **Enabled**   | Master switch. With it off, the keybind is inert.                                                           |
 | **Fly speed** | Base speed: **Slow**, **Normal**, **Fast** or **Turbo**. The scroll wheel scales around whichever you pick. |
 
 Turning the feature off — by hand, or by switching to a [profile](Config-Profiles) that has it off — while the camera is
@@ -37,6 +37,6 @@ the server has not already sent.
 
 ## It doubles as a region tool
 
-While the freecam is flying, the [regions](Regions) **Mark Region Corner** key places the corner **at the camera** rather
-than at your feet. Fly to the top corner of a room and pin it there instead of building a tower to stand on. With the
-freecam off, the same key marks your feet as usual.
+While the freecam is flying, the [regions](Regions) **Mark Region Corner** key places the corner **at the camera**
+rather than at your feet. Fly to the top corner of a room and pin it there instead of building a tower to stand on. With
+the freecam off, the same key marks your feet as usual.

@@ -15,14 +15,14 @@ Open the list with **Reminders…** in the **Reminders** tab of `/hexa config`, 
 
 Every reminder counts down; the trigger decides when the countdown begins.
 
-| Trigger | Starts when |
-|---|---|
-| **Timer** | You start it, or it repeats on its own |
-| **Chat message** | A line of chat matches your pattern |
+| Trigger                              | Starts when                                             |
+|--------------------------------------|---------------------------------------------------------|
+| **Timer**                            | You start it, or it repeats on its own                  |
+| **Chat message**                     | A line of chat matches your pattern                     |
 | **Arriving at** / **Leaving island** | You reach or leave a named island, e.g. `dwarven mines` |
-| **Entering** / **Leaving a region** | You cross the boundary of a [region](Regions) you drew |
-| **Joining a world** | You log in |
-| **Holding an item** | You put a particular Skyblock item in your main hand |
+| **Entering** / **Leaving a region**  | You cross the boundary of a [region](Regions) you drew  |
+| **Joining a world**                  | You log in                                              |
+| **Holding an item**                  | You put a particular Skyblock item in your main hand    |
 
 **Chat message is the powerful one.** It can watch for "your potion has expired" or "this ability is on cooldown for
 30s" and start counting from there — see [Chat patterns](#chat-patterns).
@@ -114,10 +114,10 @@ included.
 
 ## Storage
 
-| File | Holds | Travels with a [profile](Config-Profiles)? |
-|---|---|---|
-| `config/hex/reminders.json` | The reminders and the panel's settings | ✅ |
-| `config/hex/reminder_state.json` | Every reminder's live countdown | ❌ |
+| File                             | Holds                                  | Travels with a [profile](Config-Profiles)? |
+|----------------------------------|----------------------------------------|--------------------------------------------|
+| `config/hex/reminders.json`      | The reminders and the panel's settings | ✅                                         |
+| `config/hex/reminder_state.json` | Every reminder's live countdown        | ❌                                         |
 
 The split is deliberate: switching profiles changes *which reminders you have* without resetting the timers you have
 running, and sharing your settings does not hand someone else your countdowns.

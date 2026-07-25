@@ -33,18 +33,18 @@ under Options → Controls instead of scattering into Misc.
 `net.trilleo.feature.Feature` is the module interface. Every hook is a no-op by default, so a feature overrides only
 what it needs:
 
-| Member | Purpose |
-|---|---|
-| `id` | Stable identifier; also the `/hexa <id>` subcommand namespace |
-| `enabled` | When false, the feature receives **no** dispatch — the single toggle point for a module |
-| `onInit()` | Once at startup, in registration order: register keymappings, load config |
-| `registerCommands(hex)` | Add subcommands under the shared `/hexa` root |
-| `settingsCategory()` | Contribute a tab to the config menu, or `null` |
-| `onClientTick(client)` | Every client tick |
-| `onHudRender(extractor, delta)` | Draw the feature's HUD overlay, once per frame |
-| `onWorldJoin` / `onWorldLeave` | Connection lifecycle |
-| `onChatReceive(message)` | Return `false` to swallow the message |
-| `onShutdown()` | Flush unsaved config |
+| Member                          | Purpose                                                                                 |
+|---------------------------------|-----------------------------------------------------------------------------------------|
+| `id`                            | Stable identifier; also the `/hexa <id>` subcommand namespace                           |
+| `enabled`                       | When false, the feature receives **no** dispatch — the single toggle point for a module |
+| `onInit()`                      | Once at startup, in registration order: register keymappings, load config               |
+| `registerCommands(hex)`         | Add subcommands under the shared `/hexa` root                                           |
+| `settingsCategory()`            | Contribute a tab to the config menu, or `null`                                          |
+| `onClientTick(client)`          | Every client tick                                                                       |
+| `onHudRender(extractor, delta)` | Draw the feature's HUD overlay, once per frame                                          |
+| `onWorldJoin` / `onWorldLeave`  | Connection lifecycle                                                                    |
+| `onChatReceive(message)`        | Return `false` to swallow the message                                                   |
+| `onShutdown()`                  | Flush unsaved config                                                                    |
 
 Features are Kotlin `object`s, one package each: `attack`, `freecam`, `hand`, `itemcustom`, `keybind`, `region`,
 `reminder`, `suggest`, `update`.
@@ -88,11 +88,11 @@ Bare parent commands print their subcommands rather than guessing at one.
 
 Three layers:
 
-| Layer | Does |
-|---|---|
-| `JsonConfig<T>` | One `<name>.json`, round-tripped with GSON. Errors never propagate: a failed load degrades to defaults, a failed save is logged and swallowed. A `normalizer` hook repairs GSON's reflection gaps (an absent field arrives as the JVM default, e.g. a null list). |
-| `ConfigHandle<T>` | Debounced writes, reload, reset, and the `global` flag. |
-| `ConfigRegistry` | The set of user-facing configs, so they can be flushed, reloaded, snapshotted and exported as a group without any caller knowing which features exist. |
+| Layer             | Does                                                                                                                                                                                                                                                              |
+|-------------------|-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| `JsonConfig<T>`   | One `<name>.json`, round-tripped with GSON. Errors never propagate: a failed load degrades to defaults, a failed save is logged and swallowed. A `normalizer` hook repairs GSON's reflection gaps (an absent field arrives as the JVM default, e.g. a null list). |
+| `ConfigHandle<T>` | Debounced writes, reload, reset, and the `global` flag.                                                                                                                                                                                                           |
+| `ConfigRegistry`  | The set of user-facing configs, so they can be flushed, reloaded, snapshotted and exported as a group without any caller knowing which features exist.                                                                                                            |
 
 **Registration is opt-in.** Only *settings* join the registry; transient machine state that happens to use `JsonConfig`
 — `UpdateStaging`'s record of a downloaded jar, for instance — stays out, because it is not something a user would want
@@ -130,15 +130,15 @@ is installed.
 `net.trilleo.skyblock` is state that belongs to no single feature, ticked centrally so it stays live regardless of which
 features are enabled:
 
-| Object | Reads |
-|---|---|
-| `Sidebar` | The scoreboard: area, Skyblock date, some events |
-| `TabList` | The player list, including the `Event:` widget |
-| `SkyblockEvents` | Merges event claims from the sidebar, tab list, boss bar and chat |
-| `IslandResolver` | Asks Hypixel via `/locraw` which **island** this is — the scoreboard line is the sub-area, not the island |
-| `SkyblockLocation` | The resolved current location |
-| `SkyblockCalendar` | Season and Skyblock time of day |
-| `item.HeldItem` | Cached main-hand Skyblock item, with `ItemRule` / `SkyblockItem` |
+| Object             | Reads                                                                                                     |
+|--------------------|-----------------------------------------------------------------------------------------------------------|
+| `Sidebar`          | The scoreboard: area, Skyblock date, some events                                                          |
+| `TabList`          | The player list, including the `Event:` widget                                                            |
+| `SkyblockEvents`   | Merges event claims from the sidebar, tab list, boss bar and chat                                         |
+| `IslandResolver`   | Asks Hypixel via `/locraw` which **island** this is — the scoreboard line is the sub-area, not the island |
+| `SkyblockLocation` | The resolved current location                                                                             |
+| `SkyblockCalendar` | Season and Skyblock time of day                                                                           |
+| `item.HeldItem`    | Cached main-hand Skyblock item, with `ItemRule` / `SkyblockItem`                                          |
 
 All of them are reset on disconnect, so an item, island or date from one server cannot go on matching into the next.
 
@@ -157,7 +157,8 @@ screen and leaves vanilla input handling alone.
 
 ## Conventions
 
-- `gradle.properties` is the **single source of truth** for versions; `fabric.mod.json` gets them expanded at build time.
+- `gradle.properties` is the **single source of truth** for versions; `fabric.mod.json` gets them expanded at build
+  time.
 - Mod code is Kotlin; mixins are Java.
 - Every user-visible string goes through a translation key — see [Translating](Translating).
 - Commit messages follow `<tag>: <message>` — see [Contributing](Contributing).
