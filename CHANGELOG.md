@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+## Version 1.9.1
+
 ### New Features
 
 #### Config menu
