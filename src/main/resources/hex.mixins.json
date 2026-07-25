@@ -12,7 +12,8 @@
     "ItemInHandRendererMixin",
     "KeyboardInputMixin",
     "LivingEntityMixin",
-    "MouseHandlerMixin"
+    "MouseHandlerMixin",
+    "OptionsScreenMixin"
   ],
   "injectors": {
     "defaultRequire": 1

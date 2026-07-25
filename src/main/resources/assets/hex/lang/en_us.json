@@ -24,6 +24,7 @@
   "hex.config.reset_tab.title": "Reset this tab?",
   "hex.config.reset_tab.message": "Restore every %s setting to its default?",
   "hex.config.reset_tab.detail": "Your saved profile is untouched, so Discard on the Profiles screen brings these settings back.",
+  "hex.config.options_shortcut.tooltip": "Open Hex Config, this mod's settings menu.",
   "hex.config.hand.enabled": "Enabled",
   "hex.config.hand.enabled.tooltip": "Master switch for the position, scale, rotation and swing settings below. When off, those are kept but ignored. Per-item swing rules have their own switch and keep working.",
   "hex.config.hand.offset_x": "Position X",

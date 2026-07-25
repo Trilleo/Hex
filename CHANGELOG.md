@@ -2,6 +2,15 @@
 
 ## Unreleased
 
+### New Features
+
+#### Config menu
+
++ Added a small **□** button beside **Done** on Minecraft's own Options screen that opens Hex's config menu. Until
+  now the menu could only be reached by typing `/hexa config` or by binding the keybind that ships unbound, so a
+  fresh install had no obvious way in. The button is on the Options screen wherever it is opened from, including the
+  title screen — where neither the command nor the keybind works.
+
 ### Fixes
 
 #### Command suggestions

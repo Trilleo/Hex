@@ -24,6 +24,7 @@
   "hex.config.reset_tab.title": "重置本页？",
   "hex.config.reset_tab.message": "将“%s”的所有设置恢复为默认值？",
   "hex.config.reset_tab.detail": "你保存的配置档案不受影响，在配置档案界面点击“放弃更改”即可把这些设置找回来。",
+  "hex.config.options_shortcut.tooltip": "打开 Hex 设置，本模组的设置菜单。",
   "hex.config.hand.enabled": "启用",
   "hex.config.hand.enabled.tooltip": "下方位置、缩放、旋转和挥手设置的总开关。关闭后这些设置会保留但不生效。逐物品挥手规则有自己的开关，仍会继续工作。",
   "hex.config.hand.offset_x": "位置 X",

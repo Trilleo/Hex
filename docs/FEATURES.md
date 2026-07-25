@@ -7,10 +7,14 @@ Every feature Hex ships, and how to use it. This is the reference the README's f
 
 ## Config menu
 
-A single, categorized menu for the mod's settings. Open it with `/hexa config` or a rebindable keybind under Options →
-Controls → **Hex**. Each feature adds its own tab down the side, a search box filters settings across all of them at
-once, every row has a reset button, and a button links straight to the Keybinds screen. Settings apply as you change
-them, so you can drag a slider and watch the result.
+A single, categorized menu for the mod's settings. Open it with `/hexa config`, with the small **□** button next to
+**Done** on Minecraft's Options screen, or with a rebindable keybind under Options → Controls → **Hex**. Each feature
+adds its own tab down the side, a search box filters settings across all of them at once, every row has a reset button,
+and a button links straight to the Keybinds screen. Settings apply as you change them, so you can drag a slider and
+watch the result.
+
+The **□** button is on the Options screen wherever you open it from — the pause menu or the title screen. From the
+title screen it is the only way in, since the command needs a chat box and the keybind needs a world.
 
 **Reset tab** in the footer restores everything on the current tab to its defaults, including that feature's own on/off
 switch. It asks first, and it only changes your live settings — your saved profile is untouched, so **Discard** on the
