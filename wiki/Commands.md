@@ -18,6 +18,7 @@ Run `/hexa` on its own to see the mod version and which subcommands exist. Runni
 | `/hexa item …`    | [Item customization](Item-Customization) list |
 | `/hexa remind …`  | [Reminders](Reminders)                        |
 | `/hexa region …`  | [Regions](Regions)                            |
+| `/hexa note …`    | [Notebook](Notebook)                          |
 | `/hexa suggest …` | [Command suggestions](Command-Suggestions)    |
 | `/hexa update`    | Check for a [mod update](Updating) now        |
 
@@ -95,6 +96,27 @@ the line:
 ```
 
 Every capture ends by opening the region for editing. See [Regions](Regions).
+
+## Notebook
+
+```
+/hexa note                        — the list of subcommands
+/hexa note list                   — every note you have
+/hexa note new [title]            — start a note and open it
+/hexa note open <title>           — open a note for editing
+/hexa note search <text>          — notes matching, with the line each one matched
+/hexa note export <title>         — copy a note to the clipboard
+/hexa note import                 — take the clipboard as a new note
+```
+
+`<title>` is the rest of the line, spaces and all, and is matched loosely — an exact title first, then ignoring case,
+then by prefix — so `/hexa note open mining` finds "Mining routes":
+
+```
+/hexa note new dungeon checklist
+```
+
+`import` never overwrites an existing note, even if the titles match. See [Notebook](Notebook).
 
 ## Command suggestions
 

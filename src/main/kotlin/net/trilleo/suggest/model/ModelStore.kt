@@ -5,10 +5,8 @@ import net.trilleo.config.JsonConfig
 import net.trilleo.suggest.SuggestConfig
 import net.trilleo.suggest.model.ModelStore.CLEAN
 import net.trilleo.suggest.model.ModelStore.DEBOUNCE_TICKS
+import net.trilleo.util.AtomicWrite
 import org.slf4j.LoggerFactory
-import java.nio.file.Files
-import java.nio.file.Path
-import java.nio.file.StandardCopyOption
 import java.util.concurrent.Executors
 import java.util.concurrent.TimeUnit
 
@@ -132,27 +130,7 @@ object ModelStore {
             prune(model)
             JsonConfig.GSON.toJson(model, json.typeToken())
         }
-        val target = json.fileIn(json.defaultDir())
-        Files.createDirectories(target.parent)
-        val temp = target.resolveSibling(target.fileName.toString() + ".tmp")
-        Files.writeString(temp, text)
-        moveOver(temp, target)
-    }
-
-    /**
-     * Replaces [target] with [temp], atomically where the filesystem allows it.
-     *
-     * `ATOMIC_MOVE` is supported on both NTFS and every mainstream Unix filesystem, but not on all of them —
-     * some network shares refuse it — so a failure falls back to a plain replace. That gives up the guarantee
-     * rather than giving up the save, which is the right way round: a non-atomic write is a small risk taken
-     * rarely, and refusing to write at all is a certainty of losing everything learned.
-     */
-    private fun moveOver(temp: Path, target: Path) {
-        try {
-            Files.move(temp, target, StandardCopyOption.REPLACE_EXISTING, StandardCopyOption.ATOMIC_MOVE)
-        } catch (_: Exception) {
-            Files.move(temp, target, StandardCopyOption.REPLACE_EXISTING)
-        }
+        AtomicWrite.writeString(json.fileIn(json.defaultDir()), text)
     }
 
     // ---- pruning ---------------------------------------------------------------------------------------

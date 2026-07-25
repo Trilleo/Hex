@@ -9,6 +9,7 @@ import net.trilleo.freecam.FreecamFeature
 import net.trilleo.hand.HandFeature
 import net.trilleo.itemcustom.ItemCustomizeFeature
 import net.trilleo.keybind.KeybindsFeature
+import net.trilleo.notebook.NotebookFeature
 import net.trilleo.region.RegionFeature
 import net.trilleo.reminder.ReminderFeature
 import net.trilleo.suggest.SuggestFeature
@@ -41,6 +42,7 @@ object Hex : ClientModInitializer {
         // the same tick's reminder dispatch, so a region-armed reminder starts counting without a tick's lag.
         Features.register(RegionFeature)
         Features.register(ReminderFeature)
+        Features.register(NotebookFeature)
         Features.register(SuggestFeature)
         Features.register(UpdateFeature)
         Features.bootstrap()

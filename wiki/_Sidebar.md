@@ -24,6 +24,7 @@
 - [Chroma text](Chroma-Text)
 - [Reminders](Reminders)
 - [Regions](Regions)
+- [Notebook](Notebook)
 - [Command suggestions](Command-Suggestions)
 - [Languages](Languages)
 

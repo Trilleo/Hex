@@ -37,6 +37,21 @@ dependencies {
 	// thing that touches the API, and Fabric loads an entrypoint lazily — nothing resolves those types unless
 	// Mod Menu itself is present and asking.
 	compileOnly("com.terraformersmc:modmenu:${providers.gradleProperty("modmenu_version").get()}")
+
+	// Unit tests, for the parts of the mod that are pure logic and touch no Minecraft runtime — the notebook's
+	// markdown pipeline above all, where a bug silently mangles text the player wrote and has nowhere else.
+	// Anything that needs a live client is still verified by running the game; this is not a substitute for that.
+	testImplementation(platform("org.junit:junit-bom:${providers.gradleProperty("junit_version").get()}"))
+	testImplementation("org.junit.jupiter:junit-jupiter")
+	testRuntimeOnly("org.junit.platform:junit-platform-launcher")
+}
+
+tasks.test {
+	useJUnitPlatform()
+	testLogging {
+		events("failed")
+		showStandardStreams = false
+	}
 }
 
 tasks.processResources {

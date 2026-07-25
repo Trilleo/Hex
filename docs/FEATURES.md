@@ -367,6 +367,61 @@ which is what makes them work in singleplayer.
 Regions live in `config/hex/regions.json` and take part in config profiles and clipboard sharing, so a set of regions is
 something you can hand to someone else.
 
+## Notebook
+
+Somewhere to write things down without leaving the game — a dungeon checklist, a mining route, prices you keep
+forgetting, what you were in the middle of doing when you logged off. Notes are written in Markdown, kept between
+sessions, and stored as ordinary `.md` files you can open in any text editor.
+
+Open it with **Open notebook…** in the **Notebook** tab of `/hexa config`, with `/hexa note`, or by binding **Open
+Notebook** under Options → Controls → **Hex**.
+
+### Finding a note
+
+The browser lists every note you have, newest edit first. Down the left is a sidebar of filters — **All notes**,
+**Pinned**, then one entry per folder and one per tag you have used. The search box searches everything at once:
+titles, folders, tags, and the text of the notes themselves, showing the line it matched under each result.
+
+Folders and tags are never created or deleted. They exist exactly as long as a note uses them, so filing a note
+somewhere new makes that folder appear and moving the last note out makes it go away again.
+
+### Writing
+
+**New** creates a note and opens it. There is no save button — what you type is kept, written a couple of seconds
+after you stop typing and again when you close the screen.
+
+Notes are Markdown, so headings, bullet and numbered lists, task checkboxes, quotes, tables and code blocks all work,
+and a note pasted in from anywhere else already looks right. Right now you write and read that Markdown as source; a
+visual editor that renders it — along with Minecraft's colour codes, [chroma text](#chroma-text), and clickable item
+and coordinate chips — is the next piece of this feature. Notes written now carry over untouched, because the text is
+the note either way.
+
+**Details…** covers the rest of a note: its folder, its tags, the colour of the bar down its row, an item id to use as
+its icon, and whether it is pinned to the top of the list.
+
+### Sharing
+
+**Export** copies a note to your clipboard and **Import** takes whatever is on your clipboard as a new note. An
+exported note carries its folder, tags, colour and icon along with its text, in a small header at the top, so a note
+you send someone arrives exactly as you filed it. Plain Markdown from anywhere else imports fine too — it just arrives
+unfiled, titled after its first heading. Importing always creates a new note and never overwrites one you already
+have.
+
+### Where they live
+
+Notes live in `config/hex/notebook/notes/`, one `.md` file each, with `config/hex/notebook/index.json` as a summary so
+the list opens without reading every file. Because each note carries its own details in its header, that index is
+disposable — delete it and the notebook is rebuilt by reading the files. It also means **dropping a `.md` file into
+`notes/` imports it**, whatever wrote it.
+
+Notes are **not** part of a config profile and are not included when you copy settings to the clipboard: they are
+things you wrote, not a settings loadout, and switching profiles should not swap out what you have written down. Only
+the notebook's display settings, in `config/hex/notebook.json`, travel with a profile.
+
+Writes go to a temporary file and are then moved into place, so a crash mid-save leaves either the old version or the
+new one and never half of either. A note written by a newer version of Hex than you are running is shown read-only
+rather than saved over.
+
 ## Command suggestions
 
 Hex watches which commands you run, learns your habits, and offers them back the next time you open chat. Nothing is

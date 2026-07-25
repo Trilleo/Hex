@@ -26,7 +26,8 @@ however well it is argued.
 1. Read [Building from source](Building-from-Source) and [Architecture](Architecture).
 2. Work through the checklist in [Adding a feature](Adding-a-Feature) — translations, changelog, `docs/FEATURES.md`,
    README, and this wiki. A change that skips them is not finished.
-3. `./gradlew build`, and run the client at least once.
+3. `./gradlew build` — which runs the unit tests too — and run the client at least once. Most of Hex can only be
+   verified by playing it; the tests cover the handful of pieces that are pure logic.
 
 ## Commit messages
 

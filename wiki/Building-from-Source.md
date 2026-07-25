@@ -30,6 +30,16 @@ On Windows use `gradlew.bat` in cmd/PowerShell, or `./gradlew` in Git Bash.
 The dev client's game directory is `run/`, which is gitignored — so its `config/hex/` is separate from your real
 Minecraft install and you can experiment freely.
 
+## Run the tests
+
+```bash
+./gradlew test
+```
+
+Hex is a client mod, so most of it can only be verified by running the game. The test source set deliberately covers
+only the parts that are pure logic and touch no Minecraft runtime — currently the [notebook](Notebook)'s note-file
+handling, where a bug would silently mangle text a player wrote and has nowhere else. `./gradlew build` runs them too.
+
 ## Project layout
 
 ```
@@ -42,13 +52,14 @@ src/main/resources/
   assets/hex/lang/               one language file per locale
   assets/hex/reminders/          shipped reminder presets
   assets/hex/suggest/            the shipped command catalogue
+src/test/kotlin/net/trilleo/     unit tests for the Minecraft-free logic
 docs/                            contributor documentation
 ```
 
 ## Versions live in one place
 
 **`gradle.properties` is the single source of truth** for every version — `mod_version`, `minecraft_version`,
-`loader_version`, `fabric_api_version`, `fabric_kotlin_version`, `loom_version`, `modmenu_version`.
+`loader_version`, `fabric_api_version`, `fabric_kotlin_version`, `loom_version`, `modmenu_version`, `junit_version`.
 
 `fabric.mod.json` receives `version`, `minecraft_version` and `loader_version` through Gradle's `processResources`, so
 **never hardcode a version there**.
