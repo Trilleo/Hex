@@ -7,6 +7,7 @@ import net.minecraft.client.gui.layouts.LayoutSettings
 import net.minecraft.client.gui.screens.Screen
 import net.minecraft.network.chat.Component
 import net.trilleo.config.HexConfigScreens
+import net.trilleo.config.gui.OptionsMenuShortcut.GAP
 
 /**
  * The small square button Hex adds beside **Done** on the vanilla Options screen.

@@ -4,6 +4,8 @@ import com.google.gson.JsonObject
 import com.google.gson.JsonParser
 import net.minecraft.client.Minecraft
 import net.minecraft.network.chat.Component
+import net.trilleo.skyblock.IslandResolver.MAX_ATTEMPTS
+import net.trilleo.skyblock.IslandResolver.RERESOLVE_COOLDOWN_MS
 import net.trilleo.util.TextClean
 import org.slf4j.LoggerFactory
 import java.util.*

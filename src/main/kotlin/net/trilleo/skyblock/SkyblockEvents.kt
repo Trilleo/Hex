@@ -5,6 +5,7 @@ import net.minecraft.network.chat.Component
 import net.trilleo.mixin.BossHealthOverlayAccessor
 import net.trilleo.skyblock.SkyblockEvents.BUILTIN_EVENTS
 import net.trilleo.skyblock.SkyblockEvents.SOON_WINDOW_MS
+import net.trilleo.skyblock.SkyblockEvents.best
 import net.trilleo.skyblock.SkyblockEvents.events
 import net.trilleo.util.TextClean
 import java.util.*

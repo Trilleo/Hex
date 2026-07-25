@@ -3,6 +3,7 @@ package net.trilleo.skyblock
 import net.minecraft.client.Minecraft
 import net.minecraft.client.multiplayer.PlayerInfo
 import net.minecraft.world.level.GameType
+import net.trilleo.skyblock.TabList.ORDER
 import net.trilleo.skyblock.TabList.POLL_INTERVAL_TICKS
 import net.trilleo.util.TextClean
 
