@@ -3,7 +3,7 @@
 Hex is a client-side Fabric utility mod for Hypixel Skyblock (Kotlin, Minecraft 26.1.2, Java 25). It must work
 entirely client side — never add server-side logic or a `main` entrypoint.
 
-## After every change: keep translations, docs and changelog in sync
+## After every change: keep translations, docs, wiki and changelog in sync
 
 Before finishing any task that changes the mod, do all of the following:
 
@@ -34,11 +34,26 @@ Before finishing any task that changes the mod, do all of the following:
    a change to an existing feature updates that feature's section. Write for a player — implementation notes belong
    in the changelog's `### Technical Details`, not here.
 
-4. **Check the README** — if the change affects anything [README.md](README.md) mentions (installation, dependencies,
+4. **Update the wiki** — the GitHub wiki is published from [wiki/](wiki/) in this repository, and it is the page a
+   player finds from a search engine, so it must never lag behind the mod.
+   - A **new feature** gets its own `wiki/<Feature-Name>.md`, plus a line in [wiki/_Sidebar.md](wiki/_Sidebar.md) and a
+     row in the feature table of [wiki/Home.md](wiki/Home.md).
+   - A **change to an existing feature** updates that feature's page, in the same task as the code — the same rule
+     [docs/FEATURES.md](docs/FEATURES.md) already carries.
+   - A change to commands, keybinds, or config files also touches [wiki/Commands.md](wiki/Commands.md),
+     [wiki/Keybinds.md](wiki/Keybinds.md) or [wiki/Config-Files.md](wiki/Config-Files.md) — those pages are exhaustive
+     lists, so a missing entry is a visible gap.
+   - A version bump in `gradle.properties` touches [wiki/Installation.md](wiki/Installation.md) and
+     [wiki/Building-from-Source.md](wiki/Building-from-Source.md), which state the supported versions.
+   - Page names are titles: renaming a file breaks every link to it. Links between pages are relative and
+     extension-less (`[Regions](Regions)`); links into this repository are absolute GitHub URLs. See
+     [docs/WIKI.md](docs/WIKI.md) for the conventions and how pages are published.
+
+5. **Check the README** — if the change affects anything [README.md](README.md) mentions (installation, dependencies,
    MC/Java version, build instructions, license), update it. [README.md](README.md) carries only a one-line summary
    per feature: add a bullet for a new feature, but keep the details in [docs/FEATURES.md](docs/FEATURES.md).
 
-5. **Check the docs folder** — if the change affects a workflow documented in [docs/](docs/) (e.g. the release
+6. **Check the docs folder** — if the change affects a workflow documented in [docs/](docs/) (e.g. the release
    process in [docs/RELEASING.md](docs/RELEASING.md)), update the affected doc in the same task.
 
 ## Project conventions

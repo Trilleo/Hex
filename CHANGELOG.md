@@ -2,6 +2,18 @@
 
 ## Unreleased
 
+### Technical Details
+
+#### Documentation
+
++ Added the source of the GitHub wiki under `wiki/`: a landing page, a page per feature, installation, updating,
+  commands, keybinds, config files, an FAQ and troubleshooting, plus developer pages on building, architecture, adding a
+  feature, translating, releasing and contributing.
++ Added [docs/WIKI.md](docs/WIKI.md), documenting the wiki's page conventions, how the pages are published to the wiki
+  repository, and what has to move with a feature change.
++ Added keeping the wiki in sync to the after-every-change checklist in `CLAUDE.md`, so a new feature ships with its
+  page, its sidebar entry and its row on the wiki's landing page.
+
 ## Version 1.9.2
 
 ### New Features

@@ -83,11 +83,13 @@ To launch a development client:
 
 ## Documentation
 
+- [Wiki](https://github.com/Trilleo/Hex/wiki) — the player-facing guide, one page per feature
 - [Features](docs/FEATURES.md)
 - [Change log](CHANGELOG.md)
 - [Translations](docs/TRANSLATIONS.md)
 - [Writing the changelog & releasing](docs/RELEASING.md)
 - [Commit structure](docs/COMMIT_STRUCTURE.md)
+- [Maintaining the wiki](docs/WIKI.md)
 
 ## License
 
