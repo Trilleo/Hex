@@ -103,8 +103,8 @@ neither is captured by a profile switch or handed over in a clipboard export.
 Two stores sit outside the registry entirely and share a discipline worth copying if a third ever needs it: writes are
 **debounced, dispatched on a single daemon thread, atomic** (`AtomicWrite` — temp sibling plus `ATOMIC_MOVE`, with a
 plain-replace fallback for filesystems that refuse it), and **version-guarded**, so a file written by a newer Hex is
-read around rather than overwritten. `ModelStore` established it; `NotebookStore` follows it, and adds one file per
-note so a single bad write costs one note rather than the notebook.
+read around rather than overwritten. `ModelStore` established it; `NotebookStore` follows it, and adds one file per note
+so a single bad write costs one note rather than the notebook.
 
 `global = true` marks a config that belongs to the **installation** rather than to a loadout — `update.json` and
 `item_custom.json`. Globals are excluded from profile snapshots and clipboard exports. This is not hypothetical

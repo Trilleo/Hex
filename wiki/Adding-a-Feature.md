@@ -125,6 +125,6 @@ and run the client at least once (`./gradlew runClient`) — a feature that comp
 
 `build` runs the unit tests under `src/test/kotlin`. Most of Hex cannot be unit tested — it draws screens and reads a
 live client — so that source set is deliberately narrow: it covers the pieces that are **pure logic and touch no
-Minecraft runtime**, and where being wrong loses something the player cannot get back. The notebook's note-file
-handling is the current example. If what you are writing fits that description, add tests; if it needs a `Minecraft`
+Minecraft runtime**, and where being wrong loses something the player cannot get back. The notebook's note-file handling
+is the current example. If what you are writing fits that description, add tests; if it needs a `Minecraft`
 instance, do not try, and test it by playing.
