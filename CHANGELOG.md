@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+## Version 1.9.3
+
 ### Technical Details
 
 #### Documentation
