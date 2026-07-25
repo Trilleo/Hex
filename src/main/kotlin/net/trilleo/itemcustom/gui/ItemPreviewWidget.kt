@@ -9,6 +9,7 @@ import net.minecraft.network.chat.Component
 import net.minecraft.world.item.ItemStack
 import net.trilleo.itemcustom.ItemCustomization
 import net.trilleo.itemcustom.ItemCustomizer
+import net.trilleo.itemcustom.gui.ItemPreviewWidget.Companion.SCALE
 
 /**
  * Shows what the item being edited looked like before, what it looks like now, and what it is now called.

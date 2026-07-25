@@ -124,13 +124,13 @@ class ItemCustomization {
      * by the list screen to mark an entry that has been created but not yet filled in.
      */
     fun hasEffect(): Boolean = active &&
-        (name.isNotEmpty() ||
-            color.isNotEmpty() ||
-            chroma ||
-            glintOrDefault != GlintOverride.DEFAULT ||
-            model.isNotEmpty() ||
-            texture.isNotEmpty() ||
-            dye.isNotEmpty())
+            (name.isNotEmpty() ||
+                    color.isNotEmpty() ||
+                    chroma ||
+                    glintOrDefault != GlintOverride.DEFAULT ||
+                    model.isNotEmpty() ||
+                    texture.isNotEmpty() ||
+                    dye.isNotEmpty())
 
     /**
      * Whether this item's name changes colour over time, and so must be re-rendered every frame rather than

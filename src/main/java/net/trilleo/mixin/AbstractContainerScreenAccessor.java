@@ -27,15 +27,21 @@ import org.spongepowered.asm.mixin.gen.Accessor;
 @Mixin(AbstractContainerScreen.class)
 public interface AbstractContainerScreenAccessor {
 
-    /** The slot under the cursor, or null when the cursor is not over one. */
+    /**
+     * The slot under the cursor, or null when the cursor is not over one.
+     */
     @Accessor("hoveredSlot")
     Slot hexHoveredSlot();
 
-    /** The x of the container panel's top-left corner; slot coordinates are relative to it. */
+    /**
+     * The x of the container panel's top-left corner; slot coordinates are relative to it.
+     */
     @Accessor("leftPos")
     int hexLeftPos();
 
-    /** The y of the container panel's top-left corner. */
+    /**
+     * The y of the container panel's top-left corner.
+     */
     @Accessor("topPos")
     int hexTopPos();
 }

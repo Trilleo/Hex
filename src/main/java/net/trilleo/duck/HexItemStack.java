@@ -49,13 +49,19 @@ import net.minecraft.world.item.ItemStack;
  */
 public interface HexItemStack {
 
-    /** The Skyblock instance uuid, {@code ""} for none, or {@code null} when it has not been read yet. */
+    /**
+     * The Skyblock instance uuid, {@code ""} for none, or {@code null} when it has not been read yet.
+     */
     String hexSkyblockUuid();
 
-    /** Latches the result of reading the uuid. Pass {@code ""} for a stack that has none. */
+    /**
+     * Latches the result of reading the uuid. Pass {@code ""} for a stack that has none.
+     */
     void hexSetSkyblockUuid(String uuid);
 
-    /** The config generation {@link #hexCustomName()} was resolved under, or 0 if never. */
+    /**
+     * The config generation {@link #hexCustomName()} was resolved under, or 0 if never.
+     */
     int hexNameGeneration();
 
     /**
@@ -64,18 +70,28 @@ public interface HexItemStack {
      */
     int hexNameFrame();
 
-    /** The customized display name, or null when this stack's customization does not change the name. */
+    /**
+     * The customized display name, or null when this stack's customization does not change the name.
+     */
     Component hexCustomName();
 
-    /** Stores a resolved name against the generation, and the chroma frame, it was resolved under. */
+    /**
+     * Stores a resolved name against the generation, and the chroma frame, it was resolved under.
+     */
     void hexSetCustomName(int generation, int frame, Component name);
 
-    /** The config generation {@link #hexRenderStack()} was resolved under, or 0 if never. */
+    /**
+     * The config generation {@link #hexRenderStack()} was resolved under, or 0 if never.
+     */
     int hexRenderGeneration();
 
-    /** The stack to draw in place of this one, or null when the appearance is unchanged. */
+    /**
+     * The stack to draw in place of this one, or null when the appearance is unchanged.
+     */
     ItemStack hexRenderStack();
 
-    /** Stores a resolved render stack against the generation it was resolved under. */
+    /**
+     * Stores a resolved render stack against the generation it was resolved under.
+     */
     void hexSetRenderStack(int generation, ItemStack renderStack);
 }
