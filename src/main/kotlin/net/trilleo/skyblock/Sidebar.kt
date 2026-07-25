@@ -104,7 +104,7 @@ object Sidebar {
             .filter { it.isNotBlank() }
             .toList()
 
-        SkyblockLocation.accept(lines)
+        SkyblockLocation.acceptArea(lines)
         SkyblockCalendar.accept(lines)
     }
 

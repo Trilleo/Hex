@@ -37,8 +37,9 @@ A profile can activate by itself when you arrive somewhere. Open **✎** on the 
 
 - **a server** — matches the address you connected to. `hypixel.net` also matches `mc.hypixel.net`.
 - **singleplayer** — any single-player world.
-- **a Skyblock island** — matches the island name shown on Hypixel's scoreboard, e.g. `private island` or `hub`. This
-  one resolves a few seconds after joining, since the scoreboard is empty at first.
+- **a Skyblock island** — matches the island you are on, e.g. `private island` or `hub`. Hex asks Hypixel which
+  island it is, so this names the whole island rather than the smaller area you are standing in (`village` on the Hub),
+  and resolves a moment after joining.
 
 If two profiles claim the same place, the one higher in the list wins. Switching to a profile by hand turns
 auto-switching off until you disconnect, so it never overrides a deliberate choice. It is also skipped entirely while
@@ -398,7 +399,7 @@ going blank.
 Three kinds of text stay in English on purpose, because they are matched against Hypixel rather than read:
 
 - **Island names** in a reminder's Island field or an **On island** condition, and in a profile's island rule — these
-  are compared to the scoreboard, which Hypixel writes in English. Type `dwarven mines`, not the translated name.
+  are compared to what Hypixel reports, which is in English. Type `dwarven mines`, not the translated name.
 - **Skyblock item IDs** in the per-item swing list and the **Holding an item** trigger, such as `HYPERION`.
 - **Chat patterns** for a chat-triggered reminder, which have to match the message as the server sent it.
 

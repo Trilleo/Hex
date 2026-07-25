@@ -2,6 +2,38 @@
 
 ## Unreleased
 
+### Fixes
+
+#### Regions
+
++ Fixed a region's island being taken from the smaller **area** the scoreboard names — `village`,
+  `community center`, `royal mines` — instead of the island it sits on. A region set to `hub` never matched
+  (the scoreboard says `village`, never `hub`), and one that spanned two areas stopped firing at the seam. Hex
+  now asks Hypixel which island you are on, the way SkyHanni and Skyblocker do, and gets the whole island
+  (`hub`, `private island`, `dwarven mines`) — the same wherever you walk on it.
+    + Regions made before this fix may have recorded an area name; correct the **Island** field in the region
+      editor if one has stopped firing.
+
+#### Config profiles
+
++ Fixed a profile set to switch on a Skyblock island never activating, for the same reason — an **On a Skyblock
+  island** rule for `hub` was compared against the area the scoreboard showed (`village`) and could not match.
+  Island rules, and reminders' **Arriving at** / **Leaving island** triggers and **On island** condition, now
+  match the actual island.
+
+### Technical Details
+
+#### Regions
+
++ Island detection now comes from Hypixel's own location data via `/locraw`, in a new
+  `net.trilleo.skyblock.IslandResolver`, rather than from the scoreboard sidebar. `SkyblockLocation` separates
+  the resolved `island` from the scoreboard `area`; `current` prefers the island and falls back to the area, so
+  nothing regresses on a server that never answers `/locraw`. The resolver asks once per world join (islands are
+  separate servers), re-asks on an area change without a rejoin at most once every 15s, only sends once the
+  scoreboard confirms Skyblock, gives up after a few unanswered tries, and swallows the JSON reply to its own
+  request so it never reaches chat or a reminder pattern. Driven centrally from `Features` (tick, join,
+  disconnect, chat).
+
 ## Version 1.9.0
 
 ### New Features
