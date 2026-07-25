@@ -1,7 +1,7 @@
 package net.trilleo.notebook.md
 
 import net.trilleo.notebook.model.NoteDocument
-import java.util.Locale
+import java.util.*
 
 /**
  * Finding a note by typing part of it.

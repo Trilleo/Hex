@@ -2,6 +2,8 @@ package net.trilleo.notebook
 
 import net.fabricmc.loader.api.FabricLoader
 import net.trilleo.config.JsonConfig
+import net.trilleo.notebook.NotebookStore.CLEAN
+import net.trilleo.notebook.NotebookStore.DEBOUNCE_TICKS
 import net.trilleo.notebook.md.NoteFrontMatter
 import net.trilleo.notebook.model.NoteDocument
 import net.trilleo.notebook.model.NoteMeta
@@ -9,7 +11,7 @@ import net.trilleo.util.AtomicWrite
 import org.slf4j.LoggerFactory
 import java.nio.file.Files
 import java.nio.file.Path
-import java.util.Locale
+import java.util.*
 import java.util.concurrent.Executors
 import java.util.concurrent.TimeUnit
 import kotlin.io.path.name

@@ -9,7 +9,7 @@ import net.trilleo.config.gui.ConfigEntryList
 import net.trilleo.notebook.NoteIcon
 import net.trilleo.notebook.Notebook
 import net.trilleo.notebook.model.NoteDocument
-import java.util.Locale
+import java.util.*
 
 /**
  * Everything about a note except its text: where it is filed, what it is tagged, and how its row looks.

@@ -1,6 +1,6 @@
 package net.trilleo.notebook.model
 
-import java.util.Locale
+import java.util.*
 
 /**
  * Everything about a note except its text: what it is called, where it is filed, and how it looks in the list.

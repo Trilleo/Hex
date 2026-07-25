@@ -3,7 +3,7 @@ package net.trilleo.notebook
 import net.trilleo.notebook.model.NoteDocument
 import net.trilleo.notebook.model.NoteMeta
 import net.trilleo.notebook.model.NoteSort
-import java.util.Locale
+import java.util.*
 
 /**
  * The notebook in memory: every note, and everything that can be done to one.

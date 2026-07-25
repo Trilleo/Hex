@@ -76,36 +76,44 @@ object NotebookFeature : Feature {
                     1
                 }
                 // Deferred: opening a screen mid-command is undone when the chat screen that ran it closes.
-                .then(Commands.literal("open").then(
-                    Commands.argument("title", StringArgumentType.greedyString()).executes { ctx ->
-                        val title = StringArgumentType.getString(ctx, "title")
-                        val document = Notebook.byTitle(title)
-                        if (document == null) {
-                            Commands.error(ctx.source, "No note called \"$title\".")
-                            0
-                        } else {
-                            openScreen(ctx.source) { NoteEditorScreen(null, document) }
-                        }
-                    },
-                ))
-                .then(Commands.literal("new")
+                .then(
+                    Commands.literal("open").then(
+                        Commands.argument("title", StringArgumentType.greedyString()).executes { ctx ->
+                            val title = StringArgumentType.getString(ctx, "title")
+                            val document = Notebook.byTitle(title)
+                            if (document == null) {
+                                Commands.error(ctx.source, "No note called \"$title\".")
+                                0
+                            } else {
+                                openScreen(ctx.source) { NoteEditorScreen(null, document) }
+                            }
+                        },
+                    )
+                )
+                .then(
+                    Commands.literal("new")
                     .executes { ctx -> newNote(ctx.source, "") }
                     .then(
                         Commands.argument("title", StringArgumentType.greedyString()).executes { ctx ->
                             newNote(ctx.source, StringArgumentType.getString(ctx, "title"))
                         },
-                    ))
+                    )
+                )
                 .then(Commands.literal("list").executes { ctx -> list(ctx.source) })
-                .then(Commands.literal("search").then(
-                    Commands.argument("query", StringArgumentType.greedyString()).executes { ctx ->
-                        search(ctx.source, StringArgumentType.getString(ctx, "query"))
-                    },
-                ))
-                .then(Commands.literal("export").then(
-                    Commands.argument("title", StringArgumentType.greedyString()).executes { ctx ->
-                        export(ctx.source, StringArgumentType.getString(ctx, "title"))
-                    },
-                ))
+                .then(
+                    Commands.literal("search").then(
+                        Commands.argument("query", StringArgumentType.greedyString()).executes { ctx ->
+                            search(ctx.source, StringArgumentType.getString(ctx, "query"))
+                        },
+                    )
+                )
+                .then(
+                    Commands.literal("export").then(
+                        Commands.argument("title", StringArgumentType.greedyString()).executes { ctx ->
+                            export(ctx.source, StringArgumentType.getString(ctx, "title"))
+                        },
+                    )
+                )
                 .then(Commands.literal("import").executes { ctx -> import(ctx.source) }),
         )
     }
