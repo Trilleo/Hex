@@ -6,24 +6,24 @@
 
 #### Notebook
 
-+ Added a **notebook**: somewhere to write things down without leaving the game. Notes are written in **Markdown**,
-  kept between sessions, and reachable from the new **Notebook** tab of `/hexa config`, from `/hexa note`, or from the
-  new **Open Notebook** keybind (unbound by default, under **Hex** in Minecraft's controls).
-+ The browser lists every note with its colour, icon, title and opening line, and has a sidebar that filters by
-  **All notes**, **Pinned**, or any folder or tag you have used. Folders and tags are never created or deleted — they
-  exist exactly as long as a note uses them.
++ Added a **notebook**: somewhere to write things down without leaving the game. Notes are written in **Markdown**, kept
+  between sessions, and reachable from the new **Notebook** tab of `/hexa config`, from `/hexa note`, or from the new
+  **Open Notebook** keybind (unbound by default, under **Hex** in Minecraft's controls).
++ The browser lists every note with its colour, icon, title and opening line, and has a sidebar that filters by **All
+  notes**, **Pinned**, or any folder or tag you have used. Folders and tags are never created or deleted — they exist
+  exactly as long as a note uses them.
 + Added **search** across everything at once: titles, folders, tags and the text of the notes themselves, showing the
   line each note matched underneath it.
-+ Each note has a title, a folder, any number of tags, a colour, an item icon, and a pin that keeps it at the top of
-  the list. The list can be sorted by last edited, newest, title, or by hand.
++ Each note has a title, a folder, any number of tags, a colour, an item icon, and a pin that keeps it at the top of the
+  list. The list can be sorted by last edited, newest, title, or by hand.
 + Added **export** and **import** through the clipboard. An exported note carries its folder, tags, colour and icon
   along with its text, so a note you send someone arrives exactly as you filed it. Plain Markdown from anywhere else
   imports too — it simply arrives unfiled, titled after its first heading. Importing never overwrites an existing note.
-+ Notes are stored as ordinary `.md` files, one per note, under `config/hex/notebook/notes/`. You can open one in a
-  text editor, and **dropping a Markdown file into that directory imports it**, whatever wrote it.
++ Notes are stored as ordinary `.md` files, one per note, under `config/hex/notebook/notes/`. You can open one in a text
+  editor, and **dropping a Markdown file into that directory imports it**, whatever wrote it.
 + Notes are kept per installation rather than per config profile, and are left out of the clipboard settings blob:
-  they are things you wrote, not a settings loadout, so switching profiles never swaps them. Only the notebook's
-  display settings, in `config/hex/notebook.json`, travel with a profile.
+  they are things you wrote, not a settings loadout, so switching profiles never swaps them. Only the notebook's display
+  settings, in `config/hex/notebook.json`, travel with a profile.
 + `/hexa note` gained `list`, `new`, `open`, `search`, `export` and `import`. A note is looked up by title — exactly
   first, then ignoring case, then by prefix — so `/hexa note open mining` finds "Mining routes".
 
@@ -42,8 +42,8 @@
   shorter than the suggestion model's), dispatched on one daemon thread, written atomically, and version-guarded — an
   `index.json` from a newer Hex is read around rather than overwritten, and a note file from a newer Hex is shown
   read-only.
-+ Extracted `AtomicWrite` from `ModelStore` — temp sibling plus `ATOMIC_MOVE` with a plain-replace fallback — so the
-  two things in the mod that must never lose a file share one implementation.
++ Extracted `AtomicWrite` from `ModelStore` — temp sibling plus `ATOMIC_MOVE` with a plain-replace fallback — so the two
+  things in the mod that must never lose a file share one implementation.
 + Added a **JUnit 5 test source set** under `src/test/kotlin`, the first tests in this repository, covering the pure
   logic that touches no Minecraft runtime: the front-matter round trip and `NoteMeta`'s repair of GSON's reflection
   gaps. Run with `./gradlew test`.

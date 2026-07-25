@@ -387,25 +387,24 @@ somewhere new makes that folder appear and moving the last note out makes it go 
 
 ### Writing
 
-**New** creates a note and opens it. There is no save button — what you type is kept, written a couple of seconds
-after you stop typing and again when you close the screen.
+**New** creates a note and opens it. There is no save button — what you type is kept, written a couple of seconds after
+you stop typing and again when you close the screen.
 
 Notes are Markdown, so headings, bullet and numbered lists, task checkboxes, quotes, tables and code blocks all work,
 and a note pasted in from anywhere else already looks right. Right now you write and read that Markdown as source; a
-visual editor that renders it — along with Minecraft's colour codes, [chroma text](#chroma-text), and clickable item
-and coordinate chips — is the next piece of this feature. Notes written now carry over untouched, because the text is
-the note either way.
+visual editor that renders it — along with Minecraft's colour codes, [chroma text](#chroma-text), and clickable item and
+coordinate chips — is the next piece of this feature. Notes written now carry over untouched, because the text is the
+note either way.
 
 **Details…** covers the rest of a note: its folder, its tags, the colour of the bar down its row, an item id to use as
 its icon, and whether it is pinned to the top of the list.
 
 ### Sharing
 
-**Export** copies a note to your clipboard and **Import** takes whatever is on your clipboard as a new note. An
-exported note carries its folder, tags, colour and icon along with its text, in a small header at the top, so a note
-you send someone arrives exactly as you filed it. Plain Markdown from anywhere else imports fine too — it just arrives
-unfiled, titled after its first heading. Importing always creates a new note and never overwrites one you already
-have.
+**Export** copies a note to your clipboard and **Import** takes whatever is on your clipboard as a new note. An exported
+note carries its folder, tags, colour and icon along with its text, in a small header at the top, so a note you send
+someone arrives exactly as you filed it. Plain Markdown from anywhere else imports fine too — it just arrives unfiled,
+titled after its first heading. Importing always creates a new note and never overwrites one you already have.
 
 ### Where they live
 
@@ -414,9 +413,9 @@ the list opens without reading every file. Because each note carries its own det
 disposable — delete it and the notebook is rebuilt by reading the files. It also means **dropping a `.md` file into
 `notes/` imports it**, whatever wrote it.
 
-Notes are **not** part of a config profile and are not included when you copy settings to the clipboard: they are
-things you wrote, not a settings loadout, and switching profiles should not swap out what you have written down. Only
-the notebook's display settings, in `config/hex/notebook.json`, travel with a profile.
+Notes are **not** part of a config profile and are not included when you copy settings to the clipboard: they are things
+you wrote, not a settings loadout, and switching profiles should not swap out what you have written down. Only the
+notebook's display settings, in `config/hex/notebook.json`, travel with a profile.
 
 Writes go to a temporary file and are then moved into place, so a crash mid-save leaves either the old version or the
 new one and never half of either. A note written by a newer version of Hex than you are running is shown read-only
