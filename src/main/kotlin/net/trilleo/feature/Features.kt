@@ -17,6 +17,8 @@ import net.trilleo.Hex
 import net.trilleo.config.*
 import net.trilleo.skyblock.IslandResolver
 import net.trilleo.skyblock.Sidebar
+import net.trilleo.skyblock.SkyblockEvents
+import net.trilleo.skyblock.TabList
 import net.trilleo.skyblock.item.HeldItem
 import org.slf4j.LoggerFactory
 
@@ -104,6 +106,12 @@ object Features {
             // ticking the moment the player chose a profile by hand — freezing the area, the Skyblock date and
             // the event (and, through the resolver below, the island) for every other reader too.
             Sidebar.tick(client)
+            // After the sidebar, which is what tells it whether this is Skyblock at all, and before the event
+            // resolver it feeds. The player list carries the events the sidebar never mentions.
+            TabList.tick(client)
+            // Last of the three, so a claim made by the sidebar or the player list this tick is already in
+            // when the boss bar is read alongside them.
+            SkyblockEvents.tick(client)
             // Between the sidebar and its readers: the sidebar gives the area, the resolver turns that server
             // into an island, and ProfileAutoSwitch (and the region tracker) read the island it produces.
             IslandResolver.tick(client)
@@ -147,16 +155,23 @@ object Features {
             // enabled.
             HeldItem.reset()
             Sidebar.reset()
-            // Sidebar.reset clears the island; this clears the resolver's own request state alongside it.
+            // Sidebar.reset clears the island and every event claim; these clear the readers that are not
+            // views over it — the resolver's own request state and the player list's cached lines.
             IslandResolver.reset()
+            TabList.reset()
             features.forEach { if (it.enabled) it.onWorldLeave(client) }
         }
 
         ClientReceiveMessageEvents.ALLOW_GAME.register { message, _ ->
             // The island resolver gets first sight so it can swallow the reply to its own /locraw request
-            // before any reminder pattern — or the chat log — sees the raw JSON. `&&` short-circuits, so a
-            // swallowed message never reaches the features either.
-            IslandResolver.onChatReceive(message) && features.all { !it.enabled || it.onChatReceive(message) }
+            // before any reminder pattern — or the chat log — sees the raw JSON. A swallowed message never
+            // reaches anything below either.
+            if (!IslandResolver.onChatReceive(message)) return@register false
+            // Then the event reader, ahead of the features and outside any enabled check, for the same reason
+            // the sidebar is ticked centrally: an event broadcast is shared state, not one feature's. It only
+            // observes and never swallows.
+            SkyblockEvents.onChatReceive(message)
+            features.all { !it.enabled || it.onChatReceive(message) }
         }
 
         ClientLifecycleEvents.CLIENT_STOPPING.register {

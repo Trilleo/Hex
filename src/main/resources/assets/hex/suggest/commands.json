@@ -535,10 +535,12 @@
     ]
   },
   "_events_comment": [
-    "Extra Skyblock event names to recognise on the scoreboard sidebar, matched as lower-cased substrings",
-    "against every line. Empty on purpose: the well-known events are built into SkyblockCalendar, and this",
-    "is the extension point for whatever Hypixel ships or renames next — an event name should be a data",
-    "edit, not a code change. A name that stops matching costs one context feature on one event, nothing more."
+    "Extra Skyblock event names, matched as lower-cased substrings against the scoreboard sidebar, the player",
+    "list's event widgets, the boss bar and event broadcasts in chat. Empty on purpose: the well-known events",
+    "are built into SkyblockEvents, and this is the extension point for whatever Hypixel ships or renames next",
+    "— an event name should be a data edit, not a code change. A name listed here is also the stable form the",
+    "event is reported under, so a name that stops matching costs the stable spelling of that one event, not",
+    "its detection: an event the player list names outright is still picked up under the name Hypixel used."
   ],
   "events": [],
   "cues": [

@@ -11,24 +11,25 @@ import java.util.*
 /**
  * The Skyblock scoreboard sidebar, read once and handed to everything that interprets it.
  *
- * Hypixel puts a surprising amount of state on the sidebar and nowhere else a client can see: the island, the
- * Skyblock date, the Skyblock time of day, and whatever event is running. Parsing it is the only way to know
- * any of that, which makes this inherently fragile — the layout is Hypixel's to change, and it has changed
- * before — so it is deliberately kept as an isolated, best-effort reader:
+ * Hypixel puts a good deal of state on the sidebar and nowhere else a client can see: the area, the Skyblock
+ * date, and the Skyblock time of day. Parsing it is the only way to know any of that, which makes this
+ * inherently fragile — the layout is Hypixel's to change, and it has changed before — so it is deliberately
+ * kept as an isolated, best-effort reader:
  *
  *  - every read is wrapped, so a surprise in the sidebar cannot throw into a tick handler;
  *  - a line nothing recognises is simply not recognised; nothing here guesses;
  *  - the consumers below treat null as "cannot tell" rather than as an answer.
  *
  * **Why the walk lives here rather than in [SkyblockLocation].** It used to be the location reader's own, back
- * when the island was the only thing anyone wanted off the sidebar. There are now two interpretations of the
- * same lines, and rebuilding every entry's string twice a second to answer two questions instead of one would
- * be pure waste — the extraction is the expensive part and the interpretation is a regex. So this owns the
- * poll and the strings, and [SkyblockLocation] and [SkyblockCalendar] are views over them.
+ * when the island was the only thing anyone wanted off the sidebar. There are now three interpretations of the
+ * same lines, and rebuilding every entry's string twice a second to answer one question at a time would be
+ * pure waste — the extraction is the expensive part and the interpretation is a regex. So this owns the poll
+ * and the strings, and [SkyblockLocation], [SkyblockCalendar] and [SkyblockEvents] read them.
  *
- * Fanning out to those two directly, rather than exposing a listener list, is a deliberate simplification:
- * there are two of them, they live in this package, and they are *defined* as interpretations of this — a
- * registry would be ceremony around a pair of calls.
+ * Fanning out to those directly, rather than exposing a listener list, is a deliberate simplification: there
+ * are three of them, they live in this package, and they are *defined* as interpretations of this — a registry
+ * would be ceremony around three calls. The event reader is the one that is not only this: the sidebar is one
+ * of its four sources, since most events are named anywhere but here.
  *
  * Ticked from the `END_CLIENT_TICK` block in [net.trilleo.feature.Features], outside any feature's enabled
  * check, for the reason set out on [net.trilleo.skyblock.item.HeldItem]: several features read this now, and a
@@ -55,13 +56,14 @@ object Sidebar {
 
     private var ticksUntilPoll = 0
 
-    /** Forgets everything, here and in both views, so a stale read cannot survive into the next server. */
+    /** Forgets everything, here and in every reader, so a stale read cannot survive into the next server. */
     fun reset() {
         onSkyblock = false
         lines = emptyList()
         ticksUntilPoll = 0
         SkyblockLocation.reset()
         SkyblockCalendar.reset()
+        SkyblockEvents.reset()
     }
 
     /**
@@ -106,6 +108,7 @@ object Sidebar {
 
         SkyblockLocation.acceptArea(lines)
         SkyblockCalendar.accept(lines)
+        SkyblockEvents.acceptSidebar(lines)
     }
 
     private fun clear(keepFlag: Boolean = false) {
@@ -113,6 +116,9 @@ object Sidebar {
         if (!keepFlag) onSkyblock = false
         SkyblockLocation.reset()
         SkyblockCalendar.reset()
+        // No sidebar means no Skyblock — every event claim goes, including the ones chat and the boss bar
+        // made, since those are only ever read while the sidebar says this is Skyblock in the first place.
+        SkyblockEvents.reset()
     }
 
     private const val POLL_INTERVAL_TICKS = 20

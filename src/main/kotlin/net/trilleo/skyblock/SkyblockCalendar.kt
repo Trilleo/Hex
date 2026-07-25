@@ -1,30 +1,24 @@
 package net.trilleo.skyblock
 
-import net.trilleo.skyblock.SkyblockCalendar.BUILTIN_EVENTS
-import net.trilleo.skyblock.SkyblockCalendar.events
 import java.util.*
 
 /**
- * The Skyblock date, the Skyblock clock, and whatever event is running — all read off the sidebar.
+ * The Skyblock date and the Skyblock clock, read off the sidebar.
  *
  * A view over [Sidebar], like [SkyblockLocation], and held to the same standard: it recognises what it is sure
  * about and reports null for everything else.
  *
  * **Why this is worth reading at all.** Skyblock keeps its own calendar, and it moves fast — a Skyblock day is
- * twenty real minutes, a year is about two and a half real days — so it is a completely different signal from
- * the wall clock. What a player does at 3am *Skyblock* time (zealots, mobs, anything that needs darkness) has
+ * twenty real minutes, a year a little over five real days — so it is a completely different signal from the
+ * wall clock. What a player does at 3am *Skyblock* time (zealots, mobs, anything that needs darkness) has
  * nothing to do with what they do at 3am their own time, and both are worth knowing. The season is what makes
- * Spooky Festival and Jerry's Workshop predictable, and the event line is the single most direct statement of
- * intent anywhere on the sidebar: a Dark Auction countdown is very nearly the player announcing they are about
- * to warp to it.
+ * Spooky Festival and Jerry's Workshop predictable.
  *
- * **Two parsing strategies, chosen per field.** The date and time lines get strict regular expressions,
- * because their formats — `Late Summer 14th`, `3:40am ☽` — have been stable for years and a strict pattern
- * that fails loudly to match is the right way to read a stable format. Events get a substring vocabulary
- * instead, the same technique [net.trilleo.suggest.context.ChatCues] uses on chat, because event lines are
- * decorated with timers and suffixes that vary per event and per Hypixel update. Matching known names inside
- * a line survives all of that, and an event nobody has listed simply is not detected — which costs one context
- * feature and breaks nothing.
+ * **Strict patterns, because these formats are stable.** The date and time lines — `Late Summer 14th`,
+ * `3:40am ☽` — have looked the same for years, and a strict pattern that fails loudly to match is the right
+ * way to read a stable format. Events used to be read here too, by a looser substring match over the same
+ * lines; they now live in [SkyblockEvents], which reads them from the player list and the boss bar as well,
+ * because the sidebar names an event only when the island the player is standing on happens to care about it.
  */
 object SkyblockCalendar {
 
@@ -48,11 +42,6 @@ object SkyblockCalendar {
     var minute: Int = -1
         private set
 
-    /** The running or imminent event, lower-cased (`"dark auction"`), or null when none is named. */
-    @Volatile
-    var event: String? = null
-        private set
-
     /**
      * Whether it is daylight, from the sun/moon glyph Hypixel puts on the time line, or null when absent.
      *
@@ -63,63 +52,6 @@ object SkyblockCalendar {
     @Volatile
     var daylight: Boolean? = null
         private set
-
-    /**
-     * Events Hypixel names on the sidebar, lower-cased.
-     *
-     * Chosen for the same property [net.trilleo.suggest.context.ChatCues]'s list is: each is something a
-     * player *does something about*. An event that merely happens, however often it is announced, would raise
-     * a tag on most lines and dilute the feature into noise.
-     *
-     * A name Hypixel has since changed simply stops matching, which costs one context feature on one event
-     * and nothing else — so this list is safe to ship despite being another server's vocabulary. The
-     * catalogue extends it without a code change through [installEvents].
-     *
-     * Declared before [events] rather than beside the other constants at the foot of the file, because an
-     * object's property initialisers run in declaration order and [events] is seeded from it.
-     */
-    private val BUILTIN_EVENTS = listOf(
-        "dark auction",
-        "jacob's contest",
-        "jacob's farming contest",
-        "farming contest",
-        "spooky festival",
-        "great spook",
-        "new year celebration",
-        "traveling zoo",
-        "travelling zoo",
-        "jerry's workshop",
-        "season of jerry",
-        "winter island",
-        "cult of the fallen star",
-        "fallen star cult",
-        "mining fiesta",
-        "fishing festival",
-        "mayor election",
-        "election over",
-        "bingo",
-        "hoppity's hunt",
-        "carnival",
-        "bank interest",
-    )
-
-    /** The active event vocabulary. Replaced wholesale by [installEvents]; never mutated in place. */
-    @Volatile
-    private var events: List<String> = BUILTIN_EVENTS.sortedByDescending { it.length }
-
-    /**
-     * Adds the catalogue's event names on top of the built-in ones. Idempotent — always rebuilt from
-     * [BUILTIN_EVENTS], so loading the catalogue twice cannot double the list.
-     *
-     * Longer names are matched first, so `"cult of the fallen star"` cannot be pre-empted by a shorter entry
-     * that happens to be a substring of the same line.
-     */
-    fun installEvents(extra: List<String>) {
-        val all = (BUILTIN_EVENTS + extra.map { it.trim().lowercase(Locale.ROOT) })
-            .filter { it.isNotEmpty() }
-            .distinct()
-        events = all.sortedByDescending { it.length }
-    }
 
     /**
      * The season, without the `early`/`late` qualifier (`"summer"`), or null.
@@ -160,7 +92,6 @@ object SkyblockCalendar {
         day = 0
         hour = -1
         minute = -1
-        event = null
         daylight = null
     }
 
@@ -219,18 +150,6 @@ object SkyblockCalendar {
             minute = -1
             daylight = null
         }
-
-        event = eventIn(lines)
-    }
-
-    /** The first known event named anywhere on the sidebar, or null. */
-    private fun eventIn(lines: List<String>): String? {
-        val vocabulary = events
-        for (line in lines) {
-            val folded = line.lowercase(Locale.ROOT)
-            vocabulary.firstOrNull { folded.contains(it) }?.let { return it }
-        }
-        return null
     }
 
     private fun to24Hour(hour: Int, meridiem: String): Int = when {

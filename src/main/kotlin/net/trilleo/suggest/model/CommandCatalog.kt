@@ -2,7 +2,7 @@ package net.trilleo.suggest.model
 
 import com.google.gson.reflect.TypeToken
 import net.trilleo.config.JsonConfig
-import net.trilleo.skyblock.SkyblockCalendar
+import net.trilleo.skyblock.SkyblockEvents
 import net.trilleo.suggest.context.ChatCues
 import net.trilleo.suggest.context.ContextSources
 import org.slf4j.LoggerFactory
@@ -134,7 +134,7 @@ object CommandCatalog {
         ContextSources.kindProvider = ::kindOf
         ChatCues.install(file.cues.filter { it.tag.isNotBlank() && it.phrases.isNotEmpty() }
             .map { ChatCues.Cue(it.tag, it.phrases.map { phrase -> phrase.lowercase(Locale.ROOT) }) })
-        SkyblockCalendar.installEvents(file.events)
+        SkyblockEvents.installEvents(file.events)
 
         Ranker.cataloguePrior = { key -> priors[key] ?: 0.0 }
         Ranker.catalogueKeys = { priors.keys }
