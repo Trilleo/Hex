@@ -15,6 +15,12 @@ repositories {
 	// Loom adds the essential maven repositories to download Minecraft and libraries from automatically.
 	// See https://docs.gradle.org/current/userguide/declaring_repositories.html
 	// for more information about repositories.
+
+	// Mod Menu, for the optional settings button on its mod list. Compile-only — see the dependency below.
+	maven {
+		name = "Terraformers"
+		url = uri("https://maven.terraformersmc.com/releases")
+	}
 }
 
 dependencies {
@@ -25,6 +31,12 @@ dependencies {
 	// Fabric API. This is technically optional, but you probably want it anyway.
 	implementation("net.fabricmc.fabric-api:fabric-api:${providers.gradleProperty("fabric_api_version").get()}")
     implementation("net.fabricmc:fabric-language-kotlin:${providers.gradleProperty("fabric_kotlin_version").get()}")
+
+	// Mod Menu is a soft integration, so this is compileOnly: it is neither bundled nor listed in
+	// fabric.mod.json's `depends`, and Hex behaves identically without it. The entrypoint class is the only
+	// thing that touches the API, and Fabric loads an entrypoint lazily — nothing resolves those types unless
+	// Mod Menu itself is present and asking.
+	compileOnly("com.terraformersmc:modmenu:${providers.gradleProperty("modmenu_version").get()}")
 }
 
 tasks.processResources {

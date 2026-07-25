@@ -16,6 +16,10 @@ watch the result.
 The **□** button is on the Options screen wherever you open it from — the pause menu or the title screen. From the
 title screen it is the only way in, since the command needs a chat box and the keybind needs a world.
 
+If you have [Mod Menu](https://modrinth.com/mod/modmenu) installed, its settings button on Hex's entry in the mod list
+opens the same menu, and closing it takes you back to the mod list. Mod Menu is entirely optional — Hex does not
+require it, does not bundle it, and behaves the same whether or not it is there.
+
 **Reset tab** in the footer restores everything on the current tab to its defaults, including that feature's own on/off
 switch. It asks first, and it only changes your live settings — your saved profile is untouched, so **Discard** on the
 Profiles screen brings them back.

@@ -10,6 +10,9 @@
   now the menu could only be reached by typing `/hexa config` or by binding the keybind that ships unbound, so a
   fresh install had no obvious way in. The button is on the Options screen wherever it is opened from, including the
   title screen — where neither the command nor the keybind works.
++ Added **Mod Menu** support: if you have Mod Menu installed, the settings button on Hex's entry in its mod list now
+  opens the config menu, and closing it returns to the list. Mod Menu stays entirely optional — it is not required,
+  not bundled, and Hex behaves the same without it.
 
 ### Fixes
 
@@ -52,6 +55,19 @@
   match the actual island.
 
 ### Technical Details
+
+#### Config menu
+
++ The Options screen button is `net.trilleo.mixin.OptionsScreenMixin` plus `config/gui/OptionsMenuShortcut.kt`, which
+  owns the button and all of its geometry. It is added to the screen's `HeaderAndFooterLayout` footer as a padded
+  child rather than placed at fixed coordinates, so it tracks Done across a resize — vanilla's `resize` re-arranges
+  the layout without re-running `init`.
++ Mod Menu is a `compileOnly` dependency (`modmenu_version` in `gradle.properties`, Terraformers maven), so nothing
+  is bundled and `fabric.mod.json`'s `depends` is untouched. `config/ModMenuIntegration.kt` is the only code that
+  names the API, and it is reachable only through the `modmenu` entrypoint, which Fabric resolves lazily — with Mod
+  Menu absent the class is never loaded and its types are never resolved. It hands back the same
+  `HexConfigScreens.create(parent)` screen as every other way in, so Mod Menu is a shortcut, not a second config
+  backend.
 
 #### Command suggestions
 

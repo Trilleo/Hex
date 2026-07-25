@@ -10,7 +10,7 @@ Hex runs entirely on your client — it never needs to be installed on a server.
 ## Features
 
 - **Config menu** — one categorized settings menu, opened with `/hexa config`, the **□** button on Minecraft's
-  Options screen, or a keybind.
+  Options screen, a keybind, or Mod Menu's settings button.
 - **Config profiles** — named setups you can switch between by hand or automatically per server, plus sharing via the
   clipboard.
 - **Keybind shortcuts** — bind a key combo to a delayed sequence of commands or chat messages.
@@ -38,6 +38,9 @@ does and how to configure it, and the [change log](CHANGELOG.md) for what's new 
     - [Fabric Language Kotlin](https://modrinth.com/mod/fabric-language-kotlin)
     - Hex, from the [releases page](https://github.com/Trilleo/Hex/releases)
 3. Launch the game with the Fabric profile.
+
+[Mod Menu](https://modrinth.com/mod/modmenu) is optional: install it and its settings button opens Hex's config menu.
+Hex works exactly the same without it.
 
 ## Updating
 

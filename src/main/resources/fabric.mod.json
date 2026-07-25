@@ -20,6 +20,12 @@
         "value": "net.trilleo.Hex",
         "adapter": "kotlin"
       }
+    ],
+    "modmenu": [
+      {
+        "value": "net.trilleo.config.ModMenuIntegration",
+        "adapter": "kotlin"
+      }
     ]
   },
   "mixins": [
