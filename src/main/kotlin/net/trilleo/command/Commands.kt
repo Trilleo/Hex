@@ -29,6 +29,14 @@ object Commands {
         source.sendFeedback(Component.literal(text))
     }
 
+    /**
+     * Send an already-built feedback line — for text that has to come out of the language files rather than
+     * being written in English at the call site.
+     */
+    fun feedback(source: FabricClientCommandSource, text: Component) {
+        source.sendFeedback(text)
+    }
+
     /** Send an error (red) line to the command source. */
     fun error(source: FabricClientCommandSource, text: String) {
         source.sendError(Component.literal(text))

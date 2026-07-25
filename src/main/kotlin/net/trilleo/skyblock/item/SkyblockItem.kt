@@ -97,8 +97,14 @@ object SkyblockItem {
      */
     fun displayName(stack: ItemStack): String = strip(stack.hoverName.string)
 
-    /** Removes `§x` pairs and nothing else. */
-    private fun strip(raw: String): String {
+    /**
+     * Removes `§x` pairs and nothing else.
+     *
+     * Public because [net.trilleo.itemcustom.ItemCustomizer] needs the same treatment applied to a name it
+     * already holds as a [net.minecraft.network.chat.Component] — it runs inside the `getHoverName` hook, so
+     * going through [displayName] there would call straight back into itself.
+     */
+    fun strip(raw: String): String {
         if (raw.indexOf('§') < 0) return raw.trim()
         val out = StringBuilder(raw.length)
         var i = 0

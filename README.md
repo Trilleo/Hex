@@ -19,6 +19,8 @@ Hex runs entirely on your client — it never needs to be installed on a server.
 - **Freecam** — detach the camera and fly it around while your character stays put.
 - **Hand display** — reposition and restyle your held item in first person, cosmetically.
 - **Per-item swing** — hide the swing animation only while holding chosen Skyblock items, by ID or UUID.
+- **Item customization** — rename, recolour, reskin or de-glint one specific Skyblock item, on your client only.
+- **Chroma text** — flowing rainbow colour for item names, whole or from a `&z` part-way through.
 - **Reminders** — timers, chat triggers and location alerts on a movable HUD panel, with ready-made presets.
 - **Regions** — draw areas on an island that announce themselves with a title and a sound when you walk in.
 - **Command suggestions** — learns the commands you use and completes them in chat, ranked by where you are, what you

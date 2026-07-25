@@ -30,6 +30,13 @@ object Notify {
     fun line(text: String, color: ChatFormatting = ChatFormatting.AQUA): MutableComponent =
         Component.literal("$PREFIX$text").withStyle(color)
 
+    /**
+     * The same, for text that has to come out of the language files: the prefix is added around a component
+     * the caller already built, rather than around a string written in English at the call site.
+     */
+    fun line(text: Component, color: ChatFormatting = ChatFormatting.AQUA): MutableComponent =
+        Component.literal(PREFIX).append(text).withStyle(color)
+
     /** Send an already-built message (see [line]) to the player's chat. */
     fun send(client: Minecraft, message: Component) {
         client.execute { client.player?.sendSystemMessage(message) }
@@ -37,6 +44,11 @@ object Notify {
 
     /** Build and send a prefixed, coloured line in one step. */
     fun chat(client: Minecraft, text: String, color: ChatFormatting = ChatFormatting.AQUA) {
+        send(client, line(text, color))
+    }
+
+    /** The same, for a translated message. */
+    fun chat(client: Minecraft, text: Component, color: ChatFormatting = ChatFormatting.AQUA) {
         send(client, line(text, color))
     }
 

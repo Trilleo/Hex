@@ -136,6 +136,75 @@ the rest of the hand settings off. It needs Skyblock's own item data, so it does
 servers. Resetting the **Hand** tab leaves the list alone; it is stored separately at
 `config/hex/swing_items.json` if you would rather edit it by hand.
 
+## Item customization
+
+Skyblock hands you the same sword everyone else has, called the same thing and drawn the same way. Item customization
+changes how one particular item looks **on your own client**: what it is called, what colour that name is, whether it
+shimmers, and what model or skin it is drawn with.
+
+Nothing here leaves your computer. Your real item is untouched, Hypixel is never told anything, and other players see
+the item exactly as it always was — this only changes what your client draws.
+
+**Customizing an item.** Hover it in any menu — your inventory, a chest, the auction house — and press **Customize
+Hovered Item**, which you bind under Options → Controls → **Hex**. It ships unbound on purpose, because the key fires
+inside Hypixel's own menus where most letters already mean something. You can also open the **Item Customization** tab
+of `/hexa config`, press **Customized items…**, and use **Add held item**.
+
+The editor shows the item before and after side by side, with its live name underneath, and offers:
+
+- **Name** — what to call it. Use `&` followed by a colour or format code, such as `&6` for gold or `&l` for bold, and
+  `&z` for chroma. Leave it blank to keep Hypixel's own name.
+- **Name colour** — colours the whole name. With **Name** blank this recolours Hypixel's name, which means dropping the
+  colours it came with — that is the only way a recolour can show at all.
+- **Chroma name** — the whole name flows through the rainbow. See [Chroma text](#chroma-text).
+- **Enchant glint** — always, never, or unchanged. Cosmetic only; the item's enchantments are untouched.
+- **Item model** — a model to draw instead, such as `minecraft:diamond_sword`. Any model your resource packs provide
+  works too.
+- **Head texture** — a player-head skin. Paste a texture hash, a `textures.minecraft.net` link, or the base64 value
+  copied out of an item. Setting one draws the item as a head unless **Item model** says otherwise.
+- **Dye colour** — recolours a dyeable model, such as leather armour. It does nothing on a model that cannot be dyed.
+
+Every field is "blank means leave it alone", so an item you only renamed keeps everything else about its appearance.
+Each customization also has its own switch, for turning one off without losing what you set up.
+
+**Only unique items can be customized.** A customization is keyed on the item's UUID, which Hypixel gives to
+non-stackable items alone — that is what makes it follow *your* Hyperion rather than every Hyperion in the game. Press
+the keybind on a stackable or a vanilla item and Hex says so rather than storing something that could never apply.
+
+**Finding them again.** Slots holding a customized item are marked with a small **✎**, which can be switched off on the
+settings tab. The **Customized items** screen — the same one `/hexa item list` opens — lists every entry with the item's
+original name, so you can edit or delete one without going to find the item first.
+
+Two things worth knowing:
+
+- **Opening the editor closes the Hypixel menu you were in.** Minecraft tells the server a container is closed the
+  moment another screen replaces it, so you lose your place in a chest or an auction page. Nothing else is lost — the
+  customization is already saved against the item's UUID.
+- **Customizations belong to your installation, not to a config profile.** Switching or pasting a profile leaves them
+  alone, since they describe items you own rather than a settings loadout. They are stored at
+  `config/hex/item_custom.json` if you would rather edit them by hand.
+
+## Chroma text
+
+Chroma is text whose colour flows through the rainbow, the same effect other Skyblock mods offer. Hex uses it in
+[item names](#item-customization); there are two ways to switch it on, and they do the same thing:
+
+- Turn on **Chroma name** in the item's editor, which makes the whole name flow.
+- Write **`&z`** in the **Name** field, which starts chroma at that point and lets you flow only part of a name — for
+  example `&7Old &zHyperion` leaves the first word grey. Any colour code, or `&r`, ends it. This is the same code
+  NotEnoughUpdates and SkyHanni use, so a name copied from either works here unchanged.
+
+Two settings on the **Item Customization** tab of `/hexa config` shape it, and both apply to every chroma name at once —
+one item flowing at a different rate from the item beside it reads as a glitch rather than a choice:
+
+- **Chroma speed** — how long one full trip through the rainbow takes, from half a second to twenty. Lower is faster.
+- **Chroma width** — how many characters one full rainbow spans. Set it low and a short name holds every colour at once;
+  set it high and the name drifts through one colour at a time.
+
+The colours move on their own, so a chroma name animates wherever it appears: in a tooltip, on a container slot, and in
+the item-name popup above the hotbar. It costs a little more to draw than a plain name, which is why it is off by
+default and set per item rather than applied to everything.
+
 ## Reminders
 
 Skyblock is full of things that quietly run out — a booster cookie, a potion, a forge slot, an ability cooldown — and

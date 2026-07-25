@@ -2,6 +2,67 @@
 
 ## Unreleased
 
+### New Features
+
+#### Item customization
+
++ Added **item customization**: change how one specific Skyblock item looks on your own client. Hover it in any menu and
+  press the new **Customize Hovered Item** keybind (unbound by default, under **Hex** in Minecraft's controls) to give
+  it a new name, a new name colour, a forced enchant glint, a different item model, a player-head skin, or a dye colour.
+  Everything is client-side — nothing is sent to Hypixel, your real item is untouched, and other players see it exactly
+  as it was.
++ Customizations are keyed on the item's **UUID**, so they follow one particular item rather than every copy of it.
+  Stackable items have no UUID and cannot be customized; pressing the keybind on one says so instead of quietly doing
+  nothing.
++ Added a **Customized items** screen, reachable from the new **Item Customization** tab of `/hexa config` and from
+  `/hexa item list`, listing everything you have customized so you can edit or remove an entry with the item nowhere in
+  reach. It can also customize whatever is in your main hand.
++ Slots holding a customized item are marked with a small **✎** in any menu, so a customization is never invisible. This
+  can be switched off on the settings tab.
++ Customizations are stored per installation rather than per config profile: switching or pasting a profile leaves them
+  alone, since they describe items you own rather than a settings loadout. They live in `config/hex/item_custom.json`.
+
+#### Chroma text
+
++ Added **chroma** — text that flows through the rainbow, as other Skyblock mods have it — and made item names able to
+  use it. Turn on **Chroma name** in an item's editor for the whole name, or write **`&z`** in the **Name** field to
+  start it part-way through, so `&7Old &zHyperion` leaves the first word grey. `&z` is the code NotEnoughUpdates and
+  SkyHanni use, so a name copied from either works unchanged; any colour code or `&r` ends it.
++ Added **Chroma speed** and **Chroma width** to the **Item Customization** tab, controlling how long one trip through
+  the rainbow takes and how many characters it spans. Both apply to every chroma name at once — one item flowing at a
+  different rate from the one beside it reads as a glitch rather than a choice.
++ Chroma names animate everywhere a name appears: tooltips, container slots, and the item-name popup above the hotbar.
+
+### Technical Details
+
+#### Item customization
+
++ Added three mixins: `ItemStackMixin` (a customized name at the return of `getHoverName`, the one choke point every
+  tooltip, slot label and hotbar popup reads), `ItemModelResolverMixin` (a substituted stack at the head of
+  `appendItemLayers`, the single funnel every drawn item passes through — swapping the argument redirects the model
+  lookup and everything the model reads off the stack, so model, head skin, dye and glint all follow from one hook), and
+  `AbstractContainerScreenAccessor` (the protected `hoveredSlot`, `leftPos` and `topPos` fields).
++ The hovered-slot keybind and the slot marker are wired through Fabric's `fabric-screen-api-v1` rather than a fourth
+  mixin, which leaves vanilla's own input handling untouched.
++ Resolution is cached on the `ItemStack` itself through a duck interface. A stack's Skyblock UUID is read from NBT at
+  most once per instance for the life of that instance — `CustomData.copyTag()` deep-copies the whole tag, and these
+  hooks run for every drawn item every frame — while the resolved name and render stack are stamped with a config
+  generation counter that any edit bumps, so the editor's preview updates live without tracking which items an edit
+  touched.
++ `Notify.chat` and `Commands.feedback` gained `Component` overloads, so new player-facing text can come out of the
+  language files rather than being written in English at the call site.
+
+#### Chroma text
+
++ Added `net.trilleo.util.Chroma`, a feature-independent helper: the hue-over-time maths, a frame token for caches, and
+  a parser turning `&`/`§`-coded text into a real component tree. Building a tree rather than leaving `§` codes in a
+  literal is what lets chroma give every character its own colour, and it also fixes inline codes and a base colour
+  being uncombinable — a `§` code inside a literal takes over the rest of the line regardless of the component's style.
++ The per-stack name cache gained a second stamp. The config generation cannot expire a chroma name, whose colours
+  change while the config sits still, so a cached name now also records the `Chroma` frame it was built for — or
+  `Chroma.STATIC` for a name that does not animate and must not be rebuilt every frame. A single hover asks for a name
+  several times over, so even an animating name is resolved once per frame rather than once per ask.
+
 ## Version 1.9.1
 
 ### New Features
