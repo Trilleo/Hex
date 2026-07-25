@@ -6,101 +6,97 @@
 
 #### Config menu
 
-+ Added a small **□** button beside **Done** on Minecraft's own Options screen that opens Hex's config menu. Until
-  now the menu could only be reached by typing `/hexa config` or by binding the keybind that ships unbound, so a
-  fresh install had no obvious way in. The button is on the Options screen wherever it is opened from, including the
-  title screen — where neither the command nor the keybind works.
++ Added a small **□** button beside **Done** on Minecraft's own Options screen that opens Hex's config menu. Until now
+  the menu could only be reached by typing `/hexa config` or by binding the keybind that ships unbound, so a fresh
+  install had no obvious way in. The button is on the Options screen wherever it is opened from, including the title
+  screen — where neither the command nor the keybind works.
 + Added **Mod Menu** support: if you have Mod Menu installed, the settings button on Hex's entry in its mod list now
-  opens the config menu, and closing it returns to the list. Mod Menu stays entirely optional — it is not required,
-  not bundled, and Hex behaves the same without it.
+  opens the config menu, and closing it returns to the list. Mod Menu stays entirely optional — it is not required, not
+  bundled, and Hex behaves the same without it.
 
 ### Fixes
 
 #### Command suggestions
 
-+ Fixed Hex only noticing a Skyblock event when the **scoreboard** happened to name one — which is almost
-  never. The scoreboard shows what the island you are standing on cares about, so a mining event in the
-  Dwarven Mines, Hoppity's Hunt anywhere at all, or a farming contest away from the Garden were all invisible,
-  and the event was Hex's strongest hint about what you are going to type next. It now reads every place
-  Hypixel states an event, the way SkyHanni and Skyblocker do:
-    + the **player list**, whose `Event:` widget names the Skyblock-wide event on every island and says how
-      long is left — enable the tab-list widgets in Hypixel's own settings and this is the best source there
-      is;
-    + the **boss bar**, which is the only place a mining event (`2X POWDER`, `GOBLIN RAID`, `RAFFLE`) appears
-      at all;
-    + the **scoreboard**, still, for the island events that do show up there, now with the countdown it
-      sometimes puts beside them;
++ Fixed Hex only noticing a Skyblock event when the **scoreboard** happened to name one — which is almost never. The
+  scoreboard shows what the island you are standing on cares about, so a mining event in the Dwarven Mines, Hoppity's
+  Hunt anywhere at all, or a farming contest away from the Garden were all invisible, and the event was Hex's strongest
+  hint about what you are going to type next. It now reads every place Hypixel states an event, the way SkyHanni and
+  Skyblocker do:
+    + the **player list**, whose `Event:` widget names the Skyblock-wide event on every island and says how long is
+      left — enable the tab-list widgets in Hypixel's own settings and this is the best source there is;
+    + the **boss bar**, which is the only place a mining event (`2X POWDER`, `GOBLIN RAID`, `RAFFLE`) appears at all;
+    + the **scoreboard**, still, for the island events that do show up there, now with the countdown it sometimes puts
+      beside them;
     + **chat**, which shouts an event's start and end before anything else knows about it.
-+ An event Hex has never heard of is now detected too, under the name Hypixel gave it, instead of being
-  ignored for not being on a list. When several events are running at once, the one ending soonest is the one
-  a suggestion is credited to — a mining event with four minutes left says more about what you are about to do
-  than a month-long festival does. An event that has not started yet only counts once it is within ten
-  minutes, so a countdown to something a day away no longer colours anything.
++ An event Hex has never heard of is now detected too, under the name Hypixel gave it, instead of being ignored for not
+  being on a list. When several events are running at once, the one ending soonest is the one a suggestion is credited
+  to — a mining event with four minutes left says more about what you are about to do than a month-long festival does.
+  An event that has not started yet only counts once it is within ten minutes, so a countdown to something a day away no
+  longer colours anything.
 
 #### Regions
 
 + Fixed a region's island being taken from the smaller **area** the scoreboard names — `village`,
-  `community center`, `royal mines` — instead of the island it sits on. A region set to `hub` never matched
-  (the scoreboard says `village`, never `hub`), and one that spanned two areas stopped firing at the seam. Hex
-  now asks Hypixel which island you are on, the way SkyHanni and Skyblocker do, and gets the whole island
-  (`hub`, `private island`, `dwarven mines`) — the same wherever you walk on it.
-    + Regions made before this fix may have recorded an area name; correct the **Island** field in the region
-      editor if one has stopped firing.
+  `community center`, `royal mines` — instead of the island it sits on. A region set to `hub` never matched (the
+  scoreboard says `village`, never `hub`), and one that spanned two areas stopped firing at the seam. Hex now asks
+  Hypixel which island you are on, the way SkyHanni and Skyblocker do, and gets the whole island (`hub`,
+  `private island`, `dwarven mines`) — the same wherever you walk on it.
+    + Regions made before this fix may have recorded an area name; correct the **Island** field in the region editor if
+      one has stopped firing.
 
 #### Config profiles
 
-+ Fixed a profile set to switch on a Skyblock island never activating, for the same reason — an **On a Skyblock
-  island** rule for `hub` was compared against the area the scoreboard showed (`village`) and could not match.
-  Island rules, and reminders' **Arriving at** / **Leaving island** triggers and **On island** condition, now
-  match the actual island.
++ Fixed a profile set to switch on a Skyblock island never activating, for the same reason — an **On a Skyblock island**
+  rule for `hub` was compared against the area the scoreboard showed (`village`) and could not match. Island rules, and
+  reminders' **Arriving at** / **Leaving island** triggers and **On island** condition, now match the actual island.
 
 ### Technical Details
 
 #### Config menu
 
 + The Options screen button is `net.trilleo.mixin.OptionsScreenMixin` plus `config/gui/OptionsMenuShortcut.kt`, which
-  owns the button and all of its geometry. It is added to the screen's `HeaderAndFooterLayout` footer as a padded
-  child rather than placed at fixed coordinates, so it tracks Done across a resize — vanilla's `resize` re-arranges
-  the layout without re-running `init`.
-+ Mod Menu is a `compileOnly` dependency (`modmenu_version` in `gradle.properties`, Terraformers maven), so nothing
-  is bundled and `fabric.mod.json`'s `depends` is untouched. `config/ModMenuIntegration.kt` is the only code that
-  names the API, and it is reachable only through the `modmenu` entrypoint, which Fabric resolves lazily — with Mod
-  Menu absent the class is never loaded and its types are never resolved. It hands back the same
+  owns the button and all of its geometry. It is added to the screen's `HeaderAndFooterLayout` footer as a padded child
+  rather than placed at fixed coordinates, so it tracks Done across a resize — vanilla's `resize` re-arranges the layout
+  without re-running `init`.
++ Mod Menu is a `compileOnly` dependency (`modmenu_version` in `gradle.properties`, Terraformers maven), so nothing is
+  bundled and `fabric.mod.json`'s `depends` is untouched. `config/ModMenuIntegration.kt` is the only code that names the
+  API, and it is reachable only through the `modmenu` entrypoint, which Fabric resolves lazily — with Mod Menu absent
+  the class is never loaded and its types are never resolved. It hands back the same
   `HexConfigScreens.create(parent)` screen as every other way in, so Mod Menu is a shortcut, not a second config
   backend.
 
 #### Command suggestions
 
-+ Event detection moved out of `SkyblockCalendar` into a new `net.trilleo.skyblock.SkyblockEvents`, which merges
-  four sources instead of parsing one. Each source holds *claims* (name, source, optional start and end) that it
-  replaces wholesale on every poll, so a source that stops naming an event withdraws it, while a source that has
-  gone silent — an empty player list mid-transfer, a boss bar that glitched away — withdraws nothing. Every claim
-  ages out through a per-source TTL (15s for the polled sources, 5min for chat) and at its own countdown, so
-  nothing can stick on an event that has ended. `current` is computed on read: running events ranked by time
-  left, then imminent ones within ten minutes. The event vocabulary is no longer a gate on detection, only the
-  canonical spelling of the names it knows, so what the ranker has already learned against (`dark auction`)
++ Event detection moved out of `SkyblockCalendar` into a new `net.trilleo.skyblock.SkyblockEvents`, which merges four
+  sources instead of parsing one. Each source holds *claims* (name, source, optional start and end) that it replaces
+  wholesale on every poll, so a source that stops naming an event withdraws it, while a source that has gone silent — an
+  empty player list mid-transfer, a boss bar that glitched away — withdraws nothing. Every claim ages out through a
+  per-source TTL (15s for the polled sources, 5min for chat) and at its own countdown, so nothing can stick on an event
+  that has ended. `current` is computed on read: running events ranked by time left, then imminent ones within ten
+  minutes. The event vocabulary is no longer a gate on detection, only the canonical spelling of the names it knows, so
+  what the ranker has already learned against (`dark auction`)
   keeps its key.
 + Added `net.trilleo.skyblock.TabList`, a shared reader of the player list alongside `Sidebar`: it polls
-  `getListedOnlinePlayers` once a second (packet data, so it works whether or not Tab is held), sorts with a copy
-  of vanilla's `PlayerTabOverlay` ordering built from public getters, cleans each display name through
-  `TextClean`, and keeps blank entries because Hypixel separates one widget from the next with one. It reads
-  nothing off Skyblock.
-+ Added a `BossHealthOverlayAccessor` mixin exposing `BossHealthOverlay.events`, the only way to read boss-bar
-  text without drawing it. Both new readers are driven centrally from `Features` (tick, disconnect, chat),
-  outside any feature's enabled check, like the sidebar and the island resolver.
-+ `SkyblockCalendar` keeps the date and the clock and no longer has an `event`; the sidebar remains one of the
-  event resolver's sources through `SkyblockEvents.acceptSidebar`.
+  `getListedOnlinePlayers` once a second (packet data, so it works whether or not Tab is held), sorts with a copy of
+  vanilla's `PlayerTabOverlay` ordering built from public getters, cleans each display name through
+  `TextClean`, and keeps blank entries because Hypixel separates one widget from the next with one. It reads nothing off
+  Skyblock.
++ Added a `BossHealthOverlayAccessor` mixin exposing `BossHealthOverlay.events`, the only way to read boss-bar text
+  without drawing it. Both new readers are driven centrally from `Features` (tick, disconnect, chat), outside any
+  feature's enabled check, like the sidebar and the island resolver.
++ `SkyblockCalendar` keeps the date and the clock and no longer has an `event`; the sidebar remains one of the event
+  resolver's sources through `SkyblockEvents.acceptSidebar`.
 
 #### Regions
 
 + Island detection now comes from Hypixel's own location data via `/locraw`, in a new
-  `net.trilleo.skyblock.IslandResolver`, rather than from the scoreboard sidebar. `SkyblockLocation` separates
-  the resolved `island` from the scoreboard `area`; `current` prefers the island and falls back to the area, so
-  nothing regresses on a server that never answers `/locraw`. The resolver asks once per world join (islands are
-  separate servers), re-asks on an area change without a rejoin at most once every 15s, only sends once the
-  scoreboard confirms Skyblock, gives up after a few unanswered tries, and swallows the JSON reply to its own
-  request so it never reaches chat or a reminder pattern. Driven centrally from `Features` (tick, join,
-  disconnect, chat).
+  `net.trilleo.skyblock.IslandResolver`, rather than from the scoreboard sidebar. `SkyblockLocation` separates the
+  resolved `island` from the scoreboard `area`; `current` prefers the island and falls back to the area, so nothing
+  regresses on a server that never answers `/locraw`. The resolver asks once per world join (islands are separate
+  servers), re-asks on an area change without a rejoin at most once every 15s, only sends once the scoreboard confirms
+  Skyblock, gives up after a few unanswered tries, and swallows the JSON reply to its own request so it never reaches
+  chat or a reminder pattern. Driven centrally from `Features` (tick, join, disconnect, chat).
 
 ## Version 1.9.0
 

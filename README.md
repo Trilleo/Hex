@@ -9,8 +9,8 @@ Hex runs entirely on your client — it never needs to be installed on a server.
 
 ## Features
 
-- **Config menu** — one categorized settings menu, opened with `/hexa config`, the **□** button on Minecraft's
-  Options screen, a keybind, or Mod Menu's settings button.
+- **Config menu** — one categorized settings menu, opened with `/hexa config`, the **□** button on Minecraft's Options
+  screen, a keybind, or Mod Menu's settings button.
 - **Config profiles** — named setups you can switch between by hand or automatically per server, plus sharing via the
   clipboard.
 - **Keybind shortcuts** — bind a key combo to a delayed sequence of commands or chat messages.

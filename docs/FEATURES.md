@@ -13,12 +13,12 @@ adds its own tab down the side, a search box filters settings across all of them
 and a button links straight to the Keybinds screen. Settings apply as you change them, so you can drag a slider and
 watch the result.
 
-The **□** button is on the Options screen wherever you open it from — the pause menu or the title screen. From the
-title screen it is the only way in, since the command needs a chat box and the keybind needs a world.
+The **□** button is on the Options screen wherever you open it from — the pause menu or the title screen. From the title
+screen it is the only way in, since the command needs a chat box and the keybind needs a world.
 
 If you have [Mod Menu](https://modrinth.com/mod/modmenu) installed, its settings button on Hex's entry in the mod list
-opens the same menu, and closing it takes you back to the mod list. Mod Menu is entirely optional — Hex does not
-require it, does not bundle it, and behaves the same whether or not it is there.
+opens the same menu, and closing it takes you back to the mod list. Mod Menu is entirely optional — Hex does not require
+it, does not bundle it, and behaves the same whether or not it is there.
 
 **Reset tab** in the footer restores everything on the current tab to its defaults, including that feature's own on/off
 switch. It asks first, and it only changes your live settings — your saved profile is untouched, so **Discard** on the
@@ -45,9 +45,9 @@ A profile can activate by itself when you arrive somewhere. Open **✎** on the 
 
 - **a server** — matches the address you connected to. `hypixel.net` also matches `mc.hypixel.net`.
 - **singleplayer** — any single-player world.
-- **a Skyblock island** — matches the island you are on, e.g. `private island` or `hub`. Hex asks Hypixel which
-  island it is, so this names the whole island rather than the smaller area you are standing in (`village` on the Hub),
-  and resolves a moment after joining.
+- **a Skyblock island** — matches the island you are on, e.g. `private island` or `hub`. Hex asks Hypixel which island
+  it is, so this names the whole island rather than the smaller area you are standing in (`village` on the Hub), and
+  resolves a moment after joining.
 
 If two profiles claim the same place, the one higher in the list wins. Switching to a profile by hand turns
 auto-switching off until you disconnect, so it never overrides a deliberate choice. It is also skipped entirely while
@@ -333,22 +333,22 @@ specifically rather than to players in general.
 **It reads Skyblock's own calendar too:**
 
 - **The season.** A Skyblock year passes in a little over five real days, so autumn comes round often enough to learn
-  from — which is what makes the Spooky Festival commands start appearing before you have thought of them. Read off
-  the scoreboard.
+  from — which is what makes the Spooky Festival commands start appearing before you have thought of them. Read off the
+  scoreboard.
 - **Skyblock time of day.** Not your clock — Skyblock's, which runs a full day every twenty real minutes. What you do
   when it is dark on Skyblock has nothing to do with what you do at night where you live, and both get learned
   separately. It takes the sun/moon marker as the answer when Hypixel shows one, rather than guessing from the hour.
-- **The running event.** The strongest signal of the lot. When the Dark Auction starts counting down, `/warp da` is
-  very nearly something you have already announced — and after a couple of auctions Hex knows it.
+- **The running event.** The strongest signal of the lot. When the Dark Auction starts counting down, `/warp da` is very
+  nearly something you have already announced — and after a couple of auctions Hex knows it.
 
 **Where the event comes from.** Hypixel scatters this one, so Hex looks everywhere it is stated: the **player list**'s
 `Event:` widget, which names the Skyblock-wide event on every island and how long is left; the **boss bar**, which is
 the only place a mining event (`2X POWDER`, `GOBLIN RAID`) shows up; the **scoreboard**, for the island events that
 reach it; and **chat**, which shouts an event's start before anything else knows. The player list is the best of the
-four, so if you have turned Hypixel's tab-list widgets off, turning them back on makes this noticeably sharper. An
-event Hex has never heard of still counts, under whatever name Hypixel used. When two events overlap, the one ending
-soonest is the one credited — the mining event with four minutes left, not the festival with three days. One that has
-not started yet counts only inside the last ten minutes of its countdown.
+four, so if you have turned Hypixel's tab-list widgets off, turning them back on makes this noticeably sharper. An event
+Hex has never heard of still counts, under whatever name Hypixel used. When two events overlap, the one ending soonest
+is the one credited — the mining event with four minutes left, not the festival with three days. One that has not
+started yet counts only inside the last ten minutes of its countdown.
 
 Rows in the list say which of these did the work, so a suggestion that turns up during a Dark Auction is labelled *dark
 auction*, and one that turns up because it is dark is labelled *night*.
