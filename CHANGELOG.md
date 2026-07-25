@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+## Version 1.9.2
+
 ### New Features
 
 #### Item customization
