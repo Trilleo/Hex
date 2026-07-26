@@ -52,6 +52,39 @@ Notes are written in Markdown:
 Headings, bullet and numbered lists, task checkboxes, quotes, code blocks, tables and horizontal rules are all standard
 Markdown, so a note pasted in from anywhere else already works.
 
+### The toolbar
+
+You do not have to remember any of that syntax. The row of buttons above the text works the way a word processor's
+does — select some text, press a button:
+
+| Button       | Does                                                          |
+|--------------|----------------------------------------------------------------|
+| **B** *I* ~~S~~ `{}` | Bold, italic, strikethrough, inline code                |
+| **H1** **H2** | Turn the line into a heading                                   |
+| **•** **1.** | Bulleted or numbered list                                      |
+| **☑**        | Checklist item — press again to tick it, again to undo it      |
+| **❝**        | Quote                                                          |
+| **—**        | Divider                                                        |
+| **🔗**       | Link — the selection becomes the label                         |
+| **&**        | Opens the colour palette                                       |
+
+Every button is a toggle: pressing **B** on text that is already bold takes the bold off. With nothing selected, a
+button leaves the cursor exactly where you need to start typing. **Ctrl+B**, **Ctrl+I** and **Ctrl+E** do bold, italic
+and code without reaching for the mouse.
+
+The **&** button opens Minecraft's sixteen colours, plus **chroma** — a colour that flows, the same one
+[item customization](Item-Customization) uses — and a swatch that goes back to plain. Colours are written as `&c` codes
+in the text, so a note keeps its colours when you export it, and they work anywhere in a note.
+
+### The preview
+
+Beside the source is a live preview: the note as it reads, updated as you type. The button at the right of the toolbar
+switches between **Source**, **Split** and **Preview**, and your choice is remembered. On a small window, **Source** or
+**Preview** on their own give the text more room than a split does.
+
+The preview renders headings at their own size, lists with real bullets and check boxes, quotes with a bar down the
+side, code blocks on a slab, dividers as lines, and every colour code and chroma run in colour.
+
 ## Details
 
 **Details…** in the editor opens the rest of a note's properties:
@@ -85,6 +118,7 @@ The **Notebook** tab of `/hexa config`:
 | **Enabled**        | Master switch. With it off the keybind and commands do nothing. Your notes are untouched  |
 | **Open notebook…** | Opens the browser                                                                         |
 | **Sort by**        | **Last edited**, **Newest**, **Title** or **Manual**. Pinned notes stay on top regardless |
+| **Editor layout**  | Whether the editor shows the source, the preview, or both — the toolbar button changes it too |
 | **Show previews**  | Draw each note's first line under its title                                               |
 | **Background opacity** | How solid the browser and the editor are, from see-through to a flat backdrop         |
 
@@ -124,9 +158,15 @@ the old version or the new one, never half of either.
 
 ## Limitations
 
-- **Markdown is stored, not yet rendered.** You write and read notes as Markdown source. A visual editor that renders
-  it — along with Minecraft colour codes, chroma text, and clickable item and coordinate chips — is coming; notes you
-  write now carry over unchanged, because the text is the note either way.
+- **You write in Markdown source, and read the preview beside it.** The editing pane is the text as you typed it,
+  markers and all; the preview is what it means. An editor where the text itself is styled as you type — with clickable
+  item and coordinate chips — is still to come, and notes you write now carry over unchanged, because the text is the
+  note either way.
+- **The preview understands most of Markdown, not all of it.** Headings, lists, task boxes, quotes, fenced code,
+  dividers, bold, italic, strikethrough, inline code and links are rendered. Tables and anything more exotic are shown
+  as the plain text you typed — the note is still correct Markdown, it just is not drawn as a table.
+- **A line is a line.** Two lines of prose in a row stay two lines in the preview rather than being joined into one
+  paragraph, because that is what someone writing a note in a game means by pressing Enter.
 - **One installation, one notebook.** Notes are not per Skyblock profile or per island.
 - **No note icons on the title screen.** Item icons come from the item registry, which Minecraft only fills in once a
   world is loaded, so a notebook opened from the main menu shows rows without them. Everything else works, and the icons

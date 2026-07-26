@@ -1,28 +1,42 @@
 package net.trilleo.notebook.gui
 
+import com.mojang.blaze3d.platform.InputConstants
 import net.minecraft.client.gui.GuiGraphicsExtractor
 import net.minecraft.client.gui.components.Button
 import net.minecraft.client.gui.components.EditBox
 import net.minecraft.client.gui.components.MultiLineEditBox
+import net.minecraft.client.gui.components.MultilineTextField
 import net.minecraft.client.gui.components.Tooltip
 import net.minecraft.client.gui.screens.Screen
+import net.minecraft.client.input.KeyEvent
+import net.minecraft.client.input.MouseButtonEvent
 import net.minecraft.network.chat.Component
+import net.minecraft.network.chat.Style
 import net.trilleo.notebook.NoteShare
 import net.trilleo.notebook.Notebook
+import net.trilleo.notebook.NotebookConfig
 import net.trilleo.notebook.model.NoteDocument
+import net.trilleo.notebook.model.NoteEditorView
 import net.trilleo.util.Notify
 
 /**
  * One note: its title, its text, and the handful of things you do to a whole note.
  *
- * The body is edited as **markdown source** — a plain text area over the note's own text. The visual,
- * block-based editor renders into this same screen later; the mode switch and the toolbar belong to that
- * work, and until then the source pane is the whole of it. Nothing here will need undoing for that: the note's
- * text is canonical either way, so the visual editor is a second view onto exactly this string.
+ * The body is edited as **markdown source**, with a formatting toolbar over it and a rendered preview beside it.
+ * The two panes are the same note: [NotePreview] re-reads the source on every keystroke, so the right-hand side
+ * is what the left-hand side means, always, and neither is a separate document that could drift.
+ *
+ * ### Why source and preview rather than one editing surface
+ *
+ * Because the note's markdown is canonical. An editor that hid the markers would have to keep a map between
+ * what is drawn and what is stored for every caret move and every click — and would have to *refuse* anything
+ * its parser could not model, which is exactly the text a note is most likely to contain. Source plus preview
+ * gives the same answer to "what will this look like" while leaving the text the player wrote untouched and
+ * every markdown construct — a table, a footnote, something this build has never heard of — still typeable.
  *
  * Vanilla's [MultiLineEditBox] does all of the text handling, including selection, word motion, clipboard and
  * IME composition. It is the right tool for *source* editing precisely because it treats the text as one
- * unstyled string, which is what source is.
+ * unstyled string, which is what source is. The toolbar reaches its selection through [NoteEdits].
  *
  * There is nothing to submit. Typing marks the note dirty and the debounce writes it; leaving the screen is a
  * definite save point on top of that.
@@ -34,8 +48,22 @@ class NoteEditorScreen(
 
     private lateinit var titleBox: EditBox
     private lateinit var body: MultiLineEditBox
+    private lateinit var preview: NotePreview
+
+    /** The toolbar's buttons, so the whole row can be switched off for a read-only note in one place. */
+    private val tools = mutableListOf<Button>()
+
+    /** The colour swatches, shown only while the palette is open. */
+    private val swatches = mutableListOf<Button>()
+    private var paletteOpen = false
+    private var paletteRows = 0
+
+    private var view: NoteEditorView = NotebookConfig.editorView
 
     override fun init() {
+        tools.clear()
+        swatches.clear()
+
         titleBox = EditBox(font, MARGIN, MARGIN + 4, titleWidth(), TITLE_HEIGHT, TITLE_LABEL).apply {
             setHint(TITLE_LABEL)
             setMaxLength(MAX_TITLE)
@@ -53,8 +81,10 @@ class NoteEditorScreen(
                 .build(),
         )
 
+        buildToolbar()
+
         body = MultiLineEditBox.builder()
-            .setX(MARGIN)
+            .setX(sourceX())
             .setY(bodyTop())
             .setPlaceholder(Component.translatable("hex.notebook.editor.placeholder"))
             // The box's own background is a flat black sprite with no say in how solid it is, so the screen
@@ -62,17 +92,165 @@ class NoteEditorScreen(
             // character counter, not a background.
             .setShowBackground(false)
             .setShowDecorations(true)
-            .build(font, bodyWidth(), bodyHeight(), BODY_LABEL)
+            .build(font, sourceWidth(), bodyHeight(), BODY_LABEL)
             .apply {
                 setCharacterLimit(MAX_BODY)
                 setValue(document.source)
                 // Set after the value, so filling the box on open does not itself count as an edit and stamp
                 // the note as modified the moment it is looked at.
-                setValueListener { text -> Notebook.setSource(document, text) }
+                setValueListener { text ->
+                    Notebook.setSource(document, text)
+                    preview.setSource(text)
+                }
+                visible = view.showsSource
             }
         addRenderableWidget(body)
 
+        preview = NotePreview(font, previewX(), bodyTop(), previewWidth(), bodyHeight()).apply {
+            setSource(document.source)
+            visible = view.showsPreview
+        }
+        addRenderableWidget(preview)
+
+        buildPalette()
         buildFooter()
+    }
+
+    // ---- the toolbar -----------------------------------------------------------------------------------
+
+    /**
+     * The formatting row.
+     *
+     * Labels are symbols and stay [Component.literal] — `B`, `•`, `☑` are not language, and a translated `B`
+     * on a bold button would be a worse button. The tooltips carry the words.
+     */
+    private fun buildToolbar() {
+        var x = MARGIN
+        val y = TOOLBAR_Y
+
+        fun tool(label: Component, key: String, width: Int = TOOL_WIDTH, action: (MultilineTextField) -> Unit) {
+            val button = Button.builder(label) { onField(action) }
+                .bounds(x, y, width, TOOL_HEIGHT)
+                .tooltip(Tooltip.create(Component.translatable("hex.notebook.editor.$key")))
+                .build()
+            button.active = !document.readOnly
+            tools += button
+            addRenderableWidget(button)
+            x += width + TOOL_GAP
+        }
+
+        tool(Component.literal("B").withStyle { it.withBold(true) }, "bold") {
+            NoteEdits.toggleWrap(it, "**")
+        }
+        tool(Component.literal("I").withStyle { it.withItalic(true) }, "italic") {
+            NoteEdits.toggleWrap(it, "*")
+        }
+        tool(Component.literal("S").withStyle { it.withStrikethrough(true) }, "strikethrough") {
+            NoteEdits.toggleWrap(it, "~~")
+        }
+        tool(Component.literal("{}"), "code") { NoteEdits.toggleWrap(it, "`") }
+
+        x += TOOL_GROUP_GAP
+        tool(Component.literal("H1"), "heading1") { field ->
+            NoteEdits.toggleLinePrefix(field) { "# " }
+        }
+        tool(Component.literal("H2"), "heading2") { field ->
+            NoteEdits.toggleLinePrefix(field) { "## " }
+        }
+        tool(Component.literal("•"), "bullet") { field ->
+            NoteEdits.toggleLinePrefix(field) { "- " }
+        }
+        tool(Component.literal("1."), "numbered") { field ->
+            NoteEdits.toggleLinePrefix(field) { index -> "${index + 1}. " }
+        }
+        tool(Component.literal("☑"), "task") { NoteEdits.cycleTask(it) }
+        tool(Component.literal("❝"), "quote") { field ->
+            NoteEdits.toggleLinePrefix(field) { "> " }
+        }
+
+        x += TOOL_GROUP_GAP
+        tool(Component.literal("—"), "rule") { NoteEdits.insert(it, "\n---\n") }
+        tool(Component.literal("🔗"), "link") { field ->
+            NoteEdits.link(
+                field,
+                Component.translatable("hex.notebook.editor.link.label").string,
+                Component.translatable("hex.notebook.editor.link.target").string,
+            )
+        }
+
+        // The palette is a panel rather than a row of its own, so the toolbar stays one line on any width.
+        val palette = Button.builder(Component.literal("&")) { togglePalette() }
+            .bounds(x, y, TOOL_WIDTH, TOOL_HEIGHT)
+            .tooltip(Tooltip.create(Component.translatable("hex.notebook.editor.color")))
+            .build()
+        palette.active = !document.readOnly
+        tools += palette
+        addRenderableWidget(palette)
+
+        // Right-aligned, because it changes the shape of the screen rather than the text — it belongs with the
+        // window, not with the formatting.
+        addRenderableWidget(
+            Button.builder(viewLabel()) { cycleView() }
+                .bounds(width - MARGIN - VIEW_WIDTH, y, VIEW_WIDTH, TOOL_HEIGHT)
+                .tooltip(Tooltip.create(Component.translatable("hex.notebook.editor.view.tooltip")))
+                .build(),
+        )
+    }
+
+    /**
+     * The sixteen colours, chroma and reset, laid out under the toolbar and hidden until asked for.
+     *
+     * Built once and toggled with `visible` rather than rebuilt on each open: rebuilding the screen would take
+     * the caret and the selection with it, which are the two things a colour button exists to act on.
+     */
+    private fun buildPalette() {
+        val perRow = ((width - MARGIN * 2 + SWATCH_GAP) / (SWATCH_SIZE + SWATCH_GAP)).coerceAtLeast(1)
+        paletteRows = (PALETTE.size + perRow - 1) / perRow
+
+        PALETTE.forEachIndexed { index, entry ->
+            val row = index / perRow
+            val column = index % perRow
+            val button = Button.builder(entry.label()) { onField { NoteEdits.color(it, entry.code) } }
+                .bounds(
+                    MARGIN + column * (SWATCH_SIZE + SWATCH_GAP),
+                    paletteTop() + row * (SWATCH_SIZE + SWATCH_GAP),
+                    SWATCH_SIZE,
+                    SWATCH_SIZE,
+                )
+                .tooltip(Tooltip.create(Component.translatable(entry.tooltipKey)))
+                .build()
+            button.visible = false
+            button.active = !document.readOnly
+            swatches += button
+            // addWidget, not addRenderableWidget: the palette floats over the panes, so it is drawn by hand
+            // after them — a registered renderable would be painted under the note's own text.
+            addWidget(button)
+        }
+    }
+
+    private fun togglePalette() {
+        paletteOpen = !paletteOpen
+        swatches.forEach { it.visible = paletteOpen }
+    }
+
+    private fun cycleView() {
+        view = view.next()
+        NotebookConfig.settings.editorView = view
+        NotebookConfig.save()
+        // The panes change size as well as visibility, so this is a rebuild rather than a flag flip. The note's
+        // text survives it because the document, not the widget, is what holds it.
+        rebuildWidgets()
+    }
+
+    private fun viewLabel(): Component =
+        Component.translatable("hex.notebook.editor.view.${view.name.lowercase()}")
+
+    /** Runs a toolbar action against the source pane, then puts the caret back where the player left it. */
+    private fun onField(action: (MultilineTextField) -> Unit) {
+        if (document.readOnly) return
+        if (!view.showsSource) return
+        action(NoteEdits.fieldOf(body))
+        setFocused(body)
     }
 
     private fun buildFooter() {
@@ -107,15 +285,38 @@ class NoteEditorScreen(
         )
     }
 
+    // ---- layout ----------------------------------------------------------------------------------------
+
     private fun titleWidth(): Int = (width - MARGIN * 2 - META_WIDTH - GAP).coerceAtLeast(MIN_TITLE_WIDTH)
 
-    // The text area's box, as functions rather than fields: the background pass draws it and init places the
-    // widget at it, and the two must not be able to drift apart.
-    private fun bodyTop(): Int = HEADER_HEIGHT
+    // The panes, as functions rather than fields: the background pass draws them and init places the widgets
+    // at them, and the two must not be able to drift apart.
+    private fun bodyTop(): Int = HEADER_HEIGHT + TOOLBAR_HEIGHT
 
-    private fun bodyWidth(): Int = width - MARGIN * 2
+    private fun bodyHeight(): Int = height - bodyTop() - FOOTER_HEIGHT
 
-    private fun bodyHeight(): Int = height - HEADER_HEIGHT - FOOTER_HEIGHT
+    private fun paneWidth(): Int = width - MARGIN * 2
+
+    private fun sourceX(): Int = MARGIN
+
+    private fun sourceWidth(): Int = when (view) {
+        NoteEditorView.SPLIT -> (paneWidth() - GAP) / 2
+        else -> paneWidth()
+    }
+
+    private fun previewX(): Int = when (view) {
+        NoteEditorView.SPLIT -> MARGIN + sourceWidth() + GAP
+        else -> MARGIN
+    }
+
+    private fun previewWidth(): Int = when (view) {
+        NoteEditorView.SPLIT -> paneWidth() - sourceWidth() - GAP
+        else -> paneWidth()
+    }
+
+    private fun paletteTop(): Int = bodyTop() + SWATCH_GAP
+
+    private fun paletteHeight(): Int = paletteRows * (SWATCH_SIZE + SWATCH_GAP) + SWATCH_GAP
 
     // ---- actions ---------------------------------------------------------------------------------------
 
@@ -154,25 +355,74 @@ class NoteEditorScreen(
         browser.confirmDelete(document)
     }
 
+    /**
+     * The shortcuts every word processor has, on the pane they apply to.
+     *
+     * Checked before `super`, which would hand the key to the focused text box and have it typed as a
+     * character. Escape and the rest are left alone.
+     */
+    /**
+     * Gives the palette first refusal on a click while it is open.
+     *
+     * Screens hand a click to the first child that is under the cursor, in the order they were added, and the
+     * source pane was added before the swatches that float over it — so without this a swatch would be a hole
+     * you click straight through into the text.
+     */
+    override fun mouseClicked(event: MouseButtonEvent, doubleClick: Boolean): Boolean {
+        if (paletteOpen) {
+            val hit = swatches.firstOrNull { it.isMouseOver(event.x(), event.y()) }
+            if (hit != null) return hit.mouseClicked(event, doubleClick)
+        }
+        return super.mouseClicked(event, doubleClick)
+    }
+
+    override fun keyPressed(event: KeyEvent): Boolean {
+        if (event.hasControlDown() && !document.readOnly && body.isFocused) {
+            val marker = when (event.key) {
+                InputConstants.KEY_B -> "**"
+                InputConstants.KEY_I -> "*"
+                InputConstants.KEY_E -> "`"
+                else -> null
+            }
+            if (marker != null) {
+                onField { NoteEdits.toggleWrap(it, marker) }
+                return true
+            }
+        }
+        return super.keyPressed(event)
+    }
+
     // ---- chrome ----------------------------------------------------------------------------------------
 
     override fun extractBackground(extractor: GuiGraphicsExtractor, mouseX: Int, mouseY: Int, delta: Float) {
         super.extractBackground(extractor, mouseX, mouseY, delta)
 
         val panel = NotebookTheme.panel()
-        extractor.fill(0, 0, width, HEADER_HEIGHT, panel)
+        extractor.fill(0, 0, width, HEADER_HEIGHT + TOOLBAR_HEIGHT, panel)
         extractor.fill(0, height - FOOTER_HEIGHT, width, height, panel)
         extractor.horizontalLine(0, width, HEADER_HEIGHT - 1, NotebookTheme.DIVIDER_COLOR)
+        extractor.horizontalLine(0, width, HEADER_HEIGHT + TOOLBAR_HEIGHT - 1, NotebookTheme.DIVIDER_COLOR)
         extractor.horizontalLine(0, width, height - FOOTER_HEIGHT, NotebookTheme.DIVIDER_COLOR)
 
         // The writing surface, in place of the text area's own sprite. The outline is drawn whatever the
         // opacity is, so that at nothing at all the box still says where it ends and the world begins.
-        extractor.fill(MARGIN, bodyTop(), MARGIN + bodyWidth(), bodyTop() + bodyHeight(), NotebookTheme.body())
-        extractor.outline(MARGIN, bodyTop(), bodyWidth(), bodyHeight(), NotebookTheme.DIVIDER_COLOR)
+        if (view.showsSource) {
+            val right = sourceX() + sourceWidth()
+            extractor.fill(sourceX(), bodyTop(), right, bodyTop() + bodyHeight(), NotebookTheme.body())
+            extractor.outline(sourceX(), bodyTop(), sourceWidth(), bodyHeight(), NotebookTheme.DIVIDER_COLOR)
+        }
     }
 
     override fun extractRenderState(extractor: GuiGraphicsExtractor, mouseX: Int, mouseY: Int, delta: Float) {
         super.extractRenderState(extractor, mouseX, mouseY, delta)
+
+        // The palette floats over the panes, so it goes on last — panel first, then the swatches themselves,
+        // which are registered for events only and so are not drawn by super.
+        if (paletteOpen) {
+            extractor.fill(0, bodyTop(), width, bodyTop() + paletteHeight(), NotebookTheme.panel())
+            extractor.horizontalLine(0, width, bodyTop() + paletteHeight(), NotebookTheme.DIVIDER_COLOR)
+            swatches.forEach { it.extractRenderState(extractor, mouseX, mouseY, delta) }
+        }
 
         // Said plainly rather than left to be discovered when an edit silently fails to save. A note from a
         // newer Hex is shown, not hidden — the player can still read it and copy out of it.
@@ -198,10 +448,19 @@ class NoteEditorScreen(
         parent?.refreshRows()
     }
 
+    /** One colour the palette offers: the code it writes, and the swatch that stands for it. */
+    private class Swatch(val code: Char, val rgb: Int, val tooltipKey: String) {
+        fun label(): Component = Component.literal(SWATCH_GLYPH).withStyle { style: Style ->
+            style.withColor(rgb)
+        }
+    }
+
     private companion object {
         const val MARGIN = 6
         const val GAP = 6
         const val HEADER_HEIGHT = 32
+        const val TOOLBAR_HEIGHT = 26
+        const val TOOLBAR_Y = HEADER_HEIGHT + 3
         const val FOOTER_HEIGHT = 32
         const val TITLE_HEIGHT = 18
         const val BUTTON_HEIGHT = 20
@@ -209,6 +468,18 @@ class NoteEditorScreen(
         const val ACTION_WIDTH = 60
         const val DONE_WIDTH = 100
         const val MIN_TITLE_WIDTH = 60
+
+        const val TOOL_WIDTH = 20
+        const val TOOL_HEIGHT = 20
+        const val TOOL_GAP = 2
+
+        /** A wider gap between the inline, block and insert groups, so the row reads as three sets. */
+        const val TOOL_GROUP_GAP = 6
+        const val VIEW_WIDTH = 60
+
+        const val SWATCH_SIZE = 16
+        const val SWATCH_GAP = 3
+        const val SWATCH_GLYPH = "■"
 
         const val MAX_TITLE = 64
 
@@ -222,5 +493,30 @@ class NoteEditorScreen(
         val BODY_LABEL: Component = Component.translatable("hex.notebook.editor.body")
 
         const val WARNING_COLOR = 0xFFFFD25F.toInt()
+
+        /**
+         * Vanilla's sixteen, then chroma and reset — the same set and the same order as the codes themselves,
+         * so the palette reads as the thing it writes rather than as a designer's selection.
+         */
+        val PALETTE = listOf(
+            Swatch('0', 0x000000, "hex.notebook.editor.color.black"),
+            Swatch('1', 0x0000AA, "hex.notebook.editor.color.dark_blue"),
+            Swatch('2', 0x00AA00, "hex.notebook.editor.color.dark_green"),
+            Swatch('3', 0x00AAAA, "hex.notebook.editor.color.dark_aqua"),
+            Swatch('4', 0xAA0000, "hex.notebook.editor.color.dark_red"),
+            Swatch('5', 0xAA00AA, "hex.notebook.editor.color.dark_purple"),
+            Swatch('6', 0xFFAA00, "hex.notebook.editor.color.gold"),
+            Swatch('7', 0xAAAAAA, "hex.notebook.editor.color.gray"),
+            Swatch('8', 0x555555, "hex.notebook.editor.color.dark_gray"),
+            Swatch('9', 0x5555FF, "hex.notebook.editor.color.blue"),
+            Swatch('a', 0x55FF55, "hex.notebook.editor.color.green"),
+            Swatch('b', 0x55FFFF, "hex.notebook.editor.color.aqua"),
+            Swatch('c', 0xFF5555, "hex.notebook.editor.color.red"),
+            Swatch('d', 0xFF55FF, "hex.notebook.editor.color.light_purple"),
+            Swatch('e', 0xFFFF55, "hex.notebook.editor.color.yellow"),
+            Swatch('f', 0xFFFFFF, "hex.notebook.editor.color.white"),
+            Swatch('z', 0xFF88CC, "hex.notebook.editor.color.chroma"),
+            Swatch('r', 0xC0C0C0, "hex.notebook.editor.color.reset"),
+        )
     }
 }

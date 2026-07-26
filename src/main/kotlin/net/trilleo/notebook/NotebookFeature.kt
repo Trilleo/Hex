@@ -16,6 +16,7 @@ import net.trilleo.notebook.gui.NoteEditorScreen
 import net.trilleo.notebook.gui.NotebookScreen
 import net.trilleo.notebook.md.NoteSearch
 import net.trilleo.notebook.model.NoteDocument
+import net.trilleo.notebook.model.NoteEditorView
 import net.trilleo.notebook.model.NoteSort
 import java.util.*
 
@@ -204,6 +205,12 @@ object NotebookFeature : Feature {
             default = NoteSort.MODIFIED,
             get = { NotebookConfig.settings.sort },
             set = { NotebookConfig.settings.sort = it; NotebookConfig.save() },
+        )
+        enum(
+            "editor_view",
+            default = NoteEditorView.SPLIT,
+            get = { NotebookConfig.editorView },
+            set = { NotebookConfig.settings.editorView = it; NotebookConfig.save() },
         )
         toggle(
             "show_snippets",

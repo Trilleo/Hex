@@ -391,10 +391,29 @@ somewhere new makes that folder appear and moving the last note out makes it go 
 you stop typing and again when you close the screen.
 
 Notes are Markdown, so headings, bullet and numbered lists, task checkboxes, quotes, tables and code blocks all work,
-and a note pasted in from anywhere else already looks right. Right now you write and read that Markdown as source; a
-visual editor that renders it — along with Minecraft's colour codes, [chroma text](#chroma-text), and clickable item and
-coordinate chips — is the next piece of this feature. Notes written now carry over untouched, because the text is the
-note either way.
+and a note pasted in from anywhere else already looks right.
+
+You do not have to type any of that syntax by hand. Above the text is a **formatting toolbar** that works the way a word
+processor's does: select some text and press **B**, *I*, strikethrough or code; press **H1**, **H2**, a bullet, a number,
+a check box or a quote to change the line; drop in a divider or a link. Every button is a toggle — pressing **B** on
+text that is already bold takes it off again — and with nothing selected it leaves the cursor where you need to type.
+**Ctrl+B**, **Ctrl+I** and **Ctrl+E** do bold, italic and code from the keyboard.
+
+The **&** button opens Minecraft's sixteen colours, plus **chroma** — the flowing colour
+[item customization](#item-customization) uses — and a swatch that returns to plain. Colours are written into the note as
+`&c` codes, so they survive export and work anywhere in the text.
+
+Beside the source is a **live preview**: the note as it reads, updated as you type, with headings at their own size,
+real bullets and check boxes, a bar down quotes, code on a slab, and every colour and chroma run in colour. The button
+at the right of the toolbar switches between **Source**, **Split** and **Preview**, and remembers your choice.
+
+The preview covers most of Markdown — headings, lists, task boxes, quotes, fenced code, dividers, bold, italic,
+strikethrough, inline code and links. A table, or anything more exotic, is shown as the plain text you typed rather than
+drawn; the note is still valid Markdown either way. Two lines of prose in a row stay two lines rather than being joined
+into a paragraph, because that is what pressing Enter means when you are writing a note in a game.
+
+Editing the styled text directly — with clickable item and coordinate chips — is still to come. Notes written now carry
+over untouched, because the text is the note either way.
 
 **Details…** covers the rest of a note: its folder, its tags, the colour of the bar down its row, an item id to use as
 its icon, and whether it is pinned to the top of the list.
@@ -404,6 +423,19 @@ its icon, and whether it is pinned to the top of the list.
 The **Notebook** tab of `/hexa config` has three display settings. **Sort by** sets the order of the list — last edited,
 newest, title, or by hand — with pinned notes always at the top. **Show previews** draws the first line of each note
 under its title. **Background opacity** sets how solid the notebook and the editor are: turn it down to see the game
+through them, up for a flat backdrop behind the text. The outline of the writing area stays visible at any setting, so
+you can always tell where the text ends and the world begins.
+
+Note icons are drawn from the item registry, which the game only fills in once a world is loaded. Open the notebook from
+the title screen and the rows show no icons; everything else works, and the icons are back the moment you are in a
+world.
+
+### How it looks
+
+The **Notebook** tab of `/hexa config` has four display settings. **Sort by** sets the order of the list — last edited,
+newest, title, or by hand — with pinned notes always at the top. **Editor layout** is the same choice the editor's own
+button makes: source, preview, or both. **Show previews** draws the first line of each note under its title.
+**Background opacity** sets how solid the notebook and the editor are: turn it down to see the game
 through them, up for a flat backdrop behind the text. The outline of the writing area stays visible at any setting, so
 you can always tell where the text ends and the world begins.
 

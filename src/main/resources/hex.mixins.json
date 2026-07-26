@@ -16,6 +16,8 @@
     "KeyboardInputMixin",
     "LivingEntityMixin",
     "MouseHandlerMixin",
+    "MultiLineEditBoxAccessor",
+    "MultilineTextFieldAccessor",
     "OptionsScreenMixin"
   ],
   "injectors": {

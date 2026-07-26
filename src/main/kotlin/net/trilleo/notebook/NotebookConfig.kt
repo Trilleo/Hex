@@ -4,6 +4,7 @@ import com.google.gson.reflect.TypeToken
 import net.trilleo.config.ConfigHandle
 import net.trilleo.config.ConfigRegistry
 import net.trilleo.config.JsonConfig
+import net.trilleo.notebook.model.NoteEditorView
 import net.trilleo.notebook.model.NoteSort
 
 /**
@@ -17,6 +18,9 @@ import net.trilleo.notebook.model.NoteSort
  *   [net.trilleo.reminder.ReminderSettings.enabled] is: GSON leaves an absent `boolean` at the JVM default of
  *   `false`, so a hand-written file omitting the key would load as *disabled*, the opposite of what omitting a
  *   setting should mean. Read it through [NotebookConfig.active].
+ * @property editorView how the note editor splits its width between the markdown source and the rendered
+ *   preview. Not nullable: an unknown or absent value is repaired in [NotebookConfig.normalize], the same way
+ *   [sort] is.
  * @property backgroundOpacity how solid the notebook's own panels are, from 0 (see straight through to the
  *   game) to 1 (flat). Nullable for the same reason [enabled] is, and a worse trap here: an absent key would
  *   load as `0.0` and the whole notebook would come up invisible. Read it through
@@ -27,6 +31,7 @@ data class NotebookSettings(
     var sort: NoteSort = NoteSort.MODIFIED,
     var showSnippets: Boolean = true,
     var backgroundOpacity: Double? = null,
+    var editorView: NoteEditorView = NoteEditorView.SPLIT,
 )
 
 /**
@@ -55,6 +60,8 @@ object NotebookConfig {
 
     val sort: NoteSort get() = settings.sort
 
+    val editorView: NoteEditorView get() = settings.editorView
+
     /**
      * How solid the notebook's panels are, treating an absent key as [OPACITY_DEFAULT] and clamping anything
      * a hand-edited file supplies — a value outside the range would otherwise pack into a nonsense alpha.
@@ -78,6 +85,7 @@ object NotebookConfig {
     @Suppress("SENSELESS_COMPARISON")
     private fun normalize(settings: NotebookSettings) {
         if (settings.sort == null) settings.sort = NoteSort.MODIFIED
+        if (settings.editorView == null) settings.editorView = NoteEditorView.SPLIT
         settings.backgroundOpacity = settings.backgroundOpacity?.coerceIn(OPACITY_MIN, OPACITY_MAX)
     }
 

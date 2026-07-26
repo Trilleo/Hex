@@ -26,6 +26,16 @@
   settings, in `config/hex/notebook.json`, travel with a profile.
 + `/hexa note` gained `list`, `new`, `open`, `search`, `export` and `import`. A note is looked up by title — exactly
   first, then ignoring case, then by prefix — so `/hexa note open mining` finds "Mining routes".
++ Added a **formatting toolbar** to the note editor, working the way a word processor's does: select text and press
+  **B**, *I*, strikethrough or code; press **H1**, **H2**, bullet, numbered, check box or quote to change the whole
+  line; insert a divider or a link. Every button is a toggle, the selection survives the press so two styles can be
+  applied in a row, and **Ctrl+B**, **Ctrl+I** and **Ctrl+E** do the three commonest from the keyboard.
++ Added a **colour palette** to the editor — Minecraft's sixteen colours, **chroma**, and a swatch back to plain. It
+  writes `&c` codes into the note, so colours survive an export and read the same as a customized item name does.
++ Added a **live preview** beside the source, updated as you type: headings at their own size, real bullets and check
+  boxes, a bar down quotes, code on a slab, dividers as lines, and every colour and chroma run in colour. The toolbar's
+  right-hand button switches between **Source**, **Split** and **Preview**, and the choice is remembered as the new
+  **Editor layout** setting.
 + Added a **Background opacity** setting to the **Notebook** tab: how solid the browser and the editor are, from
   see-through to a flat backdrop. The writing area is no longer a slab of black — it uses the same setting, and keeps
   its outline at every value so you can still tell where it ends.
@@ -54,6 +64,19 @@
   load, so building the row icon's `ItemStack` before that threw `Components not bound yet` out of a screen's extract
   pass. `NoteIcon` now caches the item's `Holder` rather than a stack, checks `areComponentsBound()`, and reports no
   icon instead — which also fixes a stack cached under one world's components being drawn under another's.
++ Added `NoteBlock` and `NoteInline`, the notebook's own markdown model: a *line* parser rather than a conforming one,
+  because the preview sits beside the source and must never disagree with the line the caret is on. `NoteInline` carries
+  the legacy colour state across emphasis runs itself, so `&c**red bold**` comes out red *and* bold even though the
+  markers split the line into runs `Chroma` never sees as one string.
++ Added `NotePreview`, a scrolling `AbstractScrollArea` that lays out wrapped rows once per edit and only redraws
+  between times — except for chroma, which rebuilds on a 50 ms timer rather than per frame so a long note stays cheap.
++ Added `MultiLineEditBoxAccessor` and `MultilineTextFieldAccessor`. The toolbar needs the *selection*, and
+  `MultiLineEditBox` re-exports only `getValue`/`setValue`, a whole-document swap that would move the caret to the end
+  of the note on every button press. `getSelected()` is public but returns a protected nested record no caller can name,
+  so the two cursor fields are read directly instead. Edits go through select-then-`insertText`, the same path a paste
+  takes, which is why the value listener still saves the note with nothing extra.
++ Added `NoteBlocksTest` — eleven cases over the block parser's genuinely ambiguous edges, where a rule and a bullet
+  start with the same character and a task and a bullet with the same two.
 + The notebook's surfaces moved into a `NotebookTheme`, read per frame from `NotebookConfig.backgroundOpacity`, and the
   editor draws the text area's background itself — `MultiLineEditBox`'s own sprite is flat black with no say in how
   solid it is.
