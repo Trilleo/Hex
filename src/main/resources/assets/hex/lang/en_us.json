@@ -507,6 +507,8 @@
   "hex.config.notebook.show_snippets.tooltip": "Draw the first line of each note under its title, so a list of similarly-named notes is still navigable.",
   "hex.config.notebook.background_opacity": "Background opacity",
   "hex.config.notebook.background_opacity.tooltip": "How solid the notebook and the note editor are. Lower it to see the game through them, raise it for a flat backdrop behind the text.",
+  "hex.config.notebook.line_spacing": "Line spacing",
+  "hex.config.notebook.line_spacing.tooltip": "Extra space between the lines of a note, in the preview and the reading screen. Raise it for prose you read while playing, lower it to fit a long checklist on one screen. The editing pane uses Minecraft's own line height and is not affected.",
   "hex.notebook.title": "Notebook",
   "hex.notebook.search": "Search",
   "hex.notebook.filter.all": "All notes",

@@ -87,7 +87,8 @@ switches between **Source**, **Split** and **Preview**, and your choice is remem
 
 The preview renders headings at their own size, lists with real bullets and check boxes, quotes with a bar down the
 side, code blocks on a slab, dividers as lines, tables as aligned columns with a bold header, and every colour code and
-chroma run in colour.
+chroma run in colour. **Line spacing** in the settings sets how much air there is between lines here and on the reading
+screen.
 
 ## Reading a note
 
@@ -133,6 +134,7 @@ The **Notebook** tab of `/hexa config`:
 | **Sort by**        | **Last edited**, **Newest**, **Title** or **Manual**. Pinned notes stay on top regardless |
 | **Editor layout**  | Whether the editor shows the source, the preview, or both — the toolbar button changes it too |
 | **Show previews**  | Draw each note's first line under its title                                               |
+| **Line spacing**   | Space between the lines of a rendered note — the preview and the reading screen           |
 | **Background opacity** | How solid the browser and the editor are, from see-through to a flat backdrop         |
 
 **Background opacity** covers the whole notebook — the header and footer bars, the filter sidebar, and the writing area
@@ -178,9 +180,11 @@ the old version or the new one, never half of either.
 - **The preview understands most of Markdown, not all of it.** Headings, lists, task boxes, quotes, fenced code,
   dividers, tables, bold, italic, strikethrough, inline code and links are rendered. Anything more exotic is shown as
   the plain text you typed — the note is still correct Markdown, it is just not drawn.
-- **A table cell that is too wide is trimmed, not wrapped**, so rows stay one line and the table stays scannable. The
-  source pane always has the full text. A table also ends at the first line with no `|` in it, rather than running on
-  to the next blank line as some Markdown renderers do — prose written under a table is prose.
+- **A table cell that is too wide wraps**, and its row grows as tall as its tallest cell — nothing you typed is
+  hidden. A table ends at the first line with no `|` in it, rather than running on to the next blank line as some
+  Markdown renderers do: prose written under a table is prose.
+- **Line spacing applies to rendered notes, not to the editing pane.** The pane you type in is Minecraft's own text
+  area, which draws at a fixed line height.
 - **A line is a line.** Two lines of prose in a row stay two lines in the preview rather than being joined into one
   paragraph, because that is what someone writing a note in a game means by pressing Enter.
 - **One installation, one notebook.** Notes are not per Skyblock profile or per island.

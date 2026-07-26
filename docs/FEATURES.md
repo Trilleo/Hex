@@ -410,11 +410,10 @@ at the right of the toolbar switches between **Source**, **Split** and **Preview
 
 The preview covers headings, lists, task boxes, quotes, fenced code, dividers, tables, bold, italic, strikethrough,
 inline code and links. Tables get aligned columns and a bold header, and honour the `:---:` alignment markers; a cell too
-wide for its column is trimmed with an ellipsis rather than wrapped, so the table stays something you can scan — the
-source pane always has the full text. The **⊞** button inserts an empty table to fill in. Anything more exotic than that
-is shown as the plain text you typed; the note is still valid Markdown either way. Two lines of prose in a row stay two
-lines rather than being joined into a paragraph, because that is what pressing Enter means when you are writing a note in
-a game.
+wide for its column wraps onto as many lines as it needs, so nothing you wrote is ever hidden. The **⊞** button inserts
+an empty table to fill in. Anything more exotic than that is shown as the plain text you typed; the note is still valid
+Markdown either way. Two lines of prose in a row stay two lines rather than being joined into a paragraph, because that
+is what pressing Enter means when you are writing a note in a game.
 
 ### Reading a note
 
@@ -445,10 +444,12 @@ world.
 
 ### How it looks
 
-The **Notebook** tab of `/hexa config` has four display settings. **Sort by** sets the order of the list — last edited,
+The **Notebook** tab of `/hexa config` has five display settings. **Sort by** sets the order of the list — last edited,
 newest, title, or by hand — with pinned notes always at the top. **Editor layout** is the same choice the editor's own
-button makes: source, preview, or both. **Show previews** draws the first line of each note under its title.
-**Background opacity** sets how solid the notebook and the editor are: turn it down to see the game
+button makes: source, preview, or both. **Show previews** draws the first line of each note under its title. **Line
+spacing** adds space between the lines of a rendered note, in the preview and the reading screen — raise it for prose you
+read while playing, lower it to fit a long checklist on one screen; the editing pane uses Minecraft's own fixed line
+height and is not affected. **Background opacity** sets how solid the notebook and the editor are: turn it down to see the game
 through them, up for a flat backdrop behind the text. The outline of the writing area stays visible at any setting, so
 you can always tell where the text ends and the world begins.
 

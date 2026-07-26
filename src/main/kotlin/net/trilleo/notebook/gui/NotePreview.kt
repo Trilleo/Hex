@@ -9,6 +9,7 @@ import net.minecraft.client.input.MouseButtonEvent
 import net.minecraft.network.chat.Component
 import net.minecraft.network.chat.Style
 import net.minecraft.util.FormattedCharSequence
+import net.trilleo.notebook.NotebookConfig
 import net.trilleo.notebook.md.NoteBlock
 import net.trilleo.notebook.md.NoteInline
 import net.trilleo.util.Chroma
@@ -26,8 +27,9 @@ private const val SCROLL_RATE = 9
  *
  * ### Laid out once, drawn every frame
  *
- * Wrapping is the expensive part, so [relayout] runs when the text or the width changes and the draw pass only
- * walks rows and skips the ones outside the viewport. The exception is chroma: a flowing colour is a different
+ * Wrapping is the expensive part, so [relayout] runs when the text, the width or the line spacing changes and
+ * the draw pass only walks rows and skips the ones outside the viewport. The exception is chroma: a flowing
+ * colour is a different
  * component every frame, so a note that uses `&z` rebuilds on a timer — [ANIMATION_MS] rather than every frame,
  * which is indistinguishable to the eye and bounds the cost on a long note.
  */
@@ -60,6 +62,8 @@ class NotePreview(
         val slab: Boolean = false,
         val rule: Boolean = false,
         val cells: List<Cell>? = null,
+        /** Where the cell text sits inside this row's box — the row's own top padding, on its first line. */
+        val cellOffsetY: Int = 0,
         val grid: Grid? = null,
         /** The source line of the check box this row can toggle, when [onToggleTask] is set. */
         val taskLine: Int? = null,
@@ -68,13 +72,19 @@ class NotePreview(
     /** One table cell, already trimmed to its column. */
     private class Cell(val text: FormattedCharSequence, val x: Int)
 
-    /** Where a table row sits in its table, so the borders are drawn once each rather than per row. */
+    /**
+     * Where a laid-out line sits in its table, so the borders are drawn once each rather than per line.
+     *
+     * A table row can be several lines tall once its cells wrap, so [topRule] and [bottomRule] are about the
+     * *edges of the table*, not about which row this is — only the first line of the first row draws a top,
+     * and only the last line of a row that ends something draws a bottom.
+     */
     private class Grid(
         val columnEdges: List<Int>,
         val right: Int,
         val header: Boolean,
-        val first: Boolean,
-        val last: Boolean,
+        val topRule: Boolean,
+        val bottomRule: Boolean,
     )
 
     /**
@@ -92,6 +102,9 @@ class NotePreview(
 
     /** The width the current [rows] were wrapped at, so a resize is noticed without anyone announcing it. */
     private var laidOutAt: Int = -1
+
+    /** The line spacing they were laid out with, so a change to the setting is noticed the same way. */
+    private var spacingAt: Int = -1
 
     /** Whether the note uses chroma, and so has to be rebuilt on the clock rather than only on edits. */
     private var animated: Boolean = false
@@ -138,7 +151,7 @@ class NotePreview(
         if (!visible) return
 
         val innerWidth = innerWidth()
-        if (innerWidth != laidOutAt) relayout()
+        if (innerWidth != laidOutAt || NotebookConfig.lineSpacing != spacingAt) relayout()
         if (animated && System.currentTimeMillis() - builtAt >= ANIMATION_MS) relayout()
 
         extractor.fill(x, y, x + width, y + height, BACKGROUND_COLOR)
@@ -188,7 +201,9 @@ class NotePreview(
         }
 
         row.grid?.let { grid -> drawGrid(extractor, grid, top, row.height) }
-        row.cells?.forEach { cell -> extractor.text(font, cell.text, left + cell.x, top, row.color) }
+        row.cells?.forEach { cell ->
+            extractor.text(font, cell.text, left + cell.x, top + row.cellOffsetY, row.color)
+        }
 
         row.prefix?.let { extractor.text(font, it, left + row.prefixX, top, PREFIX_COLOR) }
 
@@ -225,15 +240,22 @@ class NotePreview(
         grid.columnEdges.drop(1).forEach { edge ->
             extractor.fill(left + edge - 1, top - 1, left + edge, top + height - 1, GRID_COLOR)
         }
-        if (grid.first) extractor.horizontalLine(left, left + grid.right, top - 1, GRID_COLOR)
-        if (grid.header || grid.last) {
-            extractor.horizontalLine(left, left + grid.right, top + height - 1, GRID_COLOR)
-        }
+        if (grid.topRule) extractor.horizontalLine(left, left + grid.right, top - 1, GRID_COLOR)
+        if (grid.bottomRule) extractor.horizontalLine(left, left + grid.right, top + height - 1, GRID_COLOR)
     }
 
     // ---- layout ----------------------------------------------------------------------------------------
 
     private fun innerWidth(): Int = (width - PADDING * 2 - scrollbarWidth()).coerceAtLeast(MIN_WIDTH)
+
+    /**
+     * How far apart lines sit — the font's own height plus whatever the player has asked for on top.
+     *
+     * A setting rather than a constant because the right answer depends on the note and the reader: prose read
+     * at a glance while playing wants air around it, a long checklist wants to fit on one screen. It is read
+     * through here rather than captured, and [spacingAt] notices when it changes.
+     */
+    private fun lineHeight(): Int = font.lineHeight + NotebookConfig.lineSpacing
 
     /**
      * Wraps every block into rows.
@@ -243,12 +265,13 @@ class NotePreview(
      */
     private fun relayout() {
         val innerWidth = innerWidth()
+        val lineHeight = lineHeight()
         val laid = mutableListOf<Row>()
         var top = 0
 
         blocks.forEach { block ->
             when (block) {
-                is NoteBlock.Blank -> top += font.lineHeight / 2
+                is NoteBlock.Blank -> top += lineHeight / 2
 
                 is NoteBlock.Rule -> {
                     laid += Row(top, RULE_HEIGHT, 0, null, RULE_COLOR, rule = true)
@@ -257,12 +280,12 @@ class NotePreview(
 
                 is NoteBlock.Heading -> {
                     val scale = headingScale(block.level)
-                    val lineHeight = (font.lineHeight * scale).toInt() + 2
+                    val headingHeight = (font.lineHeight * scale).toInt() + NotebookConfig.lineSpacing + 2
                     val text = NoteInline.render(block.text, headingStyle(block.level))
                     val wrapWidth = (innerWidth / scale).toInt().coerceAtLeast(MIN_WIDTH)
                     font.split(text, wrapWidth).forEach { line ->
-                        laid += Row(top, lineHeight, 0, line, HEADING_COLOR, scale = scale)
-                        top += lineHeight
+                        laid += Row(top, headingHeight, 0, line, HEADING_COLOR, scale = scale)
+                        top += headingHeight
                     }
                     top += HEADING_GAP
                 }
@@ -270,8 +293,8 @@ class NotePreview(
                 is NoteBlock.Paragraph -> {
                     val text = NoteInline.render(block.text)
                     font.split(text, innerWidth).forEach { line ->
-                        laid += Row(top, font.lineHeight, 0, line, TEXT_COLOR)
-                        top += font.lineHeight
+                        laid += Row(top, lineHeight, 0, line, TEXT_COLOR)
+                        top += lineHeight
                     }
                 }
 
@@ -279,15 +302,15 @@ class NotePreview(
                     val indent = block.depth * QUOTE_INDENT + QUOTE_TEXT_GAP
                     val text = NoteInline.render(block.text, QUOTE_STYLE)
                     font.split(text, (innerWidth - indent).coerceAtLeast(MIN_WIDTH)).forEach { line ->
-                        laid += Row(top, font.lineHeight, indent, line, QUOTE_COLOR, quoteDepth = block.depth)
-                        top += font.lineHeight
+                        laid += Row(top, lineHeight, indent, line, QUOTE_COLOR, quoteDepth = block.depth)
+                        top += lineHeight
                     }
                 }
 
                 is NoteBlock.Code -> {
                     val line = FormattedCharSequence.forward(block.text, CODE_STYLE)
-                    laid += Row(top, font.lineHeight, CODE_INDENT, line, CODE_COLOR, slab = true)
-                    top += font.lineHeight
+                    laid += Row(top, lineHeight, CODE_INDENT, line, CODE_COLOR, slab = true)
+                    top += lineHeight
                 }
 
                 is NoteBlock.Table -> top = layOutTable(block, innerWidth, laid, top)
@@ -306,15 +329,15 @@ class NotePreview(
                         // An empty item is a bullet someone has just typed and not yet filled in. It still
                         // takes a row, or the list would appear to swallow the line they are on.
                         laid += Row(
-                            top, font.lineHeight, textX, null, TEXT_COLOR,
+                            top, lineHeight, textX, null, TEXT_COLOR,
                             prefix = FormattedCharSequence.forward(marker, Style.EMPTY), prefixX = indent,
                             taskLine = taskLine,
                         )
-                        top += font.lineHeight
+                        top += lineHeight
                     }
                     lines.forEachIndexed { index, line ->
                         laid += Row(
-                            top, font.lineHeight, textX, line, TEXT_COLOR,
+                            top, lineHeight, textX, line, TEXT_COLOR,
                             prefix = if (index == 0) {
                                 FormattedCharSequence.forward(marker, Style.EMPTY)
                             } else {
@@ -323,7 +346,7 @@ class NotePreview(
                             prefixX = indent,
                             taskLine = taskLine.takeIf { index == 0 },
                         )
-                        top += font.lineHeight
+                        top += lineHeight
                     }
                 }
             }
@@ -332,6 +355,7 @@ class NotePreview(
         rows = laid
         laidOutHeight = top + PADDING * 2
         laidOutAt = innerWidth
+        spacingAt = NotebookConfig.lineSpacing
         builtAt = System.currentTimeMillis()
         refreshScrollAmount()
     }
@@ -340,16 +364,33 @@ class NotePreview(
      * Lays a table out as ordinary rows, and returns where the next block starts.
      *
      * Columns get their natural width when the table fits, and shares of the pane in proportion to it when it
-     * does not. A cell too long for its column is **truncated**, not wrapped: a note is read at a glance, and a
-     * table whose rows are three lines tall stops being a table anyone can scan. The source pane always has the
-     * full text.
+     * does not. **A cell too wide for its column wraps**, and the row takes the height of its tallest cell:
+     * a table that hid the end of a sentence would be a table you could not trust, and a note is not worth
+     * reading twice — once here and once in the source — to find out what it said.
+     *
+     * A column's natural width is capped at the pane, so one enormous cell asks for a large share rather than
+     * an unbounded one and its neighbours keep enough room to be read at all.
+     *
+     * ### Measured from the component that is drawn, never from the text
+     *
+     * Every cell is rendered *once*, up front, and both the column width and the wrapping come from that same
+     * component. Measuring the plain string instead would be wrong by exactly the styling: a header cell is
+     * bold, bold is a pixel wider per character in Minecraft's font, and a `Floor` heading measured plain but
+     * drawn bold overflows its column by one character — which the wrap then honours, and the table reads
+     * `Floo` / `r`. Anything that measures one thing and draws another has that bug waiting in it, so this does
+     * not have the option.
      */
     private fun layOutTable(table: NoteBlock.Table, innerWidth: Int, laid: MutableList<Row>, start: Int): Int {
         if (table.columns == 0) return start
 
         val all = listOfNotNull(table.header) + table.rows
+        val rendered = all.mapIndexed { rowIndex, cells ->
+            val style = if (table.header != null && rowIndex == 0) Style.EMPTY.withBold(true) else Style.EMPTY
+            cells.map { NoteInline.render(it, style) }
+        }
         val natural = IntArray(table.columns) { column ->
-            all.maxOf { font.width(NoteInline.plain(it[column])) } + CELL_PADDING * 2
+            val widest = rendered.maxOf { font.width(it[column]) } + CELL_PADDING * 2
+            widest.coerceAtMost(innerWidth)
         }
         val total = natural.sum().coerceAtLeast(1)
         val widths = if (total <= innerWidth) {
@@ -367,49 +408,69 @@ class NotePreview(
             running += width
         }
 
-        val rowHeight = font.lineHeight + CELL_PADDING
+        val lineHeight = lineHeight()
         var top = start
-        all.forEachIndexed { index, cells ->
-            val header = table.header != null && index == 0
-            val style = if (header) Style.EMPTY.withBold(true) else Style.EMPTY
-            val drawn = cells.mapIndexed { column, text ->
+        rendered.forEachIndexed { rowIndex, cells ->
+            val header = table.header != null && rowIndex == 0
+
+            // Every cell is wrapped to its column and the row is made as tall as the tallest of them, so a
+            // long cell costs the row height rather than costing the reader the end of the sentence.
+            val wrapped = cells.mapIndexed { column, text ->
                 val inner = (widths[column] - CELL_PADDING * 2).coerceAtLeast(1)
-                val rendered = clip(NoteInline.render(text, style), inner)
-                val slack = (inner - font.width(rendered)).coerceAtLeast(0)
-                val offset = when (table.alignments[column]) {
-                    NoteBlock.Align.RIGHT -> slack
-                    NoteBlock.Align.CENTER -> slack / 2
-                    NoteBlock.Align.LEFT -> 0
-                }
-                Cell(rendered, edges[column] + CELL_PADDING + offset)
+                inner to font.split(text, inner)
             }
-            laid += Row(
-                top,
-                rowHeight,
-                0,
-                null,
-                if (header) HEADING_COLOR else TEXT_COLOR,
-                cells = drawn,
-                grid = Grid(
-                    columnEdges = edges.toList(),
-                    right = running,
-                    header = header,
-                    first = index == 0,
-                    last = index == all.lastIndex,
-                ),
-            )
-            top += rowHeight
+            val lines = wrapped.maxOf { it.second.size }.coerceAtLeast(1)
+
+            // What the row's text actually covers: full line boxes for all but the last line, and only the
+            // glyphs for the last, because a line box carries its leading *below* the glyphs. Padding is then
+            // split evenly around that, which is what puts the text in the middle of the cell rather than
+            // hard against its top edge.
+            val content = (lines - 1) * lineHeight + TEXT_HEIGHT
+            val padTop = CELL_PADDING / 2
+            val padBottom = CELL_PADDING - padTop
+
+            repeat(lines) { lineIndex ->
+                val drawn = wrapped.mapIndexedNotNull { column, (inner, cellLines) ->
+                    // A cell shorter than its row sits in the middle of it rather than at the top: a one-line
+                    // cell beside a three-line one is the common case in a real table, and hanging it from the
+                    // top makes the row read as two rows that have come apart.
+                    val lead = (lines - cellLines.size) / 2
+                    val line = cellLines.getOrNull(lineIndex - lead) ?: return@mapIndexedNotNull null
+                    val slack = (inner - font.width(line)).coerceAtLeast(0)
+                    val offset = when (table.alignments[column]) {
+                        NoteBlock.Align.RIGHT -> slack
+                        NoteBlock.Align.CENTER -> slack / 2
+                        NoteBlock.Align.LEFT -> 0
+                    }
+                    Cell(line, edges[column] + CELL_PADDING + offset)
+                }
+                val firstOfRow = lineIndex == 0
+                val lastOfRow = lineIndex == lines - 1
+                // The heights sum to `content + CELL_PADDING` exactly, so the grid's fills stay contiguous
+                // however many lines the row turned out to be.
+                val height = (if (lastOfRow) TEXT_HEIGHT else lineHeight) +
+                    (if (firstOfRow) padTop else 0) +
+                    (if (lastOfRow) padBottom else 0)
+                laid += Row(
+                    top,
+                    height,
+                    0,
+                    null,
+                    if (header) HEADING_COLOR else TEXT_COLOR,
+                    cells = drawn,
+                    cellOffsetY = if (firstOfRow) padTop else 0,
+                    grid = Grid(
+                        columnEdges = edges.toList(),
+                        right = running,
+                        header = header,
+                        topRule = rowIndex == 0 && lineIndex == 0,
+                        bottomRule = lastOfRow && (header || rowIndex == all.lastIndex),
+                    ),
+                )
+                top += height
+            }
         }
         return top
-    }
-
-    /** [text] cut to [width], with an ellipsis when something was cut. */
-    private fun clip(text: Component, width: Int): FormattedCharSequence {
-        val lines = font.split(text, width)
-        if (lines.size <= 1) return lines.firstOrNull() ?: FormattedCharSequence.EMPTY
-        val room = (width - font.width(ELLIPSIS)).coerceAtLeast(1)
-        val head = font.split(text, room).firstOrNull() ?: FormattedCharSequence.EMPTY
-        return FormattedCharSequence.composite(head, FormattedCharSequence.forward(ELLIPSIS, Style.EMPTY))
     }
 
     private fun markerFor(item: NoteBlock.Item): String = when {
@@ -440,9 +501,18 @@ class NotePreview(
         const val QUOTE_BAR = 2
         const val QUOTE_TEXT_GAP = 6
         const val CODE_INDENT = 4
-        const val CELL_PADDING = 3
+        /** Padding inside a table cell: this much on each side, and this much split above and below. */
+        const val CELL_PADDING = 4
+
+        /**
+         * How tall a line of text actually is, as against the 9 of a line *box*.
+         *
+         * Vanilla's own number — `Button` centres its label with the same 8 — and the distinction matters here
+         * because a line box carries its leading below the glyphs, so centring on the box would sit every cell
+         * a pixel or two high.
+         */
+        const val TEXT_HEIGHT = 8
         const val MIN_CELL = 16
-        const val ELLIPSIS = "…"
 
         /** Not language: these are the glyphs a list is drawn with, the same in every locale. */
         const val BULLET = "•"

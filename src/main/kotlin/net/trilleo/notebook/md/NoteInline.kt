@@ -130,9 +130,6 @@ object NoteInline {
         return result
     }
 
-    /** Strips the markers, for anywhere that wants the words without the syntax — a list row's snippet, say. */
-    fun plain(text: String): String = render(text).string
-
     // ---- internals -------------------------------------------------------------------------------------
 
     private class Link(val label: String, val end: Int)

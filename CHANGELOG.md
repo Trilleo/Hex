@@ -40,12 +40,16 @@
   **check boxes you can still tick**. Clicking a task line writes the `x` into the note itself, so a checklist is
   usable while you play instead of being a picture of a checklist.
 + **Tables are now drawn** in the preview and the reading screen: aligned columns, a bold header on its own row, and
-  the `:---:` markers respected. A cell too wide for its column is trimmed with an ellipsis rather than wrapped, so a
-  table stays something you can scan. The toolbar's **⊞** button drops in an empty one.
+  the `:---:` markers respected. A cell too wide for its column **wraps onto as many lines as it needs** — a table
+  never hides part of what you wrote — and cell text sits in the middle of its cell, so a short cell beside a wrapped
+  one still lines up with it. The toolbar's **⊞** button drops in an empty one.
 + The colour palette now takes **any colour, not just Minecraft's sixteen**: type `#RRGGBB` in the palette's field and
   press the swatch beside it. It writes a `&#RRGGBB` code — the spelling other Skyblock mods and server plugins already
   use — which works anywhere a colour code does, [chroma text](https://github.com/Trilleo/Hex/wiki/Chroma-Text)
   included, so item names can use it too.
++ Added a **Line spacing** setting to the **Notebook** tab: extra space between the lines of a rendered note, in both
+  the editor's preview and the reading screen. The stock setting is roomier than before, and it goes from lines
+  touching to double-spaced. The editing pane keeps Minecraft's own line height, which is fixed.
 + Added a **Background opacity** setting to the **Notebook** tab: how solid the browser and the editor are, from
   see-through to a flat backdrop. The writing area is no longer a slab of black — it uses the same setting, and keeps
   its outline at every value so you can still tell where it ends.
@@ -90,6 +94,11 @@
 + Added `NoteTasks`, the one part of the reading screen that changes a note: a pure string function that flips the
   box on a given line and touches nothing else on it — not the indent, the bullet character or the spacing. Eight tests
   cover it, because it rewrites text the player wrote.
++ Table cells are wrapped to their column and the row takes the height of its tallest cell, so the grid's rules and
+  column separators are drawn per laid-out *line* rather than per row — which is also what lets a wrapped table scroll
+  and clip like everything else in the pane. Each cell is rendered once and both its column's width and its wrapping
+  come from that same component: measuring the plain string instead is wrong by exactly the styling, and a bold header
+  cell measured plain overflows its column by a character, so `Floor` wraps to `Floo` / `r`.
 + `NoteBlock` gained tables, which are the one construct that cannot be one block per line, and a source line number on
   list items, which is how a click on a rendered check box finds the character to change. A line with no pipe ends a
   table rather than joining it as a one-cell row — the one place the parser knowingly differs from GFM, and it differs

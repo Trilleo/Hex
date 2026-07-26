@@ -218,8 +218,18 @@ object NotebookFeature : Feature {
             get = { NotebookConfig.settings.showSnippets },
             set = { NotebookConfig.settings.showSnippets = it; NotebookConfig.save() },
         )
-        // markDirty, not save: a slider's setter fires every frame of a drag, and the panels are read per
-        // frame, so dragging the handle with the notebook open behind the menu fades it live.
+        // Both sliders mark dirty rather than save: a setter fires every frame of a drag, and both values are
+        // read per frame, so dragging a handle with the notebook open behind the menu shows the result live.
+        slider(
+            "line_spacing",
+            min = NotebookConfig.SPACING_MIN.toDouble(),
+            max = NotebookConfig.SPACING_MAX.toDouble(),
+            step = 1.0,
+            default = NotebookConfig.SPACING_DEFAULT.toDouble(),
+            get = { NotebookConfig.lineSpacing.toDouble() },
+            set = { NotebookConfig.settings.lineSpacing = it.toInt(); NotebookConfig.markDirty() },
+            format = { "+${it.toInt()} px" },
+        )
         slider(
             "background_opacity",
             min = NotebookConfig.OPACITY_MIN,
