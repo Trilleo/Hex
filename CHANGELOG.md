@@ -36,20 +36,20 @@
   boxes, a bar down quotes, code on a slab, dividers as lines, and every colour and chroma run in colour. The toolbar's
   right-hand button switches between **Source**, **Split** and **Preview**, and the choice is remembered as the new
   **Editor layout** setting.
-+ Added a **View** button to every note in the browser, opening the note full width with nothing to edit — and
-  **check boxes you can still tick**. Clicking a task line writes the `x` into the note itself, so a checklist is
-  usable while you play instead of being a picture of a checklist.
-+ **Tables are now drawn** in the preview and the reading screen: aligned columns, a bold header on its own row, and
-  the `:---:` markers respected. A cell too wide for its column **wraps onto as many lines as it needs** — a table
-  never hides part of what you wrote — and cell text sits in the middle of its cell, so a short cell beside a wrapped
-  one still lines up with it. The toolbar's **⊞** button drops in an empty one.
++ Added a **View** button to every note in the browser, opening the note full width with nothing to edit — and **check
+  boxes you can still tick**. Clicking a task line writes the `x` into the note itself, so a checklist is usable while
+  you play instead of being a picture of a checklist.
++ **Tables are now drawn** in the preview and the reading screen: aligned columns, a bold header on its own row, and the
+  `:---:` markers respected. A cell too wide for its column **wraps onto as many lines as it needs** — a table never
+  hides part of what you wrote — and cell text sits in the middle of its cell, so a short cell beside a wrapped one
+  still lines up with it. The toolbar's **⊞** button drops in an empty one.
 + The colour palette now takes **any colour, not just Minecraft's sixteen**: type `#RRGGBB` in the palette's field and
   press the swatch beside it. It writes a `&#RRGGBB` code — the spelling other Skyblock mods and server plugins already
   use — which works anywhere a colour code does, [chroma text](https://github.com/Trilleo/Hex/wiki/Chroma-Text)
   included, so item names can use it too.
 + Added a **Line spacing** setting to the **Notebook** tab: extra space between the lines of a rendered note, in both
-  the editor's preview and the reading screen. The stock setting is roomier than before, and it goes from lines
-  touching to double-spaced. The editing pane keeps Minecraft's own line height, which is fixed.
+  the editor's preview and the reading screen. The stock setting is roomier than before, and it goes from lines touching
+  to double-spaced. The editing pane keeps Minecraft's own line height, which is fixed.
 + Added a **Background opacity** setting to the **Notebook** tab: how solid the browser and the editor are, from
   see-through to a flat backdrop. The writing area is no longer a slab of black — it uses the same setting, and keeps
   its outline at every value so you can still tell where it ends.
@@ -91,8 +91,8 @@
   takes, which is why the value listener still saves the note with nothing extra.
 + Added `NoteBlocksTest` — eleven cases over the block parser's genuinely ambiguous edges, where a rule and a bullet
   start with the same character and a task and a bullet with the same two.
-+ Added `NoteTasks`, the one part of the reading screen that changes a note: a pure string function that flips the
-  box on a given line and touches nothing else on it — not the indent, the bullet character or the spacing. Eight tests
++ Added `NoteTasks`, the one part of the reading screen that changes a note: a pure string function that flips the box
+  on a given line and touches nothing else on it — not the indent, the bullet character or the spacing. Eight tests
   cover it, because it rewrites text the player wrote.
 + Table cells are wrapped to their column and the row takes the height of its tallest cell, so the grid's rules and
   column separators are drawn per laid-out *line* rather than per row — which is also what lets a wrapped table scroll
