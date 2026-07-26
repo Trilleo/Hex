@@ -65,6 +65,7 @@ does — select some text, press a button:
 | **☑**        | Checklist item — press again to tick it, again to undo it      |
 | **❝**        | Quote                                                          |
 | **—**        | Divider                                                        |
+| **⊞**        | Table — inserts an empty one to fill in                         |
 | **🔗**       | Link — the selection becomes the label                         |
 | **&**        | Opens the colour palette                                       |
 
@@ -73,8 +74,10 @@ button leaves the cursor exactly where you need to start typing. **Ctrl+B**, **C
 and code without reaching for the mouse.
 
 The **&** button opens Minecraft's sixteen colours, plus **chroma** — a colour that flows, the same one
-[item customization](Item-Customization) uses — and a swatch that goes back to plain. Colours are written as `&c` codes
-in the text, so a note keeps its colours when you export it, and they work anywhere in a note.
+[item customization](Item-Customization) uses — and a swatch that goes back to plain. Below them is a field for **any**
+colour: type `#RRGGBB`, press the swatch beside it, and the selection is wrapped in a `&#RRGGBB` code. Colours are
+written into the text, so a note keeps them when you export it, and they work anywhere in a note — see
+[Chroma text](Chroma-Text).
 
 ### The preview
 
@@ -83,7 +86,17 @@ switches between **Source**, **Split** and **Preview**, and your choice is remem
 **Preview** on their own give the text more room than a split does.
 
 The preview renders headings at their own size, lists with real bullets and check boxes, quotes with a bar down the
-side, code blocks on a slab, dividers as lines, and every colour code and chroma run in colour.
+side, code blocks on a slab, dividers as lines, tables as aligned columns with a bold header, and every colour code and
+chroma run in colour.
+
+## Reading a note
+
+**View** on a note's row opens it full width — no toolbar, no source pane, just the note as it reads, for following a
+route or a checklist while you play.
+
+It is not quite read-only: **check boxes still tick**. Click a task line and the `x` is written into the note, exactly as
+if you had typed it, so a checklist is usable rather than decorative. **Edit** in the footer opens the same note in the
+editor.
 
 ## Details
 
@@ -163,8 +176,11 @@ the old version or the new one, never half of either.
   item and coordinate chips — is still to come, and notes you write now carry over unchanged, because the text is the
   note either way.
 - **The preview understands most of Markdown, not all of it.** Headings, lists, task boxes, quotes, fenced code,
-  dividers, bold, italic, strikethrough, inline code and links are rendered. Tables and anything more exotic are shown
-  as the plain text you typed — the note is still correct Markdown, it just is not drawn as a table.
+  dividers, tables, bold, italic, strikethrough, inline code and links are rendered. Anything more exotic is shown as
+  the plain text you typed — the note is still correct Markdown, it is just not drawn.
+- **A table cell that is too wide is trimmed, not wrapped**, so rows stay one line and the table stays scannable. The
+  source pane always has the full text. A table also ends at the first line with no `|` in it, rather than running on
+  to the next blank line as some Markdown renderers do — prose written under a table is prose.
 - **A line is a line.** Two lines of prose in a row stay two lines in the preview rather than being joined into one
   paragraph, because that is what someone writing a note in a game means by pressing Enter.
 - **One installation, one notebook.** Notes are not per Skyblock profile or per island.

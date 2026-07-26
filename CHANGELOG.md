@@ -36,6 +36,16 @@
   boxes, a bar down quotes, code on a slab, dividers as lines, and every colour and chroma run in colour. The toolbar's
   right-hand button switches between **Source**, **Split** and **Preview**, and the choice is remembered as the new
   **Editor layout** setting.
++ Added a **View** button to every note in the browser, opening the note full width with nothing to edit — and
+  **check boxes you can still tick**. Clicking a task line writes the `x` into the note itself, so a checklist is
+  usable while you play instead of being a picture of a checklist.
++ **Tables are now drawn** in the preview and the reading screen: aligned columns, a bold header on its own row, and
+  the `:---:` markers respected. A cell too wide for its column is trimmed with an ellipsis rather than wrapped, so a
+  table stays something you can scan. The toolbar's **⊞** button drops in an empty one.
++ The colour palette now takes **any colour, not just Minecraft's sixteen**: type `#RRGGBB` in the palette's field and
+  press the swatch beside it. It writes a `&#RRGGBB` code — the spelling other Skyblock mods and server plugins already
+  use — which works anywhere a colour code does, [chroma text](https://github.com/Trilleo/Hex/wiki/Chroma-Text)
+  included, so item names can use it too.
 + Added a **Background opacity** setting to the **Notebook** tab: how solid the browser and the editor are, from
   see-through to a flat backdrop. The writing area is no longer a slab of black — it uses the same setting, and keeps
   its outline at every value so you can still tell where it ends.
@@ -77,6 +87,17 @@
   takes, which is why the value listener still saves the note with nothing extra.
 + Added `NoteBlocksTest` — eleven cases over the block parser's genuinely ambiguous edges, where a rule and a bullet
   start with the same character and a task and a bullet with the same two.
++ Added `NoteTasks`, the one part of the reading screen that changes a note: a pure string function that flips the
+  box on a given line and touches nothing else on it — not the indent, the bullet character or the spacing. Eight tests
+  cover it, because it rewrites text the player wrote.
++ `NoteBlock` gained tables, which are the one construct that cannot be one block per line, and a source line number on
+  list items, which is how a click on a rendered check box finds the character to change. A line with no pipe ends a
+  table rather than joining it as a one-cell row — the one place the parser knowingly differs from GFM, and it differs
+  the way a note behaves.
++ `Chroma` learned `&#RRGGBB`, so every consumer of it — note text, note titles, item names, the HUD — gained full RGB
+  at once rather than the notebook growing a private colour syntax.
++ The editor's panes stop short of the footer by the height of `MultiLineEditBox`'s character counter, which the widget
+  draws just below itself with no say in the matter — it was landing under the Done button.
 + The notebook's surfaces moved into a `NotebookTheme`, read per frame from `NotebookConfig.backgroundOpacity`, and the
   editor draws the text area's background itself — `MultiLineEditBox`'s own sprite is flat black with no say in how
   solid it is.

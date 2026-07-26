@@ -120,4 +120,83 @@ class NoteBlocksTest {
         assertEquals(2, blocks.size)
         assertEquals("check the boss room", (blocks[0] as NoteBlock.Paragraph).text)
     }
+
+    /** The reading screen turns a click into a line number, so items have to know which line they came from. */
+    @Test
+    fun `items remember their source line`() {
+        val blocks = parse("intro\n\n- [ ] first\n- [ ] second")
+
+        assertEquals(2, (blocks[2] as NoteBlock.Item).line)
+        assertEquals(3, (blocks[3] as NoteBlock.Item).line)
+    }
+
+    // ---- tables --------------------------------------------------------------------------------------
+
+    @Test
+    fun `a header, a rule and rows become one table block`() {
+        val blocks = parse("| Floor | Score |\n|-------|-------|\n| F7 | 300 |\n| M7 | 320 |")
+
+        assertEquals(1, blocks.size)
+        val table = blocks[0] as NoteBlock.Table
+        assertEquals(listOf("Floor", "Score"), table.header)
+        assertEquals(listOf(listOf("F7", "300"), listOf("M7", "320")), table.rows)
+    }
+
+    /** The rule is what makes a table a table — otherwise every sentence with a pipe in it becomes a grid. */
+    @Test
+    fun `pipes without a rule under them stay prose`() {
+        val blocks = parse("use /warp | it is faster\nsecond line")
+
+        assertTrue(blocks.all { it is NoteBlock.Paragraph })
+    }
+
+    @Test
+    fun `alignment markers are read from the rule`() {
+        val table = parse("| a | b | c |\n|:---|:---:|---:|\n| 1 | 2 | 3 |")[0] as NoteBlock.Table
+
+        assertEquals(
+            listOf(NoteBlock.Align.LEFT, NoteBlock.Align.CENTER, NoteBlock.Align.RIGHT),
+            table.alignments,
+        )
+    }
+
+    @Test
+    fun `outer pipes are optional, and a ragged row is padded or trimmed to the header`() {
+        val table = parse("Floor | Score\n------|------\nF7 |\nM7 | 320 | extra")[0] as NoteBlock.Table
+
+        assertEquals(2, table.columns)
+        assertEquals(listOf("F7", ""), table.rows[0])
+        assertEquals(listOf("M7", "320"), table.rows[1])
+    }
+
+    /**
+     * A line with no pipe at all ends the table, rather than joining it as a one-cell row.
+     *
+     * GFM would keep going to the next blank line. This is the one place the parser knowingly differs, and it
+     * differs the way a note behaves: prose written straight under a table is prose, not a row with a cell
+     * missing.
+     */
+    @Test
+    fun `a line without a pipe ends the table`() {
+        val blocks = parse("| a |\n|---|\n| 1 |\nand then prose")
+
+        val table = blocks[0] as NoteBlock.Table
+        assertEquals(listOf(listOf("1")), table.rows)
+        assertEquals("and then prose", (blocks[1] as NoteBlock.Paragraph).text)
+    }
+
+    @Test
+    fun `an escaped pipe stays inside its cell`() {
+        val table = parse("| a | b |\n|---|---|\n| one \\| two | three |")[0] as NoteBlock.Table
+
+        assertEquals(listOf("one | two", "three"), table.rows[0])
+    }
+
+    @Test
+    fun `the block after a table is parsed normally`() {
+        val blocks = parse("| a |\n|---|\n| 1 |\n# After")
+
+        assertEquals(2, blocks.size)
+        assertEquals(1, (blocks[1] as NoteBlock.Heading).level)
+    }
 }

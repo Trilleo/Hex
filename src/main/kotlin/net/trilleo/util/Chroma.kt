@@ -136,6 +136,34 @@ object Chroma {
     private fun isMarker(c: Char): Boolean = c == SECTION || c == AMPERSAND
 
     /**
+     * The colour of a `&#RRGGBB` code starting at [i], or null when that is not what is there.
+     *
+     * Minecraft's sixteen codes are sixteen colours, which is not many when the thing being coloured is a
+     * player's own text. Components carry a full RGB colour, so the only thing missing was a way to *write*
+     * one; `&#RRGGBB` is the spelling plugins and the other Skyblock mods already use, so text pasted from
+     * either side keeps its colours.
+     *
+     * Always [HEX_LENGTH] characters when it matches, so a caller advances by that.
+     */
+    fun hexAt(raw: String, i: Int): Int? {
+        if (i + HEX_LENGTH > raw.length) return null
+        if (!isMarker(raw[i]) || raw[i + 1] != HEX_MARKER) return null
+        var rgb = 0
+        for (offset in 2 until HEX_LENGTH) {
+            val digit = Character.digit(raw[i + offset], 16)
+            if (digit < 0) return null
+            rgb = (rgb shl 4) or digit
+        }
+        return rgb
+    }
+
+    /** `&`, `#`, and six digits. */
+    const val HEX_LENGTH: Int = 8
+
+    /** The character that turns a marker into a hex colour rather than a one-letter code. */
+    const val HEX_MARKER: Char = '#'
+
+    /**
      * Walks the text once, holding the style the codes have built up so far.
      *
      * A class rather than a nest of local functions because there are seven pieces of state to carry and every
@@ -173,6 +201,17 @@ object Chroma {
             var i = 0
             while (i < raw.length) {
                 val c = raw[i]
+
+                // Checked before the one-letter codes, because `&#` is not one of them and would otherwise be
+                // emitted as two literal characters.
+                val hex = Chroma.hexAt(raw, i)
+                if (hex != null) {
+                    flush()
+                    applyColor(hex)
+                    i += Chroma.HEX_LENGTH
+                    continue
+                }
+
                 val code = if (Chroma.isMarker(c) && i + 1 < raw.length) raw[i + 1].lowercaseChar() else null
                 // An unknown code is not a code: an item genuinely called "Rock & Roll" keeps its ampersand.
                 if (code != null && applies(code)) {
@@ -204,10 +243,7 @@ object Chroma {
             }
             val formatting = ChatFormatting.getByCode(code) ?: return
             if (formatting.isColor) {
-                // Legacy behaviour: a colour code also clears bold, italic and the rest.
-                color = formatting.color
-                chroma = false
-                clearFormats()
+                applyColor(formatting.color)
                 return
             }
             when (formatting) {
@@ -219,6 +255,13 @@ object Chroma {
                 // RESET is handled above; nothing else reaches here.
                 else -> Unit
             }
+        }
+
+        /** Legacy behaviour, and the same for a hex colour: setting a colour also clears bold, italic and the rest. */
+        private fun applyColor(rgb: Int?) {
+            color = rgb
+            chroma = false
+            clearFormats()
         }
 
         private fun clearFormats() {

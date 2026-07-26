@@ -71,22 +71,27 @@ object NoteEdits {
     }
 
     /**
-     * Colours the selection: `&c` before it and `&r` after, or a bare `&c` at the caret when nothing is
+     * Colours the selection: the code before it and `&r` after, or the bare code at the caret when nothing is
      * selected.
+     *
+     * [code] is what follows the `&` — one of the sixteen letters, `z` for chroma, `r` for plain, or `#RRGGBB`
+     * for a colour Minecraft has no letter for. It is passed as text rather than as a character precisely so
+     * that the last of those is not a second kind of operation.
      *
      * `&r` rather than restoring whatever colour was in force before, because a note is read as much in its
      * source form as rendered, and a reset is the one ending a reader can follow without tracking state.
      */
-    fun color(field: MultilineTextField, code: Char) {
+    fun color(field: MultilineTextField, code: String) {
         val (start, end) = field.selectedRange()
         val selected = field.value().substring(start, end)
+        val opening = "&$code"
         if (selected.isEmpty()) {
-            replace(field, start, end, "&$code")
-            select(field, start + 2, start + 2)
+            replace(field, start, end, opening)
+            select(field, start + opening.length, start + opening.length)
             return
         }
-        replace(field, start, end, "&$code$selected&r")
-        select(field, start + 2, start + 2 + selected.length)
+        replace(field, start, end, "$opening$selected&r")
+        select(field, start + opening.length, start + opening.length + selected.length)
     }
 
     /** Inserts [text] over the selection and leaves the caret after it — rules, and anything else literal. */

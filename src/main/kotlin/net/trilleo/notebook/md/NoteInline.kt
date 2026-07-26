@@ -170,6 +170,12 @@ object NoteInline {
         var current = state
         var i = 0
         while (i < run.length - 1) {
+            val hex = Chroma.hexAt(run, i)
+            if (hex != null) {
+                current = CodeState(hex, chroma = false)
+                i += Chroma.HEX_LENGTH
+                continue
+            }
             if (run[i] == '&' || run[i] == '§') {
                 when (val code = run[i + 1].lowercaseChar()) {
                     Chroma.CODE -> current = CodeState(current.color, chroma = true)

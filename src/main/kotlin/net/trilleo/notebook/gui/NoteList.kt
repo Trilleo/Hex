@@ -97,6 +97,12 @@ class NoteList(
             .tooltip(Tooltip.create(Component.translatable("hex.notebook.pin.tooltip")))
             .build()
 
+        private val viewButton: Button = Button.builder(Component.translatable("hex.notebook.view")) {
+            Minecraft.getInstance().setScreen(NoteViewScreen(screen, document))
+        }.bounds(0, 0, EDIT_WIDTH, WIDGET_HEIGHT)
+            .tooltip(Tooltip.create(Component.translatable("hex.notebook.view.tooltip")))
+            .build()
+
         private val editButton: Button = Button.builder(Component.translatable("hex.notebook.edit")) {
             Minecraft.getInstance().setScreen(NoteEditorScreen(screen, document))
         }.bounds(0, 0, EDIT_WIDTH, WIDGET_HEIGHT).build()
@@ -115,7 +121,7 @@ class NoteList(
             .build()
 
         override val widgets: List<AbstractWidget> =
-            listOf(pinButton, editButton, duplicateButton, deleteButton)
+            listOf(pinButton, viewButton, editButton, duplicateButton, deleteButton)
 
         override fun extractContent(
             extractor: GuiGraphicsExtractor,
@@ -143,7 +149,7 @@ class NoteList(
             }
             x += ICON + GAP
 
-            val buttonsWidth = SMALL_WIDTH * 3 + EDIT_WIDTH + GAP * 3
+            val buttonsWidth = SMALL_WIDTH * 3 + EDIT_WIDTH * 2 + GAP * 4
             val available = (contentRight - buttonsWidth - GAP - x).coerceAtLeast(MIN_TEXT_WIDTH)
 
             // The title goes through Chroma so a note can be named in colour — and in flowing colour — exactly
@@ -181,6 +187,10 @@ class NoteList(
 
             place(editButton, right, EDIT_WIDTH)
             draw(editButton, extractor, mouseX, mouseY, delta)
+            right -= EDIT_WIDTH + GAP
+
+            place(viewButton, right, EDIT_WIDTH)
+            draw(viewButton, extractor, mouseX, mouseY, delta)
             right -= SMALL_WIDTH + GAP
 
             place(pinButton, right, SMALL_WIDTH)

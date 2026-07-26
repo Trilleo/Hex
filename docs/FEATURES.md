@@ -400,17 +400,30 @@ text that is already bold takes it off again — and with nothing selected it le
 **Ctrl+B**, **Ctrl+I** and **Ctrl+E** do bold, italic and code from the keyboard.
 
 The **&** button opens Minecraft's sixteen colours, plus **chroma** — the flowing colour
-[item customization](#item-customization) uses — and a swatch that returns to plain. Colours are written into the note as
-`&c` codes, so they survive export and work anywhere in the text.
+[item customization](#item-customization) uses — and a swatch that returns to plain. It also takes **any** colour: type
+`#RRGGBB` into the palette's field and press the swatch next to it. Colours are written into the note as `&c` or
+`&#RRGGBB` codes, so they survive export and work anywhere in the text.
 
 Beside the source is a **live preview**: the note as it reads, updated as you type, with headings at their own size,
 real bullets and check boxes, a bar down quotes, code on a slab, and every colour and chroma run in colour. The button
 at the right of the toolbar switches between **Source**, **Split** and **Preview**, and remembers your choice.
 
-The preview covers most of Markdown — headings, lists, task boxes, quotes, fenced code, dividers, bold, italic,
-strikethrough, inline code and links. A table, or anything more exotic, is shown as the plain text you typed rather than
-drawn; the note is still valid Markdown either way. Two lines of prose in a row stay two lines rather than being joined
-into a paragraph, because that is what pressing Enter means when you are writing a note in a game.
+The preview covers headings, lists, task boxes, quotes, fenced code, dividers, tables, bold, italic, strikethrough,
+inline code and links. Tables get aligned columns and a bold header, and honour the `:---:` alignment markers; a cell too
+wide for its column is trimmed with an ellipsis rather than wrapped, so the table stays something you can scan — the
+source pane always has the full text. The **⊞** button inserts an empty table to fill in. Anything more exotic than that
+is shown as the plain text you typed; the note is still valid Markdown either way. Two lines of prose in a row stay two
+lines rather than being joined into a paragraph, because that is what pressing Enter means when you are writing a note in
+a game.
+
+### Reading a note
+
+**View** on a note's row opens it full width with no toolbar and no source pane — the note as it reads, as large as the
+screen allows, for following directions or a checklist while you play.
+
+It is not quite read-only: **check boxes still tick**. Clicking a task line writes the `x` into the note's markdown, the
+same edit as typing it yourself, so the list is one you can actually use. **Edit** in the footer opens the same note in
+the editor. A note written by a newer Hex is shown but cannot be ticked, for the same reason its editor is read-only.
 
 Editing the styled text directly — with clickable item and coordinate chips — is still to come. Notes written now carry
 over untouched, because the text is the note either way.

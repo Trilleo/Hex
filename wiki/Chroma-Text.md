@@ -19,6 +19,12 @@ leaves the first word grey and flows the second.
 
 `&z` is the same code **NotEnoughUpdates** and **SkyHanni** use, so a name copied from either works here unchanged.
 
+## Any colour, not just the sixteen
+
+`&#RRGGBB` sets a colour Minecraft has no code for — `&#FF8800 Sunset` is orange, and it ends the same way any colour
+does, at the next code or `&r`. It works wherever `&` codes do: item names, [note](Notebook) text, note titles. The
+notebook's colour palette writes it for you.
+
 ## Settings
 
 Two settings on the **Item Customization** tab of `/hexa config`. Both apply to **every chroma name at once** — one item

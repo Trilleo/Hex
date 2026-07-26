@@ -59,7 +59,31 @@ class NotePreview(
         val quoteDepth: Int = 0,
         val slab: Boolean = false,
         val rule: Boolean = false,
+        val cells: List<Cell>? = null,
+        val grid: Grid? = null,
+        /** The source line of the check box this row can toggle, when [onToggleTask] is set. */
+        val taskLine: Int? = null,
     )
+
+    /** One table cell, already trimmed to its column. */
+    private class Cell(val text: FormattedCharSequence, val x: Int)
+
+    /** Where a table row sits in its table, so the borders are drawn once each rather than per row. */
+    private class Grid(
+        val columnEdges: List<Int>,
+        val right: Int,
+        val header: Boolean,
+        val first: Boolean,
+        val last: Boolean,
+    )
+
+    /**
+     * Called with a source line number when a check box is clicked, or null for a pane that only displays.
+     *
+     * This is the whole difference between the editor's preview and the reading screen: the same widget, with
+     * or without the one interaction that changes the note. See [net.trilleo.notebook.md.NoteTasks].
+     */
+    var onToggleTask: ((Int) -> Unit)? = null
 
     private var source: String = ""
     private var blocks: List<NoteBlock> = emptyList()
@@ -90,6 +114,19 @@ class NotePreview(
 
     override fun onClick(event: MouseButtonEvent, doubleClick: Boolean) {
         updateScrolling(event)
+
+        val toggle = onToggleTask ?: return
+        if (isOverScrollbar(event.x(), event.y())) return
+        rowAt(event.y())?.taskLine?.let(toggle)
+    }
+
+    /** The row under [mouseY], in screen coordinates, or null for the padding between them. */
+    private fun rowAt(mouseY: Double): Row? {
+        val scroll = scrollAmount().toInt()
+        return rows.firstOrNull { row ->
+            val top = y + PADDING + row.top - scroll
+            mouseY >= top && mouseY < top + row.height
+        }
     }
 
     override fun extractWidgetRenderState(
@@ -112,13 +149,22 @@ class NotePreview(
             return
         }
 
+        val hovered = if (onToggleTask != null && isHovered) rowAt(mouseY.toDouble()) else null
+
         extractor.enableScissor(x + 1, y + 1, x + width - 1, y + height - 1)
         val scroll = scrollAmount().toInt()
         rows.forEach { row ->
             val top = y + PADDING + row.top - scroll
             // Rows are in order, so everything below the pane is as well — but the loop is cheap and stopping
             // early would need an index dance that buys nothing at these sizes.
-            if (top + row.height >= y && top <= y + height) draw(extractor, row, top)
+            if (top + row.height >= y && top <= y + height) {
+                // A tickable line says so before it is clicked, since nothing else on a reading screen reacts
+                // to the mouse at all.
+                if (row === hovered && row.taskLine != null) {
+                    extractor.fill(x + 1, top - 1, x + width - 1, top + row.height - 1, HOVER_COLOR)
+                }
+                draw(extractor, row, top)
+            }
         }
         extractor.disableScissor()
 
@@ -141,6 +187,9 @@ class NotePreview(
             return
         }
 
+        row.grid?.let { grid -> drawGrid(extractor, grid, top, row.height) }
+        row.cells?.forEach { cell -> extractor.text(font, cell.text, left + cell.x, top, row.color) }
+
         row.prefix?.let { extractor.text(font, it, left + row.prefixX, top, PREFIX_COLOR) }
 
         val text = row.text ?: return
@@ -160,6 +209,26 @@ class NotePreview(
             row.color,
         )
         extractor.pose().popMatrix()
+    }
+
+    /**
+     * A table row's borders: the lines between its columns, and the rules that close the table off.
+     *
+     * Drawn per row rather than per table because a table is laid out as rows like everything else — which is
+     * what lets it scroll and be clipped without knowing it is a table at all.
+     */
+    private fun drawGrid(extractor: GuiGraphicsExtractor, grid: Grid, top: Int, height: Int) {
+        val left = x + PADDING
+        if (grid.header) {
+            extractor.fill(left, top - 1, left + grid.right, top + height - 1, SLAB_COLOR)
+        }
+        grid.columnEdges.drop(1).forEach { edge ->
+            extractor.fill(left + edge - 1, top - 1, left + edge, top + height - 1, GRID_COLOR)
+        }
+        if (grid.first) extractor.horizontalLine(left, left + grid.right, top - 1, GRID_COLOR)
+        if (grid.header || grid.last) {
+            extractor.horizontalLine(left, left + grid.right, top + height - 1, GRID_COLOR)
+        }
     }
 
     // ---- layout ----------------------------------------------------------------------------------------
@@ -221,6 +290,8 @@ class NotePreview(
                     top += font.lineHeight
                 }
 
+                is NoteBlock.Table -> top = layOutTable(block, innerWidth, laid, top)
+
                 is NoteBlock.Item -> {
                     val indent = block.depth * LIST_INDENT
                     val marker = markerFor(block)
@@ -228,12 +299,16 @@ class NotePreview(
                     val textX = indent + markerWidth
                     val text = NoteInline.render(block.text)
                     val lines = font.split(text, (innerWidth - textX).coerceAtLeast(MIN_WIDTH))
+                    // Only the first row of an item carries the line number: a click anywhere on a wrapped
+                    // item would otherwise tick a box several rows above the cursor.
+                    val taskLine = block.line.takeIf { block.done != null }
                     if (lines.isEmpty()) {
                         // An empty item is a bullet someone has just typed and not yet filled in. It still
                         // takes a row, or the list would appear to swallow the line they are on.
                         laid += Row(
                             top, font.lineHeight, textX, null, TEXT_COLOR,
                             prefix = FormattedCharSequence.forward(marker, Style.EMPTY), prefixX = indent,
+                            taskLine = taskLine,
                         )
                         top += font.lineHeight
                     }
@@ -246,6 +321,7 @@ class NotePreview(
                                 null
                             },
                             prefixX = indent,
+                            taskLine = taskLine.takeIf { index == 0 },
                         )
                         top += font.lineHeight
                     }
@@ -258,6 +334,82 @@ class NotePreview(
         laidOutAt = innerWidth
         builtAt = System.currentTimeMillis()
         refreshScrollAmount()
+    }
+
+    /**
+     * Lays a table out as ordinary rows, and returns where the next block starts.
+     *
+     * Columns get their natural width when the table fits, and shares of the pane in proportion to it when it
+     * does not. A cell too long for its column is **truncated**, not wrapped: a note is read at a glance, and a
+     * table whose rows are three lines tall stops being a table anyone can scan. The source pane always has the
+     * full text.
+     */
+    private fun layOutTable(table: NoteBlock.Table, innerWidth: Int, laid: MutableList<Row>, start: Int): Int {
+        if (table.columns == 0) return start
+
+        val all = listOfNotNull(table.header) + table.rows
+        val natural = IntArray(table.columns) { column ->
+            all.maxOf { font.width(NoteInline.plain(it[column])) } + CELL_PADDING * 2
+        }
+        val total = natural.sum().coerceAtLeast(1)
+        val widths = if (total <= innerWidth) {
+            natural
+        } else {
+            IntArray(table.columns) {
+                (natural[it].toLong() * innerWidth / total).toInt().coerceAtLeast(MIN_CELL)
+            }
+        }
+
+        val edges = IntArray(table.columns)
+        var running = 0
+        widths.forEachIndexed { index, width ->
+            edges[index] = running
+            running += width
+        }
+
+        val rowHeight = font.lineHeight + CELL_PADDING
+        var top = start
+        all.forEachIndexed { index, cells ->
+            val header = table.header != null && index == 0
+            val style = if (header) Style.EMPTY.withBold(true) else Style.EMPTY
+            val drawn = cells.mapIndexed { column, text ->
+                val inner = (widths[column] - CELL_PADDING * 2).coerceAtLeast(1)
+                val rendered = clip(NoteInline.render(text, style), inner)
+                val slack = (inner - font.width(rendered)).coerceAtLeast(0)
+                val offset = when (table.alignments[column]) {
+                    NoteBlock.Align.RIGHT -> slack
+                    NoteBlock.Align.CENTER -> slack / 2
+                    NoteBlock.Align.LEFT -> 0
+                }
+                Cell(rendered, edges[column] + CELL_PADDING + offset)
+            }
+            laid += Row(
+                top,
+                rowHeight,
+                0,
+                null,
+                if (header) HEADING_COLOR else TEXT_COLOR,
+                cells = drawn,
+                grid = Grid(
+                    columnEdges = edges.toList(),
+                    right = running,
+                    header = header,
+                    first = index == 0,
+                    last = index == all.lastIndex,
+                ),
+            )
+            top += rowHeight
+        }
+        return top
+    }
+
+    /** [text] cut to [width], with an ellipsis when something was cut. */
+    private fun clip(text: Component, width: Int): FormattedCharSequence {
+        val lines = font.split(text, width)
+        if (lines.size <= 1) return lines.firstOrNull() ?: FormattedCharSequence.EMPTY
+        val room = (width - font.width(ELLIPSIS)).coerceAtLeast(1)
+        val head = font.split(text, room).firstOrNull() ?: FormattedCharSequence.EMPTY
+        return FormattedCharSequence.composite(head, FormattedCharSequence.forward(ELLIPSIS, Style.EMPTY))
     }
 
     private fun markerFor(item: NoteBlock.Item): String = when {
@@ -288,6 +440,9 @@ class NotePreview(
         const val QUOTE_BAR = 2
         const val QUOTE_TEXT_GAP = 6
         const val CODE_INDENT = 4
+        const val CELL_PADDING = 3
+        const val MIN_CELL = 16
+        const val ELLIPSIS = "…"
 
         /** Not language: these are the glyphs a list is drawn with, the same in every locale. */
         const val BULLET = "•"
@@ -306,6 +461,8 @@ class NotePreview(
         const val SLAB_COLOR = 0x40000000
         const val RULE_COLOR = 0x80FFFFFF.toInt()
         const val HINT_COLOR = 0xFF808080.toInt()
+        const val GRID_COLOR = 0x50FFFFFF
+        const val HOVER_COLOR = 0x28FFFFFF
 
         val QUOTE_STYLE: Style = Style.EMPTY.withItalic(true)
         val CODE_STYLE: Style = Style.EMPTY.withColor(CODE_COLOR)
