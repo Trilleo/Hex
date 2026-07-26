@@ -57,17 +57,17 @@ Markdown, so a note pasted in from anywhere else already works.
 You do not have to remember any of that syntax. The row of buttons above the text works the way a word processor's
 does — select some text, press a button:
 
-| Button       | Does                                                          |
-|--------------|----------------------------------------------------------------|
-| **B** *I* ~~S~~ `{}` | Bold, italic, strikethrough, inline code                |
-| **H1** **H2** | Turn the line into a heading                                   |
-| **•** **1.** | Bulleted or numbered list                                      |
-| **☑**        | Checklist item — press again to tick it, again to undo it      |
-| **❝**        | Quote                                                          |
-| **—**        | Divider                                                        |
-| **⊞**        | Table — inserts an empty one to fill in                         |
-| **🔗**       | Link — the selection becomes the label                         |
-| **&**        | Opens the colour palette                                       |
+| Button               | Does                                                      |
+|----------------------|-----------------------------------------------------------|
+| **B** *I* ~~S~~ `{}` | Bold, italic, strikethrough, inline code                  |
+| **H1** **H2**        | Turn the line into a heading                              |
+| **•** **1.**         | Bulleted or numbered list                                 |
+| **☑**               | Checklist item — press again to tick it, again to undo it |
+| **❝**               | Quote                                                     |
+| **—**                | Divider                                                   |
+| **⊞**                | Table — inserts an empty one to fill in                   |
+| **🔗**               | Link — the selection becomes the label                    |
+| **&**                | Opens the colour palette                                  |
 
 Every button is a toggle: pressing **B** on text that is already bold takes the bold off. With nothing selected, a
 button leaves the cursor exactly where you need to start typing. **Ctrl+B**, **Ctrl+I** and **Ctrl+E** do bold, italic
@@ -95,9 +95,9 @@ screen.
 **View** on a note's row opens it full width — no toolbar, no source pane, just the note as it reads, for following a
 route or a checklist while you play.
 
-It is not quite read-only: **check boxes still tick**. Click a task line and the `x` is written into the note, exactly as
-if you had typed it, so a checklist is usable rather than decorative. **Edit** in the footer opens the same note in the
-editor.
+It is not quite read-only: **check boxes still tick**. Click a task line and the `x` is written into the note, exactly
+as if you had typed it, so a checklist is usable rather than decorative. **Edit** in the footer opens the same note in
+the editor.
 
 ## Details
 
@@ -127,15 +127,15 @@ Importing always creates a **new** note. It never overwrites one you already hav
 
 The **Notebook** tab of `/hexa config`:
 
-| Setting            | Notes                                                                                     |
-|--------------------|-------------------------------------------------------------------------------------------|
-| **Enabled**        | Master switch. With it off the keybind and commands do nothing. Your notes are untouched  |
-| **Open notebook…** | Opens the browser                                                                         |
-| **Sort by**        | **Last edited**, **Newest**, **Title** or **Manual**. Pinned notes stay on top regardless |
-| **Editor layout**  | Whether the editor shows the source, the preview, or both — the toolbar button changes it too |
-| **Show previews**  | Draw each note's first line under its title                                               |
-| **Line spacing**   | Space between the lines of a rendered note — the preview and the reading screen           |
-| **Background opacity** | How solid the browser and the editor are, from see-through to a flat backdrop         |
+| Setting                | Notes                                                                                         |
+|------------------------|-----------------------------------------------------------------------------------------------|
+| **Enabled**            | Master switch. With it off the keybind and commands do nothing. Your notes are untouched      |
+| **Open notebook…**     | Opens the browser                                                                             |
+| **Sort by**            | **Last edited**, **Newest**, **Title** or **Manual**. Pinned notes stay on top regardless     |
+| **Editor layout**      | Whether the editor shows the source, the preview, or both — the toolbar button changes it too |
+| **Show previews**      | Draw each note's first line under its title                                                   |
+| **Line spacing**       | Space between the lines of a rendered note — the preview and the reading screen               |
+| **Background opacity** | How solid the browser and the editor are, from see-through to a flat backdrop                 |
 
 **Background opacity** covers the whole notebook — the header and footer bars, the filter sidebar, and the writing area
 of the editor. Turn it down to keep an eye on the game behind the screen, up for the most readable text. Whatever you
@@ -180,9 +180,9 @@ the old version or the new one, never half of either.
 - **The preview understands most of Markdown, not all of it.** Headings, lists, task boxes, quotes, fenced code,
   dividers, tables, bold, italic, strikethrough, inline code and links are rendered. Anything more exotic is shown as
   the plain text you typed — the note is still correct Markdown, it is just not drawn.
-- **A table cell that is too wide wraps**, and its row grows as tall as its tallest cell — nothing you typed is
-  hidden. A table ends at the first line with no `|` in it, rather than running on to the next blank line as some
-  Markdown renderers do: prose written under a table is prose.
+- **A table cell that is too wide wraps**, and its row grows as tall as its tallest cell — nothing you typed is hidden.
+  A table ends at the first line with no `|` in it, rather than running on to the next blank line as some Markdown
+  renderers do: prose written under a table is prose.
 - **Line spacing applies to rendered notes, not to the editing pane.** The pane you type in is Minecraft's own text
   area, which draws at a fixed line height.
 - **A line is a line.** Two lines of prose in a row stay two lines in the preview rather than being joined into one
