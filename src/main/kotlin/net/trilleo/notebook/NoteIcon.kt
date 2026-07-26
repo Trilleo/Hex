@@ -6,6 +6,7 @@ import net.minecraft.resources.Identifier
 import net.minecraft.world.item.Item
 import net.minecraft.world.item.ItemStack
 import net.minecraft.world.item.Items
+import net.trilleo.notebook.NoteIcon.DEFAULT
 
 /**
  * Turning a note's icon id into something drawable.

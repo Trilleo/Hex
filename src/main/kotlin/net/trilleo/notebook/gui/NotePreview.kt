@@ -449,8 +449,8 @@ class NotePreview(
                 // The heights sum to `content + CELL_PADDING` exactly, so the grid's fills stay contiguous
                 // however many lines the row turned out to be.
                 val height = (if (lastOfRow) TEXT_HEIGHT else lineHeight) +
-                    (if (firstOfRow) padTop else 0) +
-                    (if (lastOfRow) padBottom else 0)
+                        (if (firstOfRow) padTop else 0) +
+                        (if (lastOfRow) padBottom else 0)
                 laid += Row(
                     top,
                     height,
@@ -501,6 +501,7 @@ class NotePreview(
         const val QUOTE_BAR = 2
         const val QUOTE_TEXT_GAP = 6
         const val CODE_INDENT = 4
+
         /** Padding inside a table cell: this much on each side, and this much split above and below. */
         const val CELL_PADDING = 4
 

@@ -2,12 +2,7 @@ package net.trilleo.notebook.gui
 
 import com.mojang.blaze3d.platform.InputConstants
 import net.minecraft.client.gui.GuiGraphicsExtractor
-import net.minecraft.client.gui.components.AbstractWidget
-import net.minecraft.client.gui.components.Button
-import net.minecraft.client.gui.components.EditBox
-import net.minecraft.client.gui.components.MultiLineEditBox
-import net.minecraft.client.gui.components.MultilineTextField
-import net.minecraft.client.gui.components.Tooltip
+import net.minecraft.client.gui.components.*
 import net.minecraft.client.gui.screens.Screen
 import net.minecraft.client.input.KeyEvent
 import net.minecraft.client.input.MouseButtonEvent

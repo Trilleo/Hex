@@ -94,12 +94,12 @@ object NotebookFeature : Feature {
                 )
                 .then(
                     Commands.literal("new")
-                    .executes { ctx -> newNote(ctx.source, "") }
-                    .then(
-                        Commands.argument("title", StringArgumentType.greedyString()).executes { ctx ->
-                            newNote(ctx.source, StringArgumentType.getString(ctx, "title"))
-                        },
-                    )
+                        .executes { ctx -> newNote(ctx.source, "") }
+                        .then(
+                            Commands.argument("title", StringArgumentType.greedyString()).executes { ctx ->
+                                newNote(ctx.source, StringArgumentType.getString(ctx, "title"))
+                            },
+                        )
                 )
                 .then(Commands.literal("list").executes { ctx -> list(ctx.source) })
                 .then(

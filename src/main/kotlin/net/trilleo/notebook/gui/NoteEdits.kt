@@ -5,6 +5,7 @@ import net.minecraft.client.gui.components.MultilineTextField
 import net.minecraft.client.gui.components.Whence
 import net.trilleo.mixin.MultiLineEditBoxAccessor
 import net.trilleo.mixin.MultilineTextFieldAccessor
+import net.trilleo.notebook.gui.NoteEdits.replace
 
 /**
  * What the formatting buttons actually do to the note's text.
@@ -44,7 +45,7 @@ object NoteEdits {
         val selected = value.substring(start, end)
 
         val insideWrapped = selected.length >= marker.length * 2 &&
-            selected.startsWith(marker) && selected.endsWith(marker)
+                selected.startsWith(marker) && selected.endsWith(marker)
         if (insideWrapped) {
             val stripped = selected.substring(marker.length, selected.length - marker.length)
             replace(field, start, end, stripped)
@@ -53,8 +54,8 @@ object NoteEdits {
         }
 
         val outsideWrapped = start >= marker.length && end + marker.length <= value.length &&
-            value.regionMatches(start - marker.length, marker, 0, marker.length) &&
-            value.regionMatches(end, marker, 0, marker.length)
+                value.regionMatches(start - marker.length, marker, 0, marker.length) &&
+                value.regionMatches(end, marker, 0, marker.length)
         if (outsideWrapped) {
             replace(field, start - marker.length, end + marker.length, selected)
             select(field, start - marker.length, start - marker.length + selected.length)
