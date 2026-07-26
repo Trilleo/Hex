@@ -500,6 +500,8 @@
   "hex.config.notebook.sort.manual": "手动",
   "hex.config.notebook.show_snippets": "显示预览",
   "hex.config.notebook.show_snippets.tooltip": "在标题下方显示每条笔记的首行，这样即使有一堆名字相近的笔记也能分辨。",
+  "hex.config.notebook.background_opacity": "背景不透明度",
+  "hex.config.notebook.background_opacity.tooltip": "笔记本和笔记编辑器的背景有多实。调低可以透过界面看到游戏画面，调高则会在文字后面形成一块纯色底板。",
   "hex.notebook.title": "笔记本",
   "hex.notebook.search": "搜索",
   "hex.notebook.filter.all": "全部笔记",

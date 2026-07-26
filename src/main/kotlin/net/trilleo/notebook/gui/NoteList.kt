@@ -135,7 +135,12 @@ class NoteList(
             extractor.fill(contentX, contentY, contentX + BAR_WIDTH, contentBottom, bar)
 
             var x = contentX + BAR_WIDTH + GAP
-            extractor.item(NoteIcon.resolve(document.meta.icon), x, contentYMiddle - ICON / 2)
+            // Null on the title screen, where item components are not bound and building a stack would throw
+            // — see NoteIcon.resolve. The slot is left empty rather than skipped over, so the row's text does
+            // not jump sideways depending on where the notebook was opened from.
+            NoteIcon.resolve(document.meta.icon)?.let { icon ->
+                extractor.item(icon, x, contentYMiddle - ICON / 2)
+            }
             x += ICON + GAP
 
             val buttonsWidth = SMALL_WIDTH * 3 + EDIT_WIDTH + GAP * 3

@@ -86,6 +86,11 @@ The **Notebook** tab of `/hexa config`:
 | **Open notebook…** | Opens the browser                                                                         |
 | **Sort by**        | **Last edited**, **Newest**, **Title** or **Manual**. Pinned notes stay on top regardless |
 | **Show previews**  | Draw each note's first line under its title                                               |
+| **Background opacity** | How solid the browser and the editor are, from see-through to a flat backdrop         |
+
+**Background opacity** covers the whole notebook — the header and footer bars, the filter sidebar, and the writing area
+of the editor. Turn it down to keep an eye on the game behind the screen, up for the most readable text. Whatever you
+set, the outline around the writing area stays, so the editor never loses its edges.
 
 ## Commands
 
@@ -123,5 +128,8 @@ the old version or the new one, never half of either.
   it — along with Minecraft colour codes, chroma text, and clickable item and coordinate chips — is coming; notes you
   write now carry over unchanged, because the text is the note either way.
 - **One installation, one notebook.** Notes are not per Skyblock profile or per island.
+- **No note icons on the title screen.** Item icons come from the item registry, which Minecraft only fills in once a
+  world is loaded, so a notebook opened from the main menu shows rows without them. Everything else works, and the icons
+  are back as soon as you are in a world.
 - A note written by a **newer version of Hex** than you are running is shown read-only rather than saved over, so
   launching an older Hex by accident cannot damage it.

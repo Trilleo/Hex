@@ -243,12 +243,13 @@ class NotebookScreen(private val parent: Screen?) : Screen(Component.translatabl
     override fun extractBackground(extractor: GuiGraphicsExtractor, mouseX: Int, mouseY: Int, delta: Float) {
         super.extractBackground(extractor, mouseX, mouseY, delta)
 
-        extractor.fill(0, 0, width, HEADER_HEIGHT, PANEL_COLOR)
-        extractor.fill(0, HEADER_HEIGHT, SIDEBAR_WIDTH, height - FOOTER_HEIGHT, SIDEBAR_COLOR)
-        extractor.fill(0, height - FOOTER_HEIGHT, width, height, PANEL_COLOR)
-        extractor.horizontalLine(0, width, HEADER_HEIGHT - 1, DIVIDER_COLOR)
-        extractor.horizontalLine(0, width, height - FOOTER_HEIGHT, DIVIDER_COLOR)
-        extractor.verticalLine(SIDEBAR_WIDTH - 1, HEADER_HEIGHT, height - FOOTER_HEIGHT, DIVIDER_COLOR)
+        val panel = NotebookTheme.panel()
+        extractor.fill(0, 0, width, HEADER_HEIGHT, panel)
+        extractor.fill(0, HEADER_HEIGHT, SIDEBAR_WIDTH, height - FOOTER_HEIGHT, NotebookTheme.sidebar())
+        extractor.fill(0, height - FOOTER_HEIGHT, width, height, panel)
+        extractor.horizontalLine(0, width, HEADER_HEIGHT - 1, NotebookTheme.DIVIDER_COLOR)
+        extractor.horizontalLine(0, width, height - FOOTER_HEIGHT, NotebookTheme.DIVIDER_COLOR)
+        extractor.verticalLine(SIDEBAR_WIDTH - 1, HEADER_HEIGHT, height - FOOTER_HEIGHT, NotebookTheme.DIVIDER_COLOR)
 
         extractor.text(font, title, MARGIN, MARGIN + 8, TITLE_COLOR)
     }
@@ -286,9 +287,6 @@ class NotebookScreen(private val parent: Screen?) : Screen(Component.translatabl
 
         val SEARCH_LABEL: Component = Component.translatable("hex.notebook.search")
 
-        const val PANEL_COLOR = 0xC0101010.toInt()
-        const val SIDEBAR_COLOR = 0x80000000.toInt()
-        const val DIVIDER_COLOR = 0x60FFFFFF
         const val TITLE_COLOR = 0xFFFFFFFF.toInt()
     }
 }

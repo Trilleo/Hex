@@ -500,6 +500,8 @@
   "hex.config.notebook.sort.manual": "Manual",
   "hex.config.notebook.show_snippets": "Show previews",
   "hex.config.notebook.show_snippets.tooltip": "Draw the first line of each note under its title, so a list of similarly-named notes is still navigable.",
+  "hex.config.notebook.background_opacity": "Background opacity",
+  "hex.config.notebook.background_opacity.tooltip": "How solid the notebook and the note editor are. Lower it to see the game through them, raise it for a flat backdrop behind the text.",
   "hex.notebook.title": "Notebook",
   "hex.notebook.search": "Search",
   "hex.notebook.filter.all": "All notes",

@@ -26,6 +26,9 @@
   settings, in `config/hex/notebook.json`, travel with a profile.
 + `/hexa note` gained `list`, `new`, `open`, `search`, `export` and `import`. A note is looked up by title — exactly
   first, then ignoring case, then by prefix — so `/hexa note open mining` finds "Mining routes".
++ Added a **Background opacity** setting to the **Notebook** tab: how solid the browser and the editor are, from
+  see-through to a flat backdrop. The writing area is no longer a slab of black — it uses the same setting, and keeps
+  its outline at every value so you can still tell where it ends.
 
 ### Technical Details
 
@@ -47,6 +50,13 @@
 + Added a **JUnit 5 test source set** under `src/test/kotlin`, the first tests in this repository, covering the pure
   logic that touches no Minecraft runtime: the front-matter round trip and `NoteMeta`'s repair of GSON's reflection
   gaps. Run with `./gradlew test`.
++ Fixed a crash when the notebook was opened from the title screen. Item components are bound when a world's data packs
+  load, so building the row icon's `ItemStack` before that threw `Components not bound yet` out of a screen's extract
+  pass. `NoteIcon` now caches the item's `Holder` rather than a stack, checks `areComponentsBound()`, and reports no
+  icon instead — which also fixes a stack cached under one world's components being drawn under another's.
++ The notebook's surfaces moved into a `NotebookTheme`, read per frame from `NotebookConfig.backgroundOpacity`, and the
+  editor draws the text area's background itself — `MultiLineEditBox`'s own sprite is flat black with no say in how
+  solid it is.
 
 ## Version 1.9.3
 

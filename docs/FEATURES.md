@@ -399,6 +399,18 @@ note either way.
 **Details…** covers the rest of a note: its folder, its tags, the colour of the bar down its row, an item id to use as
 its icon, and whether it is pinned to the top of the list.
 
+### How it looks
+
+The **Notebook** tab of `/hexa config` has three display settings. **Sort by** sets the order of the list — last edited,
+newest, title, or by hand — with pinned notes always at the top. **Show previews** draws the first line of each note
+under its title. **Background opacity** sets how solid the notebook and the editor are: turn it down to see the game
+through them, up for a flat backdrop behind the text. The outline of the writing area stays visible at any setting, so
+you can always tell where the text ends and the world begins.
+
+Note icons are drawn from the item registry, which the game only fills in once a world is loaded. Open the notebook from
+the title screen and the rows show no icons; everything else works, and the icons are back the moment you are in a
+world.
+
 ### Sharing
 
 **Export** copies a note to your clipboard and **Import** takes whatever is on your clipboard as a new note. An exported

@@ -53,15 +53,16 @@ class NoteEditorScreen(
                 .build(),
         )
 
-        val bodyTop = HEADER_HEIGHT
-        val bodyHeight = height - HEADER_HEIGHT - FOOTER_HEIGHT
         body = MultiLineEditBox.builder()
             .setX(MARGIN)
-            .setY(bodyTop)
+            .setY(bodyTop())
             .setPlaceholder(Component.translatable("hex.notebook.editor.placeholder"))
-            .setShowBackground(true)
+            // The box's own background is a flat black sprite with no say in how solid it is, so the screen
+            // draws the surface behind it instead — see NotebookTheme.body. Decorations stay: they are the
+            // character counter, not a background.
+            .setShowBackground(false)
             .setShowDecorations(true)
-            .build(font, width - MARGIN * 2, bodyHeight, BODY_LABEL)
+            .build(font, bodyWidth(), bodyHeight(), BODY_LABEL)
             .apply {
                 setCharacterLimit(MAX_BODY)
                 setValue(document.source)
@@ -108,6 +109,14 @@ class NoteEditorScreen(
 
     private fun titleWidth(): Int = (width - MARGIN * 2 - META_WIDTH - GAP).coerceAtLeast(MIN_TITLE_WIDTH)
 
+    // The text area's box, as functions rather than fields: the background pass draws it and init places the
+    // widget at it, and the two must not be able to drift apart.
+    private fun bodyTop(): Int = HEADER_HEIGHT
+
+    private fun bodyWidth(): Int = width - MARGIN * 2
+
+    private fun bodyHeight(): Int = height - HEADER_HEIGHT - FOOTER_HEIGHT
+
     // ---- actions ---------------------------------------------------------------------------------------
 
     /** Copies the note — header and all — so pasting it anywhere else reconstructs it whole. */
@@ -150,10 +159,16 @@ class NoteEditorScreen(
     override fun extractBackground(extractor: GuiGraphicsExtractor, mouseX: Int, mouseY: Int, delta: Float) {
         super.extractBackground(extractor, mouseX, mouseY, delta)
 
-        extractor.fill(0, 0, width, HEADER_HEIGHT, PANEL_COLOR)
-        extractor.fill(0, height - FOOTER_HEIGHT, width, height, PANEL_COLOR)
-        extractor.horizontalLine(0, width, HEADER_HEIGHT - 1, DIVIDER_COLOR)
-        extractor.horizontalLine(0, width, height - FOOTER_HEIGHT, DIVIDER_COLOR)
+        val panel = NotebookTheme.panel()
+        extractor.fill(0, 0, width, HEADER_HEIGHT, panel)
+        extractor.fill(0, height - FOOTER_HEIGHT, width, height, panel)
+        extractor.horizontalLine(0, width, HEADER_HEIGHT - 1, NotebookTheme.DIVIDER_COLOR)
+        extractor.horizontalLine(0, width, height - FOOTER_HEIGHT, NotebookTheme.DIVIDER_COLOR)
+
+        // The writing surface, in place of the text area's own sprite. The outline is drawn whatever the
+        // opacity is, so that at nothing at all the box still says where it ends and the world begins.
+        extractor.fill(MARGIN, bodyTop(), MARGIN + bodyWidth(), bodyTop() + bodyHeight(), NotebookTheme.body())
+        extractor.outline(MARGIN, bodyTop(), bodyWidth(), bodyHeight(), NotebookTheme.DIVIDER_COLOR)
     }
 
     override fun extractRenderState(extractor: GuiGraphicsExtractor, mouseX: Int, mouseY: Int, delta: Float) {
@@ -206,8 +221,6 @@ class NoteEditorScreen(
         val TITLE_LABEL: Component = Component.translatable("hex.notebook.editor.title_hint")
         val BODY_LABEL: Component = Component.translatable("hex.notebook.editor.body")
 
-        const val PANEL_COLOR = 0xC0101010.toInt()
-        const val DIVIDER_COLOR = 0x60FFFFFF
         const val WARNING_COLOR = 0xFFFFD25F.toInt()
     }
 }

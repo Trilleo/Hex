@@ -17,6 +17,7 @@ import net.trilleo.notebook.gui.NotebookScreen
 import net.trilleo.notebook.md.NoteSearch
 import net.trilleo.notebook.model.NoteDocument
 import net.trilleo.notebook.model.NoteSort
+import java.util.*
 
 /**
  * Notes, written in markdown and kept between sessions.
@@ -209,6 +210,18 @@ object NotebookFeature : Feature {
             default = true,
             get = { NotebookConfig.settings.showSnippets },
             set = { NotebookConfig.settings.showSnippets = it; NotebookConfig.save() },
+        )
+        // markDirty, not save: a slider's setter fires every frame of a drag, and the panels are read per
+        // frame, so dragging the handle with the notebook open behind the menu fades it live.
+        slider(
+            "background_opacity",
+            min = NotebookConfig.OPACITY_MIN,
+            max = NotebookConfig.OPACITY_MAX,
+            step = NotebookConfig.OPACITY_STEP,
+            default = NotebookConfig.OPACITY_DEFAULT,
+            get = { NotebookConfig.backgroundOpacity },
+            set = { NotebookConfig.settings.backgroundOpacity = it; NotebookConfig.markDirty() },
+            format = { String.format(Locale.ROOT, "%.0f%%", it * 100) },
         )
 
         resetsTo(NotebookConfig.handle)

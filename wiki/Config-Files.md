@@ -16,7 +16,7 @@ touch these — the [config menu](Configuration) covers everything — but they 
 | `reminders.json`      | [Reminders](Reminders) and their panel settings                                 | ✅                               |
 | `regions.json`        | [Regions](Regions) and their settings                                           | ✅                               |
 | `suggest.json`        | [Command suggestions](Command-Suggestions) *settings*                           | ✅                               |
-| `notebook.json`       | [Notebook](Notebook) *display settings* — sort order, previews                  | ✅                               |
+| `notebook.json`       | [Notebook](Notebook) *display settings* — sort order, previews, opacity         | ✅                               |
 | `vanilla_keys.json`   | Minecraft's own key bindings, when **MC keys** is on                            | ✅                               |
 | `item_custom.json`    | [Item customizations](Item-Customization)                                       | ❌ per installation              |
 | `update.json`         | [Auto-updater](Updating) settings                                               | ❌ per installation              |
