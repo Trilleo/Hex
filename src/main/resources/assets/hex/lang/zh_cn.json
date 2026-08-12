@@ -414,7 +414,7 @@
   "hex.config.highlight_edit.value_name": "名称包含",
   "hex.config.highlight_edit.value_name.tooltip": "名称中的任意一段，忽略颜色和大小写。在 Hypixel 上，怪物的名字浮在它上方一个独立的标记上，亮起来的是下面那只怪物。运行 /hexa highlight nearby 可以看到你周围的名称。",
   "hex.config.highlight_edit.value_type": "实体 id",
-  "hex.config.highlight_edit.value_type.tooltip": "一个实体 id，例如 minecraft:zombie。该类型的所有实体都会匹配。",
+  "hex.config.highlight_edit.value_type.tooltip": "一个实体 id，例如 minecraft:zombie。该类型的所有实体都会匹配。输入名称的一部分后按 Tab 补全，或用方向键浏览游戏中的每一种实体。",
   "hex.config.highlight_edit.island": "岛屿",
   "hex.config.highlight_edit.island.tooltip": "这条规则生效的岛屿，写法与计分板上一致。留空表示在任何地方都匹配。",
   "hex.config.highlight_edit.color": "发光颜色",

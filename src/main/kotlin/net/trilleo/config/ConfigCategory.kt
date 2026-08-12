@@ -152,15 +152,21 @@ class ConfigCategory(
             )
         }
 
-        /** Add a free-text field. [validate] returns an error message for a bad value, or null. */
+        /**
+         * Add a free-text field. [validate] returns an error message for a bad value, or null.
+         *
+         * [suggestions] returns every value the field could hold, unfiltered; supplying it turns the row into
+         * a completing one, with Tab and the arrow keys. Leave it out for free text.
+         */
         fun text(
             key: String,
             default: String,
             get: () -> String,
             set: (String) -> Unit,
             validate: (String) -> Component? = { null },
+            suggestions: () -> List<String> = { emptyList() },
         ) {
-            entries += TextEntry(label(key), tooltip(key), default, get, set, validate)
+            entries += TextEntry(label(key), tooltip(key), default, get, set, validate, suggestions)
         }
 
         /** Add a colour picker over an `"#RRGGBB"` (or `"#AARRGGBB"`) string. */

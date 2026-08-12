@@ -83,6 +83,11 @@ class SliderEntry(
 /**
  * A free-text setting. [validate] returns an error to show beneath the field for an unacceptable value, or
  * null when the value is fine; a renderer is expected to refuse to save while an error stands.
+ *
+ * [suggestions] is the field's whole vocabulary, unfiltered — every value it could hold. Filtering and
+ * ranking against what has been typed is [Suggestions]' job, not each call site's, so a field backed by a
+ * registry is one lambda returning that registry's ids. A field with no fixed vocabulary returns nothing and
+ * behaves exactly as it did before completion existed.
  */
 class TextEntry(
     override val label: Component,
@@ -91,6 +96,7 @@ class TextEntry(
     val get: () -> String,
     val set: (String) -> Unit,
     val validate: (String) -> Component? = { null },
+    val suggestions: () -> List<String> = { emptyList() },
 ) : ConfigEntry
 
 /**

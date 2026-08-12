@@ -8,6 +8,7 @@ import net.minecraft.network.chat.Component
 import net.minecraft.world.entity.EntityType
 import net.trilleo.config.ConfigCategory
 import net.trilleo.config.gui.ConfigEntryList
+import net.trilleo.highlight.EntityTypes
 import net.trilleo.highlight.HighlightAlerts
 import net.trilleo.highlight.HighlightCapture
 import net.trilleo.highlight.HighlightConfig
@@ -123,6 +124,11 @@ class HighlightEditScreen(
             get = { highlight.value },
             set = { highlight.value = it; highlight.normalizeValue(); touch() },
             validate = ::validateValue,
+            // Only the type field has a vocabulary. A name fragment is whatever Hypixel decided to call
+            // something, which no registry on this client has ever heard of.
+            suggestions = {
+                if (highlight.kind == HighlightMatch.ENTITY_TYPE) EntityTypes.ids() else emptyList()
+            },
         )
 
         text(

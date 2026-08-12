@@ -38,6 +38,23 @@ A fragment rather than the whole name, because Hypixel decorates names with leve
 change from one mob to the next while the middle of the name stays put. A typo in an entity id is reported in the
 editor, rather than leaving you with a rule that quietly catches nothing.
 
+### Completing an entity id
+
+The entity id field completes as you type, the way the chat box completes a command.
+
+| Key           | Does                                                       |
+|---------------|-------------------------------------------------------------|
+| **Tab**       | Takes the highlighted suggestion; press again to walk on    |
+| **↑** / **↓** | Move the highlight through the list                        |
+| **Click**     | Takes the one you clicked                                  |
+
+Type `zomb` and everything matching drops down. Matches on the part after the colon come first, since nobody types the
+namespace — but `spider` still finds `minecraft:cave_spider`, because a match anywhere in the id counts too.
+
+**Leave the field empty and the list is every entity the game knows**, so the whole set is browsable with the arrow
+keys without knowing a name to start from. It is read from the game's own registry rather than written down, so it can
+never drift from what a rule can actually match, and anything another mod registers is in it.
+
 ### Names on Hypixel
 
 **A Hypixel mob's name is not on the mob.** It floats on a separate invisible marker a head above it. Hex follows that

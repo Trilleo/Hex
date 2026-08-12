@@ -414,7 +414,7 @@
   "hex.config.highlight_edit.value_name": "Name contains",
   "hex.config.highlight_edit.value_name.tooltip": "Any part of the name, ignoring colours and capitals. On Hypixel a mob's name floats on a separate marker above it, and the mob underneath is what lights up. Run /hexa highlight nearby to read the names around you.",
   "hex.config.highlight_edit.value_type": "Entity id",
-  "hex.config.highlight_edit.value_type.tooltip": "An entity id, such as minecraft:zombie. Every entity of that kind matches.",
+  "hex.config.highlight_edit.value_type.tooltip": "An entity id, such as minecraft:zombie. Every entity of that kind matches. Type part of a name and press Tab to complete it, or use the arrow keys to walk every entity the game knows.",
   "hex.config.highlight_edit.island": "Island",
   "hex.config.highlight_edit.island.tooltip": "The island this rule works on, as it appears on the scoreboard. Leave blank to match anywhere.",
   "hex.config.highlight_edit.color": "Glow colour",

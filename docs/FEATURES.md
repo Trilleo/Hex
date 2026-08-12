@@ -397,6 +397,11 @@ A rule matches one of two ways, chosen with **Match by**:
 - **Type** — the entity is of a given kind, written as an entity id such as `minecraft:zombie`. Every one of them
   matches. A typo here is reported in the editor rather than leaving you with a rule that quietly catches nothing.
 
+The entity id field completes as you type, the way the chat box completes a command. Type `zomb` and a list of
+everything matching drops down; **Tab** takes the highlighted one, and **↑** / **↓** walk the list. Leave the field
+empty and the list is every entity the game knows, so you can browse the whole set without knowing a name to start
+from. The list is read from the game's own registry, so anything another mod adds is in it too.
+
 **On Hypixel, a mob's name is not on the mob.** It floats on a separate invisible marker a head above it. Hex follows
 that link, so a name rule lights up the *mob* rather than the marker — which is what you want, since an invisible
 marker has nothing to draw an outline around. A hologram that labels nothing still matches on its own name, so signs

@@ -69,6 +69,121 @@ class ConfigEntryList(
         setScrollAmount(if (preserveScroll) scroll else 0.0)
     }
 
+    // ---- completion popup ------------------------------------------------------------------------------
+
+    /** What a completing [TextRow] wants shown, in screen coordinates. */
+    class Popup(
+        val x: Int,
+        val anchorTop: Int,
+        val anchorBottom: Int,
+        val minWidth: Int,
+        val entries: List<String>,
+        val selected: Int,
+    )
+
+    /** Where the popup actually landed last frame, so a click can be tested against it. */
+    private class Placed(
+        val row: TextRow,
+        val x: Int,
+        val y: Int,
+        val width: Int,
+        val height: Int,
+        val first: Int,
+        val shown: Int,
+    )
+
+    private var placed: Placed? = null
+
+    /**
+     * Draws the rows, then the completion popup on top of them.
+     *
+     * After `super` returns the list's scissor is off again, which is the whole reason the popup is drawn here
+     * rather than by the row that owns it: inside [extractListItems] it would be clipped to the list and then
+     * painted over by every row below. Drawing it last also means it covers those rows, which is exactly what
+     * a popup should do.
+     */
+    override fun extractWidgetRenderState(
+        extractor: GuiGraphicsExtractor,
+        mouseX: Int,
+        mouseY: Int,
+        delta: Float,
+    ) {
+        super.extractWidgetRenderState(extractor, mouseX, mouseY, delta)
+
+        val row = children().filterIsInstance<TextRow>().firstOrNull { it.popup() != null }
+        val popup = row?.popup()
+        if (row == null || popup == null) {
+            placed = null
+            return
+        }
+        placed = drawPopup(extractor, row, popup)
+    }
+
+    private fun drawPopup(extractor: GuiGraphicsExtractor, row: TextRow, popup: Popup): Placed {
+        val font = minecraft.font
+
+        // Window the list around the highlighted entry, so walking past the bottom scrolls rather than stops.
+        val shown = minOf(POPUP_ROWS, popup.entries.size)
+        val first = (popup.selected - shown + 1)
+            .coerceAtLeast(0)
+            .coerceAtMost((popup.entries.size - shown).coerceAtLeast(0))
+        val window = popup.entries.subList(first, first + shown)
+
+        // Never off the right edge of the list; a suggestion running under the scrollbar is unreadable. The
+        // floor keeps the range valid when the field sits close to that edge, so the clamp cannot invert.
+        val available = (right - popup.x - GAP).coerceAtLeast(popup.minWidth)
+        val width = window.maxOf { font.width(it) + POPUP_PADDING * 2 }.coerceIn(popup.minWidth, available)
+        val height = shown * POPUP_ROW_HEIGHT + 2
+
+        // Below the field by preference, above it when there is no room — the bottom rows of a long list would
+        // otherwise open their popup past the end of the screen.
+        val y = if (popup.anchorBottom + height <= bottom) popup.anchorBottom else popup.anchorTop - height
+
+        extractor.fill(popup.x, y, popup.x + width, y + height, POPUP_BACKGROUND)
+        extractor.outline(popup.x, y, width, height, POPUP_BORDER)
+
+        window.forEachIndexed { index, text ->
+            val top = y + 1 + index * POPUP_ROW_HEIGHT
+            val isSelected = first + index == popup.selected
+            if (isSelected) {
+                extractor.fill(popup.x + 1, top, popup.x + width - 1, top + POPUP_ROW_HEIGHT, POPUP_SELECTED)
+            }
+            val drawn = if (font.width(text) <= width - POPUP_PADDING * 2) {
+                text
+            } else {
+                font.plainSubstrByWidth(text, width - POPUP_PADDING * 2 - font.width("…")) + "…"
+            }
+            extractor.text(
+                font,
+                drawn,
+                popup.x + POPUP_PADDING,
+                top + (POPUP_ROW_HEIGHT - font.lineHeight) / 2,
+                if (isSelected) POPUP_SELECTED_TEXT else POPUP_TEXT,
+            )
+        }
+
+        return Placed(row, popup.x, y, width, height, first, shown)
+    }
+
+    /**
+     * Lets a click land on the popup before the rows underneath it get a chance.
+     *
+     * The popup is drawn over rows that still occupy that space as far as the list's hit-testing is concerned,
+     * so without this a click on a suggestion would focus whatever row happens to be behind it.
+     */
+    override fun mouseClicked(event: net.minecraft.client.input.MouseButtonEvent, doubled: Boolean): Boolean {
+        placed?.let { p ->
+            val x = event.x
+            val y = event.y
+            if (x >= p.x && x < p.x + p.width && y >= p.y && y < p.y + p.height) {
+                val index = p.first + (((y - p.y - 1) / POPUP_ROW_HEIGHT).toInt()).coerceIn(0, p.shown - 1)
+                p.row.choose(index)
+                return true
+            }
+        }
+        return super.mouseClicked(event, doubled)
+    }
+
     private fun rowFor(entry: ConfigEntry): Row = when (entry) {
         is BooleanEntry -> BooleanRow(entry)
         is SliderEntry -> SliderRow(entry)
@@ -354,6 +469,19 @@ class ConfigEntryList(
         }
     }
 
+    /**
+     * A text field, optionally completing.
+     *
+     * When its [TextEntry] offers a vocabulary, the row keeps a ranked shortlist of what the typed text could
+     * become and claims Tab and the arrow keys while the field has focus — the same contract the chat box's
+     * command suggestions have, so it needs no explaining. The popup itself is drawn by
+     * [ConfigEntryList.extractWidgetRenderState] rather than here, because this row is inside a scissor and
+     * anything it drew below itself would be clipped by the list and painted over by the next row.
+     *
+     * **Escape is deliberately not claimed.** [Screen.keyPressed] answers it before any child sees it, so a
+     * row that tried to dismiss its popup with Escape would be writing code that never runs. The popup closes
+     * by the field losing focus, which is the other thing a player reaches for.
+     */
     private class TextRow(private val entry: TextEntry) : ResettableRow(
         entry.label,
         entry.tooltip,
@@ -369,12 +497,93 @@ class ConfigEntryList(
             this@TextRow.rowTooltip?.let(::setTooltip)
         }
 
+        /** The shortlist for what is typed now, best first. Empty means no popup. */
+        private var matches: List<String> = emptyList()
+
+        private var selected: Int = 0
+
+        /** The text [matches] was computed for, so the ranking runs on a change rather than every frame. */
+        private var rankedFor: String? = null
+
         override val widgets: List<AbstractWidget> = listOf(field, resetButton)
+
+        /** Where the popup should hang, or null when there is nothing to show. */
+        fun popup(): Popup? {
+            if (!field.isFocused || matches.isEmpty()) return null
+            return Popup(field.x, field.y, field.y + WIDGET_HEIGHT, field.width, matches, selected)
+        }
+
+        /** Applies the candidate at [index]; called when one is clicked. */
+        fun choose(index: Int) {
+            matches.getOrNull(index)?.let { apply(it) }
+        }
+
+        override fun keyPressed(event: net.minecraft.client.input.KeyEvent): Boolean {
+            if (field.isFocused && matches.isNotEmpty()) {
+                when (event.key) {
+                    InputConstants.KEY_TAB -> {
+                        accept()
+                        return true
+                    }
+
+                    InputConstants.KEY_DOWN -> {
+                        move(1)
+                        return true
+                    }
+
+                    InputConstants.KEY_UP -> {
+                        move(-1)
+                        return true
+                    }
+                }
+            }
+            return super.keyPressed(event)
+        }
+
+        /**
+         * Takes the highlighted candidate — or, when it is already in the field, moves on to the next.
+         *
+         * That second half is what makes holding Tab walk the list, the way it does in chat: applying a
+         * candidate narrows the ranking to it and its longer siblings, so without it a second press would
+         * re-apply the same value forever.
+         */
+        private fun accept() {
+            val pick = matches.getOrNull(selected) ?: return
+            if (pick == field.value) move(1) else apply(pick)
+        }
+
+        private fun apply(pick: String) {
+            // Assigning the value fires the responder, which is what writes it through to the setting.
+            field.value = pick
+            field.moveCursorToEnd(false)
+            // Force a re-rank next frame: the shortlist for the new text is a different one.
+            rankedFor = null
+        }
+
+        private fun move(by: Int) {
+            if (matches.isEmpty()) return
+            selected = (selected + by).mod(matches.size)
+        }
+
+        /** Re-ranks when the typed text has changed. A row with no vocabulary settles on an empty list. */
+        private fun refresh() {
+            if (!field.isFocused) {
+                matches = emptyList()
+                rankedFor = null
+                return
+            }
+            val typed = field.value
+            if (typed == rankedFor) return
+            rankedFor = typed
+            matches = Suggestions.rank(entry.suggestions(), typed)
+            selected = 0
+        }
 
         override fun layout(extractor: GuiGraphicsExtractor, mouseX: Int, mouseY: Int, delta: Float) {
             if (!field.isFocused && field.value != entry.get()) field.value = entry.get()
             place(field, controlX(), CONTROL_WIDTH)
             draw(field, extractor, mouseX, mouseY, delta)
+            refresh()
             // An invalid value is flagged in place rather than blocking the row, since edits apply live.
             entry.validate(field.value)?.let { error ->
                 val font = Minecraft.getInstance().font
@@ -493,10 +702,23 @@ class ConfigEntryList(
         private const val RESET_WIDTH = 20
         private const val GAP = 6
 
+        /** How many candidates the completion popup shows at once; the rest are reached with the arrows. */
+        private const val POPUP_ROWS = 8
+        private const val POPUP_ROW_HEIGHT = 12
+        private const val POPUP_PADDING = 4
+
         private const val LABEL_COLOR = 0xFFE8E8E8.toInt()
         private const val HEADING_COLOR = 0xFFFFD25F.toInt()
         private const val SEPARATOR_COLOR = 0x40FFFFFF
         private const val ERROR_COLOR = 0xFFFF6B6B.toInt()
+
+        // Near-opaque, because the popup sits over rows that are still drawn underneath it and a translucent
+        // one would read as two overlapping lists rather than one on top.
+        private const val POPUP_BACKGROUND = 0xF0100010.toInt()
+        private const val POPUP_BORDER = 0xFF4A4A5A.toInt()
+        private const val POPUP_SELECTED = 0xFF3A5A8A.toInt()
+        private const val POPUP_TEXT = 0xFFB0B0B0.toInt()
+        private const val POPUP_SELECTED_TEXT = 0xFFFFFFFF.toInt()
 
         /** Whether an entry matches a search query, tested against its label and tooltip. */
         fun matches(entry: ConfigEntry, query: String): Boolean {

@@ -29,6 +29,18 @@
   are the exact strings a rule matches against, so it is somewhere to copy a name from rather than guess at one.
 + Added `/hexa highlight add`, `list` and `edit`, and the **Open Entity Highlights** and **Highlight What You Look At**
   keybinds, both unbound by default.
++ The entity id field **completes as you type**, the way the chat box completes a command: a list drops down, **Tab**
+  takes the highlighted entry and pressing it again walks on, the arrow keys move through it, and a click takes the one
+  you clicked.
+    + Matches on the part after the colon come first, since nobody types the namespace — but `spider` still finds
+      `minecraft:cave_spider`, because a match anywhere in the id counts too.
+    + An empty field offers every entity the game knows, so the whole set is browsable without knowing a name to start
+      from. The list comes from the game's own registry, so it covers anything another mod registers.
+
+#### Config Menu
+
++ Settings text fields can now offer completions. Only the entity id field uses this today; every other text field is
+  unchanged.
 
 ### Technical Details
 
@@ -49,6 +61,16 @@
   a crowded island turns a query per name tag into a query per match.
 + Highlights reuse `ReminderAction` and `ReminderActions.run` rather than growing a parallel alert pipeline, so
   reminders, regions and highlights all deliver a title and a sound through one implementation.
+
+#### Config Menu
+
++ `TextEntry` gained an optional `suggestions` provider returning the field's whole vocabulary; filtering and ranking
+  live in one place (`Suggestions`) rather than at each call site, and the entry model stays free of GUI types.
++ The completion popup is drawn by `ConfigEntryList` after its rows rather than by the row that owns it. A row draws
+  inside the list's scissor, so anything it put below itself would be clipped and then painted over by the next row.
+  No host screen changed.
++ The popup deliberately does not claim Escape: `Screen.keyPressed` answers it before any child sees it, so a
+  dismiss-on-Escape would have been code that never runs.
 
 ## Version 1.10.0
 
