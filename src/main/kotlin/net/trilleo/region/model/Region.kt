@@ -107,7 +107,10 @@ class Region {
     /** How long after firing this region stays quiet, in seconds. Stops a doorway becoming a machine gun. */
     var cooldownSeconds: Double = DEFAULT_COOLDOWN_SECONDS
 
-    /** `"#AARRGGBB"` for the preview outline and fill, or `""` to use the tab's default colour. */
+    /**
+     * The preview outline and fill: `"#AARRGGBB"`, `"chroma"` for a box that flows through the rainbow, or
+     * `""` to use the tab's default colour. See [net.trilleo.color.ColorValue].
+     */
     var color: String = ""
 
     // ---- geometry ------------------------------------------------------------------------------------

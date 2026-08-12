@@ -13,7 +13,7 @@ import net.minecraft.world.item.component.DyedItemColor
 import net.minecraft.world.item.component.ResolvableProfile
 import net.trilleo.skyblock.item.SkyblockItem
 import net.trilleo.util.Chroma
-import net.trilleo.util.HexColor
+import net.trilleo.color.ColorValue
 import java.nio.charset.StandardCharsets
 import java.util.*
 
@@ -77,7 +77,7 @@ object ItemCustomizer {
      */
     fun nameFor(customization: ItemCustomization, original: Component): Component? {
         val hasName = customization.name.isNotEmpty()
-        val color = HexColor.parse(customization.color)
+        val color = ColorValue.parse(customization.color)
         if (!hasName && color == null && !customization.chroma) return null
 
         val text = if (hasName) customization.name else SkyblockItem.strip(original.string)
@@ -124,7 +124,7 @@ object ItemCustomizer {
             ?: Identifier.withDefaultNamespace("player_head").takeIf { profile != null }
         if (model != null) target().set(DataComponents.ITEM_MODEL, model)
 
-        HexColor.parse(customization.dye)?.let {
+        ColorValue.parse(customization.dye)?.let {
             target().set(DataComponents.DYED_COLOR, DyedItemColor(it and 0xFFFFFF))
         }
 

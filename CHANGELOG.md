@@ -2,6 +2,73 @@
 
 ## Unreleased
 
+### New Features
+
+#### Colour Picker
+
++ Added the **colour picker**: one screen for every colour in the mod, opened by the swatch beside any colour
+  setting. Entity Highlight, Chat Highlight, Regions, Reminders, Item Customization and the Notebook all pick
+  colours the same way now, instead of each offering a bare hex field.
+    + **Four ways to find a colour**, because people arrive knowing different things: a saturation/value field
+      with a hue bar to hunt by eye, a hex field for one copied from somewhere else, R/G/B fields for one
+      written down as numbers, and swatches for the colours worth having a name for.
+    + **Minecraft's sixteen** — the `&0`–`&f` colours, named — so "the same gold the legendary items use" is a
+      click rather than a look-up.
+    + **Twelve presets** Minecraft has no code for: orange, teal, violet, coral and the rest.
+    + **Recent colours, shared across the whole mod.** A colour picked for a region is one click away the next
+      time a highlight or a note needs it, which is what makes two features match without typing digits twice.
+    + **Copy and paste**, accepting `#RRGGBB`, `RRGGBB` and `0xRRGGBB` — the three spellings a colour actually
+      arrives in.
+    + **It applies as you drag**, like every other settings row, so a region box or a HUD panel behind the
+      screen recolours as you go. Cancel or Escape puts the original back.
++ **Chroma is now a colour, not a switch beside one.** The picker offers it wherever a colour can flow, and the
+  separate "Chroma" toggles on a chat rule and an item customization are gone — one control instead of two that
+  could disagree. Existing configs are migrated on load, so a rule or an item that was flowing goes on flowing.
++ **Chroma reaches four more places**: the entity glow outline, region boxes, the reminder panel's background,
+  text and flash colours. Each of those tabs gains its own **Chroma speed** slider, matching the ones Item
+  Customization and Chat Highlight already had.
++ Colour settings that mean "leave it alone" — an item's name colour and dye, a note's colour — now have a
+  **None** button, so a colour set by mistake can be cleared instead of being stuck.
+
+### Improvements
+
+#### Notebook
+
++ The editor's colour palette reads the same colour table and the same recent colours as the picker, and gains a
+  row of recent colours that writes `&#RRGGBB` for you.
+
+### Technical Details
+
+#### Colour Picker
+
++ Added `net.trilleo.color`: `ColorValue` defines what a colour setting may hold — a hex string, `"chroma"`, or
+  nothing — plus the palettes and the parsing; `ColorConfig` persists the shared recent colours at
+  `config/hex/colors.json`; `ColorPickerScreen` is the screen. `ColorValue.parse` is stricter than
+  `HexColor.parse`, demanding exactly six or eight digits, so a half-typed value reads as "not a colour yet"
+  rather than as a very dark blue.
++ `ColorEntry` gained `chroma` and `optional` flags and `ConfigEntryList.ColorRow` now opens the picker, so a
+  feature asking for `color(...)` inherits every part of it. There is deliberately no second way to pick a
+  colour: a new feature that calls `ConfigCategory.Builder.color` is consistent without trying to be.
++ Chroma migrated from a boolean to a value. `ChatHighlight.chroma` and `ItemCustomization.chroma` are read one
+  last time through a `@SerializedName("chroma")` nullable, folded into the colour by each config's normalizer,
+  and then dropped — GSON omits a null field, so the key leaves the file on the first write back.
++ `HighlightTracker.Match` carries the components whose colour follows a chroma rule and `HighlightLookup`
+  recolours them **in place** each frame: `MutableComponent.withColor` mutates and returns the same object, so
+  the name tag the scan published keeps its identity and the tracker's identity-keyed `markedTags` set goes on
+  recognising it. Rebuilding them per frame would have quietly broken the marked-name scaling.
++ Region boxes resolve their colour on the tick they are emitted and the reminder panel on the frame it is
+  drawn, so both flow without either caching a colour that changes.
++ Chroma has no alpha byte of its own, so each alpha-carrying consumer supplies one: a chroma region keeps the
+  stock preview colour's transparency and a chroma panel background the stock background's, while panel text
+  stays opaque.
++ `ColorConfig` is registered `global`, so config profiles neither capture nor restore the recent-colour list —
+  it is a record of what the player has been doing, not a loadout.
++ `RegionEditScreen` drops its live preview in `onClose` rather than `removed`, so opening the picker from it
+  leaves the box on screen; `RegionRenderer.tick` clears a stale focus when no screen is open at all.
++ The notebook's palette reads `ColorValue.VANILLA` instead of its own copy of the sixteen, which retires
+  sixteen duplicated translation keys. It stays an inline panel rather than becoming a button that opens the
+  picker: leaving the editor and coming back would lose the caret and selection the colour is meant to apply to.
+
 ## Version 1.10.3
 
 ### New Features

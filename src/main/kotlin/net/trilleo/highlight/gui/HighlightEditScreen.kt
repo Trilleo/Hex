@@ -12,6 +12,7 @@ import net.trilleo.highlight.EntityTypes
 import net.trilleo.highlight.HighlightAlerts
 import net.trilleo.highlight.HighlightCapture
 import net.trilleo.highlight.HighlightConfig
+import net.trilleo.highlight.HighlightTracker
 import net.trilleo.highlight.model.Highlight
 import net.trilleo.highlight.model.HighlightMatch
 import net.trilleo.reminder.model.ActionKind
@@ -140,7 +141,8 @@ class HighlightEditScreen(
         color(
             "color",
             default = HighlightConfig.settings.defaultColor,
-            get = { highlight.color.ifBlank { HighlightConfig.settings.defaultColor } },
+            chroma = true,
+            get = { HighlightTracker.colorOf(highlight) },
             set = { highlight.color = it; touch() },
         )
         slider(

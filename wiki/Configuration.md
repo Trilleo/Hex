@@ -49,9 +49,9 @@ A few lists are deliberately not caught by a tab reset, because they are data ra
 | **Freecam**             | Movement speed, sensitivity and behaviour of the [freecam](Freecam)                                            |
 | **Hand**                | First-person [hand position, scale, rotation and swing](Hand-Display), plus the per-item swing list            |
 | **Item Customization**  | The [customized items](Item-Customization) list, the ✎ slot marker, and [chroma](Chroma-Text) speed and width |
-| **Reminders**           | The [reminder](Reminders) panel's position, scale, colours and row count; snooze length                        |
-| **Regions**             | [Region](Regions) drawing, names, through-walls, default radius, exit margin                                   |
-| **Entity Highlight**    | The [highlight rules](Entity-Highlight) list, scan interval, default glow colour                               |
+| **Reminders**           | The [reminder](Reminders) panel's position, scale, colours and row count; chroma speed; snooze length          |
+| **Regions**             | [Region](Regions) drawing, names, through-walls, colours and chroma speed, default radius, exit margin         |
+| **Entity Highlight**    | The [highlight rules](Entity-Highlight) list, scan interval, default glow colour, chroma speed                 |
 | **Chat Highlight**      | The [chat highlight rules](Chat-Highlight) list, default colour, and its [chroma](Chroma-Text) speed and width |
 | **Command Suggestions** | Everything about [command suggestions](Command-Suggestions), and the dashboard                                 |
 | **Updates**             | The [auto-updater](Updating) — per installation, never part of a profile                                       |

@@ -24,6 +24,61 @@ it, does not bundle it, and behaves the same whether or not it is there.
 switch. It asks first, and it only changes your live settings — your saved profile is untouched, so **Discard** on the
 Profiles screen brings them back.
 
+## Colour picker
+
+Every colour in Hex is chosen the same way. Any setting that holds a colour shows the value as text with a **swatch**
+beside it; click the swatch and the colour picker opens.
+
+It offers four ways to reach a colour, because people arrive knowing different things:
+
+- The **square** picks saturation and brightness by eye, and the **bar** under it picks the hue.
+- The **#RRGGBB** field takes a colour copied from somewhere else. `#` is optional and case does not matter.
+- The **R**, **G** and **B** fields take one written down as numbers, `0`–`255` each.
+- The **swatches** are the colours worth having a name for.
+
+There are three rows of swatches:
+
+- **Minecraft colours** — the sixteen `&0`–`&f` colours, named. Hypixel writes every rarity, stat and broadcast in one of
+  them, so "the same gold the legendary items use" is a click rather than a look-up.
+- **Presets** — a dozen colours Minecraft has no code for: orange, amber, lime, mint, teal, sky, violet, magenta, pink,
+  coral, crimson and slate.
+- **Recent** — the last twelve colours you picked *anywhere in the mod*. This is the row that makes two features match:
+  a colour chosen for a region is one click away when a highlight needs the same one. The **×** at the end of the row
+  forgets them all.
+
+**Copy** puts the current colour on the clipboard and **Paste** reads one back, accepting `#RRGGBB`, `RRGGBB` and
+`0xRRGGBB`.
+
+The picker applies as you drag, exactly as a settings row does, so a region box or the reminder panel behind it
+recolours while you choose. **Done** keeps the colour and remembers it; **Cancel**, Escape, or closing the screen any
+other way puts the original back.
+
+### Chroma
+
+Where a colour is allowed to move, the picker has a **Chroma** button. Chroma is not a colour but a mode — it flows
+through the rainbow — and it lives in the same setting as a colour because it answers the same question. It is available
+for:
+
+- item names, and chat highlights ([chroma text](#chroma-text));
+- the [entity highlight](#entity-highlight) glow outline;
+- [region](#regions) boxes;
+- the [reminder](#reminders) panel's background, text and flash colours.
+
+Each of those tabs has its own **Chroma speed** slider. Alert titles are not on the list: Minecraft draws a title once
+from a fixed component, so a colour written into one cannot move.
+
+### None
+
+Settings where "leave it alone" is a real answer — an item's name colour and dye, a note's colour — also have a **None**
+button, which clears the colour rather than replacing it with another one.
+
+### Transparency
+
+A few settings carry transparency as well as a colour, written `#AARRGGBB` with the opacity first: region boxes, and the
+reminder panel's colours. There is no transparency slider — type the value in the hex field, or leave it alone and it is
+carried through everything else you change. A chroma region or panel takes the stock transparency for that setting,
+since a flowing colour has none of its own.
+
 ## Config profiles
 
 A profile is a complete set of Hex settings under a name. Open **Profiles…** from the config menu footer to see them
@@ -154,9 +209,10 @@ The editor shows the item before and after side by side, with its live name unde
 
 - **Name** — what to call it. Use `&` followed by a colour or format code, such as `&6` for gold or `&l` for bold, and
   `&z` for chroma. Leave it blank to keep Hypixel's own name.
-- **Name colour** — colours the whole name. With **Name** blank this recolours Hypixel's name, which means dropping the
-  colours it came with — that is the only way a recolour can show at all.
-- **Chroma name** — the whole name flows through the rainbow. See [Chroma text](#chroma-text).
+- **Name colour** — colours the whole name, through the [colour picker](#colour-picker). With **Name** blank this
+  recolours Hypixel's name, which means dropping the colours it came with — that is the only way a recolour can show at
+  all. Press **Chroma** in the picker and the whole name flows through the rainbow instead; press **None** to leave the
+  name's own colours alone. See [Chroma text](#chroma-text).
 - **Enchant glint** — always, never, or unchanged. Cosmetic only; the item's enchantments are untouched.
 - **Item model** — a model to draw instead, such as `minecraft:diamond_sword`. Any model your resource packs provide
   works too.
@@ -186,24 +242,31 @@ Two things worth knowing:
 
 ## Chroma text
 
-Chroma is text whose colour flows through the rainbow, the same effect other Skyblock mods offer. Hex uses it in
-[item names](#item-customization); there are two ways to switch it on, and they do the same thing:
+Chroma is colour that flows through the rainbow, the same effect other Skyblock mods offer. It is a choice in the
+[colour picker](#colour-picker) rather than a setting of its own, so anything that can flow is switched to chroma the
+same way any other colour is chosen: open the swatch and press **Chroma**.
 
-- Turn on **Chroma name** in the item's editor, which makes the whole name flow.
-- Write **`&z`** in the **Name** field, which starts chroma at that point and lets you flow only part of a name — for
-  example `&7Old &zHyperion` leaves the first word grey. Any colour code, or `&r`, ends it. This is the same code
-  NotEnoughUpdates and SkyHanni use, so a name copied from either works here unchanged.
+Hex can flow [item names](#item-customization), [chat highlights](#chat-highlight), the
+[entity highlight](#entity-highlight) glow, [region](#regions) boxes and the [reminder](#reminders) panel.
 
-Two settings on the **Item Customization** tab of `/hexa config` shape it, and both apply to every chroma name at once —
-one item flowing at a different rate from the item beside it reads as a glitch rather than a choice:
+For text there is a second, finer way in: write **`&z`** in the **Name** field of an item, or in a
+[note](#notebook), and chroma starts at that point — `&7Old &zHyperion` leaves the first word grey and flows the second.
+Any colour code, or `&r`, ends it. This is the same code NotEnoughUpdates and SkyHanni use, so a name copied from either
+works here unchanged.
+
+Each feature that can flow has its own **Chroma speed** on its tab of `/hexa config`, applying to every chroma value in
+that feature at once — one item flowing at a different rate from the item beside it reads as a glitch rather than a
+choice:
 
 - **Chroma speed** — how long one full trip through the rainbow takes, from half a second to twenty. Lower is faster.
-- **Chroma width** — how many characters one full rainbow spans. Set it low and a short name holds every colour at once;
-  set it high and the name drifts through one colour at a time.
+- **Chroma width** — how many characters one full rainbow spans, on the two tabs that colour *text* (Item Customization
+  and Chat Highlight). Set it low and a short name holds every colour at once; set it high and the name drifts through
+  one colour at a time. A glow, a box and a panel are one colour rather than a run of characters, so those tabs have no
+  width to set.
 
 The colours move on their own, so a chroma name animates wherever it appears: in a tooltip, on a container slot, and in
-the item-name popup above the hotbar. It costs a little more to draw than a plain name, which is why it is off by
-default and set per item rather than applied to everything.
+the item-name popup above the hotbar. It costs a little more to draw than a plain colour, which is why it is off by
+default and set per item, per rule or per region rather than applied to everything.
 
 ## Reminders
 
@@ -258,7 +321,9 @@ says which one in chat rather than letting it stutter every time you receive a m
 **Panel position…** opens a screen where you drag the panel where you want it, or nudge it with the arrow keys — hold
 Shift to move further. It is placed as a fraction of the screen, so it stays put when you change resolution, go
 fullscreen, or change your GUI scale, and **Grow from** picks which corner stays anchored as reminders come and go. The
-rest of the **Reminders** tab covers scale, colours, how many rows to show, and whether to hide the panel off Skyblock.
+rest of the **Reminders** tab covers scale, colours — background, text and flash, each through the
+[colour picker](#colour-picker) and each able to flow with **Chroma** — how many rows to show, and whether to hide the
+panel off Skyblock.
 The panel hides with the rest of the HUD when you press F1.
 
 Bind **Dismiss Reminder** under Options → Controls → **Hex** to silence whatever is flashing without opening anything;
@@ -343,7 +408,8 @@ leaving takes a small **exit margin** beyond the boundary, set in the tab.
 **Preview** in the regions list — or the **Toggle Region Preview** keybind, or `/hexa region preview` — draws every
 region on the island as a real shape in the world, labelled with its name, and stays on after you close the menu so you
 can walk around and look. The **Regions** tab decides whether they draw through walls and whether names are shown, and
-each region can have its own colour.
+each region can have its own colour — chosen through the [colour picker](#colour-picker), **Chroma** included, at the
+speed set on that tab.
 
 The region you have open in the editor is always drawn, so a box you are typing sizes into changes shape behind the
 menu.
@@ -413,8 +479,10 @@ elsewhere — leave it blank and the rule works everywhere, which is the normal 
 
 ### Seeing them
 
-**Glow colour** is the outline's colour, and every rule can have its own. The outline is vanilla's own glowing effect,
-so it draws through terrain and follows the mob smoothly however fast it moves.
+**Glow colour** is the outline's colour, chosen through the [colour picker](#colour-picker), and every rule can have its
+own — **Chroma** included, which walks the outline through the rainbow at the speed set on the **Entity Highlight** tab.
+The outline is vanilla's own glowing effect, so it draws through terrain and follows the mob smoothly however fast it
+moves.
 
 One thing it cannot do is outline an entity that is invisible — there is no model to draw around. That is exactly why a
 name rule targets the mob and not the marker above it.
@@ -479,9 +547,9 @@ hi` is guild chat while `Guild > Steve joined.` belongs to no channel.
 **Islands** restricts a rule to one or several islands, comma-separated — `hub, dwarven mines` — or anywhere when left
 blank. A list rather than the single island an entity highlight takes, because chat follows the player around.
 
-**Paint** covers either the words that matched or the whole message. On top of the **Colour** come **Bold**, **Italic**,
-**Underline**, **Strikethrough** and **Scrambled**, and **Chroma**, which flows the text through the rainbow and
-replaces the colour entirely. **Mark before** and **Mark after** put text such as `»` and `«` either side of the match,
+**Paint** covers either the words that matched or the whole message. On top of the **Colour** — chosen through the
+[colour picker](#colour-picker), where **Chroma** flows the text through the rainbow — come **Bold**, **Italic**,
+**Underline**, **Strikethrough** and **Scrambled**. **Mark before** and **Mark after** put text such as `»` and `«` either side of the match,
 which stays visible in a screenshot and to a colour-blind player in a way a colour does not.
 
 **Hide the message** drops a matching line from chat. It still counts as a match, so a rule can silence spam and keep
@@ -536,10 +604,14 @@ number, a check box or a quote to change the line; drop in a divider or a link. 
 **B** on text that is already bold takes it off again — and with nothing selected it leaves the cursor where you need to
 type. **Ctrl+B**, **Ctrl+I** and **Ctrl+E** do bold, italic and code from the keyboard.
 
-The **&** button opens Minecraft's sixteen colours, plus **chroma** — the flowing colour
-[item customization](#item-customization) uses — and a swatch that returns to plain. It also takes **any** colour: type
-`#RRGGBB` into the palette's field and press the swatch next to it. Colours are written into the note as `&c` or
-`&#RRGGBB` codes, so they survive export and work anywhere in the text.
+The **&** button opens Minecraft's sixteen colours — the same sixteen the [colour picker](#colour-picker) offers, with
+the same names — plus **chroma**, the flowing colour, and a swatch that returns to plain. Under them is a row of the
+colours you have picked recently anywhere in Hex, and under that a field that takes **any** colour: type `#RRGGBB` and
+press the swatch next to it, and it joins that shared row. Colours are written into the note as `&c` or `&#RRGGBB`
+codes, so they survive export and work anywhere in the text.
+
+The palette is a panel here rather than the full colour picker on purpose: leaving the editor for another screen would
+lose the cursor and the selection the colour is meant to apply to.
 
 Beside the source is a **live preview**: the note as it reads, updated as you type, with headings at their own size,
 real bullets and check boxes, a bar down quotes, code on a slab, and every colour and chroma run in colour. The button

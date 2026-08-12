@@ -86,17 +86,14 @@ class ItemCustomizeScreen(
             get = { customization.name },
             set = { customization.name = it; ItemCustomizeConfig.markDirty() },
         )
+        // Chroma is one of the values this row can hold rather than a switch beside it — see
+        // net.trilleo.color.ColorValue.
         color(
             "color",
             default = "",
+            chroma = true,
             get = { customization.color },
             set = { customization.color = it.trim(); ItemCustomizeConfig.markDirty() },
-        )
-        toggle(
-            "chroma",
-            default = false,
-            get = { customization.chroma },
-            set = { customization.chroma = it; ItemCustomizeConfig.save() },
         )
         enum(
             "glint",

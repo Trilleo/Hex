@@ -243,6 +243,7 @@ class RegionEditScreen(
             "color",
             default = RegionConfig.settings.previewColor,
             alpha = true,
+            chroma = true,
             get = { region.color.ifBlank { RegionConfig.settings.previewColor } },
             set = { region.color = it; touch() },
         )
@@ -407,12 +408,19 @@ class RegionEditScreen(
         minecraft.setScreen(ReminderEditScreen(RemindersScreen(this), reminder))
     }
 
+    /**
+     * The preview is dropped here rather than in [removed], because this screen is no longer the last thing
+     * standing between the editor and the world: picking this region's colour opens
+     * [net.trilleo.color.gui.ColorPickerScreen], which would otherwise take the box off screen at the exact
+     * moment the player is choosing what colour to draw it in. [RegionRenderer.tick] is the safety net for
+     * any other way this screen might go away.
+     */
     override fun onClose() {
+        RegionRenderer.focused = null
         minecraft.setScreen(parent)
     }
 
     override fun removed() {
-        RegionRenderer.focused = null
         RegionConfig.save()
         parent?.refreshRows()
     }

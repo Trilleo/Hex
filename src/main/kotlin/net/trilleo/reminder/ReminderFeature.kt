@@ -22,6 +22,7 @@ import net.trilleo.reminder.model.Trigger
 import net.trilleo.reminder.preset.PresetSync
 import net.trilleo.reminder.preset.ReminderPresets
 import net.trilleo.reminder.preset.gui.PresetsScreen
+import net.trilleo.util.Chroma
 import net.trilleo.util.Duration
 import net.trilleo.util.TextClean
 import java.util.*
@@ -281,6 +282,7 @@ object ReminderFeature : Feature {
             "background_color",
             default = HudSettings().backgroundColor,
             alpha = true,
+            chroma = true,
             get = { ReminderConfig.hud.backgroundColor },
             set = { ReminderConfig.hud.backgroundColor = it; ReminderConfig.markDirty() },
         )
@@ -288,6 +290,7 @@ object ReminderFeature : Feature {
             "text_color",
             default = HudSettings().textColor,
             alpha = true,
+            chroma = true,
             get = { ReminderConfig.hud.textColor },
             set = { ReminderConfig.hud.textColor = it; ReminderConfig.markDirty() },
         )
@@ -295,8 +298,21 @@ object ReminderFeature : Feature {
             "flash_color",
             default = HudSettings().flashColor,
             alpha = true,
+            chroma = true,
             get = { ReminderConfig.hud.flashColor },
             set = { ReminderConfig.hud.flashColor = it; ReminderConfig.markDirty() },
+        )
+        // One speed for the whole panel — see HudSettings.chromaSeconds. markDirty, not save: a slider fires
+        // its setter on every frame of a drag.
+        slider(
+            "chroma_speed",
+            min = Chroma.SECONDS_MIN,
+            max = Chroma.SECONDS_MAX,
+            step = Chroma.SECONDS_STEP,
+            default = HudSettings().chromaSeconds,
+            get = { ReminderConfig.hud.chromaSeconds },
+            set = { ReminderConfig.hud.chromaSeconds = it; ReminderConfig.markDirty() },
+            format = { String.format(Locale.ROOT, "%.1fs", it) },
         )
 
         toggle(

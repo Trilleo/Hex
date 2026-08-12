@@ -1,5 +1,7 @@
 package net.trilleo.reminder.hud
 
+import net.trilleo.util.Chroma
+
 /** Which corner of the reminder panel the anchor pins, and therefore which way the panel grows. */
 enum class HudCorner {
     TOP_LEFT,
@@ -44,13 +46,26 @@ class HudSettings {
 
     var background: Boolean = true
 
-    /** Panel background, `"#AARRGGBB"` — carried as a string so the JSON stays readable by hand. */
+    /**
+     * Panel background, `"#AARRGGBB"` or `"chroma"` — carried as a string so the JSON stays readable by hand.
+     * See [net.trilleo.color.ColorValue].
+     */
     var backgroundColor: String = "#80101010"
 
     var textColor: String = "#FFE0E0E0"
 
     /** The colour a reminder flashes in while it is firing. */
     var flashColor: String = "#FFFF5555"
+
+    /**
+     * How long one full trip through the rainbow takes, in seconds, for whichever of the three colours above
+     * is set to chroma.
+     *
+     * One speed for the panel rather than one per colour: a background and its text flowing at different
+     * rates would be unreadable at the moment they crossed. There is no matching *width* — a panel is a
+     * surface, not a run of characters, so there is nothing for a rainbow to spread along.
+     */
+    var chromaSeconds: Double = Chroma.SECONDS_DEFAULT
 
     /** How many rows the panel shows before collapsing the rest into a "+N more" line. */
     var maxRows: Int = 8

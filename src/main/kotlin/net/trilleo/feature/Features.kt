@@ -14,6 +14,7 @@ import net.fabricmc.loader.api.FabricLoader
 import net.minecraft.client.KeyMapping
 import net.minecraft.network.chat.Component
 import net.trilleo.Hex
+import net.trilleo.color.ColorConfig
 import net.trilleo.config.*
 import net.trilleo.skyblock.IslandResolver
 import net.trilleo.skyblock.Sidebar
@@ -65,6 +66,10 @@ object Features {
         // Not a feature — it belongs to the profile system — but it registers a config like one, so it has
         // to load alongside them and before the active profile is seeded.
         VanillaKeysConfig.load()
+
+        // Likewise: the colour picker's remembered colours belong to the mod rather than to any one feature,
+        // and every feature's colour rows read them.
+        ColorConfig.load()
 
         // Only now are the feature configs registered and loaded, so only now can the active profile be
         // seeded from them.

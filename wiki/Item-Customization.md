@@ -25,8 +25,7 @@ It shows the item **before and after side by side**, with its live name undernea
 | Field             | What it does                                                                                                                         |
 |-------------------|--------------------------------------------------------------------------------------------------------------------------------------|
 | **Name**          | What to call it. `&` + a colour or format code works — `&6` gold, `&l` bold, `&z` [chroma](Chroma-Text). Blank keeps Hypixel's name. |
-| **Name colour**   | Colours the whole name.                                                                                                              |
-| **Chroma name**   | The whole name flows through the rainbow — see [Chroma text](Chroma-Text).                                                           |
+| **Name colour**   | Colours the whole name, through the [colour picker](Colour-Picker). **Chroma** there flows it through the rainbow; **None** leaves the name's own colours alone. |
 | **Enchant glint** | Always, never, or unchanged. Cosmetic only; enchantments are untouched.                                                              |
 | **Item model**    | A model to draw instead, e.g. `minecraft:diamond_sword`. Models from your resource packs work too.                                   |
 | **Head texture**  | A player-head skin: a texture hash, a `textures.minecraft.net` link, or the base64 value copied from an item.                        |

@@ -1,5 +1,6 @@
 package net.trilleo.chat.model
 
+import com.google.gson.annotations.SerializedName
 import net.minecraft.network.chat.Component
 import net.trilleo.reminder.model.ReminderAction
 import java.util.*
@@ -98,11 +99,26 @@ class ChatHighlight {
     /** Whether the paint covers only the matched text or the whole message. */
     var scope: ChatScope = ChatScope.MATCH
 
-    /** `"#RRGGBB"` for the highlight, or `""` to use the tab's default colour. Ignored while [chroma] is on. */
+    /**
+     * What colour to paint the match: `"#RRGGBB"`, `"chroma"` for the flowing rainbow, or `""` to use the
+     * tab's default colour — see [net.trilleo.color.ColorValue] for the full vocabulary.
+     *
+     * Chroma lives in this field rather than in a flag beside it because it answers the same question a
+     * colour does. Ask [net.trilleo.chat.ChatHighlightConfig.isChroma] rather than testing this directly: a
+     * blank value defers to the tab's default, which may itself be chroma.
+     */
     var color: String = ""
 
-    /** Whether the highlighted text flows through the rainbow instead of holding [color]. */
-    var chroma: Boolean = false
+    /**
+     * Chroma as it was stored before it became a colour, read once so an existing rule keeps flowing.
+     *
+     * Nullable and mapped to the old key by name: `null` means the file predates nothing — it simply has no
+     * `chroma` key — while `true` is a rule written by an older Hex. The config's normalizer folds a `true`
+     * into [color] and clears this, and GSON omits a null field, so the key disappears from the file the
+     * first time it is written back.
+     */
+    @SerializedName("chroma")
+    var legacyChroma: Boolean? = null
 
     var bold: Boolean = false
     var italic: Boolean = false
@@ -204,7 +220,6 @@ class ChatHighlight {
         into.islands = islands
         into.scope = scope
         into.color = color
-        into.chroma = chroma
         into.bold = bold
         into.italic = italic
         into.underlined = underlined

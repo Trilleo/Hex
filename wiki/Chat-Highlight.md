@@ -70,19 +70,20 @@ button filters what you are looking at without changing any rule.
 
 Every occurrence in a message is painted, not just the first.
 
-**Colour** is the rule's own, falling back to the tab's default when left alone. On top of it, any of **Bold**,
-**Italic**, **Underline**, **Strikethrough** and **Scrambled** can be turned on. Scrambled draws text as characters that
-never settle — it hides what it marks, so it suits censoring a word rather than highlighting one.
+**Colour** is the rule's own, falling back to the tab's default when left alone, and is chosen through the
+[colour picker](Colour-Picker). On top of it, any of **Bold**, **Italic**, **Underline**, **Strikethrough** and
+**Scrambled** can be turned on. Scrambled draws text as characters that never settle — it hides what it marks, so it
+suits censoring a word rather than highlighting one.
 
 ### Chroma
 
 **Chroma** flows the highlighted text through the rainbow instead of holding one colour, the same effect
-[chroma text](Chroma-Text) gives an item name. It replaces the colour setting entirely, which is why the colour row
-disappears while it is on.
+[chroma text](Chroma-Text) gives an item name. It is one of the choices in the colour picker rather than a switch beside
+the colour — press **Chroma** where you would otherwise pick a shade.
 
-**Chroma speed** and **Chroma width** live on the settings tab rather than on each rule, so everything in Hex that flows
-flows at one rate. Speed is how long a full trip through the rainbow takes; width is how many characters one rainbow
-spans — set it wide and a short word shifts colour as a whole rather than striping.
+**Chroma speed** and **Chroma width** live on the settings tab rather than on each rule, so every rule in chat flows at
+one rate. Speed is how long a full trip through the rainbow takes; width is how many characters one rainbow spans — set
+it wide and a short word shifts colour as a whole rather than striping.
 
 The colours travel along the text and restart on each wrapped line, so a long message reads as one rainbow per row.
 

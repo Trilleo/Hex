@@ -3,6 +3,7 @@ package net.trilleo.highlight
 import net.minecraft.client.Minecraft
 import net.minecraft.client.multiplayer.ClientLevel
 import net.minecraft.network.chat.Component
+import net.minecraft.network.chat.MutableComponent
 import net.minecraft.util.ARGB
 import net.minecraft.world.entity.Entity
 import net.minecraft.world.entity.EntityType
@@ -15,8 +16,8 @@ import net.trilleo.highlight.HighlightTracker.nameTagFor
 import net.trilleo.highlight.HighlightTracker.wearerOf
 import net.trilleo.highlight.model.Highlight
 import net.trilleo.highlight.model.HighlightMatch
+import net.trilleo.color.ColorValue
 import net.trilleo.skyblock.SkyblockLocation
-import net.trilleo.util.HexColor
 import net.trilleo.util.TextClean
 import java.util.*
 
@@ -40,19 +41,30 @@ object HighlightTracker {
     /**
      * What a matched entity gets.
      *
-     * @param color the rule's colour, opaque. Colours the outline, and the marks around a [nameTag].
+     * @param color the rule's colour, opaque. Colours the outline, and the marks around a [nameTag]. For a
+     *   chroma rule this is where the rainbow had got to when the scan ran; [HighlightLookup] re-reads the
+     *   clock every frame, so it is only what the colour would be if that never happened.
+     * @param chroma whether the rule flows, and so whether [HighlightLookup] has to resolve a fresh colour
+     *   each frame rather than using [color] as it stands.
      * @param outline whether writing that colour to the render state can actually draw something. False for a
      *   marker armor stand, whose renderer returns no render type at all: writing it there would draw nothing
      *   while still switching the whole outline pass on for the frame, which is a cost with no picture.
      * @param label the floating label, when the rule asked for one. Never set alongside a [nameTag] — the
      *   entity already has a name on screen, and [HighlightLookup] would skip the label anyway.
      * @param nameTag the marked-up replacement for a name tag this mod cannot glow. See [nameTagFor].
+     * @param tinted the components whose colour has to follow a chroma rule — the label, or the two marks
+     *   around a name tag. **They are recoloured in place**, which is the point: `MutableComponent.withColor`
+     *   mutates and returns the same object, so the component this scan published keeps its identity and
+     *   [markedTags] — an identity set — goes on recognising it. Rebuilding them each frame would hand the
+     *   render path a name tag the tracker could no longer identify, and [nameTagScale] would stop growing it.
      */
     class Match(
         val color: Int,
+        val chroma: Boolean,
         val outline: Boolean,
         val label: Component?,
         val nameTag: Component?,
+        val tinted: List<MutableComponent>,
     )
 
     /**
@@ -341,23 +353,26 @@ object HighlightTracker {
     }
 
     private fun matchOf(rule: Highlight, entity: Entity, distanceSq: Double): Match {
+        val spec = colorOf(rule)
         // Forced opaque: the outline pass has no alpha to spend, so a colour written with one would otherwise
         // come out as a darker version of itself rather than a translucent one.
-        val color = ARGB.opaque(
-            HexColor.parseOrDefault(
-                rule.color.ifBlank { HighlightConfig.settings.defaultColor },
-                DEFAULT_COLOR,
-                alpha = false,
-            ),
-        )
-        val nameTag = nameTagFor(entity, color)
+        val color = ARGB.opaque(ColorValue.resolve(spec, DEFAULT_COLOR, HighlightConfig.settings.chromaSeconds))
+        val marks = mutableListOf<MutableComponent>()
+        val nameTag = nameTagFor(entity, color, marks)
+        val label = if (nameTag == null) labelFor(rule, color, distanceSq) else null
+        label?.let(marks::add)
         return Match(
             color = color,
+            chroma = ColorValue.isChroma(spec),
             outline = entity !is ArmorStand || !entity.isMarker,
-            label = if (nameTag == null) labelFor(rule, color, distanceSq) else null,
+            label = label,
             nameTag = nameTag,
+            tinted = marks,
         )
     }
+
+    /** The colour [rule] glows in — its own, or the tab's default when it names none. May be `"chroma"`. */
+    fun colorOf(rule: Highlight): String = rule.color.ifBlank { HighlightConfig.settings.defaultColor }
 
     /**
      * The marked-up name tag for a match that has no body to glow, or null for an ordinary entity.
@@ -378,15 +393,18 @@ object HighlightTracker {
      * Built here rather than in the render hook for the reason [labelFor] is, and stale by the same scan
      * interval — a fifth of a second behind a health bar on a mob too far away to fight.
      */
-    private fun nameTagFor(entity: Entity, color: Int): Component? {
+    private fun nameTagFor(entity: Entity, color: Int, marks: MutableList<MutableComponent>): Component? {
         if (entity !is ArmorStand) return null
         // A plain armor stand glows perfectly well; only one you cannot see needs its name doing the work.
         if (!entity.isMarker && !entity.isInvisible) return null
         val name = entity.customName ?: return null
-        return Component.empty()
-            .append(Component.literal(MARK_LEFT).withColor(color))
-            .append(name)
-            .append(Component.literal(MARK_RIGHT).withColor(color))
+        // The two marks are kept by reference so a chroma rule can recolour exactly them each frame, leaving
+        // Hypixel's own name — which is information the player is reading — alone.
+        val left = Component.literal(MARK_LEFT).withColor(color)
+        val right = Component.literal(MARK_RIGHT).withColor(color)
+        marks += left
+        marks += right
+        return Component.empty().append(left).append(name).append(right)
     }
 
     /**
@@ -397,7 +415,7 @@ object HighlightTracker {
      * The distance it carries is therefore as of the last scan, which at the default interval is a fifth of a
      * second old — well under what anyone reads off a number that is changing as they walk.
      */
-    private fun labelFor(rule: Highlight, color: Int, distanceSq: Double): Component? {
+    private fun labelFor(rule: Highlight, color: Int, distanceSq: Double): MutableComponent? {
         if (!rule.showLabel) return null
         val text = if (rule.labelDistance) {
             String.format(Locale.ROOT, "%s  %.0fm", rule.name, kotlin.math.sqrt(distanceSq))

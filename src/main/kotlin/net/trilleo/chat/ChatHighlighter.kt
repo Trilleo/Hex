@@ -9,8 +9,8 @@ import net.trilleo.chat.ChatHighlighter.restyle
 import net.trilleo.chat.model.ChatHighlight
 import net.trilleo.chat.model.ChatScope
 import net.trilleo.skyblock.SkyblockLocation
+import net.trilleo.color.ColorValue
 import net.trilleo.util.Chroma
-import net.trilleo.util.HexColor
 import net.trilleo.util.TextClean
 import org.slf4j.LoggerFactory
 import java.util.*
@@ -298,7 +298,7 @@ object ChatHighlighter {
                         out.append(Component.literal(span.rule.prefix).setStyle(overlay))
                     }
                     val painted = overlay.applyTo(style)
-                    if (liveChroma && span.rule.chroma) {
+                    if (liveChroma && ChatHighlightConfig.isChroma(span.rule)) {
                         // One component per character — the whole cost of chroma, and the reason the chat log
                         // marks a single run for the render pass instead of doing this to every message.
                         val phase = Chroma.phase(ChatHighlightConfig.chromaSeconds)
@@ -337,15 +337,15 @@ object ChatHighlighter {
      */
     fun styleFor(rule: ChatHighlight): Style {
         var style = Style.EMPTY
-        style = if (rule.chroma) {
+        style = if (ChatHighlightConfig.isChroma(rule)) {
             style
                 .withFont(ChatChroma.FONT)
                 .withColor(Chroma.color(0, ChatHighlightConfig.chromaSeconds, ChatHighlightConfig.chromaWidth))
         } else {
-            val raw = rule.color.ifBlank { ChatHighlightConfig.settings.defaultColor }
             // Masked to 24 bits: a config colour may carry an alpha byte, and Style.withColor takes plain RGB —
             // an unmasked value would arrive as a nonsense colour rather than as a translucent one.
-            style.withColor(HexColor.parseOrDefault(raw, DEFAULT_RGB) and RGB_MASK)
+            val raw = ChatHighlightConfig.colorOf(rule)
+            style.withColor((ColorValue.parse(raw) ?: DEFAULT_RGB) and RGB_MASK)
         }
         if (rule.bold) style = style.withBold(true)
         if (rule.italic) style = style.withItalic(true)

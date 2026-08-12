@@ -80,7 +80,8 @@ Minecraft language. See [Languages](Languages).
   your GUI scale.
 - **Grow from** picks which corner stays anchored as reminders come and go.
 - The rest of the **Reminders** tab covers scale, colours, how many rows to show, and whether to hide the panel off
-  Skyblock.
+  Skyblock. The background, text and flash colours each go through the [colour picker](Colour-Picker) and each can be
+  set to **Chroma**, at the speed set by **Chroma speed** on the same tab.
 - The panel **hides with the rest of the HUD when you press F1**.
 
 Two keys, both bound under Options → Controls → **Hex**:

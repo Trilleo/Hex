@@ -13,6 +13,7 @@
 
 **Features**
 
+- [Colour picker](Colour-Picker)
 - [Config profiles](Config-Profiles)
 - [Keybind shortcuts](Keybind-Shortcuts)
 - [Control switches](Control-Switches)

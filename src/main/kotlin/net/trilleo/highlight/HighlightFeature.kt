@@ -14,6 +14,7 @@ import net.trilleo.config.ConfigCategory
 import net.trilleo.feature.Feature
 import net.trilleo.highlight.gui.HighlightsScreen
 import net.trilleo.highlight.model.Highlight
+import net.trilleo.util.Chroma
 import net.trilleo.util.Notify
 import java.util.*
 
@@ -243,8 +244,21 @@ object HighlightFeature : Feature {
         color(
             "default_color",
             default = defaults.defaultColor,
+            chroma = true,
             get = { HighlightConfig.settings.defaultColor },
             set = { HighlightConfig.settings.defaultColor = it; HighlightConfig.markDirty() },
+        )
+        // Shared by every chroma rule — see HighlightSettings.chromaSeconds. markDirty, not save: a slider
+        // fires its setter on every frame of a drag.
+        slider(
+            "chroma_speed",
+            min = Chroma.SECONDS_MIN,
+            max = Chroma.SECONDS_MAX,
+            step = Chroma.SECONDS_STEP,
+            default = defaults.chromaSeconds,
+            get = { HighlightConfig.settings.chromaSeconds },
+            set = { HighlightConfig.settings.chromaSeconds = it; HighlightConfig.markDirty() },
+            format = { String.format(Locale.ROOT, "%.1fs", it) },
         )
         slider(
             "name_tag_scale",

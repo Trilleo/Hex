@@ -2,6 +2,7 @@ package net.trilleo.region
 
 import com.google.gson.reflect.TypeToken
 import net.minecraft.world.phys.Vec3
+import net.trilleo.color.ColorValue
 import net.trilleo.config.ConfigHandle
 import net.trilleo.config.ConfigRegistry
 import net.trilleo.config.JsonConfig
@@ -9,6 +10,7 @@ import net.trilleo.region.model.Region
 import net.trilleo.region.model.RegionShape
 import net.trilleo.reminder.model.ActionKind
 import net.trilleo.reminder.model.ReminderAction
+import net.trilleo.util.Chroma
 import java.util.*
 
 /**
@@ -37,11 +39,22 @@ data class RegionSettings(
      */
     var exitMargin: Double = 0.5,
 
-    /** Fallback preview colour for a region that names none of its own. */
+    /** Fallback preview colour for a region that names none of its own. May be `"chroma"`. */
     var previewColor: String = "#5555FF55",
 
     /** Colour of a capture in progress, deliberately distinct from a finished region's. */
     var draftColor: String = "#60FFAA00",
+
+    /**
+     * How long one full trip through the rainbow takes, in seconds, for a region drawn in chroma.
+     *
+     * Shared by every region rather than set per region, the same choice
+     * [net.trilleo.itemcustom.ItemCustomizeSettings.chromaSeconds] made: two boxes flowing at different rates
+     * beside each other reads as a glitch rather than as a setting. There is no matching *width*, because a
+     * box is one colour rather than a run of characters — a rainbow spread across it would have nothing to
+     * spread along.
+     */
+    var chromaSeconds: Double = Chroma.SECONDS_DEFAULT,
 
     /** Whether the preview draws through terrain. */
     var previewSeeThrough: Boolean = true,
@@ -152,6 +165,14 @@ object RegionConfig {
         if (settings.previewColor == null) settings.previewColor = RegionSettings().previewColor
         @Suppress("SENSELESS_COMPARISON")
         if (settings.draftColor == null) settings.draftColor = RegionSettings().draftColor
+        settings.previewColor = ColorValue.normalize(settings.previewColor, alpha = true)
+        settings.draftColor = ColorValue.normalize(settings.draftColor, alpha = true)
+
+        // Zero is how an absent key arrives — GSON does not run Kotlin's default — and it is also below the
+        // slider's floor, so a config written before chroma reached regions picks the default up rather than
+        // freezing a chroma box solid.
+        settings.chromaSeconds = settings.chromaSeconds.sane(Chroma.SECONDS_DEFAULT)
+            .takeIf { it > 0.0 }?.coerceIn(Chroma.SECONDS_MIN, Chroma.SECONDS_MAX) ?: Chroma.SECONDS_DEFAULT
 
         settings.defaultRadius = settings.defaultRadius.sane(12.0).coerceIn(1.0, 256.0)
         settings.defaultHeight = settings.defaultHeight.sane(6.0).coerceIn(1.0, 256.0)
@@ -175,6 +196,7 @@ object RegionConfig {
         if (region.leaveText == null) region.leaveText = ""
         @Suppress("SENSELESS_COMPARISON")
         if (region.color == null) region.color = ""
+        region.color = ColorValue.normalize(region.color, alpha = true)
         @Suppress("SENSELESS_COMPARISON")
         if (region.shape == null) region.shape = RegionShape.BOX
         @Suppress("SENSELESS_COMPARISON")

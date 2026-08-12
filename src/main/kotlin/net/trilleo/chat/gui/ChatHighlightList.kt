@@ -10,6 +10,7 @@ import net.minecraft.client.gui.narration.NarratableEntry
 import net.minecraft.network.chat.Component
 import net.trilleo.chat.ChatHighlightConfig
 import net.trilleo.chat.model.ChatHighlight
+import net.trilleo.color.ColorValue
 import net.trilleo.util.Chroma
 import net.trilleo.util.HexColor
 
@@ -162,17 +163,13 @@ class ChatHighlightList(
             val top = contentYMiddle - SWATCH_HEIGHT / 2
             val rgb = when {
                 !rule.enabled -> DISABLED_COLOR
-                rule.chroma -> Chroma.color(
+                ChatHighlightConfig.isChroma(rule) -> Chroma.color(
                     0,
                     ChatHighlightConfig.chromaSeconds,
                     ChatHighlightConfig.chromaWidth,
                 ) or HexColor.OPAQUE
 
-                else -> HexColor.parseOrDefault(
-                    rule.color.ifBlank { ChatHighlightConfig.settings.defaultColor },
-                    NAME_COLOR,
-                    alpha = false,
-                )
+                else -> ColorValue.resolve(ChatHighlightConfig.colorOf(rule), NAME_COLOR)
             }
             extractor.fill(x, top, x + SWATCH_WIDTH, top + SWATCH_HEIGHT, rgb)
             extractor.outline(x, top, SWATCH_WIDTH, SWATCH_HEIGHT, SWATCH_BORDER)

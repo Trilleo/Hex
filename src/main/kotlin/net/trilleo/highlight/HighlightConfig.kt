@@ -1,6 +1,7 @@
 package net.trilleo.highlight
 
 import com.google.gson.reflect.TypeToken
+import net.trilleo.color.ColorValue
 import net.trilleo.config.ConfigHandle
 import net.trilleo.config.ConfigRegistry
 import net.trilleo.config.JsonConfig
@@ -8,6 +9,7 @@ import net.trilleo.highlight.model.Highlight
 import net.trilleo.highlight.model.HighlightMatch
 import net.trilleo.reminder.model.ActionKind
 import net.trilleo.reminder.model.ReminderAction
+import net.trilleo.util.Chroma
 import java.util.*
 
 /**
@@ -32,8 +34,18 @@ data class HighlightSettings(
      */
     var scanIntervalTicks: Int = 4,
 
-    /** Fallback glow colour for a rule that names none of its own. */
+    /** Fallback glow colour for a rule that names none of its own. May be `"chroma"`. */
     var defaultColor: String = "#FFFF55",
+
+    /**
+     * How long one full trip through the rainbow takes, in seconds, for a rule glowing in chroma.
+     *
+     * Shared by every rule rather than set per rule, the choice
+     * [net.trilleo.itemcustom.ItemCustomizeSettings.chromaSeconds] already made: two mobs beside each other
+     * cycling at different rates reads as a rendering fault rather than as two settings. There is no matching
+     * *width*, because an outline is one colour rather than a run of characters.
+     */
+    var chromaSeconds: Double = Chroma.SECONDS_DEFAULT,
 
     /**
      * How much bigger a marked name tag is drawn than the game would draw it.
@@ -152,6 +164,12 @@ object HighlightConfig {
         if (settings.highlights == null) settings.highlights = mutableListOf()
         @Suppress("SENSELESS_COMPARISON")
         if (settings.defaultColor == null) settings.defaultColor = HighlightSettings().defaultColor
+        settings.defaultColor = ColorValue.normalize(settings.defaultColor, alpha = false)
+
+        // Zero is how an absent key arrives, and it is below the slider's floor, so a config written before
+        // chroma reached highlights picks the default up rather than freezing a chroma glow solid.
+        settings.chromaSeconds = settings.chromaSeconds.sane(Chroma.SECONDS_DEFAULT)
+            .takeIf { it > 0.0 }?.coerceIn(Chroma.SECONDS_MIN, Chroma.SECONDS_MAX) ?: Chroma.SECONDS_DEFAULT
 
         settings.scanIntervalTicks = settings.scanIntervalTicks.coerceIn(SCAN_INTERVAL_MIN, SCAN_INTERVAL_MAX)
         // Zero is how an absent key arrives — GSON does not run Kotlin's default — and it is also below the
@@ -183,6 +201,7 @@ object HighlightConfig {
         if (highlight.island == null) highlight.island = ""
         @Suppress("SENSELESS_COMPARISON")
         if (highlight.color == null) highlight.color = ""
+        highlight.color = ColorValue.normalize(highlight.color, alpha = false)
         @Suppress("SENSELESS_COMPARISON")
         if (highlight.notifyText == null) highlight.notifyText = ""
         @Suppress("SENSELESS_COMPARISON")

@@ -28,10 +28,9 @@ import java.util.*
  * per-row reset, inline validation and tooltips for nothing, and keeping the editor looking like the rest of the
  * mod.
  *
- * **Which rows exist depends on the choices above them**, which is why nearly every setter calls [rebuild]: the
- * colour row is meaningless while chroma is on, and the notification's title and sound settings only appear once
- * there is a notification to configure. Showing all of them at once would make a rule look far more complicated
- * than the two fields most of them need.
+ * **Which rows exist depends on the choices above them**, which is why several setters call [rebuild]: the
+ * notification's title and sound settings only appear once there is a notification to configure. Showing all of
+ * them at once would make a rule look far more complicated than the two fields most of them need.
  *
  * ### The preview
  *
@@ -167,22 +166,16 @@ class ChatHighlightEditScreen(
             get = { rule.scope },
             set = { rule.scope = it; touch() },
         )
-        toggle(
-            "chroma",
-            default = false,
-            get = { rule.chroma },
-            set = { rule.chroma = it; ChatHighlightConfig.save(); rebuild() },
+        // Chroma is one of the values this row can hold rather than a switch beside it — see
+        // net.trilleo.color.ColorValue. That is also why the row no longer appears and disappears: there is
+        // nothing left for it to contradict.
+        color(
+            "color",
+            default = ChatHighlightConfig.settings.defaultColor,
+            chroma = true,
+            get = { ChatHighlightConfig.colorOf(rule) },
+            set = { rule.color = it; touch() },
         )
-        // Hidden while chroma is on: chroma overrides it entirely, and a colour picker that visibly does nothing
-        // is how a player concludes the feature is broken.
-        if (!rule.chroma) {
-            color(
-                "color",
-                default = ChatHighlightConfig.settings.defaultColor,
-                get = { rule.color.ifBlank { ChatHighlightConfig.settings.defaultColor } },
-                set = { rule.color = it; touch() },
-            )
-        }
 
         toggle("bold", default = false, get = { rule.bold }, set = { rule.bold = it; touch() })
         toggle("italic", default = false, get = { rule.italic }, set = { rule.italic = it; touch() })

@@ -1,6 +1,7 @@
 package net.trilleo.itemcustom
 
 import com.google.gson.reflect.TypeToken
+import net.trilleo.color.ColorValue
 import net.trilleo.config.ConfigHandle
 import net.trilleo.config.ConfigRegistry
 import net.trilleo.config.JsonConfig
@@ -183,8 +184,12 @@ object ItemCustomizeConfig {
             item.normalizeUuid()
             item.model = item.model.trim()
             item.texture = ItemCustomizer.normalizeTexture(item.texture)
-            item.color = item.color.trim()
-            item.dye = item.dye.trim()
+            // Chroma used to be a flag beside the colour and is now one of the values the colour can take, so
+            // an entry written by an older Hex is carried across once and the old key dropped.
+            if (item.legacyChroma == true) item.color = ColorValue.CHROMA
+            item.legacyChroma = null
+            item.color = ColorValue.normalize(item.color, alpha = false)
+            item.dye = ColorValue.normalize(item.dye, alpha = false)
         }
 
         settings.items.removeAll { it.uuid.isEmpty() }

@@ -100,14 +100,26 @@ class TextEntry(
 ) : ConfigEntry
 
 /**
- * A colour setting, carried as `"#RRGGBB"` (or `"#AARRGGBB"` when [alpha] is set) rather than a packed int,
- * so the JSON stays readable for anyone editing a config file by hand.
+ * A colour setting, carried as text rather than a packed int so the JSON stays readable for anyone editing a
+ * config file by hand. What the text may say — a hex colour, `"chroma"`, or nothing — is
+ * [net.trilleo.color.ColorValue]'s to define; [chroma] and [optional] say which of those this particular
+ * setting accepts.
+ *
+ * The renderer turns this into a swatch that opens [net.trilleo.color.gui.ColorPickerScreen], so every colour
+ * in the mod is chosen the same way. A feature never builds a colour control of its own.
+ *
+ * @param alpha whether the value carries an alpha byte (`"#AARRGGBB"`) as well as a colour.
+ * @param chroma whether this setting can flow through the rainbow. Only true where the thing being coloured is
+ *   redrawn often enough to animate — a colour written once into a component that is then cached cannot.
+ * @param optional whether an empty value is meaningful here, i.e. "leave whatever colour it already had".
  */
 class ColorEntry(
     override val label: Component,
     override val tooltip: Component?,
     val default: String,
     val alpha: Boolean,
+    val chroma: Boolean,
+    val optional: Boolean,
     val get: () -> String,
     val set: (String) -> Unit,
 ) : ConfigEntry

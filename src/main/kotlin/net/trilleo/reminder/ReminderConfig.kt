@@ -1,6 +1,7 @@
 package net.trilleo.reminder
 
 import com.google.gson.reflect.TypeToken
+import net.trilleo.color.ColorValue
 import net.trilleo.config.ConfigHandle
 import net.trilleo.config.ConfigRegistry
 import net.trilleo.config.JsonConfig
@@ -9,6 +10,7 @@ import net.trilleo.reminder.hud.HudCorner
 import net.trilleo.reminder.hud.HudSettings
 import net.trilleo.reminder.hud.HudSort
 import net.trilleo.reminder.model.*
+import net.trilleo.util.Chroma
 import java.util.*
 
 /**
@@ -120,6 +122,15 @@ object ReminderConfig {
         if (hud.textColor == null) hud.textColor = "#FFE0E0E0"
         @Suppress("SENSELESS_COMPARISON")
         if (hud.flashColor == null) hud.flashColor = "#FFFF5555"
+        hud.backgroundColor = ColorValue.normalize(hud.backgroundColor, alpha = true)
+        hud.textColor = ColorValue.normalize(hud.textColor, alpha = true)
+        hud.flashColor = ColorValue.normalize(hud.flashColor, alpha = true)
+
+        // Zero is how an absent key arrives — GSON does not run Kotlin's default — and it is also below the
+        // slider's floor, so a config written before chroma reached the panel picks the default up rather than
+        // freezing a chroma panel solid.
+        hud.chromaSeconds = hud.chromaSeconds.sane(Chroma.SECONDS_DEFAULT)
+            .takeIf { it > 0.0 }?.coerceIn(Chroma.SECONDS_MIN, Chroma.SECONDS_MAX) ?: Chroma.SECONDS_DEFAULT
 
         hud.anchorX = hud.anchorX.sane(0.01).coerceIn(0.0, 1.0)
         hud.anchorY = hud.anchorY.sane(0.35).coerceIn(0.0, 1.0)

@@ -74,7 +74,10 @@ class Highlight {
      */
     var island: String = ""
 
-    /** `"#RRGGBB"` for the glow, or `""` to use the tab's default colour. The outline pass ignores alpha. */
+    /**
+     * The glow: `"#RRGGBB"`, `"chroma"` for an outline that flows through the rainbow, or `""` to use the
+     * tab's default colour. The outline pass ignores alpha. See [net.trilleo.color.ColorValue].
+     */
     var color: String = ""
 
     /** How far away a match still counts, in blocks. Beyond it the entity neither glows nor announces itself. */

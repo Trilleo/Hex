@@ -2,8 +2,10 @@ package net.trilleo.highlight
 
 import net.minecraft.client.renderer.entity.state.EntityRenderState
 import net.minecraft.network.chat.Component
+import net.minecraft.util.ARGB
 import net.minecraft.world.entity.Entity
 import net.minecraft.world.entity.EntityAttachment
+import net.trilleo.util.Chroma
 
 /**
  * The render path's entry point into entity highlighting: everything
@@ -43,9 +45,21 @@ object HighlightLookup {
         if (!HighlightTracker.anyMatched) return
         val match = HighlightTracker.matchFor(entity.id) ?: return
 
+        // The one piece of per-frame work this file does, and only for a rule that asked to flow: the scan
+        // could only bake in the colour the rainbow held when it ran, which at the default interval would step
+        // five times a second instead of moving. Every other match is one field read, exactly as before.
+        val color = if (match.chroma) {
+            ARGB.opaque(Chroma.color(0, HighlightConfig.settings.chromaSeconds, Chroma.WIDTH_DEFAULT)).also {
+                // In place, so the published components keep their identity — see HighlightTracker.Match.tinted.
+                match.tinted.forEach { part -> part.withColor(it) }
+            }
+        } else {
+            match.color
+        }
+
         // Skipped for an entity that cannot draw one — vanilla has already written NO_OUTLINE, and writing a
         // colour there would switch the outline pass on for a frame in which it can produce nothing.
-        if (match.outline) state.outlineColor = match.color
+        if (match.outline) state.outlineColor = color
 
         match.nameTag?.let { marked ->
             // Only ever a replacement for a name the game is already drawing, never a new one: the attachment

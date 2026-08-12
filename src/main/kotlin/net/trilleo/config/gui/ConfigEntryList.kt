@@ -8,8 +8,9 @@ import net.minecraft.client.gui.components.*
 import net.minecraft.client.gui.narration.NarratableEntry
 import net.minecraft.client.gui.screens.Screen
 import net.minecraft.network.chat.Component
+import net.trilleo.color.ColorValue
+import net.trilleo.color.gui.ColorPickerScreen
 import net.trilleo.config.*
-import net.trilleo.util.HexColor
 import java.util.*
 import kotlin.math.roundToInt
 import kotlin.math.roundToLong
@@ -191,7 +192,7 @@ class ConfigEntryList(
         is EnumEntry<*> -> EnumRow(entry)
         is ActionEntry -> ActionRow(entry, screen)
         is TextEntry -> TextRow(entry)
-        is ColorEntry -> ColorRow(entry)
+        is ColorEntry -> ColorRow(entry, screen)
         is KeybindEntry -> KeybindRow(entry)
     }
 
@@ -593,8 +594,18 @@ class ConfigEntryList(
         }
     }
 
-    /** A hex colour field with a swatch, so the value is legible without decoding the digits. */
-    private class ColorRow(private val entry: ColorEntry) : ResettableRow(
+    /**
+     * A colour: the value as text, plus a swatch that opens the mod's colour picker.
+     *
+     * The swatch is a real [Button] with the colour painted over it rather than a rectangle this row
+     * hit-tests itself, so it inherits click routing, keyboard focus and the tooltip from the list for
+     * nothing; hover is signalled by its border, since the colour covers vanilla's own highlight.
+     *
+     * The text field stays, and it is not redundant. Typing is how a colour arrives from a wiki page or a
+     * teammate, and the field is also where an alpha byte is written — the picker deliberately has no alpha
+     * slider, so a translucent value is carried through unchanged rather than edited by dragging.
+     */
+    private class ColorRow(private val entry: ColorEntry, private val screen: Screen) : ResettableRow(
         entry.label,
         entry.tooltip,
         isDefault = { entry.get() == entry.default },
@@ -604,12 +615,39 @@ class ConfigEntryList(
             Minecraft.getInstance().font, 0, 0, CONTROL_WIDTH - SWATCH - GAP, WIDGET_HEIGHT, entry.label,
         ).apply {
             value = entry.get()
-            setMaxLength(9)
-            setResponder { text -> if (parse(text) != null) entry.set(text) }
+            setMaxLength(ColorValue.MAX_LENGTH)
+            // Applied only once the text is a value this setting accepts, so a colour can be typed through
+            // its half-finished states without the setting flickering on every keystroke.
+            setResponder { text -> if (accepts(text)) entry.set(ColorValue.normalize(text, entry.alpha)) }
             this@ColorRow.rowTooltip?.let(::setTooltip)
         }
 
-        override val widgets: List<AbstractWidget> = listOf(field, resetButton)
+        private val swatch: Button = Button.builder(Component.empty()) { open() }
+            .bounds(0, 0, SWATCH, WIDGET_HEIGHT)
+            .tooltip(Tooltip.create(Component.translatable("hex.color.open.tooltip")))
+            .build()
+
+        override val widgets: List<AbstractWidget> = listOf(field, swatch, resetButton)
+
+        private fun accepts(text: String): Boolean = when {
+            ColorValue.isChroma(text) -> entry.chroma
+            ColorValue.isNone(text) -> entry.optional
+            else -> ColorValue.parse(text) != null
+        }
+
+        private fun open() {
+            Minecraft.getInstance().setScreen(
+                ColorPickerScreen(
+                    parent = screen,
+                    subject = entry.label,
+                    initial = entry.get(),
+                    alpha = entry.alpha,
+                    allowChroma = entry.chroma,
+                    allowNone = entry.optional,
+                    apply = entry.set,
+                ),
+            )
+        }
 
         override fun layout(extractor: GuiGraphicsExtractor, mouseX: Int, mouseY: Int, delta: Float) {
             if (!field.isFocused && field.value != entry.get()) field.value = entry.get()
@@ -618,18 +656,34 @@ class ConfigEntryList(
 
             val swatchX = controlX() + CONTROL_WIDTH - SWATCH
             val top = widgetY()
-            val argb = parse(field.value)?.let { if (entry.alpha) it else it or OPAQUE } ?: 0
+            place(swatch, swatchX, SWATCH)
+            draw(swatch, extractor, mouseX, mouseY, delta)
+
+            val spec = entry.get()
+            // Resolved every frame rather than cached, which is the whole reason a chroma swatch flows here
+            // exactly as the thing it is colouring will.
+            val argb = when {
+                ColorValue.isNone(spec) -> EMPTY_SWATCH
+                else -> ColorValue.resolve(spec, EMPTY_SWATCH)
+            }
             extractor.fill(swatchX, top, swatchX + SWATCH, top + WIDGET_HEIGHT, argb)
-            extractor.outline(swatchX, top, SWATCH, WIDGET_HEIGHT, SWATCH_BORDER)
+            extractor.outline(
+                swatchX,
+                top,
+                SWATCH,
+                WIDGET_HEIGHT,
+                if (swatch.isHovered || swatch.isFocused) SWATCH_HOVER else SWATCH_BORDER,
+            )
             drawReset(extractor, mouseX, mouseY, delta)
         }
 
         private companion object {
             const val SWATCH = 20
-            const val OPAQUE = HexColor.OPAQUE
             const val SWATCH_BORDER = 0xFF000000.toInt()
+            const val SWATCH_HOVER = 0xFFFFFFFF.toInt()
 
-            fun parse(text: String): Int? = HexColor.parse(text)
+            /** What "no colour" and an unreadable value both draw as: a dark, obviously-empty square. */
+            const val EMPTY_SWATCH = 0xFF2A2A2A.toInt()
         }
     }
 

@@ -13,7 +13,9 @@ import net.trilleo.notebook.Notebook
 import net.trilleo.notebook.NotebookConfig
 import net.trilleo.notebook.model.NoteDocument
 import net.trilleo.notebook.model.NoteEditorView
-import net.trilleo.util.HexColor
+import net.trilleo.color.ColorConfig
+import net.trilleo.color.ColorValue
+import net.trilleo.util.Chroma
 import net.trilleo.util.Notify
 import java.util.*
 
@@ -54,6 +56,9 @@ class NoteEditorScreen(
     /** Everything the palette panel holds — the swatches, the hex field and its apply button. */
     private val paletteWidgets = mutableListOf<AbstractWidget>()
 
+    /** The recent-colour slots, kept separately so [refreshRecent] can repoint them without a rebuild. */
+    private val recentButtons = mutableListOf<Button>()
+
     /** The hex field and the button that writes what it holds, kept for the value checks between them. */
     private lateinit var hexBox: EditBox
     private lateinit var hexApply: Button
@@ -65,6 +70,7 @@ class NoteEditorScreen(
     override fun init() {
         tools.clear()
         paletteWidgets.clear()
+        recentButtons.clear()
 
         titleBox = EditBox(font, MARGIN, MARGIN + 4, titleWidth(), TITLE_HEIGHT, TITLE_LABEL).apply {
             setHint(TITLE_LABEL)
@@ -202,17 +208,22 @@ class NoteEditorScreen(
     }
 
     /**
-     * The sixteen colours, chroma and reset, laid out under the toolbar and hidden until asked for.
+     * The sixteen colours, chroma and reset, then the colours picked recently anywhere in the mod, laid out
+     * under the toolbar and hidden until asked for.
      *
      * Built once and toggled with `visible` rather than rebuilt on each open: rebuilding the screen would take
-     * the caret and the selection with it, which are the two things a colour button exists to act on.
+     * the caret and the selection with it, which are the two things a colour button exists to act on. That is
+     * also why this palette stays here rather than becoming a button that opens
+     * [net.trilleo.color.gui.ColorPickerScreen] — leaving the editor and coming back would lose the very
+     * selection the colour is meant to be applied to. It shares the picker's colour table and its recent list
+     * instead, which is the part that was worth sharing.
      */
     private fun buildPalette() {
         val perRow = ((width - MARGIN * 2 + SWATCH_GAP) / (SWATCH_SIZE + SWATCH_GAP)).coerceAtLeast(1)
         val swatchRows = (PALETTE.size + perRow - 1) / perRow
-        // One row more than the swatches need: the last one is the hex field, for the colours Minecraft has
-        // no letter for.
-        paletteRows = swatchRows + 1
+        // Two rows more than the swatches need: one for the recent colours, one for the hex field — the
+        // colours Minecraft has no letter for.
+        paletteRows = swatchRows + 2
 
         PALETTE.forEachIndexed { index, entry ->
             val row = index / perRow
@@ -225,12 +236,14 @@ class NoteEditorScreen(
                         SWATCH_SIZE,
                         SWATCH_SIZE,
                     )
-                    .tooltip(Tooltip.create(Component.translatable(entry.tooltipKey)))
+                    .tooltip(Tooltip.create(entry.name))
                     .build(),
             )
         }
 
-        val hexY = paletteTop() + swatchRows * (SWATCH_SIZE + SWATCH_GAP)
+        buildRecent(paletteTop() + swatchRows * (SWATCH_SIZE + SWATCH_GAP), perRow)
+
+        val hexY = paletteTop() + (swatchRows + 1) * (SWATCH_SIZE + SWATCH_GAP)
         hexBox = EditBox(font, MARGIN, hexY, HEX_WIDTH, SWATCH_SIZE, HEX_LABEL).apply {
             setHint(HEX_LABEL)
             setMaxLength(HEX_MAX)
@@ -244,6 +257,40 @@ class NoteEditorScreen(
             .build()
         addPaletteWidget(hexApply)
         refreshHexApply()
+    }
+
+    /**
+     * A slot per remembered colour, writing `&#RRGGBB` for whatever sits in that slot right now.
+     *
+     * Every slot is built up front and each reads [ColorConfig] when it is clicked and again when it is drawn
+     * ([refreshRecent]), rather than capturing a colour at build time. That is what lets the row follow a
+     * colour applied from the hex field a moment ago, on a screen that deliberately never rebuilds itself.
+     */
+    private fun buildRecent(y: Int, perRow: Int) {
+        repeat(minOf(ColorConfig.MAX_RECENT, perRow)) { index ->
+            val button = Button.builder(Component.literal(SWATCH_GLYPH)) {
+                ColorConfig.recent.getOrNull(index)?.let { spec ->
+                    onField { field -> NoteEdits.color(field, spec) }
+                }
+            }
+                .bounds(MARGIN + index * (SWATCH_SIZE + SWATCH_GAP), y, SWATCH_SIZE, SWATCH_SIZE)
+                .tooltip(Tooltip.create(Component.translatable("hex.color.recent")))
+                .build()
+            recentButtons += button
+            addPaletteWidget(button)
+        }
+        refreshRecent()
+    }
+
+    /** Points each recent slot at whatever colour is in it now, hiding the slots with nothing behind them. */
+    private fun refreshRecent() {
+        val recent = ColorConfig.recent
+        recentButtons.forEachIndexed { index, button ->
+            val rgb = recent.getOrNull(index)?.let { ColorValue.parse(it) }
+            button.visible = paletteOpen && rgb != null
+            button.message = Component.literal(SWATCH_GLYPH)
+                .withStyle { style: Style -> style.withColor((rgb ?: UNSET_SWATCH_COLOR) and ColorValue.RGB_MASK) }
+        }
     }
 
     private fun addPaletteWidget(widget: AbstractWidget) {
@@ -261,11 +308,7 @@ class NoteEditorScreen(
      * The `#` is optional and case does not matter, because a colour arrives pasted from a palette site as
      * often as it is typed. What goes into the note is the canonical spelling either way.
      */
-    private fun typedHex(): Int? {
-        val text = hexBox.value.trim().removePrefix("#")
-        if (text.length != HEX_DIGITS) return null
-        return HexColor.parse(text)
-    }
+    private fun typedHex(): Int? = ColorValue.parse(hexBox.value)?.and(ColorValue.RGB_MASK)
 
     /** Keeps the apply button showing the colour it would write, and dead until that colour can be read. */
     private fun refreshHexApply() {
@@ -278,12 +321,20 @@ class NoteEditorScreen(
 
     private fun applyHex() {
         val rgb = typedHex() ?: return
-        onField { NoteEdits.color(it, String.format(Locale.ROOT, "#%06X", rgb)) }
+        val spec = ColorValue.format(rgb, alpha = false)
+        // Remembered in the same shared list every colour row in the mod writes to, so a colour invented here
+        // is one click away the next time a region or a highlight needs it.
+        ColorConfig.remember(spec)
+        onField { NoteEdits.color(it, spec) }
+        refreshRecent()
     }
 
     private fun togglePalette() {
         paletteOpen = !paletteOpen
         paletteWidgets.forEach { it.visible = paletteOpen }
+        // After the blanket assignment above, which would otherwise show every recent slot including the
+        // empty ones.
+        refreshRecent()
         if (!paletteOpen && view.showsSource) setFocused(body)
     }
 
@@ -528,7 +579,7 @@ class NoteEditorScreen(
     }
 
     /** One colour the palette offers: the code it writes, and the swatch that stands for it. */
-    private class Swatch(val code: String, val rgb: Int, val tooltipKey: String) {
+    private class Swatch(val code: String, val rgb: Int, val name: Component) {
         fun label(): Component = Component.literal(SWATCH_GLYPH).withStyle { style: Style ->
             style.withColor(rgb)
         }
@@ -565,7 +616,6 @@ class NoteEditorScreen(
         const val SWATCH_GLYPH = "■"
         const val HEX_WIDTH = 66
         const val HEX_MAX = 7
-        const val HEX_DIGITS = 6
         const val UNSET_SWATCH_COLOR = 0x505050
 
         /** The counter `MultiLineEditBox` draws under itself, plus the gap it leaves above it. */
@@ -591,28 +641,28 @@ class NoteEditorScreen(
         const val WARNING_COLOR = 0xFFFFD25F.toInt()
 
         /**
-         * Vanilla's sixteen, then chroma and reset — the same set and the same order as the codes themselves,
-         * so the palette reads as the thing it writes rather than as a designer's selection.
+         * Vanilla's sixteen, then chroma and reset.
+         *
+         * The sixteen come from [ColorValue.VANILLA] rather than being written out again here, so the
+         * notebook's palette and the colour picker's are the same table and the same names — one list to
+         * keep right instead of two that could drift. Chroma and reset are appended because they are codes
+         * without colours: neither is a value a colour setting could hold, so neither belongs in
+         * [ColorValue].
          */
-        val PALETTE = listOf(
-            Swatch("0", 0x000000, "hex.notebook.editor.color.black"),
-            Swatch("1", 0x0000AA, "hex.notebook.editor.color.dark_blue"),
-            Swatch("2", 0x00AA00, "hex.notebook.editor.color.dark_green"),
-            Swatch("3", 0x00AAAA, "hex.notebook.editor.color.dark_aqua"),
-            Swatch("4", 0xAA0000, "hex.notebook.editor.color.dark_red"),
-            Swatch("5", 0xAA00AA, "hex.notebook.editor.color.dark_purple"),
-            Swatch("6", 0xFFAA00, "hex.notebook.editor.color.gold"),
-            Swatch("7", 0xAAAAAA, "hex.notebook.editor.color.gray"),
-            Swatch("8", 0x555555, "hex.notebook.editor.color.dark_gray"),
-            Swatch("9", 0x5555FF, "hex.notebook.editor.color.blue"),
-            Swatch("a", 0x55FF55, "hex.notebook.editor.color.green"),
-            Swatch("b", 0x55FFFF, "hex.notebook.editor.color.aqua"),
-            Swatch("c", 0xFF5555, "hex.notebook.editor.color.red"),
-            Swatch("d", 0xFF55FF, "hex.notebook.editor.color.light_purple"),
-            Swatch("e", 0xFFFF55, "hex.notebook.editor.color.yellow"),
-            Swatch("f", 0xFFFFFF, "hex.notebook.editor.color.white"),
-            Swatch("z", 0xFF88CC, "hex.notebook.editor.color.chroma"),
-            Swatch("r", 0xC0C0C0, "hex.notebook.editor.color.reset"),
-        )
+        val PALETTE: List<Swatch> by lazy {
+            ColorValue.VANILLA.map { Swatch(it.code?.toString().orEmpty(), it.rgb, it.name) } + listOf(
+                Swatch(
+                    Chroma.CODE.toString(),
+                    CHROMA_SWATCH_COLOR,
+                    Component.translatable("hex.notebook.editor.color.chroma"),
+                ),
+                Swatch("r", RESET_SWATCH_COLOR, Component.translatable("hex.notebook.editor.color.reset")),
+            )
+        }
+
+        /** Chroma has no one colour, so its swatch is a pink that none of the sixteen already uses. */
+        const val CHROMA_SWATCH_COLOR = 0xFF88CC
+
+        const val RESET_SWATCH_COLOR = 0xC0C0C0
     }
 }

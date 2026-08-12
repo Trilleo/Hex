@@ -2,9 +2,9 @@ package net.trilleo.reminder.hud
 
 import net.minecraft.client.Minecraft
 import net.minecraft.client.gui.GuiGraphicsExtractor
+import net.trilleo.color.ColorValue
 import net.trilleo.reminder.ReminderConfig
 import net.trilleo.skyblock.SkyblockLocation
-import net.trilleo.util.HexColor
 
 /** The panel's box in panel space (screen pixels divided by the scale), as laid out by [ReminderHudRenderer]. */
 class PanelRect(val left: Int, val top: Int, val width: Int, val height: Int)
@@ -31,6 +31,12 @@ object ReminderHudRenderer {
     private const val DEFAULT_TEXT = 0xFFE0E0E0.toInt()
     private const val DEFAULT_FLASH = 0xFFFF5555.toInt()
     private const val BORDER = 0x40FFFFFF
+
+    /** How solid a chroma panel background is. The stock background's own alpha, so the two match. */
+    private const val BACKGROUND_CHROMA_ALPHA = 0x80
+
+    /** Text is never see-through, chroma or not: a translucent countdown is a countdown you cannot read. */
+    private const val OPAQUE_ALPHA = 0xFF
 
     /** Whether the panel would draw at all right now, so the editor can offer a preview when it would not. */
     fun visible(): Boolean {
@@ -97,7 +103,7 @@ object ReminderHudRenderer {
         extractor.pose().scale(hud.scale.toFloat())
 
         if (hud.background) {
-            val background = HexColor.parseOrDefault(hud.backgroundColor, DEFAULT_BACKGROUND)
+            val background = colorOf(hud.backgroundColor, DEFAULT_BACKGROUND, BACKGROUND_CHROMA_ALPHA)
             extractor.fill(rect.left, rect.top, rect.left + rect.width, rect.top + rect.height, background)
             extractor.outline(rect.left, rect.top, rect.width, rect.height, BORDER)
         }
@@ -105,8 +111,8 @@ object ReminderHudRenderer {
         // No per-reminder animation state: the phase of the flash is a pure function of the wall clock, which
         // is frame-rate independent, allocates nothing, and stays correct across a pause.
         val bright = (System.currentTimeMillis() / FLASH_PERIOD) % 2L == 0L
-        val textColor = HexColor.parseOrDefault(hud.textColor, DEFAULT_TEXT)
-        val flashColor = HexColor.parseOrDefault(hud.flashColor, DEFAULT_FLASH)
+        val textColor = colorOf(hud.textColor, DEFAULT_TEXT, OPAQUE_ALPHA)
+        val flashColor = colorOf(hud.flashColor, DEFAULT_FLASH, OPAQUE_ALPHA)
 
         rows.forEachIndexed { index, row ->
             val color = if (row.flashing && bright) flashColor else textColor
@@ -114,5 +120,17 @@ object ReminderHudRenderer {
         }
 
         extractor.pose().popMatrix()
+    }
+
+    /**
+     * One stored colour as the ARGB to draw this frame, chroma included.
+     *
+     * A flowing colour is a hue and nothing else, so it has no transparency of its own to keep: [chromaAlpha]
+     * supplies one, which is why a chroma *background* stays as see-through as the stock one while chroma
+     * *text* comes out solid. Resolved per frame, which is what makes it flow rather than step.
+     */
+    private fun colorOf(spec: String, fallback: Int, chromaAlpha: Int): Int {
+        val resolved = ColorValue.resolve(spec, fallback, ReminderConfig.hud.chromaSeconds)
+        return if (ColorValue.isChroma(spec)) ColorValue.withAlpha(resolved, chromaAlpha) else resolved
     }
 }

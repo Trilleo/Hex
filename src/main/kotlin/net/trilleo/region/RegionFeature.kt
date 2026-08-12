@@ -17,6 +17,7 @@ import net.trilleo.config.ConfigCategory
 import net.trilleo.feature.Feature
 import net.trilleo.region.gui.RegionsScreen
 import net.trilleo.region.model.Region
+import net.trilleo.util.Chroma
 import net.trilleo.util.Notify
 import java.util.*
 
@@ -349,6 +350,7 @@ object RegionFeature : Feature {
             "preview_color",
             default = defaults.previewColor,
             alpha = true,
+            chroma = true,
             get = { RegionConfig.settings.previewColor },
             set = { RegionConfig.settings.previewColor = it; RegionConfig.markDirty() },
         )
@@ -356,8 +358,21 @@ object RegionFeature : Feature {
             "draft_color",
             default = defaults.draftColor,
             alpha = true,
+            chroma = true,
             get = { RegionConfig.settings.draftColor },
             set = { RegionConfig.settings.draftColor = it; RegionConfig.markDirty() },
+        )
+        // Shared by every chroma region rather than set per region — see RegionSettings.chromaSeconds.
+        // markDirty, not save: a slider fires its setter on every frame of a drag.
+        slider(
+            "chroma_speed",
+            min = Chroma.SECONDS_MIN,
+            max = Chroma.SECONDS_MAX,
+            step = Chroma.SECONDS_STEP,
+            default = defaults.chromaSeconds,
+            get = { RegionConfig.settings.chromaSeconds },
+            set = { RegionConfig.settings.chromaSeconds = it; RegionConfig.markDirty() },
+            format = { String.format(Locale.ROOT, "%.1fs", it) },
         )
 
         toggle(

@@ -188,6 +188,7 @@ object ChatHighlightFeature : Feature {
         color(
             "default_color",
             default = defaults.defaultColor,
+            chroma = true,
             get = { ChatHighlightConfig.settings.defaultColor },
             set = { ChatHighlightConfig.settings.defaultColor = it; ChatHighlightConfig.markDirty() },
         )

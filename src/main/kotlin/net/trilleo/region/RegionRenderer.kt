@@ -9,8 +9,8 @@ import net.minecraft.world.phys.AABB
 import net.minecraft.world.phys.Vec3
 import net.trilleo.region.model.Region
 import net.trilleo.region.model.RegionShape
+import net.trilleo.color.ColorValue
 import net.trilleo.skyblock.SkyblockLocation
-import net.trilleo.util.HexColor
 import kotlin.math.sqrt
 
 /**
@@ -49,9 +49,17 @@ object RegionRenderer {
     /** Fallback when a colour will not parse — a visible box beats an invisible one. */
     private const val DEFAULT_COLOR = 0x5555FF55
 
+    /** How solid a chroma region's fill is. The stock preview colour's own alpha, so the two match. */
+    private const val CHROMA_ALPHA = 0x55
+
     /** Called every client tick from [RegionFeature]. Cheap, and a no-op when nothing is being previewed. */
     fun tick(client: Minecraft) {
         if (client.level == null) return
+
+        // The editor drops its own focus when it closes, but a screen can also go away without that — the
+        // game closing every screen at once, say. Being back in the world with no screen open is the moment
+        // that becomes visible, so it is the moment to let go of a region nobody is editing any more.
+        if (focused != null && client.screen == null) focused = null
 
         val draft = RegionCapture.draftBox()
         val regions = previewed()
@@ -61,8 +69,7 @@ object RegionRenderer {
         // collector was installed before, so this cannot disturb the game's own gizmo use.
         Minecraft.getInstance().collectPerTickGizmos().use {
             draft?.let { box ->
-                val color = HexColor.parseOrDefault(RegionConfig.settings.draftColor, DEFAULT_COLOR)
-                emitBox(box, color)
+                emitBox(box, colorOf(RegionConfig.settings.draftColor))
                 label(client, box, draftLabel(box))
             }
             regions.forEach { region -> emit(client, region) }
@@ -87,10 +94,7 @@ object RegionRenderer {
     }
 
     private fun emit(client: Minecraft, region: Region) {
-        val color = HexColor.parseOrDefault(
-            region.color.ifBlank { RegionConfig.settings.previewColor },
-            DEFAULT_COLOR,
-        )
+        val color = colorOf(region.color.ifBlank { RegionConfig.settings.previewColor })
 
         when (region.shape) {
             RegionShape.BOX -> emitBox(region.aabb(), color)
@@ -99,6 +103,22 @@ object RegionRenderer {
         }
 
         if (RegionConfig.settings.previewNames) label(client, region.aabb(), region.name)
+    }
+
+    /**
+     * One stored colour as the ARGB to draw this tick, chroma included.
+     *
+     * **Chroma is given a fixed transparency** rather than keeping the value's own, because a flowing colour
+     * has no alpha byte to keep — the rainbow is a hue and nothing else. [CHROMA_ALPHA] matches the stock
+     * preview colour's, so switching a region to chroma changes what colour it is and not how solid it looks.
+     *
+     * Emitted from the tick rather than the frame, like everything else here, so a chroma box steps twenty
+     * times a second. On a box the size of a room that reads as a smooth drift; it is only text, where the eye
+     * tracks individual letters, that needs the frame rate.
+     */
+    private fun colorOf(spec: String): Int {
+        val resolved = ColorValue.resolve(spec, DEFAULT_COLOR, RegionConfig.settings.chromaSeconds)
+        return if (ColorValue.isChroma(spec)) ColorValue.withAlpha(resolved, CHROMA_ALPHA) else resolved
     }
 
     private fun emitBox(box: AABB, color: Int) {

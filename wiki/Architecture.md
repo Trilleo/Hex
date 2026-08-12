@@ -137,6 +137,17 @@ The GUI itself is **in-house**: no Cloth Config, no Mod Menu backend. `ModMenuIn
 compiled against a `compileOnly` dependency and loaded lazily by Fabric, so nothing resolves those types unless Mod Menu
 is installed.
 
+### Colours
+
+`net.trilleo.color` is the one place colours live. `ColorValue` defines what a colour setting may hold — a hex string,
+`"chroma"`, or nothing — and resolves any of the three into a packed ARGB without failing; `ColorConfig` persists the
+recent colours shared across the mod; `gui.ColorPickerScreen` is the [picker](Colour-Picker) that every `color(...)` row
+opens.
+
+There is deliberately **one** way to ask for a colour, so a feature added later inherits the palettes, the recent
+colours and chroma without doing anything. `chroma = true` belongs only on settings whose render path re-reads the value
+every frame or every tick: a colour written into a component that is then cached cannot animate.
+
 ## Shared Skyblock readers
 
 `net.trilleo.skyblock` is state that belongs to no single feature, ticked centrally so it stays live regardless of which

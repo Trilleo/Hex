@@ -169,15 +169,31 @@ class ConfigCategory(
             entries += TextEntry(label(key), tooltip(key), default, get, set, validate, suggestions)
         }
 
-        /** Add a colour picker over an `"#RRGGBB"` (or `"#AARRGGBB"`) string. */
+        /**
+         * Add a colour row — a swatch that opens the mod's colour picker, plus the value as text.
+         *
+         * This is the only way a feature should ask for a colour. Everything the picker offers (the palettes,
+         * the shared recent colours, hex and RGB entry, chroma) comes with the row, so a new setting is
+         * consistent with the rest of the mod without doing anything to be.
+         *
+         * @param alpha the value carries an alpha byte as well as a colour.
+         * @param chroma this setting may flow through the rainbow. Only set it where whatever draws the colour
+         *   re-reads it every frame or every tick; a colour baked into a cached component cannot animate, and
+         *   offering chroma there would produce a setting that visibly does nothing.
+         * @param optional an empty value means "no colour of its own", which the picker offers as **None**.
+         *   Defaults to true exactly when the setting's own default is empty, which is what that already meant
+         *   at every call site.
+         */
         fun color(
             key: String,
             default: String,
             alpha: Boolean = false,
+            chroma: Boolean = false,
+            optional: Boolean = default.isBlank(),
             get: () -> String,
             set: (String) -> Unit,
         ) {
-            entries += ColorEntry(label(key), tooltip(key), default, alpha, get, set)
+            entries += ColorEntry(label(key), tooltip(key), default, alpha, chroma, optional, get, set)
         }
 
         /** Add a key-combination capture row. */

@@ -73,11 +73,16 @@ Every button is a toggle: pressing **B** on text that is already bold takes the 
 button leaves the cursor exactly where you need to start typing. **Ctrl+B**, **Ctrl+I** and **Ctrl+E** do bold, italic
 and code without reaching for the mouse.
 
-The **&** button opens Minecraft's sixteen colours, plus **chroma** — a colour that flows, the same one
-[item customization](Item-Customization) uses — and a swatch that goes back to plain. Below them is a field for **any**
-colour: type `#RRGGBB`, press the swatch beside it, and the selection is wrapped in a `&#RRGGBB` code. Colours are
-written into the text, so a note keeps them when you export it, and they work anywhere in a note — see
+The **&** button opens Minecraft's sixteen colours — the same sixteen the [colour picker](Colour-Picker) offers, with
+the same names — plus **chroma**, a colour that flows, the same one
+[item customization](Item-Customization) uses — and a swatch that goes back to plain. Under them is a row of the colours
+you have picked **recently anywhere in Hex**, and under that a field for **any** colour: type `#RRGGBB`, press the
+swatch beside it, and the selection is wrapped in a `&#RRGGBB` code — and that colour joins the shared recent row.
+Colours are written into the text, so a note keeps them when you export it, and they work anywhere in a note — see
 [Chroma text](Chroma-Text).
+
+The palette is a panel here rather than the full [colour picker](Colour-Picker) on purpose: leaving the editor for
+another screen would lose the cursor and the selection the colour is meant to apply to.
 
 ### The preview
 

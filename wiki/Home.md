@@ -14,6 +14,7 @@ anywhere, and it has no server-side half — there is nothing to install for you
 | Feature                                    | In one line                                                             |
 |--------------------------------------------|-------------------------------------------------------------------------|
 | [Config menu](Configuration)               | One categorized settings menu, opened four different ways               |
+| [Colour picker](Colour-Picker)             | One picker for every colour in the mod, with shared recent colours      |
 | [Config profiles](Config-Profiles)         | Named setups you switch by hand or automatically per server or island   |
 | [Keybind shortcuts](Keybind-Shortcuts)     | A key combo runs a delayed sequence of commands or chat messages        |
 | [Control switches](Control-Switches)       | Cycle one of Minecraft's own controls between two or more keys, in-game |
@@ -22,7 +23,7 @@ anywhere, and it has no server-side half — there is nothing to install for you
 | [Hand display](Hand-Display)               | Reposition and restyle your held item in first person, cosmetically     |
 | [Per-item swing](Per-Item-Swing)           | Hide the swing animation only while holding chosen Skyblock items       |
 | [Item customization](Item-Customization)   | Rename, recolour, reskin or de-glint one specific item, client-side     |
-| [Chroma text](Chroma-Text)                 | Flowing rainbow colour for item names, whole or from `&z` onward        |
+| [Chroma text](Chroma-Text)                 | Flowing rainbow colour, chosen wherever a colour is                     |
 | [Reminders](Reminders)                     | Timers, chat triggers and location alerts on a movable HUD panel        |
 | [Regions](Regions)                         | Areas you draw that announce themselves when you walk in                |
 | [Entity highlight](Entity-Highlight)       | Mobs you pick, lit up in your colour, announcing themselves when new    |

@@ -78,10 +78,11 @@ region on the island as a real shape in the world, labelled with its name, and *
 you can walk around and look.
 
 The **Regions** tab decides whether they draw through walls and whether names are shown; each region can have its own
-colour.
+colour, chosen through the [colour picker](Colour-Picker). **Chroma** there walks the shape through the rainbow at the
+speed set by **Chroma speed** on the tab, and the opacity byte in `#AARRGGBB` decides how solid the fill is.
 
 The region you have open in the editor is **always** drawn, so a box you are typing sizes into changes shape behind the
-menu.
+menu — and it stays drawn while you are picking its colour, so you can watch the shape recolour as you drag.
 
 ## Regions and reminders
 

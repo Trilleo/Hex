@@ -78,8 +78,13 @@ The list's **All islands** / **This island** button filters what you are looking
 
 ## Seeing them
 
-**Glow colour** is the outline's colour, and every rule has its own. It is vanilla's own glowing effect, so it draws
-through terrain and follows the mob smoothly however fast it moves.
+**Glow colour** is the outline's colour, and every rule has its own, chosen through the
+[colour picker](Colour-Picker). It is vanilla's own glowing effect, so it draws through terrain and follows the mob
+smoothly however fast it moves.
+
+Pressing **Chroma** in the picker walks the outline through the rainbow, at the speed set by **Chroma speed** on this
+tab. The floating label and the arrows around a marked name flow with it, so a rule reads as one thing rather than a
+glowing mob beside a static label.
 
 One thing it cannot do is outline an entity that is **invisible** — there is no model to draw around. That is exactly
 why a name rule targets the mob rather than the marker above it.
@@ -145,7 +150,8 @@ The **Entity Highlight** tab of `/hexa config`:
 | **Enabled**          | Master switch. With it off nothing glows and no rule announces anything, but your rules are kept        |
 | **Highlights…**      | Opens the rule list                                                                                     |
 | **Scan interval**    | How often the world is checked, in ticks. Higher costs less and only delays a mob that has just spawned |
-| **Default colour**   | The glow colour a rule uses when it names none of its own                                               |
+| **Default colour**   | The glow colour a rule uses when it names none of its own. Chroma works here too                        |
+| **Chroma speed**     | How long one full trip through the rainbow takes for a rule glowing in chroma. Shared by every rule     |
 | **Marked name size** | How much bigger a marked name tag is drawn, from `1.00×` to `4.00×`. Applies to every rule at once      |
 | **Skyblock only**    | Ignore every rule unless the scoreboard looks like Skyblock's                                           |
 

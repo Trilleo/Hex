@@ -21,6 +21,7 @@ touch these — the [config menu](Configuration) covers everything — but they 
 | `notebook.json`       | [Notebook](Notebook) *display settings* — sort, previews, layout, spacing, opacity | ✅                               |
 | `vanilla_keys.json`   | Minecraft's own key bindings, when **MC keys** is on                               | ✅                               |
 | `item_custom.json`    | [Item customizations](Item-Customization)                                          | ❌ per installation              |
+| `colors.json`         | The [colour picker](Colour-Picker)'s recent colours                                | ❌ per installation              |
 | `update.json`         | [Auto-updater](Updating) settings                                                  | ❌ per installation              |
 | `reminder_state.json` | Every reminder's live countdown                                                    | ❌ per installation              |
 | `suggest/model.json`  | What command suggestions has learned                                               | ❌ per installation              |
@@ -35,8 +36,8 @@ The distinction is **loadout versus installation**:
 - A **loadout** is how you want the mod to behave — panel position, hand scale, which reminders exist. Switching
   profiles should swap all of it.
 - An **installation** property describes *you and your machine*, not a setup. Whether Hex updates itself, which of your
-  items you have reskinned, how far into a four-day cookie you are, which commands you personally type, and what you
-  have written down are all in this group.
+  items you have reskinned, how far into a four-day cookie you are, which commands you personally type, which colours
+  you have reached for lately, and what you have written down are all in this group.
 
 Swapping those on a profile switch would be actively wrong: it would silently turn the updater off, hand your command
 history and your notes to anyone you shared settings with, and reset a countdown you were relying on. So they stay put.

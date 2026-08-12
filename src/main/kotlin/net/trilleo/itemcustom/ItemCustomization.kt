@@ -1,5 +1,7 @@
 package net.trilleo.itemcustom
 
+import com.google.gson.annotations.SerializedName
+import net.trilleo.color.ColorValue
 import net.trilleo.util.Chroma
 import java.util.*
 
@@ -74,18 +76,26 @@ class ItemCustomization {
     var name: String = ""
 
     /**
-     * `"#RRGGBB"` applied as the name's base colour, or blank to leave the name's own styling alone. Codes
-     * inside [name] still win over this per segment, so it sets the colour of everything not coloured already.
+     * The name's base colour: `"#RRGGBB"`, `"chroma"` to flow the whole name through the rainbow, or blank to
+     * leave the name's own styling alone. See [net.trilleo.color.ColorValue].
+     *
+     * Codes inside [name] still win over this per segment, so it sets the colour of everything not coloured
+     * already — and `"chroma"` here is exactly what a leading `&z` would do, without having to type it.
      */
     var color: String = ""
 
     /**
-     * Whether the whole name flows through the rainbow — the same thing `&z` does, without having to type it.
+     * Chroma as it was stored before it became a colour, read once so an existing customization keeps flowing.
      *
-     * A plain [Boolean] rather than the nullable [enabled] uses, because here GSON's default happens to be the
-     * right one: a file that omits the key means chroma is off, and `false` is exactly that.
+     * Nullable so an absent key is distinguishable from a stored `false`; [ItemCustomizeConfig]'s normalizer
+     * folds a `true` into [color] and clears this, and GSON omits a null field, so the key leaves the file the
+     * first time it is written back. Same migration [net.trilleo.chat.model.ChatHighlight.legacyChroma] does.
      */
-    var chroma: Boolean = false
+    @SerializedName("chroma")
+    var legacyChroma: Boolean? = null
+
+    /** Whether the name flows through the rainbow, i.e. whether [color] asks for chroma. */
+    val chroma: Boolean get() = ColorValue.isChroma(color)
 
     /** Whether to force the enchantment glint. Null is repaired to [GlintOverride.DEFAULT] at load. */
     var glint: GlintOverride? = null
@@ -125,8 +135,8 @@ class ItemCustomization {
      */
     fun hasEffect(): Boolean = active &&
             (name.isNotEmpty() ||
+                    // Covers chroma too, which is now a value this field can hold rather than a flag beside it.
                     color.isNotEmpty() ||
-                    chroma ||
                     glintOrDefault != GlintOverride.DEFAULT ||
                     model.isNotEmpty() ||
                     texture.isNotEmpty() ||

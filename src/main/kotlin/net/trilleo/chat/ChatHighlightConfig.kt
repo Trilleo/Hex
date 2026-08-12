@@ -4,6 +4,7 @@ import com.google.gson.reflect.TypeToken
 import net.trilleo.chat.model.ChatChannel
 import net.trilleo.chat.model.ChatHighlight
 import net.trilleo.chat.model.ChatScope
+import net.trilleo.color.ColorValue
 import net.trilleo.config.ConfigHandle
 import net.trilleo.config.ConfigRegistry
 import net.trilleo.config.JsonConfig
@@ -88,6 +89,18 @@ object ChatHighlightConfig {
     val chromaSeconds: Double get() = settings.chromaSeconds
     val chromaWidth: Double get() = settings.chromaWidth
 
+    /**
+     * The colour [rule] actually paints with — its own, or the tab's default when it names none.
+     *
+     * One place rather than an `ifBlank` at each call site, because chroma is now one of the values this can
+     * come back as: the highlighter, the list screen and [anyChroma] all have to agree about whether a rule
+     * flows, and they only can if they are all asking the same question.
+     */
+    fun colorOf(rule: ChatHighlight): String = rule.color.ifBlank { settings.defaultColor }
+
+    /** Whether [rule] flows through the rainbow, default colour included. */
+    fun isChroma(rule: ChatHighlight): Boolean = ColorValue.isChroma(colorOf(rule))
+
     private var chromaRevision: Int = -1
     private var chromaCached: Boolean = false
 
@@ -103,7 +116,7 @@ object ChatHighlightConfig {
         get() {
             if (chromaRevision != revision) {
                 chromaRevision = revision
-                chromaCached = settings.highlights.any { it.enabled && it.chroma }
+                chromaCached = settings.highlights.any { it.enabled && isChroma(it) }
             }
             return chromaCached
         }
@@ -163,6 +176,7 @@ object ChatHighlightConfig {
         if (settings.highlights == null) settings.highlights = mutableListOf()
         @Suppress("SENSELESS_COMPARISON")
         if (settings.defaultColor == null) settings.defaultColor = ChatHighlightSettings().defaultColor
+        settings.defaultColor = ColorValue.normalize(settings.defaultColor, alpha = false)
 
         // Zero is how an absent key arrives — GSON does not run Kotlin's default — and it is also below either
         // slider's floor, so it cannot be a value anyone chose. Reading it as "not set" is what lets a config
@@ -192,6 +206,13 @@ object ChatHighlightConfig {
         if (highlight.islands == null) highlight.islands = ""
         @Suppress("SENSELESS_COMPARISON")
         if (highlight.color == null) highlight.color = ""
+
+        // Chroma used to be a flag beside the colour; it is now one of the values the colour can take. A rule
+        // written by an older Hex is carried across here and the old key dropped, so a file only ever migrates
+        // once and a rule that was flowing goes on flowing.
+        if (highlight.legacyChroma == true) highlight.color = ColorValue.CHROMA
+        highlight.legacyChroma = null
+        highlight.color = ColorValue.normalize(highlight.color, alpha = false)
         @Suppress("SENSELESS_COMPARISON")
         if (highlight.prefix == null) highlight.prefix = ""
         @Suppress("SENSELESS_COMPARISON")
