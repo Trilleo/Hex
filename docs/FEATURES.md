@@ -38,8 +38,8 @@ It offers four ways to reach a colour, because people arrive knowing different t
 
 There are three rows of swatches:
 
-- **Minecraft colours** — the sixteen `&0`–`&f` colours, named. Hypixel writes every rarity, stat and broadcast in one of
-  them, so "the same gold the legendary items use" is a click rather than a look-up.
+- **Minecraft colours** — the sixteen `&0`–`&f` colours, named. Hypixel writes every rarity, stat and broadcast in one
+  of them, so "the same gold the legendary items use" is a click rather than a look-up.
 - **Presets** — a dozen colours Minecraft has no code for: orange, amber, lime, mint, teal, sky, violet, magenta, pink,
   coral, crimson and slate.
 - **Recent** — the last twelve colours you picked *anywhere in the mod*. This is the row that makes two features match:
@@ -323,8 +323,7 @@ Shift to move further. It is placed as a fraction of the screen, so it stays put
 fullscreen, or change your GUI scale, and **Grow from** picks which corner stays anchored as reminders come and go. The
 rest of the **Reminders** tab covers scale, colours — background, text and flash, each through the
 [colour picker](#colour-picker) and each able to flow with **Chroma** — how many rows to show, and whether to hide the
-panel off Skyblock.
-The panel hides with the rest of the HUD when you press F1.
+panel off Skyblock. The panel hides with the rest of the HUD when you press F1.
 
 Bind **Dismiss Reminder** under Options → Controls → **Hex** to silence whatever is flashing without opening anything;
 **Snooze Reminder** pushes it back instead, by the amount set in the tab.
@@ -549,8 +548,8 @@ blank. A list rather than the single island an entity highlight takes, because c
 
 **Paint** covers either the words that matched or the whole message. On top of the **Colour** — chosen through the
 [colour picker](#colour-picker), where **Chroma** flows the text through the rainbow — come **Bold**, **Italic**,
-**Underline**, **Strikethrough** and **Scrambled**. **Mark before** and **Mark after** put text such as `»` and `«` either side of the match,
-which stays visible in a screenshot and to a colour-blind player in a way a colour does not.
+**Underline**, **Strikethrough** and **Scrambled**. **Mark before** and **Mark after** put text such as `»` and `«`
+either side of the match, which stays visible in a screenshot and to a colour-blind player in a way a colour does not.
 
 **Hide the message** drops a matching line from chat. It still counts as a match, so a rule can silence spam and keep
 its sound, and a hidden line still reaches reminders and command suggestions.
