@@ -126,7 +126,13 @@ class HighlightList(
             // Name above, what-it-catches muted beneath — the summary is what tells apart two rules the player
             // has named similarly for two different islands.
             val nameColor = if (highlight.enabled) NAME_COLOR else DISABLED_COLOR
-            extractor.text(font, truncate(highlight.name, available), x, contentYMiddle - font.lineHeight - 1, nameColor)
+            extractor.text(
+                font,
+                truncate(highlight.name, available),
+                x,
+                contentYMiddle - font.lineHeight - 1,
+                nameColor
+            )
             extractor.text(font, truncate(highlight.summary(), available), x, contentYMiddle + 1, SUB_COLOR)
 
             val count = HighlightTracker.countFor(highlight)
