@@ -19,6 +19,7 @@ Run `/hexa` on its own to see the mod version and which subcommands exist. Runni
 | `/hexa remind …`    | [Reminders](Reminders)                        |
 | `/hexa region …`    | [Regions](Regions)                            |
 | `/hexa highlight …` | [Entity highlight](Entity-Highlight)          |
+| `/hexa chat …`      | [Chat highlight](Chat-Highlight)              |
 | `/hexa note …`      | [Notebook](Notebook)                          |
 | `/hexa suggest …`   | [Command suggestions](Command-Suggestions)    |
 | `/hexa update`      | Check for a [mod update](Updating) now        |
@@ -115,6 +116,27 @@ Every capture ends by opening the region for editing. See [Regions](Regions).
 
 `nearby` prints names as Hex reads them, with Hypixel's colour codes and invisible padding stripped — those are the
 strings a rule matches against, so it is what to copy from. See [Entity highlight](Entity-Highlight).
+
+## Chat highlight
+
+```
+/hexa chat add [name]    — a new rule, opened for editing
+/hexa chat list          — every rule, what it catches, and whether it is on
+/hexa chat test <line>   — run a line of your own past your rules
+/hexa chat edit          — open the chat highlights list
+```
+
+`name` is the rest of the line and only labels the new rule; what it looks for is typed into the editor that opens.
+
+`test` is the counterpart of `/hexa highlight nearby`. Chat has no crosshair to point at something with, so instead you
+supply the line yourself and Hex prints it exactly as chat would show it — repainted, marked, chroma and all — followed
+by which rules claimed it and whether they would have hidden it:
+
+```
+/hexa chat test Party > Steve: rare drop!
+```
+
+See [Chat highlight](Chat-Highlight).
 
 ## Notebook
 

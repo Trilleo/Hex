@@ -2,6 +2,53 @@
 
 ## Unreleased
 
+### New Features
+
+#### Chat Highlight
+
++ Added **Chat Highlight**: words you choose, picked out of chat in a colour you choose. A rule watches for a piece of
+  text, and when a message contains it the matching words are repainted — the sibling of Entity Highlight, for the half
+  of Skyblock that arrives as text rather than as a mob.
+    + **Colour and style.** Any colour, plus bold, italic, underline, strikethrough and scrambled. **Chroma** flows the
+      match through the rainbow, and it genuinely flows — chat is not redrawn from scratch the way an item name is, so
+      Hex marks the run and recolours it every frame instead. Speed and width are shared with the rest of the mod.
+    + **Paint** covers either the words that matched or the whole message, for a broadcast that is easier to spot as one
+      coloured row.
+    + **Marks before and after** put text like `»` and `«` either side of the match — visible in a screenshot and to a
+      colour-blind player, which a colour is not.
+    + **Channel** restricts a rule to public, party, guild, officer, co-op or private chat, so "my name" can highlight in
+      party chat without firing on every guild message.
+    + **Islands** restricts a rule to one or several islands, comma-separated — `hub, dwarven mines` — or anywhere when
+      left blank.
+    + **Hide the message** drops a matching line from chat entirely. It still counts as a match, so one rule can silence
+      spam and keep its sound; and a hidden line still reaches reminders and command suggestions.
+    + **Announce matches** fires a title and a sound, with the cooldown, subtitle, colour and pitch controls Entity
+      Highlight already has.
+    + Clicking and hovering still work over highlighted text: Hex repaints the words inside Hypixel's own message rather
+      than rebuilding it, so a party invite stays clickable.
++ The editor previews the rule on a sample line as you write it, chroma and all — chat has no crosshair to point at
+  something with, so the preview and `/hexa chat test <line>` are how a rule is checked without waiting for a message.
++ Added `/hexa chat` — `add`, `list`, `edit`, and `test <line>` to run a line of your own past your rules.
++ Added the **Open Chat Highlights** keybind, unbound by default.
+
+### Technical Details
+
+#### Chat Highlight
+
++ Added `Feature.onChatModify`, wired once to `ClientReceiveMessageEvents.MODIFY_GAME` in `Features.bootstrap`.
+  `ALLOW_GAME` can only swallow a message and `MODIFY_GAME` can only replace it, so restyling chat needed the second
+  hook; the result is folded through the features in registration order.
++ `ChatHighlightFeature` is registered last of the chat readers. Chat fans out with `all { … }`, which stops at the first
+  feature that refuses a message, so hiding a line any earlier would have hidden it from reminders too.
++ `ChatHighlighter` matches on the raw flattened text rather than `TextClean.strip`, because stripping moves the offsets
+  the repaint depends on; it rebuilds through `Component.visit` and `Style.applyTo` so click and hover events survive.
+  Matching is `String.indexOf` only — no regex, and so none of `ChatMatcher`'s backtracking hazards — with the output
+  bounded instead at 512 searched characters and 64 highlighted runs per message.
++ Animated chroma is a `ChatComponentMixin` on the two drawing `ChatGraphicsAccess` implementations, wrapping each line's
+  `FormattedCharSequence`. Marked runs carry `hex:chroma`, a font asset copying vanilla's `minecraft:default` provider
+  list so glyph widths — and therefore wrapping and click hit-testing — are unchanged. The click-only implementation is
+  deliberately not touched, and the wrapper is skipped entirely when no enabled rule uses chroma.
+
 ## Version 1.10.2
 
 ### Improvements

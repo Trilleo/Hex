@@ -4,6 +4,7 @@ import net.fabricmc.api.ClientModInitializer
 import net.minecraft.client.KeyMapping
 import net.minecraft.resources.Identifier
 import net.trilleo.attack.AttackModeFeature
+import net.trilleo.chat.ChatHighlightFeature
 import net.trilleo.feature.Features
 import net.trilleo.freecam.FreecamFeature
 import net.trilleo.hand.HandFeature
@@ -46,6 +47,12 @@ object Hex : ClientModInitializer {
         Features.register(ReminderFeature)
         Features.register(NotebookFeature)
         Features.register(SuggestFeature)
+        // Last of the chat readers, and that is the whole reason it is here rather than beside HighlightFeature.
+        // A chat highlight can hide a line, and Features fans chat out with `all { … }`, which stops at the first
+        // feature that refuses one — so registering it any earlier would mean a hidden line never reaching
+        // reminders or command suggestions. Hiding a message from the chat window should not hide it from the
+        // rest of the mod.
+        Features.register(ChatHighlightFeature)
         Features.register(UpdateFeature)
         Features.bootstrap()
 

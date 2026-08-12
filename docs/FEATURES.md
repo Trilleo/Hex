@@ -459,6 +459,52 @@ Note that a glow drawn through terrain shows you where something is before you c
 than most of what Hex does, which is why it is opt-in per rule rather than on by default; see the note on Hypixel's
 rules in the [README](../README.md).
 
+## Chat highlight
+
+The words you care about, picked out of chat in a colour you choose. A rule watches for a piece of text, and when a
+message contains it the matching words are repainted — the sibling of entity highlight, for the half of Skyblock that
+arrives as text rather than as a mob.
+
+The rule list opens from the **Chat Highlight** tab of `/hexa config`, from `/hexa chat edit`, or from the **Open Chat
+Highlights** keybind, which is unbound by default. **Add** makes a blank rule and opens it; the only field it really
+needs is **Text to find**.
+
+**Text to find** is plain text rather than a pattern: a message counts when it contains that text anywhere, and capitals
+are ignored unless **Match capitals** is on. Reminders already cover the pattern-shaped job, and keeping this one
+literal means no rule anyone writes can misbehave.
+
+**Channel** restricts a rule to public, party, guild, officer, co-op or private chat, or **Any**, which also covers the
+server's own broadcasts. A line only counts as a channel's when somebody is actually speaking on it, so `Guild > Steve:
+hi` is guild chat while `Guild > Steve joined.` belongs to no channel.
+
+**Islands** restricts a rule to one or several islands, comma-separated — `hub, dwarven mines` — or anywhere when left
+blank. A list rather than the single island an entity highlight takes, because chat follows the player around.
+
+**Paint** covers either the words that matched or the whole message. On top of the **Colour** come **Bold**, **Italic**,
+**Underline**, **Strikethrough** and **Scrambled**, and **Chroma**, which flows the text through the rainbow and
+replaces the colour entirely. **Mark before** and **Mark after** put text such as `»` and `«` either side of the match,
+which stays visible in a screenshot and to a colour-blind player in a way a colour does not.
+
+**Hide the message** drops a matching line from chat. It still counts as a match, so a rule can silence spam and keep
+its sound, and a hidden line still reaches reminders and command suggestions.
+
+**Announce matches** fires a title and a sound, with the same message, subtitle, colour, sound and cooldown settings
+reminders, regions and entity highlights use. The cooldown matters more here: a chat line has no identity to remember,
+so without one a rule watching a busy channel would fire on every message that mentions its word.
+
+The editor previews the rule on a sample line as it is written, chroma and all, and `/hexa chat test <line>` runs a line
+of the player's own past every rule and prints what they made of it. Between them they replace the crosshair an entity
+rule is made with — chat cannot be pointed at.
+
+Where two rules claim the same words, the first in the list wins them; both still count as having matched. Clicking and
+hovering survive a repaint, because the words are painted inside Hypixel's own message rather than the message being
+rebuilt from its text. The one consequence is that a rule whose text would span Hypixel's invisible padding does not
+match.
+
+Rules live in `config/hex/chathighlights.json` and take part in config profiles and clipboard sharing. Messages already
+in the chat log keep whatever styling they arrived with: chat is styled once, on arrival, so switching a rule on changes
+the next message rather than the ones above it.
+
 ## Notebook
 
 Somewhere to write things down without leaving the game — a dungeon checklist, a mining route, prices you keep

@@ -52,6 +52,7 @@ A few lists are deliberately not caught by a tab reset, because they are data ra
 | **Reminders**           | The [reminder](Reminders) panel's position, scale, colours and row count; snooze length                        |
 | **Regions**             | [Region](Regions) drawing, names, through-walls, default radius, exit margin                                   |
 | **Entity Highlight**    | The [highlight rules](Entity-Highlight) list, scan interval, default glow colour                               |
+| **Chat Highlight**      | The [chat highlight rules](Chat-Highlight) list, default colour, and its [chroma](Chroma-Text) speed and width |
 | **Command Suggestions** | Everything about [command suggestions](Command-Suggestions), and the dashboard                                 |
 | **Updates**             | The [auto-updater](Updating) — per installation, never part of a profile                                       |
 

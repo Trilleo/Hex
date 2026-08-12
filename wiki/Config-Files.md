@@ -16,6 +16,7 @@ touch these — the [config menu](Configuration) covers everything — but they 
 | `reminders.json`      | [Reminders](Reminders) and their panel settings                                    | ✅                               |
 | `regions.json`        | [Regions](Regions) and their settings                                              | ✅                               |
 | `highlights.json`     | [Entity highlight](Entity-Highlight) rules and their settings                      | ✅                               |
+| `chathighlights.json` | [Chat highlight](Chat-Highlight) rules and their settings                          | ✅                               |
 | `suggest.json`        | [Command suggestions](Command-Suggestions) *settings*                              | ✅                               |
 | `notebook.json`       | [Notebook](Notebook) *display settings* — sort, previews, layout, spacing, opacity | ✅                               |
 | `vanilla_keys.json`   | Minecraft's own key bindings, when **MC keys** is on                               | ✅                               |

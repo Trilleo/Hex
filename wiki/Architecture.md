@@ -44,10 +44,14 @@ what it needs:
 | `onHudRender(extractor, delta)` | Draw the feature's HUD overlay, once per frame                                          |
 | `onWorldJoin` / `onWorldLeave`  | Connection lifecycle                                                                    |
 | `onChatReceive(message)`        | Return `false` to swallow the message                                                   |
+| `onChatModify(message)`         | Return a replacement for a message every feature has allowed                            |
 | `onShutdown()`                  | Flush unsaved config                                                                    |
 
-Features are Kotlin `object`s, one package each: `attack`, `freecam`, `hand`, `itemcustom`, `keybind`, `region`,
-`reminder`, `suggest`, `update`.
+The two chat hooks are separate because Fabric's two events are: `ALLOW_GAME` can only swallow a message and
+`MODIFY_GAME` can only replace it. They fire in that order, so a swallowed message never reaches `onChatModify`.
+
+Features are Kotlin `object`s, one package each: `attack`, `chat`, `freecam`, `hand`, `highlight`, `itemcustom`,
+`keybind`, `notebook`, `region`, `reminder`, `suggest`, `update`.
 
 ## The event hub
 
@@ -157,7 +161,9 @@ Java, under `src/main/java/net/trilleo/mixin/`, registered in the **`"client"`**
 
 Roughly: `Camera`/`ClientInput`/`KeyboardInput`/`MouseHandler` for the freecam, `ItemInHandRenderer` for the hand,
 `ItemStack`/`ItemModelResolver` for item customization, `ChatScreen` + `CommandSuggestionsAccessor` for command
-suggestions, `OptionsScreen` for the **□** button, and accessors where vanilla state is otherwise private.
+suggestions, `ChatComponent`'s two drawing graphics accesses for animated [chroma](Chroma-Text) in
+[chat highlights](Chat-Highlight), `OptionsScreen` for the **□** button, and accessors where vanilla state is otherwise
+private.
 
 Keep mixins minimal — prefer a Fabric API hook where one exists. Item customization uses Fabric's screen API rather than
 a mixin on `AbstractContainerScreen` for exactly this reason: it gives both the key hook and the draw hook for any

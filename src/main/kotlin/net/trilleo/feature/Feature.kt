@@ -64,6 +64,20 @@ interface Feature {
      */
     fun onChatReceive(message: Component): Boolean = true
 
+    /**
+     * A chat message that every feature has already allowed, on its way to being shown. Return a replacement, or
+     * [message] itself to leave it alone.
+     *
+     * Separate from [onChatReceive] because the two answer different questions and Fabric asks them through
+     * different events: `ALLOW_GAME` can only swallow a message, and `MODIFY_GAME` can only replace it. A feature
+     * that wants to restyle chat has to be here; a feature that wants to hide it has to be there.
+     *
+     * Runs for every feature in registration order, each seeing what the one before returned, so two features
+     * restyling the same line compose rather than overwrite. Never called for a message [onChatReceive]
+     * swallowed.
+     */
+    fun onChatModify(message: Component): Component = message
+
     /** The client is stopping — flush any unsaved config here. */
     fun onShutdown() {}
 }

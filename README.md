@@ -25,6 +25,8 @@ Hex runs entirely on your client — it never needs to be installed on a server.
 - **Regions** — draw areas on an island that announce themselves with a title and a sound when you walk in.
 - **Entity highlight** — light up the mobs you care about in a colour you pick, matched by name or by type, with a title
   and a sound the moment a new one turns up.
+- **Chat highlight** — pick out words in chat in a colour you choose, chroma included, restricted by channel and island,
+  with an optional title, sound, or hiding the message entirely.
 - **Notebook** — Markdown notes with a formatting toolbar and live preview, folders, tags and full-text search, stored
   as plain `.md` files you can edit, share and drop in from anywhere.
 - **Command suggestions** — learns the commands you use and completes them in chat, ranked by where you are, what you

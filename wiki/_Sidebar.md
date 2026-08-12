@@ -25,6 +25,7 @@
 - [Reminders](Reminders)
 - [Regions](Regions)
 - [Entity highlight](Entity-Highlight)
+- [Chat highlight](Chat-Highlight)
 - [Notebook](Notebook)
 - [Command suggestions](Command-Suggestions)
 - [Languages](Languages)

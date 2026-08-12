@@ -26,6 +26,7 @@ it. Anything you never bind simply does nothing.
 | **Toggle Region Preview**      | Draw every region on the island in the world    | [Regions](Regions)                       |
 | **Open Entity Highlights**     | Opens the highlight rules list                  | [Entity highlight](Entity-Highlight)     |
 | **Highlight What You Look At** | A rule for the entity under your crosshair      | [Entity highlight](Entity-Highlight)     |
+| **Open Chat Highlights**       | Opens the chat highlight rules list             | [Chat highlight](Chat-Highlight)         |
 | **Open Notebook**              | Opens the notebook                              | [Notebook](Notebook)                     |
 
 ## Two different things called "keybinds"

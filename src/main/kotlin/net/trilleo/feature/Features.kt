@@ -174,6 +174,18 @@ object Features {
             features.all { !it.enabled || it.onChatReceive(message) }
         }
 
+        // Fabric fires ALLOW_GAME, then MODIFY_GAME, then GAME — so a message swallowed above never reaches
+        // this, and by the time it does every feature has already had its say on whether to show it at all.
+        // Separate from the block above because the two events answer different questions: that one can only
+        // swallow a message, this one can only replace it. Folded through the features in registration order,
+        // each seeing what the one before returned, so two features restyling one line compose rather than
+        // fight over it.
+        ClientReceiveMessageEvents.MODIFY_GAME.register { message, _ ->
+            var current = message
+            features.forEach { if (it.enabled) current = it.onChatModify(current) }
+            current
+        }
+
         ClientLifecycleEvents.CLIENT_STOPPING.register {
             // Features first, then the flush: a feature that mutates settings while shutting down still gets
             // those changes written.

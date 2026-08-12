@@ -40,5 +40,10 @@ flowing at a different rate from the item beside it reads as a glitch rather tha
 The colours move on their own, so a chroma name animates **wherever it appears**: in a tooltip, on a container slot, and
 in the item-name popup above the hotbar.
 
+Chroma is also available in **chat**, as a per-rule setting on a [chat highlight](Chat-Highlight) — the same flowing
+colour, on the words a rule picks out of a message. It keeps its own speed and width settings on the **Chat Highlight**
+tab, since the two are set for different reasons: an item name sits still and is read at leisure, while a chat line
+scrolls.
+
 It costs a little more to draw than a plain name, which is why it is **off by default and set per item** rather than
 applied to everything.
