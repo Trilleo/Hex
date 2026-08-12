@@ -419,8 +419,17 @@ so it draws through terrain and follows the mob smoothly however fast it moves.
 One thing it cannot do is outline an entity that is invisible — there is no model to draw around. That is exactly why a
 name rule targets the mob and not the marker above it.
 
+**Far away, the name is marked instead.** Hypixel does not send a distant mob at all — only the floating name that sits
+where it will be — so until you are close enough there is nothing to draw an outline around. A rule that matches one of
+those marks the name itself instead, wrapping it in arrows in the rule's colour: `▶ ✦ Lapis Zombie 100/100❤ ◀`. The
+name is left exactly as Hypixel wrote it, so its own colours and health bar are still readable. Walk closer, the mob
+arrives, and it glows the ordinary way with no arrows — nothing to switch on, and nothing to switch off. This is a
+**name** rule's doing; a **type** rule cannot match a mob that has not been sent, since the only thing there is its
+name.
+
 **Show label** floats the rule's name over everything it matches, in the rule's colour, and **Label distance** adds how
-far away it is. A label never covers up a name the game was already showing.
+far away it is. A label never covers up a name the game was already showing — including a marked one, so a distant mob
+shows its own name rather than the rule's.
 
 ### Being told
 

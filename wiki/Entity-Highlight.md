@@ -62,8 +62,9 @@ link, so a name rule lights up the **mob**, not the marker — which is what you
 model to draw an outline around.
 
 A marker that labels nothing — a hologram, a sign, floating text — keeps its own name and matches normally, so those
-stay findable. And an entity that names *itself*, as a name-tagged mob in singleplayer does, is always taken at its word
-over a marker that happens to float above it.
+stay findable. That also covers a mob too far away to have been sent yet, which is nothing *but* its name: see
+[far away, the name is marked instead](#far-away-the-name-is-marked-instead). And an entity that names *itself*, as a
+name-tagged mob in singleplayer does, is always taken at its word over a marker that happens to float above it.
 
 ## Where a rule applies
 
@@ -83,8 +84,28 @@ through terrain and follows the mob smoothly however fast it moves.
 One thing it cannot do is outline an entity that is **invisible** — there is no model to draw around. That is exactly
 why a name rule targets the mob rather than the marker above it.
 
+### Far away, the name is marked instead
+
+Hypixel does not send a distant mob at all. Only its floating name is there, hanging where the mob will be, which is why
+a rule could fire its notification while nothing lit up until you walked over.
+
+A rule that matches one of those now marks **the name itself**, wrapping it in arrows in the rule's colour:
+
+```
+▶ ✦ Lapis Zombie 100/100❤ ◀
+```
+
+The name is left exactly as Hypixel wrote it, so its colours and health bar stay readable. Walk closer, the mob arrives,
+and it glows the ordinary way with no arrows — there is nothing to switch on, and nothing to switch off.
+
+This is something a **name** rule does. A **type** rule cannot match a mob that has not been sent, because the only
+thing there is its name.
+
+### Labels
+
 **Show label** floats the rule's name over everything it matches, in the rule's colour, and **Label distance** adds how
-far away it is. A label never covers up a name the game was already showing.
+far away it is. A label never covers up a name the game was already showing — including a marked one, so a distant mob
+keeps showing its own name rather than the rule's.
 
 Each row in the list shows a live count of how many entities its rule is matching right now, so you can tell a working
 rule from a mistyped one without hunting the island for the mob you wrote it for.

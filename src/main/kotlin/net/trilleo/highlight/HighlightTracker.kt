@@ -35,8 +35,23 @@ import java.util.*
  */
 object HighlightTracker {
 
-    /** What a matched entity gets: a glow colour, and a label when its rule asked for one. */
-    class Match(val color: Int, val label: Component?)
+    /**
+     * What a matched entity gets.
+     *
+     * @param color the rule's colour, opaque. Colours the outline, and the marks around a [nameTag].
+     * @param outline whether writing that colour to the render state can actually draw something. False for a
+     *   marker armor stand, whose renderer returns no render type at all: writing it there would draw nothing
+     *   while still switching the whole outline pass on for the frame, which is a cost with no picture.
+     * @param label the floating label, when the rule asked for one. Never set alongside a [nameTag] — the
+     *   entity already has a name on screen, and [HighlightLookup] would skip the label anyway.
+     * @param nameTag the marked-up replacement for a name tag this mod cannot glow. See [nameTagFor].
+     */
+    class Match(
+        val color: Int,
+        val outline: Boolean,
+        val label: Component?,
+        val nameTag: Component?,
+    )
 
     /**
      * The published table, read by [HighlightLookup] on the render thread.
@@ -200,9 +215,10 @@ object HighlightTracker {
             // stand that happens to float above it is not.
             if (wearer.id in ownTag) return@forEach
             attachedTag[wearer.id] = text
-            // The stand has handed its name over, so it must not also match on it — that would light up an
-            // invisible entity, which draws as nothing and reads as a rule that half works. A stand nobody
-            // claimed keeps its name and matches normally, which is what makes a standalone hologram matchable.
+            // The stand has handed its name over, so it must not also match on it — the mob is what the player
+            // is looking for, and marking its name a second time would only double the picture. A stand nobody
+            // claimed keeps its name and matches normally: that is a standalone hologram, and it is also every
+            // mob Hypixel has not sent yet, which is what [nameTagFor] draws instead of a glow.
             ownTag.remove(stand.id)
         }
 
@@ -220,7 +236,7 @@ object HighlightTracker {
                 distanceSq <= candidate.maxDistance * candidate.maxDistance && candidate.matches(tag, typeId)
             } ?: return@forEach
 
-            table[entity.id] = matchOf(rule, distanceSq)
+            table[entity.id] = matchOf(rule, entity, distanceSq)
             tally[rule.id] = (tally[rule.id] ?: 0) + 1
             if (rule.notify && announced.getOrPut(rule.id) { HashSet() }.add(entity.id)) {
                 onFound(rule, entity)
@@ -294,7 +310,7 @@ object HighlightTracker {
         return dx * dx + dz * dz
     }
 
-    private fun matchOf(rule: Highlight, distanceSq: Double): Match {
+    private fun matchOf(rule: Highlight, entity: Entity, distanceSq: Double): Match {
         // Forced opaque: the outline pass has no alpha to spend, so a colour written with one would otherwise
         // come out as a darker version of itself rather than a translucent one.
         val color = ARGB.opaque(
@@ -304,7 +320,43 @@ object HighlightTracker {
                 alpha = false,
             ),
         )
-        return Match(color, labelFor(rule, color, distanceSq))
+        val nameTag = nameTagFor(entity, color)
+        return Match(
+            color = color,
+            outline = entity !is ArmorStand || !entity.isMarker,
+            label = if (nameTag == null) labelFor(rule, color, distanceSq) else null,
+            nameTag = nameTag,
+        )
+    }
+
+    /**
+     * The marked-up name tag for a match that has no body to glow, or null for an ordinary entity.
+     *
+     * **This is what makes a rule work before you are close enough to see the mob.** Hypixel sends a distant
+     * mob as its floating name and nothing else: the name stand arrives, the mob does not, so [wearerOf] finds
+     * nobody, the stand keeps its own name and the rule matches *the stand*. That is the right match — it is
+     * the only thing in the world carrying the name — but a glow on it draws nothing, because
+     * `ArmorStandRenderer` returns no render type at all for a marker stand and only an armor-stand silhouette
+     * for an invisible one. So the visible half of the highlight moves to the one thing that *is* on screen:
+     * the name itself, wrapped in the rule's colour.
+     *
+     * Nothing hands over explicitly. Walk closer, the mob arrives, [wearerOf] gives it the stand's name, the
+     * stand stops matching and the mob glows — the ordinary highlight, from the ordinary path.
+     *
+     * The name is taken as Hypixel wrote it, colours and health bar and all, and only bracketed: it is
+     * information the player is reading, and a rule that repainted it would be taking away more than it adds.
+     * Built here rather than in the render hook for the reason [labelFor] is, and stale by the same scan
+     * interval — a fifth of a second behind a health bar on a mob too far away to fight.
+     */
+    private fun nameTagFor(entity: Entity, color: Int): Component? {
+        if (entity !is ArmorStand) return null
+        // A plain armor stand glows perfectly well; only one you cannot see needs its name doing the work.
+        if (!entity.isMarker && !entity.isInvisible) return null
+        val name = entity.customName ?: return null
+        return Component.empty()
+            .append(Component.literal(MARK_LEFT).withColor(color))
+            .append(name)
+            .append(Component.literal(MARK_RIGHT).withColor(color))
     }
 
     /**
@@ -362,6 +414,10 @@ object HighlightTracker {
 
     /** Fallback when a colour will not parse — a visibly wrong glow beats an invisible one. */
     private const val DEFAULT_COLOR = 0xFFFFFF55.toInt()
+
+    /** What a marked name tag is bracketed with. Arrows rather than words, so no locale owns them. */
+    private const val MARK_LEFT = "▶ "
+    private const val MARK_RIGHT = " ◀"
 
     /** How far either side of a name stand to look for the mob wearing it, in blocks. */
     private const val SEARCH_RADIUS = 0.75

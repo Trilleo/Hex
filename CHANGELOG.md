@@ -2,6 +2,26 @@
 
 ## Unreleased
 
+### Improvements
+
+#### Entity Highlight
+
++ A rule now marks a **distant mob's name tag**, rather than doing nothing until you are close enough to see the mob.
+  Hypixel sends a far-away mob as its floating name and nothing else, so there is no body to draw an outline around;
+  Hex wraps that name in arrows in the rule's colour instead — `▶ ✦ Lapis Zombie 100/100❤ ◀` — leaving Hypixel's own
+  colours and health bar readable. Walk closer, the mob arrives, and it glows the ordinary way.
+    + Nothing to switch on: any existing name rule starts doing this. A **type** rule cannot, since a mob that has not
+      been sent has no type to match on.
+
+### Technical Details
+
+#### Entity Highlight
+
++ `HighlightTracker.Match` now carries the marked-up name tag and whether the glow can draw at all, both decided at
+  scan time; `HighlightLookup` still does nothing per frame but read the table.
++ The glow colour is no longer written for a marker armor stand. `ArmorStandRenderer` returns no render type for one,
+  so the write drew nothing while still switching the whole entity outline pass on for that frame.
+
 ## Version 1.10.1
 
 ### New Features
