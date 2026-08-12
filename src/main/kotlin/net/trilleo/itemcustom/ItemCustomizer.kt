@@ -11,9 +11,9 @@ import net.minecraft.resources.Identifier
 import net.minecraft.world.item.ItemStack
 import net.minecraft.world.item.component.DyedItemColor
 import net.minecraft.world.item.component.ResolvableProfile
+import net.trilleo.color.ColorValue
 import net.trilleo.skyblock.item.SkyblockItem
 import net.trilleo.util.Chroma
-import net.trilleo.color.ColorValue
 import java.nio.charset.StandardCharsets
 import java.util.*
 

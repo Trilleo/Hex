@@ -11,12 +11,13 @@ import net.minecraft.world.entity.LivingEntity
 import net.minecraft.world.entity.decoration.ArmorStand
 import net.minecraft.world.phys.AABB
 import net.minecraft.world.phys.Vec3
+import net.trilleo.color.ColorValue
 import net.trilleo.highlight.HighlightTracker.labelFor
+import net.trilleo.highlight.HighlightTracker.markedTags
 import net.trilleo.highlight.HighlightTracker.nameTagFor
 import net.trilleo.highlight.HighlightTracker.wearerOf
 import net.trilleo.highlight.model.Highlight
 import net.trilleo.highlight.model.HighlightMatch
-import net.trilleo.color.ColorValue
 import net.trilleo.skyblock.SkyblockLocation
 import net.trilleo.util.TextClean
 import java.util.*

@@ -7,9 +7,10 @@ import net.minecraft.gizmos.Gizmos
 import net.minecraft.gizmos.TextGizmo
 import net.minecraft.world.phys.AABB
 import net.minecraft.world.phys.Vec3
+import net.trilleo.color.ColorValue
+import net.trilleo.region.RegionRenderer.CHROMA_ALPHA
 import net.trilleo.region.model.Region
 import net.trilleo.region.model.RegionShape
-import net.trilleo.color.ColorValue
 import net.trilleo.skyblock.SkyblockLocation
 import kotlin.math.sqrt
 

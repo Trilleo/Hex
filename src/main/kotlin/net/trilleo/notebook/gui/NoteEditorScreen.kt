@@ -8,16 +8,15 @@ import net.minecraft.client.input.KeyEvent
 import net.minecraft.client.input.MouseButtonEvent
 import net.minecraft.network.chat.Component
 import net.minecraft.network.chat.Style
+import net.trilleo.color.ColorConfig
+import net.trilleo.color.ColorValue
 import net.trilleo.notebook.NoteShare
 import net.trilleo.notebook.Notebook
 import net.trilleo.notebook.NotebookConfig
 import net.trilleo.notebook.model.NoteDocument
 import net.trilleo.notebook.model.NoteEditorView
-import net.trilleo.color.ColorConfig
-import net.trilleo.color.ColorValue
 import net.trilleo.util.Chroma
 import net.trilleo.util.Notify
-import java.util.*
 
 /**
  * One note: its title, its text, and the handful of things you do to a whole note.

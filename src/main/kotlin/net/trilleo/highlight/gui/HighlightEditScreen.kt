@@ -8,11 +8,7 @@ import net.minecraft.network.chat.Component
 import net.minecraft.world.entity.EntityType
 import net.trilleo.config.ConfigCategory
 import net.trilleo.config.gui.ConfigEntryList
-import net.trilleo.highlight.EntityTypes
-import net.trilleo.highlight.HighlightAlerts
-import net.trilleo.highlight.HighlightCapture
-import net.trilleo.highlight.HighlightConfig
-import net.trilleo.highlight.HighlightTracker
+import net.trilleo.highlight.*
 import net.trilleo.highlight.model.Highlight
 import net.trilleo.highlight.model.HighlightMatch
 import net.trilleo.reminder.model.ActionKind

@@ -8,8 +8,8 @@ import net.trilleo.chat.ChatHighlighter.MAX_SUBJECT
 import net.trilleo.chat.ChatHighlighter.restyle
 import net.trilleo.chat.model.ChatHighlight
 import net.trilleo.chat.model.ChatScope
-import net.trilleo.skyblock.SkyblockLocation
 import net.trilleo.color.ColorValue
+import net.trilleo.skyblock.SkyblockLocation
 import net.trilleo.util.Chroma
 import net.trilleo.util.TextClean
 import org.slf4j.LoggerFactory

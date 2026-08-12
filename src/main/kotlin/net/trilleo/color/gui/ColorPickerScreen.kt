@@ -536,10 +536,10 @@ class ColorPickerScreen(
             ?: (if (clearing) Component.translatable("hex.color.recent.clear") else null)
             ?: notice
             ?: when (mode) {
-            Mode.CHROMA -> Component.translatable("hex.color.chroma")
-            Mode.NONE -> Component.translatable("hex.color.none")
-            Mode.FIXED -> Component.literal(ColorValue.format(argb, alpha))
-        }
+                Mode.CHROMA -> Component.translatable("hex.color.chroma")
+                Mode.NONE -> Component.translatable("hex.color.none")
+                Mode.FIXED -> Component.literal(ColorValue.format(argb, alpha))
+            }
         extractor.centeredText(
             font,
             label,
