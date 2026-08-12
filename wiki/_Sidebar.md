@@ -24,6 +24,7 @@
 - [Chroma text](Chroma-Text)
 - [Reminders](Reminders)
 - [Regions](Regions)
+- [Entity highlight](Entity-Highlight)
 - [Notebook](Notebook)
 - [Command suggestions](Command-Suggestions)
 - [Languages](Languages)

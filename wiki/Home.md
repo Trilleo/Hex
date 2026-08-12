@@ -25,6 +25,7 @@ anywhere, and it has no server-side half — there is nothing to install for you
 | [Chroma text](Chroma-Text)                 | Flowing rainbow colour for item names, whole or from `&z` onward        |
 | [Reminders](Reminders)                     | Timers, chat triggers and location alerts on a movable HUD panel        |
 | [Regions](Regions)                         | Areas you draw that announce themselves when you walk in                |
+| [Entity highlight](Entity-Highlight)       | Mobs you pick, lit up in your colour, announcing themselves when new    |
 | [Notebook](Notebook)                       | Markdown notes with folders, tags and search, kept between sessions     |
 | [Command suggestions](Command-Suggestions) | Learns the commands you use and completes them, ranked by context       |
 | [Auto-update](Updating)                    | Hex downloads new releases itself and applies them on exit              |

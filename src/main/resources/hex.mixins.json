@@ -10,6 +10,7 @@
     "ChatScreenMixin",
     "ClientInputMixin",
     "CommandSuggestionsAccessor",
+    "EntityRenderDispatcherMixin",
     "ItemInHandRendererMixin",
     "ItemModelResolverMixin",
     "ItemStackMixin",

@@ -22,7 +22,8 @@ and you can turn that off. Everything else, including everything
 
 Mostly. The general features — [config profiles](Config-Profiles), [keybind shortcuts](Keybind-Shortcuts),
 [control switches](Control-Switches), [attack mode](Attack-Mode-Switch), [freecam](Freecam),
-[hand display](Hand-Display), [reminders](Reminders), [regions](Regions) — work anywhere, including singleplayer.
+[hand display](Hand-Display), [reminders](Reminders), [regions](Regions), [entity highlight](Entity-Highlight) — work
+anywhere, including singleplayer.
 
 Features that read Skyblock's own data need Skyblock: [per-item swing](Per-Item-Swing),
 [item customization](Item-Customization), island-based triggers and conditions, and the Skyblock signals inside

@@ -24,6 +24,8 @@ it. Anything you never bind simply does nothing.
 | **Mark Region Corner**         | Set one corner, then the opposite one           | [Regions](Regions)                       |
 | **Walk Region**                | Start/stop recording the outline you walk       | [Regions](Regions)                       |
 | **Toggle Region Preview**      | Draw every region on the island in the world    | [Regions](Regions)                       |
+| **Open Entity Highlights**     | Opens the highlight rules list                  | [Entity highlight](Entity-Highlight)     |
+| **Highlight What You Look At** | A rule for the entity under your crosshair      | [Entity highlight](Entity-Highlight)     |
 | **Open Notebook**              | Opens the notebook                              | [Notebook](Notebook)                     |
 
 ## Two different things called "keybinds"

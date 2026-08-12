@@ -7,6 +7,7 @@ import net.trilleo.attack.AttackModeFeature
 import net.trilleo.feature.Features
 import net.trilleo.freecam.FreecamFeature
 import net.trilleo.hand.HandFeature
+import net.trilleo.highlight.HighlightFeature
 import net.trilleo.itemcustom.ItemCustomizeFeature
 import net.trilleo.keybind.KeybindsFeature
 import net.trilleo.notebook.NotebookFeature
@@ -41,6 +42,7 @@ object Hex : ClientModInitializer {
         // Ahead of reminders: a region crossing detected on this tick is drained by ReminderTriggers during
         // the same tick's reminder dispatch, so a region-armed reminder starts counting without a tick's lag.
         Features.register(RegionFeature)
+        Features.register(HighlightFeature)
         Features.register(ReminderFeature)
         Features.register(NotebookFeature)
         Features.register(SuggestFeature)

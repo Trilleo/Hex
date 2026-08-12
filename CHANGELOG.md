@@ -2,6 +2,54 @@
 
 ## Unreleased
 
+### New Features
+
+#### Entity Highlight
+
++ Added **entity highlight**: a list of rules saying which entities to light up, in what colour, and whether finding a
+  new one should announce itself. Open it from the **Entity Highlight** tab of `/hexa config`, from
+  `/hexa highlight edit`, or with the **Open Entity Highlights** keybind.
++ A rule matches either on the **name** — any fragment of it, ignoring colours and capitals — or on the **entity
+  type**, written as an id such as `minecraft:zombie`.
+    + On Hypixel a mob's name floats on a separate invisible marker above it, so a name rule follows that link and
+      lights up the **mob**, not the marker. A hologram that labels nothing still matches on its own name.
+    + An unknown entity id is reported in the editor, rather than leaving a rule that quietly catches nothing.
++ Each rule carries its own **glow colour**, a **range** past which it stops applying, and an optional **island** so
+  the same name can mean different things in different places.
++ **Announce new ones** fires a title and a sound the first time each matching entity is seen, with the same colour,
+  subtitle, duration, pitch and volume controls reminders and regions already have. A **cooldown** keeps a pack that
+  spawns together down to one announcement.
+    + "New" means an entity that has not been seen before, not one that has come back into range — a mob that wanders
+      out of sight and returns stays quiet. Leaving the world forgets everything, so arriving somewhere is announced.
++ **Show label** floats the rule's name over everything it matches, in the rule's colour, optionally with the distance.
+  It never covers up a name the game was already showing.
++ Added **Add this** and the **Highlight What You Look At** keybind, which read the entity under your crosshair and
+  build a rule from it — Hypixel's mob names are not something anyone can spell from memory.
++ Added `/hexa highlight nearby`, which prints the type id and the resolved name of everything within 24 blocks. Those
+  are the exact strings a rule matches against, so it is somewhere to copy a name from rather than guess at one.
++ Added `/hexa highlight add`, `list` and `edit`, and the **Open Entity Highlights** and **Highlight What You Look At**
+  keybinds, both unbound by default.
+
+### Technical Details
+
+#### Entity Highlight
+
++ The glow is vanilla's own entity outline, coloured per entity by writing `EntityRenderState.outlineColor` from a
+  mixin at the return of `EntityRenderDispatcher.extractEntity`. That is the only point where both halves work: the
+  colour has to be in place before `LevelRenderer` checks `appearsGlowing()` to decide whether the outline pass runs at
+  all, and vanilla's own extraction overwrites the field partway through. No render pass, no shader and no per-frame
+  geometry belongs to this feature.
++ The floating label reuses vanilla's name-tag renderer by writing `nameTag` and `nameTagAttachment` on the same render
+  state. Both are written together because vanilla only fills the attachment inside the branch where it decided to show
+  a name, leaves it stale otherwise, and dereferences it without a null check.
++ Matching, name resolution and distance work all happen on a tick in `HighlightTracker` and publish an immutable table
+  keyed by entity id. The render hook does one map lookup per entity and early-returns on a single volatile read when
+  nothing is highlighted.
++ Name-tag resolution queries for a mob beneath a marker only for markers whose text some rule already wants, which on
+  a crowded island turns a query per name tag into a query per match.
++ Highlights reuse `ReminderAction` and `ReminderActions.run` rather than growing a parallel alert pipeline, so
+  reminders, regions and highlights all deliver a title and a sound through one implementation.
+
 ## Version 1.10.0
 
 ### New Features

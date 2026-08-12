@@ -9,18 +9,19 @@ Run `/hexa` on its own to see the mod version and which subcommands exist. Runni
 
 ## Overview
 
-| Command           | What it does                                  |
-|-------------------|-----------------------------------------------|
-| `/hexa`           | Version and the list of subcommands           |
-| `/hexa config`    | Open the [config menu](Configuration)         |
-| `/hexa keybinds`  | Open the [Keybinds](Keybind-Shortcuts) screen |
-| `/hexa hand …`    | [Per-item swing](Per-Item-Swing) list         |
-| `/hexa item …`    | [Item customization](Item-Customization) list |
-| `/hexa remind …`  | [Reminders](Reminders)                        |
-| `/hexa region …`  | [Regions](Regions)                            |
-| `/hexa note …`    | [Notebook](Notebook)                          |
-| `/hexa suggest …` | [Command suggestions](Command-Suggestions)    |
-| `/hexa update`    | Check for a [mod update](Updating) now        |
+| Command             | What it does                                  |
+|---------------------|-----------------------------------------------|
+| `/hexa`             | Version and the list of subcommands           |
+| `/hexa config`      | Open the [config menu](Configuration)         |
+| `/hexa keybinds`    | Open the [Keybinds](Keybind-Shortcuts) screen |
+| `/hexa hand …`      | [Per-item swing](Per-Item-Swing) list         |
+| `/hexa item …`      | [Item customization](Item-Customization) list |
+| `/hexa remind …`    | [Reminders](Reminders)                        |
+| `/hexa region …`    | [Regions](Regions)                            |
+| `/hexa highlight …` | [Entity highlight](Entity-Highlight)          |
+| `/hexa note …`      | [Notebook](Notebook)                          |
+| `/hexa suggest …`   | [Command suggestions](Command-Suggestions)    |
+| `/hexa update`      | Check for a [mod update](Updating) now        |
 
 ## Config and keybinds
 
@@ -96,6 +97,24 @@ the line:
 ```
 
 Every capture ends by opening the region for editing. See [Regions](Regions).
+
+## Entity highlight
+
+```
+/hexa highlight add [name]   — a rule for the entity under your crosshair, then opens it
+/hexa highlight nearby       — the type ids and names of everything within 24 blocks
+/hexa highlight list         — every rule, and how many entities each is matching now
+/hexa highlight edit         — open the highlights list
+```
+
+`name` is the rest of the line and only labels the new rule; what it matches is read off the entity you are looking at:
+
+```
+/hexa highlight add slayer boss
+```
+
+`nearby` prints names as Hex reads them, with Hypixel's colour codes and invisible padding stripped — those are the
+strings a rule matches against, so it is what to copy from. See [Entity highlight](Entity-Highlight).
 
 ## Notebook
 

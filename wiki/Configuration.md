@@ -18,8 +18,9 @@ title screen it is the only way in, since the command needs a chat box and the k
 
 ## How the menu is laid out
 
-- **Tabs down the side**, one per feature: Keybinds, Freecam, Hand, Item Customization, Reminders, Regions, Command
-  Suggestions, Updates. Each feature contributes its own tab, so the sidebar reflects what the mod actually has.
+- **Tabs down the side**, one per feature: Keybinds, Freecam, Hand, Item Customization, Reminders, Regions, Entity
+  Highlight, Command Suggestions, Updates. Each feature contributes its own tab, so the sidebar reflects what the mod
+  actually has.
 - **A search box** filters settings across *all* tabs at once, so you can find a setting without knowing which feature
   owns it.
 - **A reset button on every row**, restoring that one setting to its default.
@@ -50,6 +51,7 @@ A few lists are deliberately not caught by a tab reset, because they are data ra
 | **Item Customization**  | The [customized items](Item-Customization) list, the ✎ slot marker, and [chroma](Chroma-Text) speed and width |
 | **Reminders**           | The [reminder](Reminders) panel's position, scale, colours and row count; snooze length                        |
 | **Regions**             | [Region](Regions) drawing, names, through-walls, default radius, exit margin                                   |
+| **Entity Highlight**    | The [highlight rules](Entity-Highlight) list, scan interval, default glow colour                               |
 | **Command Suggestions** | Everything about [command suggestions](Command-Suggestions), and the dashboard                                 |
 | **Updates**             | The [auto-updater](Updating) — per installation, never part of a profile                                       |
 

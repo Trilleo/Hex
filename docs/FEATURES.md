@@ -367,6 +367,79 @@ which is what makes them work in singleplayer.
 Regions live in `config/hex/regions.json` and take part in config profiles and clipboard sharing, so a set of regions is
 something you can hand to someone else.
 
+## Entity highlight
+
+Pick the entities you care about and they light up — a coloured outline drawn around the mob itself, visible across a
+crowded room and through the wall in front of it. A rule can also announce itself: the first time a matching entity
+turns up, a title appears in the middle of your screen and a sound plays.
+
+Open the list from the **Entity Highlight** tab of `/hexa config`, with `/hexa highlight edit`, or by binding **Open
+Entity Highlights** under Options → Controls → **Hex**.
+
+### Making one
+
+The easy way is to point at something. Look at the mob you want, then press **Add this** in the list, run
+`/hexa highlight add`, or bind **Highlight What You Look At** to a key. Hex reads the entity's name and type off the
+world and opens the new rule for you to give it a colour.
+
+If you would rather type it, **Add empty** makes a blank rule. `/hexa highlight nearby` prints everything within 24
+blocks — its type id, and its name exactly as Hex reads it, with Hypixel's colour codes and invisible padding already
+stripped out. Those printed strings are the ones a rule matches against, so it is the place to copy a name from rather
+than guessing at one.
+
+### Matching
+
+A rule matches one of two ways, chosen with **Match by**:
+
+- **Name** — the entity's name contains what you typed, ignoring colours and capitals. Any fragment will do, which
+  matters because Hypixel decorates names with levels, health bars and rarity colours that change from one mob to the
+  next while the middle of the name stays put.
+- **Type** — the entity is of a given kind, written as an entity id such as `minecraft:zombie`. Every one of them
+  matches. A typo here is reported in the editor rather than leaving you with a rule that quietly catches nothing.
+
+**On Hypixel, a mob's name is not on the mob.** It floats on a separate invisible marker a head above it. Hex follows
+that link, so a name rule lights up the *mob* rather than the marker — which is what you want, since an invisible
+marker has nothing to draw an outline around. A hologram that labels nothing still matches on its own name, so signs
+and floating text remain findable.
+
+Two more limits are worth knowing. **Range** decides how far away a match still counts; past it the entity neither
+glows nor announces itself. **Island** restricts a rule to one place, in case the same name means something different
+elsewhere — leave it blank and the rule works everywhere, which is the normal case.
+
+### Seeing them
+
+**Glow colour** is the outline's colour, and every rule can have its own. The outline is vanilla's own glowing effect,
+so it draws through terrain and follows the mob smoothly however fast it moves.
+
+One thing it cannot do is outline an entity that is invisible — there is no model to draw around. That is exactly why a
+name rule targets the mob and not the marker above it.
+
+**Show label** floats the rule's name over everything it matches, in the rule's colour, and **Label distance** adds how
+far away it is. A label never covers up a name the game was already showing.
+
+### Being told
+
+Turn on **Announce new ones** and the rule speaks up the first time it sees each matching entity — a title, a sound, or
+both, with the same colour, subtitle, duration, pitch and volume controls reminders and regions have. **Test** fires it
+on the spot so you can judge the sound without waiting for a mob.
+
+"New" means an entity Hex has not seen before, not one that has merely come back into range: a mob that wanders behind
+a hill and returns stays quiet. Leaving the world forgets everything, so arriving somewhere is always announced.
+**Cooldown** keeps a pack that spawns together down to a single announcement rather than one per mob.
+
+### Where they live
+
+Highlights live in `config/hex/highlights.json` and take part in config profiles and clipboard sharing, so a set of
+rules for an island is something you can hand to someone else.
+
+The **Scan interval** setting decides how often the world is checked. Raising it costs less and only delays how quickly
+a mob that has just spawned starts glowing — nothing already matched flickers, because a match is remembered for as
+long as the entity exists.
+
+Note that a glow drawn through terrain shows you where something is before you can see it. That goes a little further
+than most of what Hex does, which is why it is opt-in per rule rather than on by default; see the note on Hypixel's
+rules in the [README](../README.md).
+
 ## Notebook
 
 Somewhere to write things down without leaving the game — a dungeon checklist, a mining route, prices you keep
