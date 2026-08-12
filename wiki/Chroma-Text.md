@@ -46,10 +46,10 @@ Each feature that can flow has its own settings on its own tab of `/hexa config`
 in that feature at once — one item flowing at a different rate from the item beside it reads as a glitch rather than a
 choice.
 
-| Setting          | Range            | Effect                                                                                                                                       |
-|------------------|------------------|-----------------------------------------------------------------------------------------------------------------------------------------------|
-| **Chroma speed** | 0.5 – 20 seconds | How long one full trip through the rainbow takes. Lower is faster. Present on all five tabs.                                                  |
-| **Chroma width** | 2 – 80           | How many characters one full rainbow spans. Low: a short name holds every colour at once. High: it drifts through one colour at a time.       |
+| Setting          | Range            | Effect                                                                                                                                  |
+|------------------|------------------|-----------------------------------------------------------------------------------------------------------------------------------------|
+| **Chroma speed** | 0.5 – 20 seconds | How long one full trip through the rainbow takes. Lower is faster. Present on all five tabs.                                            |
+| **Chroma width** | 2 – 80           | How many characters one full rainbow spans. Low: a short name holds every colour at once. High: it drifts through one colour at a time. |
 
 **Chroma width** exists only on the two tabs that colour *text* — Item Customization and Chat Highlight. A glow, a box
 and a panel are a single colour rather than a run of characters, so there is nothing for a rainbow to spread along and

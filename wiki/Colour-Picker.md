@@ -11,12 +11,12 @@ it stays true for anything added later, because a colour setting has no other co
 
 People open a colour picker knowing different things, so there are four ways in and they all edit the same value:
 
-| Control            | For                                                                             |
-|--------------------|---------------------------------------------------------------------------------|
-| **The square**     | Saturation across, brightness down. Hunting for a colour by eye.                 |
-| **The bar**        | Hue, from red round to red.                                                      |
-| **#RRGGBB**        | A colour copied from somewhere else. The `#` is optional and case does not matter. |
-| **R / G / B**      | A colour written down as numbers, `0`–`255` each.                                |
+| Control        | For                                                                                |
+|----------------|------------------------------------------------------------------------------------|
+| **The square** | Saturation across, brightness down. Hunting for a colour by eye.                   |
+| **The bar**    | Hue, from red round to red.                                                        |
+| **#RRGGBB**    | A colour copied from somewhere else. The `#` is optional and case does not matter. |
+| **R / G / B**  | A colour written down as numbers, `0`–`255` each.                                  |
 
 ## Swatches
 
@@ -28,16 +28,16 @@ Minecraft's sixteen `&0`–`&f` colours, named. Hypixel writes every rarity, eve
 them, so these are the colours a Skyblock player already thinks in — "the same gold the legendary items use" is a click
 rather than a look-up.
 
-| Rarity      | Colour       |
-|-------------|--------------|
-| Common      | White        |
-| Uncommon    | Green        |
-| Rare        | Blue         |
-| Epic        | Dark purple  |
-| Legendary   | Gold         |
-| Mythic      | Light purple |
-| Divine      | Aqua         |
-| Special     | Red          |
+| Rarity    | Colour       |
+|-----------|--------------|
+| Common    | White        |
+| Uncommon  | Green        |
+| Rare      | Blue         |
+| Epic      | Dark purple  |
+| Legendary | Gold         |
+| Mythic    | Light purple |
+| Divine    | Aqua         |
+| Special   | Red          |
 
 ### Presets
 
@@ -67,19 +67,19 @@ or the reminder panel behind the screen recolours while you are still dragging. 
 
 ## Chroma
 
-Where a colour is allowed to move, the picker has a **Chroma** button. [Chroma](Chroma-Text) is not a colour but a mode
-— it flows through the rainbow — and it lives in the colour setting rather than beside it because it answers the same
-question the colour does. One control, not two that could disagree.
+Where a colour is allowed to move, the picker has a **Chroma** button. [Chroma](Chroma-Text) is not a colour but a
+mode — it flows through the rainbow — and it lives in the colour setting rather than beside it because it answers the
+same question the colour does. One control, not two that could disagree.
 
 Chroma is available for:
 
-| Where                                                | What flows                       | Speed set on            |
-|------------------------------------------------------|----------------------------------|-------------------------|
-| [Item customization](Item-Customization)             | The item's name                  | Item Customization tab  |
-| [Chat highlight](Chat-Highlight)                     | The highlighted words            | Chat Highlight tab      |
-| [Entity highlight](Entity-Highlight)                 | The glow outline                 | Entity Highlight tab    |
-| [Regions](Regions)                                   | The box, cylinder or sphere      | Regions tab             |
-| [Reminders](Reminders)                               | Panel background, text and flash | Reminders tab           |
+| Where                                    | What flows                       | Speed set on           |
+|------------------------------------------|----------------------------------|------------------------|
+| [Item customization](Item-Customization) | The item's name                  | Item Customization tab |
+| [Chat highlight](Chat-Highlight)         | The highlighted words            | Chat Highlight tab     |
+| [Entity highlight](Entity-Highlight)     | The glow outline                 | Entity Highlight tab   |
+| [Regions](Regions)                       | The box, cylinder or sphere      | Regions tab            |
+| [Reminders](Reminders)                   | Panel background, text and flash | Reminders tab          |
 
 Alert **titles** are not on the list. Minecraft draws a title once from a fixed component, so a colour written into one
 has nothing to animate it.

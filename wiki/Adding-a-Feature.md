@@ -51,11 +51,11 @@ Guidelines:
 
 - **Ship keybinds unbound** (`InputConstants.UNKNOWN.value`) and in `Hex.KEY_CATEGORY`.
 - **Ask for a colour with `color(...)`, never a hand-rolled control.** That row is the whole
-  [colour picker](Colour-Picker) — the palettes, the shared recent colours, hex and RGB entry, chroma — so a new
-  feature is consistent with every existing one without trying to be. Read the stored value back through
+  [colour picker](Colour-Picker) — the palettes, the shared recent colours, hex and RGB entry, chroma — so a new feature
+  is consistent with every existing one without trying to be. Read the stored value back through
   `ColorValue.resolve`, which folds a hex colour, `"chroma"` and an empty value into one packed ARGB and never fails.
-  Pass `chroma = true` only where whatever draws the colour re-reads it every frame or every tick; a colour baked into
-  a cached component cannot animate, and offering chroma there ships a setting that visibly does nothing.
+  Pass `chroma = true` only where whatever draws the colour re-reads it every frame or every tick; a colour baked into a
+  cached component cannot animate, and offering chroma there ships a setting that visibly does nothing.
 - **Never register a Fabric callback yourself** — override the `Feature` hook instead. If the hook you need does not
   exist, add it to `Feature` and wire it once in `Features`.
 - **`onHudRender` is a frame callback, not a tick.** Do no work there beyond drawing: format, measure, sort and read
