@@ -1,6 +1,7 @@
 package net.trilleo.highlight
 
 import net.minecraft.client.renderer.entity.state.EntityRenderState
+import net.minecraft.network.chat.Component
 import net.minecraft.world.entity.Entity
 import net.minecraft.world.entity.EntityAttachment
 
@@ -67,5 +68,21 @@ object HighlightLookup {
             ?: return
         state.nameTag = label
         state.nameTagAttachment = attachment
+    }
+
+    /**
+     * How much bigger than the game intended [tag] should be drawn — 1 for every name tag but a marked one.
+     *
+     * Called by [net.trilleo.mixin.EntityRendererMixin] for each name tag about to be submitted, which is a
+     * handful a frame rather than one per entity, and answers on a single volatile read in the normal case
+     * where nothing is marked at all.
+     *
+     * The size lives in the config rather than in the [HighlightTracker.Match] so that dragging the slider
+     * shows its effect on the mobs already marked, instead of on the ones found after the next scan.
+     */
+    fun nameTagScale(tag: Component?): Float {
+        if (tag == null || !HighlightTracker.anyMarked) return 1.0f
+        if (!HighlightTracker.isMarkedTag(tag)) return 1.0f
+        return HighlightConfig.settings.nameTagScale.toFloat()
     }
 }

@@ -246,6 +246,16 @@ object HighlightFeature : Feature {
             get = { HighlightConfig.settings.defaultColor },
             set = { HighlightConfig.settings.defaultColor = it; HighlightConfig.markDirty() },
         )
+        slider(
+            "name_tag_scale",
+            min = HighlightConfig.NAME_TAG_SCALE_MIN,
+            max = HighlightConfig.NAME_TAG_SCALE_MAX,
+            step = 0.25,
+            default = defaults.nameTagScale,
+            get = { HighlightConfig.settings.nameTagScale },
+            set = { HighlightConfig.settings.nameTagScale = it; HighlightConfig.markDirty() },
+            format = { String.format(Locale.ROOT, "%.2f×", it) },
+        )
         toggle(
             "skyblock_only",
             default = defaults.skyblockOnly,

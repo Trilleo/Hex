@@ -12,6 +12,11 @@
   colours and health bar readable. Walk closer, the mob arrives, and it glows the ordinary way.
     + Nothing to switch on: any existing name rule starts doing this. A **type** rule cannot, since a mob that has not
       been sent has no type to match on.
++ Added **Marked name size** to the Entity Highlight tab: how much bigger a marked name tag is drawn, from `1.00×` to
+  `4.00×`, half again as big to start with. At the range a mob is name-only, a tag at its ordinary size is a few pixels
+  tall.
+    + It grows the name about the point it hangs from, so the tag stays over the spot the mob will appear at however
+      large it is drawn, and it follows the slider as you drag it rather than waiting for the next scan.
 
 ### Technical Details
 
@@ -21,6 +26,10 @@
   scan time; `HighlightLookup` still does nothing per frame but read the table.
 + The glow colour is no longer written for a marker armor stand. `ArmorStandRenderer` returns no render type for one,
   so the write drew nothing while still switching the whole entity outline pass on for that frame.
++ Added `EntityRendererMixin`, which scales a marked name tag in `submitNameDisplay`. The scale is applied between a
+  move to the tag's anchor and back, so vanilla's own anchoring translation is not multiplied by it; the tracker
+  publishes the name tags it wrote as an identity set, which is how the render path recognises one without a field
+  added to every `EntityRenderState` in the game.
 
 ## Version 1.10.1
 

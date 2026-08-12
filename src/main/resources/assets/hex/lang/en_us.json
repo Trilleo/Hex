@@ -378,6 +378,8 @@
   "hex.config.highlights.scan_interval.tooltip": "How often the world is checked for new matches. A higher number costs less and only delays how quickly a mob that has just spawned starts glowing.",
   "hex.config.highlights.default_color": "Default colour",
   "hex.config.highlights.default_color.tooltip": "The glow colour used by a rule that names none of its own.",
+  "hex.config.highlights.name_tag_scale": "Marked name size",
+  "hex.config.highlights.name_tag_scale.tooltip": "How much bigger a marked name tag is drawn. A mob too far away for Hypixel to have sent shows only its name, and this is what makes that name easy to spot. 1.00× is the size the game draws it.",
   "hex.config.highlights.skyblock_only": "Skyblock only",
   "hex.config.highlights.skyblock_only.tooltip": "Ignore every rule unless the scoreboard looks like Skyblock's.",
   "hex.highlights.title": "Entity highlights",

@@ -98,6 +98,12 @@ A rule that matches one of those now marks **the name itself**, wrapping it in a
 The name is left exactly as Hypixel wrote it, so its colours and health bar stay readable. Walk closer, the mob arrives,
 and it glows the ordinary way with no arrows — there is nothing to switch on, and nothing to switch off.
 
+A marked name is also drawn **bigger** than the game would draw it, since at the range this happens an ordinary name tag
+is a few pixels tall. **Marked name size** on the settings tab sets how much bigger, from `1.00×` — the size the game
+draws it — up to `4.00×`, and it is half again as big to start with. It grows about the point it hangs from, so the tag
+stays over the spot the mob will appear at however large you make it, and it changes as you drag the slider rather than
+at the next scan.
+
 This is something a **name** rule does. A **type** rule cannot match a mob that has not been sent, because the only
 thing there is its name.
 
@@ -140,6 +146,7 @@ The **Entity Highlight** tab of `/hexa config`:
 | **Highlights…**    | Opens the rule list                                                                                     |
 | **Scan interval**  | How often the world is checked, in ticks. Higher costs less and only delays a mob that has just spawned |
 | **Default colour** | The glow colour a rule uses when it names none of its own                                               |
+| **Marked name size** | How much bigger a marked name tag is drawn, from `1.00×` to `4.00×`. Applies to every rule at once     |
 | **Skyblock only**  | Ignore every rule unless the scoreboard looks like Skyblock's                                           |
 
 Raising the scan interval makes nothing flicker: a match is remembered for as long as the entity exists, so it only

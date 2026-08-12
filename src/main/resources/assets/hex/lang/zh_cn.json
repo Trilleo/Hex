@@ -378,6 +378,8 @@
   "hex.config.highlights.scan_interval.tooltip": "多久检查一次世界里的新匹配。数值越大开销越小，只会让刚刚生成的怪物晚一点开始发光。",
   "hex.config.highlights.default_color": "默认颜色",
   "hex.config.highlights.default_color.tooltip": "没有指定自己颜色的规则所使用的发光颜色。",
+  "hex.config.highlights.name_tag_scale": "标记名称大小",
+  "hex.config.highlights.name_tag_scale.tooltip": "被标记的名称显示得比原来大多少。距离太远、Hypixel 还没有发送实体的怪物只会显示名称，这个设置决定了那个名称有多醒目。1.00× 就是游戏原本的大小。",
   "hex.config.highlights.skyblock_only": "仅限空岛生存",
   "hex.config.highlights.skyblock_only.tooltip": "除非计分板看起来像空岛生存的，否则忽略所有规则。",
   "hex.highlights.title": "实体高亮",

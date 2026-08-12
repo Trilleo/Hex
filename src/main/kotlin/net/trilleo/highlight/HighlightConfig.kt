@@ -35,6 +35,20 @@ data class HighlightSettings(
     /** Fallback glow colour for a rule that names none of its own. */
     var defaultColor: String = "#FFFF55",
 
+    /**
+     * How much bigger a marked name tag is drawn than the game would draw it.
+     *
+     * The one thing that decides whether the far half of a highlight is *noticeable*. A marked name is the whole
+     * of what a rule can show for a mob Hypixel has not sent yet — see
+     * [net.trilleo.highlight.HighlightTracker.Match.nameTag] — and at the range that happens, a name at its
+     * ordinary size is a few pixels tall. Above 1 it grows about its own anchor, so the tag stays over the spot
+     * the mob will appear at rather than climbing away from it.
+     *
+     * Global rather than per-rule because it is a legibility setting, not a property of any one rule: it depends
+     * on the screen and the player's eyes, and someone who wants bigger wants it for every rule at once.
+     */
+    var nameTagScale: Double = HighlightConfig.DEFAULT_NAME_TAG_SCALE,
+
     /** Whether highlights are only live while the scoreboard looks like Skyblock's. */
     var skyblockOnly: Boolean = false,
 )
@@ -140,6 +154,14 @@ object HighlightConfig {
         if (settings.defaultColor == null) settings.defaultColor = HighlightSettings().defaultColor
 
         settings.scanIntervalTicks = settings.scanIntervalTicks.coerceIn(SCAN_INTERVAL_MIN, SCAN_INTERVAL_MAX)
+        // Zero is how an absent key arrives — GSON does not run Kotlin's default — and it is also below the
+        // slider's floor, so it cannot be a value anyone chose. Reading it as "not set" is what lets a config
+        // written before this setting existed pick the new size up, rather than loading a marked name at the
+        // size it was never legible at.
+        if (!settings.nameTagScale.isFinite() || settings.nameTagScale <= 0.0) {
+            settings.nameTagScale = DEFAULT_NAME_TAG_SCALE
+        }
+        settings.nameTagScale = settings.nameTagScale.coerceIn(NAME_TAG_SCALE_MIN, NAME_TAG_SCALE_MAX)
 
         val seenIds = HashSet<String>()
         val seenNames = HashSet<String>()
@@ -209,4 +231,13 @@ object HighlightConfig {
 
     const val SCAN_INTERVAL_MIN: Int = 1
     const val SCAN_INTERVAL_MAX: Int = 20
+
+    /** Half again as big: plainly not an ordinary name tag, without shouting over the world it hangs in. */
+    const val DEFAULT_NAME_TAG_SCALE: Double = 1.5
+
+    /** 1 is "the size the game would have drawn it". Smaller than that is nobody's idea of a highlight. */
+    const val NAME_TAG_SCALE_MIN: Double = 1.0
+
+    /** Past this a tag a hundred blocks away starts covering the thing it is pointing at. */
+    const val NAME_TAG_SCALE_MAX: Double = 4.0
 }

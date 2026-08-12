@@ -427,6 +427,11 @@ arrives, and it glows the ordinary way with no arrows — nothing to switch on, 
 **name** rule's doing; a **type** rule cannot match a mob that has not been sent, since the only thing there is its
 name.
 
+A marked name is drawn bigger than the game would draw it, because at that range an ordinary name tag is a few pixels
+tall. **Marked name size**, on the settings tab, sets how much bigger for every rule at once — `1.00×` is the size the
+game draws it, it starts at half again as big, and it goes to `4.00×`. The name grows about the point it hangs from, so
+it stays over the spot the mob will appear at rather than climbing away from it as you turn the setting up.
+
 **Show label** floats the rule's name over everything it matches, in the rule's colour, and **Label distance** adds how
 far away it is. A label never covers up a name the game was already showing — including a marked one, so a distant mob
 shows its own name rather than the rule's.

@@ -67,6 +67,18 @@ object HighlightTracker {
     @Volatile
     private var counts: Map<String, Int> = emptyMap()
 
+    /**
+     * Every name tag this scan published, by identity, so the render path can recognise one it is about to draw.
+     *
+     * Identity rather than equality, and a set rather than a flag on the render state: the components in here
+     * were freshly built by this scan and handed to exactly one entity each, so "is this the object we wrote?"
+     * is both the cheapest question and the exact one. It saves adding a field to every `EntityRenderState` the
+     * game owns and writing it for every entity in the world on every frame, when the number of name tags
+     * actually drawn in a frame is a handful.
+     */
+    @Volatile
+    private var markedTags: Set<Component> = emptySet()
+
     /** Ticks since the last rescan. */
     private var sinceScan: Int = 0
 
@@ -87,6 +99,12 @@ object HighlightTracker {
     /** Whether anything at all is matched, so the render hook can leave without touching a map. */
     val anyMatched: Boolean get() = matches.isNotEmpty()
 
+    /** Whether [isMarkedTag] can say yes to anything, so the name tag hook can leave on one read. */
+    val anyMarked: Boolean get() = markedTags.isNotEmpty()
+
+    /** Whether [tag] is a name tag this feature wrote, rather than one the game did. */
+    fun isMarkedTag(tag: Component): Boolean = tag in markedTags
+
     /** How many entities [highlight] is matching right now, for the list screen. */
     fun countFor(highlight: Highlight): Int = counts[highlight.id] ?: 0
 
@@ -100,6 +118,7 @@ object HighlightTracker {
     fun reset() {
         matches = emptyMap()
         counts = emptyMap()
+        markedTags = emptySet()
         announced.clear()
         quietUntil.clear()
         sinceScan = 0
@@ -147,6 +166,7 @@ object HighlightTracker {
     private fun clearTable() {
         if (matches.isNotEmpty()) matches = emptyMap()
         if (counts.isNotEmpty()) counts = emptyMap()
+        if (markedTags.isNotEmpty()) markedTags = emptySet()
     }
 
     /**
@@ -224,6 +244,9 @@ object HighlightTracker {
 
         val table = HashMap<Int, Match>()
         val tally = HashMap<String, Int>()
+        // Identity, not equality: two mobs of a kind carry name tags that read the same and are different
+        // objects, and it is the object the render path will be holding.
+        val marks = Collections.newSetFromMap(IdentityHashMap<Component, Boolean>())
         targets.forEach { entity ->
             val tag = ownTag[entity.id] ?: attachedTag[entity.id]
             val typeId = typeIdOf(entity)
@@ -236,13 +259,18 @@ object HighlightTracker {
                 distanceSq <= candidate.maxDistance * candidate.maxDistance && candidate.matches(tag, typeId)
             } ?: return@forEach
 
-            table[entity.id] = matchOf(rule, entity, distanceSq)
+            val match = matchOf(rule, entity, distanceSq)
+            table[entity.id] = match
+            match.nameTag?.let { marks.add(it) }
             tally[rule.id] = (tally[rule.id] ?: 0) + 1
             if (rule.notify && announced.getOrPut(rule.id) { HashSet() }.add(entity.id)) {
                 onFound(rule, entity)
             }
         }
 
+        // The marks go up before the table does, so a frame can never find a name tag it cannot recognise: the
+        // render path only ever reaches one through the table it is published with.
+        markedTags = marks
         matches = table
         counts = tally
         prune(level, rules)
