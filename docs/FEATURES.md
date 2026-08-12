@@ -399,16 +399,16 @@ A rule matches one of two ways, chosen with **Match by**:
 
 The entity id field completes as you type, the way the chat box completes a command. Type `zomb` and a list of
 everything matching drops down; **Tab** takes the highlighted one, and **↑** / **↓** walk the list. Leave the field
-empty and the list is every entity the game knows, so you can browse the whole set without knowing a name to start
-from. The list is read from the game's own registry, so anything another mod adds is in it too.
+empty and the list is every entity the game knows, so you can browse the whole set without knowing a name to start from.
+The list is read from the game's own registry, so anything another mod adds is in it too.
 
 **On Hypixel, a mob's name is not on the mob.** It floats on a separate invisible marker a head above it. Hex follows
-that link, so a name rule lights up the *mob* rather than the marker — which is what you want, since an invisible
-marker has nothing to draw an outline around. A hologram that labels nothing still matches on its own name, so signs
-and floating text remain findable.
+that link, so a name rule lights up the *mob* rather than the marker — which is what you want, since an invisible marker
+has nothing to draw an outline around. A hologram that labels nothing still matches on its own name, so signs and
+floating text remain findable.
 
-Two more limits are worth knowing. **Range** decides how far away a match still counts; past it the entity neither
-glows nor announces itself. **Island** restricts a rule to one place, in case the same name means something different
+Two more limits are worth knowing. **Range** decides how far away a match still counts; past it the entity neither glows
+nor announces itself. **Island** restricts a rule to one place, in case the same name means something different
 elsewhere — leave it blank and the rule works everywhere, which is the normal case.
 
 ### Seeing them
@@ -428,8 +428,8 @@ Turn on **Announce new ones** and the rule speaks up the first time it sees each
 both, with the same colour, subtitle, duration, pitch and volume controls reminders and regions have. **Test** fires it
 on the spot so you can judge the sound without waiting for a mob.
 
-"New" means an entity Hex has not seen before, not one that has merely come back into range: a mob that wanders behind
-a hill and returns stays quiet. Leaving the world forgets everything, so arriving somewhere is always announced.
+"New" means an entity Hex has not seen before, not one that has merely come back into range: a mob that wanders behind a
+hill and returns stays quiet. Leaving the world forgets everything, so arriving somewhere is always announced.
 **Cooldown** keeps a pack that spawns together down to a single announcement rather than one per mob.
 
 ### Where they live
@@ -438,8 +438,8 @@ Highlights live in `config/hex/highlights.json` and take part in config profiles
 rules for an island is something you can hand to someone else.
 
 The **Scan interval** setting decides how often the world is checked. Raising it costs less and only delays how quickly
-a mob that has just spawned starts glowing — nothing already matched flickers, because a match is remembered for as
-long as the entity exists.
+a mob that has just spawned starts glowing — nothing already matched flickers, because a match is remembered for as long
+as the entity exists.
 
 Note that a glow drawn through terrain shows you where something is before you can see it. That goes a little further
 than most of what Hex does, which is why it is opt-in per rule rather than on by default; see the note on Hypixel's

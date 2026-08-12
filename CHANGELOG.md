@@ -9,13 +9,13 @@
 + Added **entity highlight**: a list of rules saying which entities to light up, in what colour, and whether finding a
   new one should announce itself. Open it from the **Entity Highlight** tab of `/hexa config`, from
   `/hexa highlight edit`, or with the **Open Entity Highlights** keybind.
-+ A rule matches either on the **name** — any fragment of it, ignoring colours and capitals — or on the **entity
-  type**, written as an id such as `minecraft:zombie`.
++ A rule matches either on the **name** — any fragment of it, ignoring colours and capitals — or on the **entity type**,
+  written as an id such as `minecraft:zombie`.
     + On Hypixel a mob's name floats on a separate invisible marker above it, so a name rule follows that link and
       lights up the **mob**, not the marker. A hologram that labels nothing still matches on its own name.
     + An unknown entity id is reported in the editor, rather than leaving a rule that quietly catches nothing.
-+ Each rule carries its own **glow colour**, a **range** past which it stops applying, and an optional **island** so
-  the same name can mean different things in different places.
++ Each rule carries its own **glow colour**, a **range** past which it stops applying, and an optional **island** so the
+  same name can mean different things in different places.
 + **Announce new ones** fires a title and a sound the first time each matching entity is seen, with the same colour,
   subtitle, duration, pitch and volume controls reminders and regions already have. A **cooldown** keeps a pack that
   spawns together down to one announcement.
@@ -46,19 +46,19 @@
 
 #### Entity Highlight
 
-+ The glow is vanilla's own entity outline, coloured per entity by writing `EntityRenderState.outlineColor` from a
-  mixin at the return of `EntityRenderDispatcher.extractEntity`. That is the only point where both halves work: the
-  colour has to be in place before `LevelRenderer` checks `appearsGlowing()` to decide whether the outline pass runs at
-  all, and vanilla's own extraction overwrites the field partway through. No render pass, no shader and no per-frame
-  geometry belongs to this feature.
++ The glow is vanilla's own entity outline, coloured per entity by writing `EntityRenderState.outlineColor` from a mixin
+  at the return of `EntityRenderDispatcher.extractEntity`. That is the only point where both halves work: the colour has
+  to be in place before `LevelRenderer` checks `appearsGlowing()` to decide whether the outline pass runs at all, and
+  vanilla's own extraction overwrites the field partway through. No render pass, no shader and no per-frame geometry
+  belongs to this feature.
 + The floating label reuses vanilla's name-tag renderer by writing `nameTag` and `nameTagAttachment` on the same render
   state. Both are written together because vanilla only fills the attachment inside the branch where it decided to show
   a name, leaves it stale otherwise, and dereferences it without a null check.
 + Matching, name resolution and distance work all happen on a tick in `HighlightTracker` and publish an immutable table
   keyed by entity id. The render hook does one map lookup per entity and early-returns on a single volatile read when
   nothing is highlighted.
-+ Name-tag resolution queries for a mob beneath a marker only for markers whose text some rule already wants, which on
-  a crowded island turns a query per name tag into a query per match.
++ Name-tag resolution queries for a mob beneath a marker only for markers whose text some rule already wants, which on a
+  crowded island turns a query per name tag into a query per match.
 + Highlights reuse `ReminderAction` and `ReminderActions.run` rather than growing a parallel alert pipeline, so
   reminders, regions and highlights all deliver a title and a sound through one implementation.
 
@@ -67,8 +67,8 @@
 + `TextEntry` gained an optional `suggestions` provider returning the field's whole vocabulary; filtering and ranking
   live in one place (`Suggestions`) rather than at each call site, and the entry model stays free of GUI types.
 + The completion popup is drawn by `ConfigEntryList` after its rows rather than by the row that owns it. A row draws
-  inside the list's scissor, so anything it put below itself would be clipped and then painted over by the next row.
-  No host screen changed.
+  inside the list's scissor, so anything it put below itself would be clipped and then painted over by the next row. No
+  host screen changed.
 + The popup deliberately does not claim Escape: `Screen.keyPressed` answers it before any child sees it, so a
   dismiss-on-Escape would have been code that never runs.
 
