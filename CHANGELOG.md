@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+## Version 1.10.1
+
 ### New Features
 
 #### Entity Highlight
