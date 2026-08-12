@@ -140,14 +140,14 @@ reminder tab's master sound switch covers them too.
 
 The **Entity Highlight** tab of `/hexa config`:
 
-| Setting            | Notes                                                                                                   |
-|--------------------|---------------------------------------------------------------------------------------------------------|
-| **Enabled**        | Master switch. With it off nothing glows and no rule announces anything, but your rules are kept        |
-| **Highlights…**    | Opens the rule list                                                                                     |
-| **Scan interval**  | How often the world is checked, in ticks. Higher costs less and only delays a mob that has just spawned |
-| **Default colour** | The glow colour a rule uses when it names none of its own                                               |
-| **Marked name size** | How much bigger a marked name tag is drawn, from `1.00×` to `4.00×`. Applies to every rule at once     |
-| **Skyblock only**  | Ignore every rule unless the scoreboard looks like Skyblock's                                           |
+| Setting              | Notes                                                                                                   |
+|----------------------|---------------------------------------------------------------------------------------------------------|
+| **Enabled**          | Master switch. With it off nothing glows and no rule announces anything, but your rules are kept        |
+| **Highlights…**      | Opens the rule list                                                                                     |
+| **Scan interval**    | How often the world is checked, in ticks. Higher costs less and only delays a mob that has just spawned |
+| **Default colour**   | The glow colour a rule uses when it names none of its own                                               |
+| **Marked name size** | How much bigger a marked name tag is drawn, from `1.00×` to `4.00×`. Applies to every rule at once      |
+| **Skyblock only**    | Ignore every rule unless the scoreboard looks like Skyblock's                                           |
 
 Raising the scan interval makes nothing flicker: a match is remembered for as long as the entity exists, so it only
 changes how quickly something newly spawned is picked up.

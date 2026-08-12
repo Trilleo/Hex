@@ -18,8 +18,8 @@ being shown the answer instead of having to guess at it — in two places:
 - **The preview.** The line above the editor's buttons is your rule, applied to a sample message. Colour, style, marks,
   scope and chroma all show up there as you set them, and chroma genuinely flows, so a rule can be judged before a real
   message ever arrives.
-- **`/hexa chat test <line>`.** Supply a line yourself and Hex prints it exactly as chat would have shown it, followed by
-  which rules claimed it and whether they would have hidden it.
+- **`/hexa chat test <line>`.** Supply a line yourself and Hex prints it exactly as chat would have shown it, followed
+  by which rules claimed it and whether they would have hidden it.
 
 ## Matching
 
@@ -27,19 +27,18 @@ being shown the answer instead of having to guess at it — in two places:
 capitals are ignored — turn on **Match capitals** when the difference matters, as it does for an all-caps broadcast and
 does not for a name someone might type either way.
 
-Plain text rather than a regular expression is a deliberate limit. [Reminders](Reminders) already own the
-pattern-shaped job, with the safeguards a player-written pattern needs; a highlight that only ever searches for a
-literal string cannot misbehave no matter what is typed into it. If you need capture groups, conditions or a
-countdown, write a reminder.
+Plain text rather than a regular expression is a deliberate limit. [Reminders](Reminders) already own the pattern-shaped
+job, with the safeguards a player-written pattern needs; a highlight that only ever searches for a literal string cannot
+misbehave no matter what is typed into it. If you need capture groups, conditions or a countdown, write a reminder.
 
 A rule with an empty **Text to find** never matches anything, so a half-written rule cannot repaint your whole chat.
 
 ### Where a rule applies
 
-| Setting     | Restricts the rule to                                                                  |
-|-------------|-----------------------------------------------------------------------------------------|
+| Setting     | Restricts the rule to                                                                     |
+|-------------|-------------------------------------------------------------------------------------------|
 | **Channel** | One chat: public, party, guild, officer, co-op or private. **Any** listens to all of them |
-| **Islands** | One or several islands, comma-separated. Blank means anywhere                            |
+| **Islands** | One or several islands, comma-separated. Blank means anywhere                             |
 
 **Channel** is what lets "my name" highlight in party chat without firing on every guild message. Hex reads the channel
 from the tag Hypixel puts at the front of the line, and it insists on a speaker before it believes one: `Guild > Steve:
@@ -65,8 +64,8 @@ button filters what you are looking at without changing any rule.
 **Paint** decides how much of the message is repainted:
 
 | Paint             | Covers                                    |
-|-------------------|--------------------------------------------|
-| **The match**     | Only the words that matched                |
+|-------------------|-------------------------------------------|
+| **The match**     | Only the words that matched               |
 | **Whole message** | The entire line, from the first character |
 
 Every occurrence in a message is painted, not just the first.
@@ -151,14 +150,14 @@ either can hide the line.
 
 The **Chat Highlight** tab of `/hexa config`:
 
-| Setting            | Notes                                                                                              |
-|--------------------|------------------------------------------------------------------------------------------------------|
-| **Enabled**        | Master switch. With it off nothing is repainted, hidden or announced, but your rules are kept       |
-| **Highlights…**    | Opens the rule list                                                                                 |
-| **Default colour** | The colour a rule uses when it names none of its own                                                |
-| **Chroma speed**   | How long one full trip through the rainbow takes. Lower is faster. Shared by every chroma rule      |
-| **Chroma width**   | How many characters one rainbow spans                                                               |
-| **Skyblock only**  | Ignore every rule unless the scoreboard looks like Skyblock's                                       |
+| Setting            | Notes                                                                                          |
+|--------------------|------------------------------------------------------------------------------------------------|
+| **Enabled**        | Master switch. With it off nothing is repainted, hidden or announced, but your rules are kept  |
+| **Highlights…**    | Opens the rule list                                                                            |
+| **Default colour** | The colour a rule uses when it names none of its own                                           |
+| **Chroma speed**   | How long one full trip through the rainbow takes. Lower is faster. Shared by every chroma rule |
+| **Chroma width**   | How many characters one rainbow spans                                                          |
+| **Skyblock only**  | Ignore every rule unless the scoreboard looks like Skyblock's                                  |
 
 Messages already in your chat log keep whatever they were given when they arrived — chat is styled once, on arrival, and
 cannot be repainted afterwards. Switching a rule on or off changes the next message, not the ones above it.
