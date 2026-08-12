@@ -3,6 +3,7 @@ package net.trilleo.chat
 import net.minecraft.network.chat.FontDescription
 import net.minecraft.util.FormattedCharSequence
 import net.trilleo.Hex
+import net.trilleo.chat.ChatChroma.phase
 import net.trilleo.util.Chroma
 
 /**

@@ -1,5 +1,6 @@
 package net.trilleo.chat
 
+import net.trilleo.chat.ChatChannels.SPEAKER
 import net.trilleo.chat.model.ChatChannel
 
 /**

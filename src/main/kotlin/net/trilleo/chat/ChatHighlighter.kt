@@ -3,6 +3,9 @@ package net.trilleo.chat
 import net.minecraft.client.Minecraft
 import net.minecraft.network.chat.Component
 import net.minecraft.network.chat.Style
+import net.trilleo.chat.ChatHighlighter.MAX_SPANS
+import net.trilleo.chat.ChatHighlighter.MAX_SUBJECT
+import net.trilleo.chat.ChatHighlighter.restyle
 import net.trilleo.chat.model.ChatHighlight
 import net.trilleo.chat.model.ChatScope
 import net.trilleo.skyblock.SkyblockLocation
