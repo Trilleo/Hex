@@ -58,6 +58,19 @@ Before finishing any task that changes the mod, do all of the following:
 
 ## Project conventions
 
+- **Every colour goes through the universal colour picker.** A feature asks for a colour with
+  `ConfigCategory.Builder.color(...)` and gets the whole picker — palettes, the shared recent colours, hex and RGB
+  entry, chroma — for free. Never hand-roll a colour control, a hex-only text field, or a second picker: there is
+  deliberately one way in, so a feature added later is consistent without trying to be. See
+  [wiki/Colour-Picker.md](wiki/Colour-Picker.md).
+    - **Chroma is a colour, not a flag beside one.** It is stored in the colour field as `"chroma"` — see
+      `net.trilleo.color.ColorValue`, which also defines `""` as "no colour of its own". Never add a separate
+      chroma toggle.
+    - Pass `chroma = true` only where whatever draws the colour re-reads it every frame or every tick. A colour
+      baked into a cached component cannot animate, and offering chroma there ships a setting that visibly does
+      nothing. Pass `alpha = true` when the value carries an opacity byte.
+    - Read stored values back with `ColorValue.resolve`, which folds all three cases into one packed ARGB and
+      never fails.
 - `gradle.properties` is the single source of truth for all versions (`mod_version`, `minecraft_version`,
   `loader_version`, …). `fabric.mod.json` gets these expanded at build time via `processResources` — never hardcode
   versions there.
