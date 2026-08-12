@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+## Verson 1.10.3
+
 ### New Features
 
 #### Chat Highlight
@@ -16,8 +18,8 @@
       coloured row.
     + **Marks before and after** put text like `»` and `«` either side of the match — visible in a screenshot and to a
       colour-blind player, which a colour is not.
-    + **Channel** restricts a rule to public, party, guild, officer, co-op or private chat, so "my name" can highlight in
-      party chat without firing on every guild message.
+    + **Channel** restricts a rule to public, party, guild, officer, co-op or private chat, so "my name" can highlight
+      in party chat without firing on every guild message.
     + **Islands** restricts a rule to one or several islands, comma-separated — `hub, dwarven mines` — or anywhere when
       left blank.
     + **Hide the message** drops a matching line from chat entirely. It still counts as a match, so one rule can silence
@@ -38,13 +40,14 @@
 + Added `Feature.onChatModify`, wired once to `ClientReceiveMessageEvents.MODIFY_GAME` in `Features.bootstrap`.
   `ALLOW_GAME` can only swallow a message and `MODIFY_GAME` can only replace it, so restyling chat needed the second
   hook; the result is folded through the features in registration order.
-+ `ChatHighlightFeature` is registered last of the chat readers. Chat fans out with `all { … }`, which stops at the first
-  feature that refuses a message, so hiding a line any earlier would have hidden it from reminders too.
++ `ChatHighlightFeature` is registered last of the chat readers. Chat fans out with `all { … }`, which stops at the
+  first feature that refuses a message, so hiding a line any earlier would have hidden it from reminders too.
 + `ChatHighlighter` matches on the raw flattened text rather than `TextClean.strip`, because stripping moves the offsets
   the repaint depends on; it rebuilds through `Component.visit` and `Style.applyTo` so click and hover events survive.
   Matching is `String.indexOf` only — no regex, and so none of `ChatMatcher`'s backtracking hazards — with the output
   bounded instead at 512 searched characters and 64 highlighted runs per message.
-+ Animated chroma is a `ChatComponentMixin` on the two drawing `ChatGraphicsAccess` implementations, wrapping each line's
++ Animated chroma is a `ChatComponentMixin` on the two drawing `ChatGraphicsAccess` implementations, wrapping each
+  line's
   `FormattedCharSequence`. Marked runs carry `hex:chroma`, a font asset copying vanilla's `minecraft:default` provider
   list so glyph widths — and therefore wrapping and click hit-testing — are unchanged. The click-only implementation is
   deliberately not touched, and the wrapper is skipped entirely when no enabled rule uses chroma.
@@ -56,9 +59,9 @@
 #### Entity Highlight
 
 + A rule now marks a **distant mob's name tag**, rather than doing nothing until you are close enough to see the mob.
-  Hypixel sends a far-away mob as its floating name and nothing else, so there is no body to draw an outline around;
-  Hex wraps that name in arrows in the rule's colour instead — `▶ ✦ Lapis Zombie 100/100❤ ◀` — leaving Hypixel's own
-  colours and health bar readable. Walk closer, the mob arrives, and it glows the ordinary way.
+  Hypixel sends a far-away mob as its floating name and nothing else, so there is no body to draw an outline around; Hex
+  wraps that name in arrows in the rule's colour instead — `▶ ✦ Lapis Zombie 100/100❤ ◀` — leaving Hypixel's own colours
+  and health bar readable. Walk closer, the mob arrives, and it glows the ordinary way.
     + Nothing to switch on: any existing name rule starts doing this. A **type** rule cannot, since a mob that has not
       been sent has no type to match on.
 + Added **Marked name size** to the Entity Highlight tab: how much bigger a marked name tag is drawn, from `1.00×` to
@@ -71,14 +74,14 @@
 
 #### Entity Highlight
 
-+ `HighlightTracker.Match` now carries the marked-up name tag and whether the glow can draw at all, both decided at
-  scan time; `HighlightLookup` still does nothing per frame but read the table.
-+ The glow colour is no longer written for a marker armor stand. `ArmorStandRenderer` returns no render type for one,
-  so the write drew nothing while still switching the whole entity outline pass on for that frame.
++ `HighlightTracker.Match` now carries the marked-up name tag and whether the glow can draw at all, both decided at scan
+  time; `HighlightLookup` still does nothing per frame but read the table.
++ The glow colour is no longer written for a marker armor stand. `ArmorStandRenderer` returns no render type for one, so
+  the write drew nothing while still switching the whole entity outline pass on for that frame.
 + Added `EntityRendererMixin`, which scales a marked name tag in `submitNameDisplay`. The scale is applied between a
   move to the tag's anchor and back, so vanilla's own anchoring translation is not multiplied by it; the tracker
-  publishes the name tags it wrote as an identity set, which is how the render path recognises one without a field
-  added to every `EntityRenderState` in the game.
+  publishes the name tags it wrote as an identity set, which is how the render path recognises one without a field added
+  to every `EntityRenderState` in the game.
 
 ## Version 1.10.1
 
