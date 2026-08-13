@@ -20,6 +20,7 @@ anywhere, and it has no server-side half — there is nothing to install for you
 | [Control switches](Control-Switches)       | Cycle one of Minecraft's own controls between two or more keys, in-game |
 | [Attack mode switch](Attack-Mode-Switch)   | Flip Attack/Destroy between hold and toggle with a keypress             |
 | [Freecam](Freecam)                         | Detach the camera and fly it around while your character stays put      |
+| [Mouse sensitivity](Mouse-Sensitivity)     | Hold a key and scroll to change how fast you turn, just while you hold  |
 | [Hand display](Hand-Display)               | Reposition and restyle your held item in first person, cosmetically     |
 | [Per-item swing](Per-Item-Swing)           | Hide the swing animation only while holding chosen Skyblock items       |
 | [Item customization](Item-Customization)   | Rename, recolour, reskin or de-glint one specific item, client-side     |

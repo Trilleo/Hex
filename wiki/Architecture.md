@@ -51,7 +51,7 @@ The two chat hooks are separate because Fabric's two events are: `ALLOW_GAME` ca
 `MODIFY_GAME` can only replace it. They fire in that order, so a swallowed message never reaches `onChatModify`.
 
 Features are Kotlin `object`s, one package each: `attack`, `chat`, `freecam`, `hand`, `highlight`, `itemcustom`,
-`keybind`, `notebook`, `region`, `reminder`, `suggest`, `update`.
+`keybind`, `notebook`, `region`, `reminder`, `sensitivity`, `suggest`, `update`.
 
 ## The event hub
 
@@ -170,7 +170,8 @@ All of them are reset on disconnect, so an item, island or date from one server 
 Java, under `src/main/java/net/trilleo/mixin/`, registered in the **`"client"`** array of `hex.mixins.json`.
 `net.trilleo.duck` holds duck interfaces for state added to vanilla classes.
 
-Roughly: `Camera`/`ClientInput`/`KeyboardInput`/`MouseHandler` for the freecam, `ItemInHandRenderer` for the hand,
+Roughly: `Camera`/`ClientInput`/`KeyboardInput`/`MouseHandler` for the freecam (`MouseHandler` also lends the wheel to
+the [sensitivity hold](Mouse-Sensitivity)), `ItemInHandRenderer` for the hand,
 `ItemStack`/`ItemModelResolver` for item customization, `ChatScreen` + `CommandSuggestionsAccessor` for command
 suggestions, `ChatComponent`'s two drawing graphics accesses for animated [chroma](Chroma-Text) in
 [chat highlights](Chat-Highlight), `OptionsScreen` for the **□** button, and accessors where vanilla state is otherwise

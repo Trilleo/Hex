@@ -2,6 +2,21 @@
 
 ## Unreleased
 
+### New Features
+
+#### Mouse Sensitivity
+
++ Added the **sensitivity hold**: bind **Hold To Adjust Sensitivity** under Options → Controls → **Hex**, hold it, and
+  the scroll wheel changes how fast you turn. Let go and your own sensitivity comes straight back — nothing is saved
+  over, so the setting you had is the setting you keep.
+    + **Steps are a percentage of the current value, not a fixed amount**, so one notch is worth the same wherever you
+      are: at the default 10%, a step down from 100% lands on 90% and a step down from 10% lands on 9%, instead of
+      hitting zero. Set the step on the **Sensitivity** tab of `/hexa config`.
+    + **Snap on press** applies a multiplier the instant the key goes down, before you scroll at all. Set it to 40% and
+      the key is instant precision aim for a long bow shot or a small NPC; leave it at 100% to start from where you
+      already were.
+    + The wheel is taken away from the hotbar while the key is held, so your slot does not change underneath you.
+
 ## Version 1.11.0
 
 ### New Features

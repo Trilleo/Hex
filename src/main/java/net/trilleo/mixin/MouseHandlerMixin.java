@@ -3,6 +3,7 @@ package net.trilleo.mixin;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.MouseHandler;
 import net.trilleo.freecam.FreecamState;
+import net.trilleo.sensitivity.SensitivityState;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
@@ -16,6 +17,9 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
  * <p>The look delta replicates vanilla's normal (non-smoothed, non-scoped) sensitivity
  * ({@code (sens * 0.6 + 0.2)^3 * 8}); the {@code * 0.15} turn factor is applied inside
  * {@link FreecamState#applyLook}, so the feel matches the vanilla camera exactly.
+ *
+ * <p>Also lends the scroll wheel to the {@linkplain SensitivityState sensitivity hold} while its key is
+ * down, cancelling vanilla's handling so the hotbar slot does not change underneath it.
  */
 @Mixin(MouseHandler.class)
 public abstract class MouseHandlerMixin {
@@ -47,6 +51,22 @@ public abstract class MouseHandlerMixin {
             return;
         }
         state.adjustSpeed(yOffset != 0.0 ? yOffset : xOffset);
+        ci.cancel();
+    }
+
+    @Inject(method = "onScroll", at = @At("HEAD"), cancellable = true)
+    private void hex$sensitivityScroll(long window, double xOffset, double yOffset, CallbackInfo ci) {
+        // The freecam already binds the wheel to its fly speed, and it is the more specific mode of the two,
+        // so it keeps the wheel while flying. Checked here rather than left to injector order, so which one
+        // wins is stated rather than inherited.
+        if (FreecamState.INSTANCE.getActive()) {
+            return;
+        }
+        SensitivityState state = SensitivityState.INSTANCE;
+        if (!state.getActive()) {
+            return;
+        }
+        state.adjust(yOffset != 0.0 ? yOffset : xOffset);
         ci.cancel();
     }
 }

@@ -47,6 +47,7 @@ A few lists are deliberately not caught by a tab reset, because they are data ra
 |-------------------------|----------------------------------------------------------------------------------------------------------------|
 | **Keybinds**            | Master switch for [keybind shortcuts](Keybind-Shortcuts), and the way into their editor                        |
 | **Freecam**             | Movement speed, sensitivity and behaviour of the [freecam](Freecam)                                            |
+| **Sensitivity**         | Wheel step and snap-on-press for the [sensitivity hold](Mouse-Sensitivity)                                     |
 | **Hand**                | First-person [hand position, scale, rotation and swing](Hand-Display), plus the per-item swing list            |
 | **Item Customization**  | The [customized items](Item-Customization) list, the ✎ slot marker, and [chroma](Chroma-Text) speed and width |
 | **Reminders**           | The [reminder](Reminders) panel's position, scale, colours and row count; chroma speed; snooze length          |

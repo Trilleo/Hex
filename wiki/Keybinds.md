@@ -13,6 +13,7 @@ it. Anything you never bind simply does nothing.
 | **Open Hex Config**            | Opens the settings menu                         | [Configuration](Configuration)           |
 | **Open Hex Keybinds**          | Opens the Keybinds screen                       | [Keybind shortcuts](Keybind-Shortcuts)   |
 | **Toggle Freecam**             | Detach / reattach the camera                    | [Freecam](Freecam)                       |
+| **Hold To Adjust Sensitivity** | Hold, then scroll to change how fast you turn   | [Mouse sensitivity](Mouse-Sensitivity)   |
 | **Cycle Attack Mode**          | Flip Attack/Destroy between Hold and Toggle     | [Attack mode switch](Attack-Mode-Switch) |
 | **Toggle Swing For Held Item** | Add or remove the held item from the swing list | [Per-item swing](Per-Item-Swing)         |
 | **Customize Hovered Item**     | Open the editor for the item under the cursor   | [Item customization](Item-Customization) |
@@ -47,6 +48,9 @@ mid-game.
   reason.
 - **Region Here**, **Mark Region Corner** and **Walk Region** are pressed while moving around the world, so avoid
   anything near WASD that you might catch by accident.
+- **Hold To Adjust Sensitivity** is the only Hex key that is *held* rather than pressed, and it is held while you are
+  aiming — so it wants somewhere your hand already rests. A mouse side button or a key you can hold with the thumb beats
+  anything you would have to reach for.
 - **Dismiss Reminder** and **Snooze Reminder** are worth binding somewhere reachable if you use reminders at all —
   otherwise the only way to silence one is `/hexa remind dismiss`.
 

@@ -19,6 +19,7 @@
 - [Control switches](Control-Switches)
 - [Attack mode switch](Attack-Mode-Switch)
 - [Freecam](Freecam)
+- [Mouse sensitivity](Mouse-Sensitivity)
 - [Hand display](Hand-Display)
 - [Per-item swing](Per-Item-Swing)
 - [Item customization](Item-Customization)

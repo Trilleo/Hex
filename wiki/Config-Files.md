@@ -11,6 +11,7 @@ touch these — the [config menu](Configuration) covers everything — but they 
 | `profiles/<name>/`    | One directory per profile: a copy of the files below                               | —                                |
 | `keybinds.json`       | [Keybind shortcuts](Keybind-Shortcuts) and [control switches](Control-Switches)    | ✅                               |
 | `freecam.json`        | [Freecam](Freecam) settings                                                        | ✅                               |
+| `sensitivity.json`    | [Mouse sensitivity](Mouse-Sensitivity) settings                                    | ✅                               |
 | `hand.json`           | [Hand display](Hand-Display) settings                                              | ✅                               |
 | `swing_items.json`    | The [per-item swing](Per-Item-Swing) list                                          | ✅                               |
 | `reminders.json`      | [Reminders](Reminders) and their panel settings                                    | ✅                               |

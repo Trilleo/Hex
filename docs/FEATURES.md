@@ -161,6 +161,28 @@ move, Space/Shift for up/down, the mouse to look, and the scroll wheel to change
 character stays in place. Bind it under Options → Controls → **Hex** and tune it in the **Freecam** tab of
 `/hexa config`.
 
+## Mouse sensitivity
+
+Hold a keybind and the scroll wheel changes your mouse sensitivity; let go and your normal sensitivity comes back. A
+long bow shot, a click on a small NPC and a spin to face something behind you all want a different sensitivity, and the
+vanilla answer is three trips into Options → Controls → Mouse Settings.
+
+Bind **Hold To Adjust Sensitivity** under Options → Controls → **Hex** (unbound by default), then hold it and scroll:
+up is faster, down is slower. The hotbar does not scroll while the key is held. Nothing is written to your Minecraft
+options — the sensitivity you had before the key went down is the one you get back.
+
+The **Sensitivity** tab of `/hexa config` has two numbers:
+
+- **Wheel step** — how much one notch changes the sensitivity, as a percentage of its current value (10% by default).
+  Because it is a percentage rather than a fixed amount, a notch is worth the same wherever you are: a step down from
+  100% lands on 90%, and a step down from 10% lands on 9% rather than on nothing.
+- **Snap on press** — a multiplier applied the instant the key goes down, before you scroll at all, as a percentage of
+  your normal sensitivity. At 40% the key is instant precision aim and the wheel only fine-tunes it; at 100% (the
+  default) it changes nothing and the wheel does all the work.
+
+The key is only read while you are in the world with no screen open, so the wheel still belongs to your inventory and to
+Hypixel's menus. While the [freecam](#freecam) is flying it keeps the wheel for its own fly speed.
+
 ## Hand display
 
 Reposition your held item in first person and change how it swings. The **Hand** tab of `/hexa config` has sliders for

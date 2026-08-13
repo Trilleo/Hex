@@ -14,6 +14,7 @@ import net.trilleo.keybind.KeybindsFeature
 import net.trilleo.notebook.NotebookFeature
 import net.trilleo.region.RegionFeature
 import net.trilleo.reminder.ReminderFeature
+import net.trilleo.sensitivity.SensitivityFeature
 import net.trilleo.suggest.SuggestFeature
 import net.trilleo.update.UpdateFeature
 import org.slf4j.LoggerFactory
@@ -37,6 +38,9 @@ object Hex : ClientModInitializer {
     override fun onInitializeClient() {
         Features.register(KeybindsFeature)
         Features.register(FreecamFeature)
+        // Beside the freecam: the two share the scroll wheel, and the mouse mixin gives it to whichever of
+        // them is engaged.
+        Features.register(SensitivityFeature)
         Features.register(HandFeature)
         Features.register(AttackModeFeature)
         Features.register(ItemCustomizeFeature)
