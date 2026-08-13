@@ -15,51 +15,84 @@ their editor, so what you learn setting up a region applies unchanged to a chat 
 
 In any of the four editors, turn on **Show as a title**, then press **Title style…**.
 
-## The two lines
+## You write a title, you do not configure one
 
-The big line and the smaller line beneath it are configured **identically**. A subtitle is not a lesser thing than a
-title: each has a colour and the same five switches.
+The screen is a **live editor**, the same shape the [notebook](Notebook) uses:
 
-| Setting                                  | Notes                                                                            |
-|------------------------------------------|----------------------------------------------------------------------------------|
-| **Colour** / **Subtitle colour**         | Through the [colour picker](Colour-Picker). **None** uses the default on the Titles tab; **Chroma** flows |
-| **Bold**                                 | Thicker text                                                                     |
-| **Italic**                               | Slanted text                                                                     |
-| **Underline**                            | A line under it                                                                  |
-| **Strikethrough**                        | A line through it                                                                | 
-| **Obfuscated**                           | Scrambles the letters, the way an enchantment table reads                        |
-| **Subtitle**                             | The smaller line's text. Leave blank for no subtitle                             |
+```
+┌──────────────────────────────────────────────┐
+│  B  I  U  S  K   │  &            [ Preview ] │   the toolbar
+├──────────────────────────────────────────────┤
+│                                              │
+│              BOSS INCOMING                   │   the title, as it will look
+│            get to the platform               │
+├──────────────────────────────────────────────┤
+│  Title     │ &c&lBOSS INCOMING             │ │   what you type
+│  Subtitle  │ &7get to the platform         │ │
+├──────────────────────────────────────────────┤
+│  Preset · Fade in · Time on screen · …       │   the numbers
+└──────────────────────────────────────────────┘
+```
 
-The **big line's text** is not set here — it comes from whatever fires the title: a reminder's message, a region's
-message, a highlight rule's. That way a reminder that puts a captured number in its message puts it in the title too.
+**The preview is the real thing**, not a mock-up: it is built by the same code that builds the title when the alert
+fires, and redrawn every frame — so colours, styles and flowing [chroma](Chroma-Text) all look here exactly as they will
+in play.
 
-## Many colours on one line
+## The toolbar
 
-The text takes the same `&` codes [item names](Item-Customization) and [notes](Notebook) do, so one line can carry
-several colours and styles:
+Each button writes a `&` code **at the cursor**, in whichever of the two boxes you were last typing in. A code applies
+from where you put it onward, so one line can carry several colours.
+
+| Button   | Writes | Effect                                                       |
+|----------|--------|--------------------------------------------------------------|
+| **B**    | `&l`   | Bold                                                         |
+| **I**    | `&o`   | Italic                                                       |
+| **U**    | `&n`   | Underline                                                    |
+| **S**    | `&m`   | Strikethrough                                                |
+| **K**    | `&k`   | Obfuscated — scrambles the letters, as an enchantment table  |
+| **&**    | —      | Opens the colour palette                                     |
+
+The palette holds Minecraft's sixteen colours, **chroma**, a **reset** back to plain, the colours you have picked
+recently *anywhere in the mod*, and a `#RRGGBB` field for any other colour. It opens over the rows below rather than
+over the boxes, so you can watch the preview change as you click.
+
+You can type the codes by hand instead — the boxes are only text. `&#FF8800` writes any colour, `&z` starts
+[chroma](Chroma-Text), and `&r` goes back to plain.
 
 ```
 &fBOSS &c&lINCOMING
 ```
 
-is white, then bold red. Beyond Minecraft's sixteen codes:
+is white, then bold red.
 
-- **`&#RRGGBB`** — any colour at all, e.g. `&#FF8800`.
-- **`&z`** — [chroma](Chroma-Text) from that point on, the same code NotEnoughUpdates and SkyHanni use.
-- **`&r`** — back to the line's own colour and styles.
+## The big line usually needs no words
 
-Codes and the switches above **compose**. The switches are the line's baseline, and a code overrides it from where it
-appears — so `&l` mid-sentence adds bolding to a line that did not ask for it, rather than being overruled by it.
+The alert already has a message — a reminder's, a region's, a rule's — and the title shows it. So a title line of
+**nothing but codes styles that message** rather than replacing it:
+
+| You type      | You get                                     |
+|---------------|---------------------------------------------|
+| *(nothing)*   | The alert's message, plain                  |
+| `&c&l`        | The alert's message, in bold red            |
+| `&c&lBOSS`    | The word **BOSS**, in bold red              |
+
+The Title box shows the alert's own message as its hint, so which of those you have written is visible before you leave
+the screen.
+
+The **Subtitle** box has no such rule: nothing else offers a second line, so whatever you type there is what appears,
+and leaving it blank means no subtitle at all.
+
+Both boxes understand `$0`–`$9` [capture groups](Reminders) on a chat-triggered reminder, exactly as its message does.
 
 ## How long it lasts
 
 Three separate timings, rather than the one Hex used to offer.
 
-| Setting            | Range           | Effect                                                     |
-|--------------------|-----------------|-------------------------------------------------------------|
-| **Fade in**        | 0 – 5 seconds   | How long the title takes to appear. Zero is instant         |
-| **Time on screen** | 0.5 – 30 seconds| How long it holds at full brightness, once it has faded in  |
-| **Fade out**       | 0 – 5 seconds   | How long it takes to disappear again                        |
+| Setting            | Range            | Effect                                                     |
+|--------------------|------------------|-------------------------------------------------------------|
+| **Fade in**        | 0 – 5 seconds    | How long the title takes to appear. Zero is instant         |
+| **Time on screen** | 0.5 – 30 seconds | How long it holds at full brightness, once it has faded in  |
+| **Fade out**       | 0 – 5 seconds    | How long it takes to disappear again                        |
 
 Thirty seconds of dwell is deliberate: "hold this until I have dealt with it" is a real thing to want from a boss
 warning.
@@ -74,55 +107,58 @@ anything. An alert can have both, either, or neither.
 
 ## Presets
 
-The **Preset** row fills the colours, the switches and the sound in one click.
+The **Preset** row writes a ready-made set of codes at the front of both lines and sets a sound, in one click.
 
-| Preset      | Look                                    | Sound                       |
-|-------------|-----------------------------------------|-----------------------------|
-| **Info**    | Aqua, grey subtitle                     | A soft chime                |
-| **Success** | Green and bold                          | The level-up                |
-| **Warning** | Gold and bold, yellow subtitle          | A high note                 |
-| **Alert**   | Red and bold, pale red subtitle         | An anvil landing            |
-| **Chroma**  | Both lines flowing, bold                | The level-up                |
+| Preset      | Title  | Subtitle | Sound            |
+|-------------|--------|----------|------------------|
+| **Info**    | `&b`   | `&7`     | A soft chime     |
+| **Success** | `&a&l` | `&7`     | The level-up     |
+| **Warning** | `&6&l` | `&e`     | A high note      |
+| **Alert**   | `&c&l` | `&7`     | An anvil landing |
+| **Chroma**  | `&z&l` | `&z`     | The level-up     |
 
-A preset is a **starting point, not a mode**. Your text and your timings are left alone — they are the two things you
-have already decided by the time you reach for a preset — and the row reads **Custom** again the moment you change
-anything it wrote. Nothing stores which preset you used.
+A preset is a **starting point, not a mode**. The codes it wrote are ordinary text you can then edit; only the *leading*
+codes are replaced, so a `&e` you put mid-line to colour one word survives; your words and your timings are untouched;
+and the row reads **Custom** again once the leading codes no longer match. Nothing stores which preset you used.
 
 ## Preview
 
-**Preview** shows the title for real, behind the open menu: same colours, same fades, same sound, chroma and all. It is
-not a mock-up drawn inside the list, which is the one thing that could be wrong about it.
+**Preview** fires the title for real, behind the open menu — same colours, same fades, same sound. The live preview at
+the top shows you the *look*; this button is how you judge the *timing*.
 
 ## The Titles tab
 
 `/hexa config` → **Titles** holds what is true of every title at once.
 
-| Setting                                                | Effect                                                                              |
-|--------------------------------------------------------|--------------------------------------------------------------------------------------|
-| **Enabled**                                            | Master switch. With it off, alerts still fire — they just say nothing on screen      |
-| **Sounds**                                             | Master switch for the sound a title plays                                           |
-| **Default colour** / **Default subtitle colour**       | Used by any title that has not chosen one                                           |
-| **Chroma speed**                                       | How long one full trip through the rainbow takes. Lower is faster                   |
-| **Chroma width**                                       | How many characters one full rainbow spans                                          |
-| **New title fade in** / **time** / **fade out**        | The timings a *newly created* title starts with                                     |
-| **Preview**                                            | A sample title with nothing but these defaults on it                                |
+| Setting                                          | Effect                                                                         |
+|--------------------------------------------------|---------------------------------------------------------------------------------|
+| **Enabled**                                      | Master switch. With it off, alerts still fire — they just say nothing on screen |
+| **Sounds**                                       | Master switch for the sound a title plays                                      |
+| **Default colour** / **Default subtitle colour** | The colour a line starts from when its own codes do not set one                 |
+| **Chroma speed**                                 | How long one full trip through the rainbow takes. Lower is faster              |
+| **Chroma width**                                 | How many characters one full rainbow spans                                     |
+| **New title fade in** / **time** / **fade out**  | The timings a *newly created* title starts with                                |
+| **Preview**                                      | A sample title with nothing but these defaults on it                           |
+
+The two default colours are chosen through the [colour picker](Colour-Picker), chroma included — set one to chroma and
+every title that has not coloured itself will flow.
 
 Two of those rows behave differently, and the difference is the point:
 
-- The **default colours** are read **every time a title appears**. Change one and every title that never chose a colour
-  of its own is restyled at once.
-- The **new title** timings are **seeds**: copied into a title when it is created, and never read again. A title's
-  dwell time is part of that title, so changing a seed leaves the ones you have already tuned alone.
+- The **default colours** are read **every time a title appears**. Change one and every title that never set its own is
+  restyled at once.
+- The **new title** timings are **seeds**: copied into a title when it is created, and never read again. A title's dwell
+  time is part of that title, so changing a seed leaves the ones you have already tuned alone.
 
 ## Where the settings live
 
-The Titles tab is stored in `config/hex/titles.json` — see [Config files](Config-Files). Each individual title's style
-travels with the alert that owns it, in `reminders.json`, `regions.json`, `highlights.json` or `chat_highlights.json`,
-so duplicating a reminder duplicates its title and sharing a profile shares both.
+The Titles tab is stored in `config/hex/titles.json` — see [Config files](Config-Files). Each individual title's two
+lines travel with the alert that owns it, in `reminders.json`, `regions.json`, `highlights.json` or
+`chathighlights.json`, so duplicating a reminder duplicates its title and sharing a profile shares both.
 
 ## See also
 
-- [Colour picker](Colour-Picker) — how every colour in Hex is chosen.
-- [Chroma text](Chroma-Text) — flowing colour, and the `&z` code.
+- [Chroma text](Chroma-Text) — flowing colour, the `&z` code, and `&#RRGGBB`.
+- [Colour picker](Colour-Picker) — how the Titles tab's default colours are chosen.
 - [Reminders](Reminders), [Regions](Regions), [Entity highlight](Entity-Highlight),
   [Chat highlight](Chat-Highlight) — the four features that show titles.

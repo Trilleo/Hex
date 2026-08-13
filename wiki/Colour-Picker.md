@@ -82,6 +82,10 @@ Chroma is available for:
 | [Reminders](Reminders)                   | Panel background, text and flash | Reminders tab          |
 | [Titles](Titles)                         | Both lines of an alert title     | Titles tab             |
 
+A title's own colours are `&` codes rather than a colour setting, so its chroma comes from writing `&z` (the toolbar's
+palette has a button for it). The **Titles** tab's two *default* colour rows are ordinary picker rows, and setting one
+to chroma sets every title that has not coloured itself flowing.
+
 > **Upgrading from 1.10.3 or earlier?** Chroma used to be a separate on/off row on a chat rule and on an item
 > customization. Those rows are gone and the setting moved into the colour; your existing rules and items are converted
 > the first time this version loads them, and go on flowing exactly as before.

@@ -1,20 +1,25 @@
 package net.trilleo.title.model
 
 /**
- * One fully described title: two styled lines, how long it holds, and what it sounds like.
+ * One fully described title: two lines of source, how long it holds, and what it sounds like.
  *
  * This is the mod's single answer to "what does a title look like". Every feature that pops one — reminders,
  * regions, entity highlights, chat highlights — stores one of these rather than its own scatter of colour and
- * duration fields, and [net.trilleo.title.Titles] is the only thing that reads it. Adding a knob to titles is
- * therefore a field here, a row in [net.trilleo.title.gui.TitleEditScreen], and nothing else — no feature has
- * to be visited, and none of them can drift from the others.
+ * duration fields, and [net.trilleo.title.Titles] is the only thing that reads it.
  *
- * ### Where the text comes from
+ * ### Two strings, not two objects
  *
- * [title]'s own [TitleLine.text] is used only by a title that owns its words. A reminder, a region or a
- * highlight passes the message it already resolved — with `$0`–`$9` captures substituted — to
- * [net.trilleo.title.Titles.show], and that wins. The *subtitle's* text is stored here in every case, because
- * nothing else has a second line to offer.
+ * Each line is one string carrying `&` codes and words together, exactly as an item name or a note does. There
+ * is no colour field and no bold/italic/underline switch, because a code already says all of that and says it
+ * *per segment* — `&c&lBOSS &einbound` is one line in two colours, which no arrangement of switches could
+ * express. The editor writes the codes for you with a toolbar and shows you the result as you type, so nothing
+ * about them has to be memorised. See [TitleFormat].
+ *
+ * ### Where the big line's words come from
+ *
+ * [title] may be **only codes**, and usually is: the alert already has a message, so `&c&l` means "my message,
+ * in bold red". Typing words there replaces the message instead. [TitleFormat.merge] is that one rule, and the
+ * subtitle needs no equivalent because nothing else offers a second line.
  *
  * ### Times are seconds, not ticks
  *
@@ -26,11 +31,11 @@ package net.trilleo.title.model
  */
 class TitleSpec {
 
-    /** The big line. Its [TitleLine.text] is ignored when the caller supplies a message of its own. */
-    var title: TitleLine = TitleLine()
+    /** The big line: `&` codes, words, or both. Codes alone style the alert's own message. */
+    var title: String = ""
 
-    /** The smaller line beneath it. Blank text means no subtitle at all. */
-    var subtitle: TitleLine = TitleLine()
+    /** The smaller line beneath it, same notation. Blank — or codes with no words — means no subtitle. */
+    var subtitle: String = ""
 
     /** How long the title takes to appear. */
     var fadeInSeconds: Double = DEFAULT_FADE_IN
@@ -60,14 +65,11 @@ class TitleSpec {
     /** Repairs this spec in place, covering GSON's reflection gaps and bounding every number. */
     fun normalize() {
         @Suppress("SENSELESS_COMPARISON")
-        if (title == null) title = TitleLine()
+        if (title == null) title = ""
         @Suppress("SENSELESS_COMPARISON")
-        if (subtitle == null) subtitle = TitleLine()
+        if (subtitle == null) subtitle = ""
         @Suppress("SENSELESS_COMPARISON")
         if (sound == null) sound = ""
-
-        title.normalize()
-        subtitle.normalize()
 
         fadeInSeconds = fadeInSeconds.sane(DEFAULT_FADE_IN).coerceIn(FADE_MIN, FADE_MAX)
         // Zero is how an absent key arrives — GSON does not run Kotlin's default — and it is also below the
@@ -80,10 +82,10 @@ class TitleSpec {
         volume = volume.sane(1.0).coerceIn(VOLUME_MIN, VOLUME_MAX)
     }
 
-    /** A deep copy, for duplicating whatever owns this spec. */
+    /** A copy, for duplicating whatever owns this spec. */
     fun copy(): TitleSpec = TitleSpec().also {
-        it.title = title.copy()
-        it.subtitle = subtitle.copy()
+        it.title = title
+        it.subtitle = subtitle
         it.fadeInSeconds = fadeInSeconds
         it.staySeconds = staySeconds
         it.fadeOutSeconds = fadeOutSeconds
@@ -116,5 +118,8 @@ class TitleSpec {
         const val PITCH_MAX: Double = 2.0
         const val VOLUME_MIN: Double = 0.0
         const val VOLUME_MAX: Double = 1.0
+
+        /** Long enough for a sentence in codes and words; a title wider than the screen is not a title. */
+        const val MAX_LENGTH: Int = 128
     }
 }

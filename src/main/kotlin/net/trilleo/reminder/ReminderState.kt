@@ -63,6 +63,15 @@ class ReminderRuntimeState {
      */
     var resolvedSubtitle: String = ""
 
+    /**
+     * The reminder's title line with its capture groups substituted, resolved alongside [resolvedText].
+     *
+     * Usually blank, and blank is not "nothing to show": a title line is normally nothing but `&` codes, and
+     * those carry no groups to substitute. This exists for the rarer line that spells out its own words, so
+     * `$0` means the same thing wherever a title can be written rather than only on the subtitle.
+     */
+    var resolvedTitle: String = ""
+
     var lastFiredEpochMs: Long = 0L
 }
 
@@ -164,6 +173,8 @@ object ReminderState {
             if (entry.resolvedText == null) entry.resolvedText = ""
             @Suppress("SENSELESS_COMPARISON")
             if (entry.resolvedSubtitle == null) entry.resolvedSubtitle = ""
+            @Suppress("SENSELESS_COMPARISON")
+            if (entry.resolvedTitle == null) entry.resolvedTitle = ""
             if (entry.firesAtEpochMs < 0L) entry.firesAtEpochMs = 0L
             if (entry.remainingMs < 0L) entry.remainingMs = 0L
         }

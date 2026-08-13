@@ -163,6 +163,28 @@ object Chroma {
     /** The character that turns a marker into a hex colour rather than a one-letter code. */
     const val HEX_MARKER: Char = '#'
 
+    /** How long a one-letter code is: the marker and the letter. */
+    const val CODE_LENGTH: Int = 2
+
+    /**
+     * How many characters the code at [i] occupies — [HEX_LENGTH], [CODE_LENGTH], or `0` for text.
+     *
+     * The single answer to "is this a code?", so anything that needs to walk past codes — [Painter] below,
+     * and [net.trilleo.title.model.TitleFormat], which has to tell a title that *styles* a message from one
+     * that *replaces* it — agrees with what actually gets parsed. An unknown letter is not a code: an item
+     * genuinely called "Rock & Roll" keeps its ampersand, and so does a title.
+     */
+    fun codeLengthAt(raw: String, i: Int): Int {
+        if (hexAt(raw, i) != null) return HEX_LENGTH
+        if (i + 1 >= raw.length || !isMarker(raw[i])) return 0
+        val code = raw[i + 1].lowercaseChar()
+        val known = code == CODE || code == RESET || ChatFormatting.getByCode(code) != null
+        return if (known) CODE_LENGTH else 0
+    }
+
+    /** The code that returns text to whatever it inherited from. */
+    const val RESET: Char = 'r'
+
     /**
      * Walks the text once, holding the style the codes have built up so far.
      *
@@ -200,42 +222,39 @@ object Chroma {
         fun paint(raw: String): MutableComponent {
             var i = 0
             while (i < raw.length) {
-                val c = raw[i]
+                // One question, asked the same way TitleFormat asks it — a code this skips is a code that
+                // walks past, and the two must never disagree about where the text is.
+                when (Chroma.codeLengthAt(raw, i)) {
+                    // `&#RRGGBB`, checked first because `&#` is not a one-letter code and would otherwise be
+                    // emitted as two literal characters.
+                    Chroma.HEX_LENGTH -> {
+                        flush()
+                        applyColor(Chroma.hexAt(raw, i))
+                        i += Chroma.HEX_LENGTH
+                    }
 
-                // Checked before the one-letter codes, because `&#` is not one of them and would otherwise be
-                // emitted as two literal characters.
-                val hex = Chroma.hexAt(raw, i)
-                if (hex != null) {
-                    flush()
-                    applyColor(hex)
-                    i += Chroma.HEX_LENGTH
-                    continue
-                }
+                    Chroma.CODE_LENGTH -> {
+                        flush()
+                        apply(raw[i + 1].lowercaseChar())
+                        i += Chroma.CODE_LENGTH
+                    }
 
-                val code = if (Chroma.isMarker(c) && i + 1 < raw.length) raw[i + 1].lowercaseChar() else null
-                // An unknown code is not a code: an item genuinely called "Rock & Roll" keeps its ampersand.
-                if (code != null && applies(code)) {
-                    flush()
-                    apply(code)
-                    i += 2
-                    continue
+                    else -> {
+                        emit(raw[i])
+                        i++
+                    }
                 }
-                emit(c)
-                i++
             }
             flush()
             return root
         }
-
-        private fun applies(code: Char): Boolean =
-            code == CODE || code == 'r' || ChatFormatting.getByCode(code) != null
 
         private fun apply(code: Char) {
             if (code == CODE) {
                 chroma = true
                 return
             }
-            if (code == 'r') {
+            if (code == RESET) {
                 color = baseColor
                 chroma = chromaAll
                 clearFormats()

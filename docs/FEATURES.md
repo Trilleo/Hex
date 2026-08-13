@@ -62,8 +62,7 @@ for:
 - item names, and chat highlights ([chroma text](#chroma-text));
 - the [entity highlight](#entity-highlight) glow outline;
 - [region](#regions) boxes;
-- the [reminder](#reminders) panel's background, text and flash colours.
-
+- the [reminder](#reminders) panel's background, text and flash colours;
 - alert [titles](#titles), both lines.
 
 Each of those tabs has its own **Chroma speed** slider.
@@ -300,19 +299,24 @@ advancement. Four features can show one — [reminders](#reminders), [regions](#
 [entity highlight](#entity-highlight) and [chat highlight](#chat-highlight) — and all four configure it in the same
 place, through one **Title style…** button in their editor.
 
-### The style screen
+### The style editor
 
-Every title setting lives on that one screen, so what you learn setting up a region applies unchanged to a chat rule.
+You **write** a title rather than configuring one. The screen is a live editor, the same shape the
+[notebook](#notebook) uses: two text boxes, a formatting toolbar over them, and the title itself drawn above, updating
+as you type.
 
-**The big line and the subtitle are configured identically.** Each has a colour, chosen through the
-[colour picker](#colour-picker), and five switches: bold, italic, underline, strikethrough and obfuscated. Leave the
-colour on **None** and the title falls back to the default on the **Titles** tab. Choose **Chroma** and it flows
-through the rainbow while it is on screen.
+**The preview is the real thing.** It is built by the same code that builds the title when the alert fires and redrawn
+every frame, so colours, styles and flowing [chroma](#chroma-text) all look here exactly as they will in play.
 
-**A line can carry more than one colour.** The text takes the same `&` codes item names and notes do, so
-`&fBOSS &c&lINCOMING` is white, then bold red, on one line. `&#FF8800` writes any colour at all, and `&z` starts
-[chroma](#chroma-text) part-way through. Codes and the switches above compose: the switches are the line's baseline, and
-a code overrides it from where it appears.
+**The toolbar writes `&` codes for you.** **B**, **I**, **U**, **S** and **K** put bold, italic, underline,
+strikethrough and obfuscated at the cursor; **&** opens a palette with Minecraft's sixteen colours, chroma, a reset,
+the colours you have picked recently anywhere in the mod, and a field for any `#RRGGBB` you like. A code applies from
+where you put it, so one line can carry several colours: `&fBOSS &c&lINCOMING` is white, then bold red. You can type
+the codes by hand instead — the boxes are just text.
+
+**The big line usually needs no words.** The alert already has a message, so a title line of nothing but codes
+*styles* that message: `&c&l` means "my message, in bold red". Type words and they replace it instead. The box shows
+the alert's own message as its hint, so which one you have written is visible before you leave the screen.
 
 **Three timings, not one.** **Fade in**, **Time on screen** and **Fade out** are set separately, from instant up to
 thirty seconds of dwell — enough for a warning you want up until you have dealt with it.
@@ -321,12 +325,12 @@ thirty seconds of dwell — enough for a warning you want up until you have deal
 the title appears. This is separate from the alert's own **Play a sound** action, so an alert can have both, either, or
 neither.
 
-**Presets.** The **Preset** row fills the colours, the switches and the sound in one click — **Info**, **Success**,
-**Warning**, **Alert** or **Chroma**. It is a starting point rather than a mode: your text and your timings are left
-alone, and the row reads **Custom** again the moment you change anything it wrote.
+**Presets.** The **Preset** row writes a ready-made set of codes at the front of both lines and sets a sound, in one
+click — **Info**, **Success**, **Warning**, **Alert** or **Chroma**. A starting point rather than a mode: the codes it
+wrote are ordinary text you can then edit, your words and timings are untouched, and the row reads **Custom** again once
+they no longer match.
 
-**Preview** shows the title for real, behind the open menu — same colours, same fades, same sound — so nothing has to be
-imagined and nothing has to be tested by walking into a region.
+**Preview** fires the title for real, behind the open menu, so the fades and the sound can be judged too.
 
 ### The Titles tab
 
@@ -335,8 +339,9 @@ imagined and nothing has to be tested by walking into a region.
 - **Enabled** — master switch. With it off, reminders, regions and highlights still fire; they just say nothing in the
   middle of the screen.
 - **Sounds** — master switch for the sound a title plays.
-- **Default colour** and **Default subtitle colour** — used by any title that has not chosen one. These are read every
-  time a title appears, so changing one restyles every such title at once.
+- **Default colour** and **Default subtitle colour** — the colour a line starts from when its own codes do not set
+  one, chosen through the [colour picker](#colour-picker). Read every time a title appears, so changing one restyles
+  every such title at once.
 - **Chroma speed** and **Chroma width** — shared by every chroma title, because two alerts flowing at different rates
   read as a glitch rather than a choice.
 - **New title fade in / time / fade out** — the timings a *newly created* title starts with. Titles you have already set
@@ -373,9 +378,9 @@ its reminders rather than losing them. A condition can test a [region](#regions)
 be limited to one room.
 
 **What it does.** Show on the panel, play a sound, show the message as a big centred title, or any combination. With
-**Show as a title** on, **Title style…** opens the full [title](#titles) editor — colours, bold and italic on both
-lines, a subtitle, the three fade timings and a sound of its own. Press **Test** in the reminder editor to see and hear
-the whole thing before committing to it.
+**Show as a title** on, **Title style…** opens the [title](#titles) editor — a live editor where you type the two lines
+and style them from a toolbar, plus the three fade timings and a sound of its own. Press **Test** in the reminder editor
+to see and hear the whole thing before committing to it.
 
 Countdowns are real time, not game time. They keep running while you are logged out, so a four-day cookie is still
 counting when you come back — and anything that came due while you were away fires once, marked overdue, rather than
@@ -471,10 +476,10 @@ Switching shape never asks you to draw the region again. A cylinder and a sphere
 
 ### What it says
 
-**Message** is the title. Turn on **Show as a title** for the big centred text, then **Title style…** for the full
-[title](#titles) editor — colours, styles, a subtitle, the fade timings and a sound of its own. **Play a sound** adds a
-separate one, with the same sound id, pitch and volume the reminders have — **Test** in the editor fires both so you can
-judge them without leaving the menu.
+**Message** is the title. Turn on **Show as a title** for the big centred text, then **Title style…** for the
+[title](#titles) editor — the two lines, a formatting toolbar, the fade timings and a sound of its own. **Play a sound**
+adds a separate one, with the same sound id, pitch and volume the reminders have — **Test** in the editor fires both so
+you can judge them without leaving the menu.
 
 **Announce leaving** fires again on the way out, with its own message if you want a different one.
 

@@ -6,10 +6,10 @@ import org.junit.jupiter.api.Test
 /**
  * The repairs and the preset matching a title does on its own, before anything of Minecraft is involved.
  *
- * Worth pinning down because both halves are load-bearing in a way that fails silently. A normalizer that let a
- * zero through would ship a title that flashes past unread, and a `matches` that was too strict would leave the
- * preset row reading **Custom** immediately after a preset was chosen — neither of which throws, and neither of
- * which is obvious from the code.
+ * Worth pinning down because both halves fail silently. A normalizer that let a zero through would ship a title
+ * that flashes past unread, and a `matches` that was too strict would leave the preset row reading **Custom**
+ * immediately after a preset was chosen — neither of which throws, and neither of which is obvious from the
+ * code.
  */
 class TitleSpecTest {
 
@@ -63,28 +63,30 @@ class TitleSpecTest {
     }
 
     @Test
-    fun `colours are canonicalised so two settings holding one colour hold one string`() {
-        val typed = spec { title.color = "ff8800"; subtitle.color = "  CHROMA " }
-        typed.normalize()
+    fun `the lines are left exactly as written`() {
+        // Deliberately not canonicalised: the text is the player's, codes and all, and a normalizer that tidied
+        // it would fight the box they typed it into.
+        val written = spec { title = "&c&lBOSS &einbound"; subtitle = "  spaced  " }
+        written.normalize()
 
-        assertEquals("#FF8800", typed.title.color)
-        assertEquals("chroma", typed.subtitle.color)
+        assertEquals("&c&lBOSS &einbound", written.title)
+        assertEquals("  spaced  ", written.subtitle)
     }
 
     // ---- copying -----------------------------------------------------------------------------------------
 
     @Test
-    fun `a copy shares no line with its original`() {
-        // Duplicating a reminder duplicates its title; a shallow copy would have the two editing one another.
-        val original = spec { title.color = "#FF5555"; title.bold = true; subtitle.text = "beneath" }
+    fun `a copy is independent of its original`() {
+        val original = spec { title = "&c&l"; subtitle = "beneath"; staySeconds = 8.0 }
         val duplicate = original.copy()
 
-        duplicate.title.color = "#55FF55"
-        duplicate.subtitle.text = "changed"
+        duplicate.title = "&a&l"
+        duplicate.subtitle = "changed"
+        duplicate.staySeconds = 1.0
 
-        assertEquals("#FF5555", original.title.color)
-        assertEquals("beneath", original.subtitle.text)
-        assertTrue(duplicate.title.bold)
+        assertEquals("&c&l", original.title)
+        assertEquals("beneath", original.subtitle)
+        assertEquals(8.0, original.staySeconds)
     }
 
     // ---- presets -----------------------------------------------------------------------------------------
@@ -99,49 +101,55 @@ class TitleSpecTest {
     }
 
     @Test
-    fun `nudging one setting drops the spec back to Custom`() {
+    fun `a preset is still recognised over words the player typed`() {
+        // The words are not part of the preset, so typing them must not make the row forget which one is on.
+        val warned = spec { title = "BOSS"; subtitle = "get to the platform" }
+        TitlePreset.WARNING.applyTo(warned)
+
+        assertEquals("&6&lBOSS", warned.title)
+        assertEquals("&eget to the platform", warned.subtitle)
+        assertEquals(TitlePreset.WARNING, TitlePreset.of(warned))
+    }
+
+    @Test
+    fun `recolouring a line drops the spec back to Custom`() {
         val warned = spec()
         TitlePreset.WARNING.applyTo(warned)
-        warned.title.italic = true
+        warned.title = "&d" + warned.title
 
         assertEquals(TitlePreset.CUSTOM, TitlePreset.of(warned))
     }
 
     @Test
-    fun `a preset leaves the text and the timings alone`() {
-        // The two things already decided by the time a preset is reached: re-applying one to tune a colour must
-        // not retype the message or reset a dwell time someone chose deliberately.
+    fun `a preset leaves the words and the timings alone`() {
         val tuned = spec {
-            subtitle.text = "written by hand"
+            subtitle = "written by hand"
             staySeconds = 9.0
             fadeInSeconds = 0.0
         }
         TitlePreset.ALERT.applyTo(tuned)
 
-        assertEquals("written by hand", tuned.subtitle.text)
+        assertEquals("written by hand", TitleFormat.stripLeadingCodes(tuned.subtitle))
         assertEquals(9.0, tuned.staySeconds)
         assertEquals(0.0, tuned.fadeInSeconds)
     }
 
     @Test
     fun `Custom writes nothing at all`() {
-        val untouched = spec { title.color = "#123456"; title.underline = true; sound = "hex:nothing" }
+        val untouched = spec { title = "&9&nkeep me"; sound = "hex:nothing" }
         TitlePreset.CUSTOM.applyTo(untouched)
 
-        assertEquals("#123456", untouched.title.color)
-        assertTrue(untouched.title.underline)
+        assertEquals("&9&nkeep me", untouched.title)
         assertEquals("hex:nothing", untouched.sound)
     }
 
     @Test
-    fun `re-applying a preset clears the styles a previous one left behind`() {
-        // WARNING is bold and INFO is not; without clearStyles the bolding would survive the switch and the
-        // preset row would immediately read Custom for a spec nobody had touched.
-        val switched = spec()
+    fun `switching preset replaces the codes rather than stacking them`() {
+        val switched = spec { title = "BOSS" }
         TitlePreset.WARNING.applyTo(switched)
         TitlePreset.INFO.applyTo(switched)
 
-        assertFalse(switched.title.bold)
+        assertEquals("&bBOSS", switched.title)
         assertEquals(TitlePreset.INFO, TitlePreset.of(switched))
     }
 }

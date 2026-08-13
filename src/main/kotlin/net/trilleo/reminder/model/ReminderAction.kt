@@ -1,7 +1,9 @@
 package net.trilleo.reminder.model
 
+import net.trilleo.color.ColorValue
 import net.trilleo.title.TitleConfig
 import net.trilleo.title.model.TitleSpec
+import net.trilleo.util.Chroma
 
 /**
  * What a reminder does when it fires.
@@ -59,10 +61,10 @@ class ReminderAction {
      *
      * One object rather than the handful of loose fields this used to carry, because four features fire titles
      * through [net.trilleo.title.Titles] and each new knob would otherwise have to be added to all of them.
-     * The big line's own text is left empty and unused: the message comes from whatever owns this action —
-     * a reminder's resolved text, a region's name — and is passed to `Titles.show`. The *subtitle's* text does
-     * live here, and carries the same `$0`–`$9` capture substitution the message does, so a chat-armed
-     * reminder can put the number it matched on either line.
+     * Its big line is usually nothing but `&` codes: the words come from whatever owns this action — a
+     * reminder's resolved text, a region's name — and the codes dress them. Both of its lines carry the same
+     * `$0`–`$9` capture substitution the message does, so a chat-armed reminder can put the number it matched
+     * on either.
      */
     var title: TitleSpec = TitleSpec()
 
@@ -74,10 +76,10 @@ class ReminderAction {
      * still supported indefinitely: a config carried back from an older install, or hand-edited from a wiki
      * page that predates the title helper, still means what it said.
      */
-    @Deprecated("Folded into title.subtitle.text by normalize()")
+    @Deprecated("Folded into title.subtitle by normalize()")
     var subtitle: String? = null
 
-    @Deprecated("Folded into title.title.color by normalize()")
+    @Deprecated("Folded into title.title as a leading &#RRGGBB code by normalize()")
     var titleColor: String? = null
 
     @Deprecated("Folded into title.staySeconds by normalize()")
@@ -104,8 +106,10 @@ class ReminderAction {
         // Migration, before the spec is normalized so the folded values are bounded like any other. A legacy
         // field wins over the new block on the rare occasion a hand-edited file carries both: the old key is
         // the one such a file was written to use, and this build's own writes never leave one behind.
-        subtitle?.let { title.subtitle.text = it }
-        titleColor?.let { if (it.isNotBlank()) title.title.color = it }
+        subtitle?.let { title.subtitle = it }
+        // The old colour becomes a leading code and nothing else, which is exactly what a title whose words
+        // come from the alert's message is: `&#FF5555` says "my message, in red". See TitleFormat.merge.
+        titleColor?.let { spec -> ColorValue.parse(spec)?.let { title.title = codeFor(it) + title.title } }
         titleSeconds?.let { title.staySeconds = it }
         subtitle = null
         titleColor = null
@@ -130,6 +134,10 @@ class ReminderAction {
 
     /** Replaces a NaN or infinite value — which no slider can produce but a hand-edited file can. */
     private fun Double.sane(fallback: Double): Double = if (isFinite()) this else fallback
+
+    /** [rgb] as the `&#RRGGBB` code that writes it, for folding an old colour field into a title line. */
+    private fun codeFor(rgb: Int): String =
+        "&" + Chroma.HEX_MARKER + ColorValue.format(rgb, alpha = false).removePrefix("#")
 
     companion object {
         /** A short, bright, unmistakably deliberate note — distinct from any sound the game plays on its own. */

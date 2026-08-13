@@ -127,7 +127,7 @@ object TitleFeature : Feature {
         Titles.show(
             Minecraft.getInstance(),
             spec,
-            text = Component.translatable("hex.titles.preview.text").string,
+            title = Component.translatable("hex.titles.preview.text").string,
             subtitle = Component.translatable("hex.titles.preview.subtitle").string,
         )
     }

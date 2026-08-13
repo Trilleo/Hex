@@ -1,6 +1,8 @@
 package net.trilleo.reminder.model
 
 import net.trilleo.config.JsonConfig
+import net.trilleo.title.model.TitleFormat
+import net.trilleo.title.model.TitleSpec
 import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.Test
 
@@ -21,7 +23,18 @@ class ReminderActionMigrationTest {
         JsonConfig.GSON.fromJson(json, ReminderAction::class.java).also { it.normalize() }
 
     @Test
-    fun `an old title keeps its subtitle, colour and duration`() {
+    fun `an old colour becomes a code that dresses the alert's message`() {
+        // The old field could only tint the message, never replace it — which is exactly what a line of nothing
+        // but codes means now, so the migration is the identity in meaning even though the storage changed.
+        val action = read("""{"kind":"TITLE","titleColor":"#FF5555"}""")
+
+        assertEquals("&#FF5555", action.title.title)
+        assertFalse(TitleFormat.hasText(action.title.title))
+        assertEquals("&#FF5555cookie ran out", TitleFormat.merge(action.title.title, "cookie ran out"))
+    }
+
+    @Test
+    fun `an old title keeps its subtitle and duration`() {
         val action = read(
             """
             {
@@ -33,18 +46,15 @@ class ReminderActionMigrationTest {
             """,
         )
 
-        assertEquals("the smaller line", action.title.subtitle.text)
-        assertEquals("#FF5555", action.title.title.color)
+        assertEquals("the smaller line", action.title.subtitle)
         assertEquals(6.5, action.title.staySeconds)
     }
 
     @Test
     fun `the old keys are dropped, so the next write is clean`() {
-        @Suppress("DEPRECATION")
         val action = read("""{"kind":"TITLE","subtitle":"beneath","titleColor":"#00FF00","titleSeconds":2.0}""")
-
-        @Suppress("DEPRECATION")
         val written = JsonConfig.GSON.toJson(action)
+
         assertFalse(written.contains("titleColor"), written)
         assertFalse(written.contains("titleSeconds"), written)
         // The subtitle moved into the new block; the top-level key it came from is gone.
@@ -53,12 +63,12 @@ class ReminderActionMigrationTest {
     }
 
     @Test
-    fun `a blank old colour stays blank rather than becoming black`() {
-        // The legacy field's empty value meant "leave it the game's white", which is what an empty colour still
-        // means. Parsed rather than defaulted through, it would have come out as 0x000000 — an invisible title.
+    fun `a blank old colour leaves the line empty rather than writing a black code`() {
+        // The legacy empty value meant "leave it the game's white". Parsed rather than guarded, it would have
+        // become `&#000000` — an invisible title, and one nothing in the editor would explain.
         val action = read("""{"kind":"TITLE","subtitle":"","titleColor":"","titleSeconds":3.5}""")
 
-        assertEquals("", action.title.title.color)
+        assertEquals("", action.title.title)
     }
 
     @Test
@@ -68,14 +78,14 @@ class ReminderActionMigrationTest {
 
         assertEquals(ActionKind.SOUND, action.kind)
         assertEquals(1.5, action.pitch)
-        assertEquals("", action.title.title.color)
+        assertEquals("", action.title.title)
         assertEquals("", action.title.sound)
     }
 
     @Test
     fun `an out-of-range old duration is bounded rather than rejected`() {
         val action = read("""{"kind":"TITLE","titleSeconds":9999.0}""")
-        assertEquals(net.trilleo.title.model.TitleSpec.STAY_MAX, action.title.staySeconds)
+        assertEquals(TitleSpec.STAY_MAX, action.title.staySeconds)
     }
 
     @Test
@@ -85,8 +95,8 @@ class ReminderActionMigrationTest {
             {
               "kind": "TITLE",
               "title": {
-                "title": {"text": "", "color": "chroma", "bold": true},
-                "subtitle": {"text": "under", "color": "#AAAAAA"},
+                "title": "&z&lBOSS &einbound",
+                "subtitle": "&7get to the platform",
                 "fadeInSeconds": 0.0,
                 "staySeconds": 8.0,
                 "fadeOutSeconds": 2.0,
@@ -98,29 +108,20 @@ class ReminderActionMigrationTest {
             """,
         )
 
-        assertEquals("chroma", action.title.title.color)
-        assertTrue(action.title.title.bold)
-        assertEquals("under", action.title.subtitle.text)
+        assertEquals("&z&lBOSS &einbound", action.title.title)
+        assertEquals("&7get to the platform", action.title.subtitle)
         assertEquals(0.0, action.title.fadeInSeconds)
         assertEquals(8.0, action.title.staySeconds)
         assertEquals("minecraft:block.anvil.land", action.title.sound)
     }
 
     @Test
-    fun `a hand-edited file naming both wins with the old key`() {
-        // The old key is the one such a file was written to use, and this build never leaves one behind — so
-        // reaching this case at all means someone typed it deliberately.
-        val action = read(
-            """
-            {
-              "kind": "TITLE",
-              "titleColor": "#FF0000",
-              "title": { "title": {"color": "#0000FF"} }
-            }
-            """,
-        )
+    fun `an old colour on a line that already has codes goes in front of them`() {
+        // Only reachable from a hand-edited file carrying both. The old key is the one such a file was written
+        // to use, so it leads — and leading is also where a colour code has to be to apply to the whole line.
+        val action = read("""{"kind":"TITLE","titleColor":"#FF0000","title":{"title":"&lBOSS"}}""")
 
-        assertEquals("#FF0000", action.title.title.color)
+        assertEquals("&#FF0000&lBOSS", action.title.title)
     }
 
     @Test
@@ -128,10 +129,10 @@ class ReminderActionMigrationTest {
         val original = read("""{"kind":"TITLE","subtitle":"first","titleColor":"#112233"}""")
         val duplicate = original.copy()
 
-        duplicate.title.subtitle.text = "second"
-        duplicate.title.title.color = "#445566"
+        duplicate.title.subtitle = "second"
+        duplicate.title.title = "&a"
 
-        assertEquals("first", original.title.subtitle.text)
-        assertEquals("#112233", original.title.title.color)
+        assertEquals("first", original.title.subtitle)
+        assertEquals("&#112233", original.title.title)
     }
 }

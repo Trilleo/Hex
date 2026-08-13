@@ -6,47 +6,55 @@
 
 #### Titles
 
-+ Added the **title helper**: one screen for every title in the mod, opened by **Title style…** in a reminder, region,
++ Added the **title helper**: one editor for every title in the mod, opened by **Title style…** in a reminder, region,
   entity highlight or chat highlight editor. All four used to carry their own three settings for a subtitle, a colour
   and a duration; they now share one editor, so every title has the same controls and a title set up in one feature
   looks the way it does in the next.
-    + **Both lines are fully styled, and styled the same way.** The big line and the subtitle each have a colour and
-      five switches — bold, italic, underline, strikethrough and obfuscated. A subtitle is no longer a lesser thing
-      than a title.
-    + **One line can carry many colours.** Titles now take the same `&` codes item names and notes do:
-      `&fBOSS &c&lINCOMING` is white, then bold red, on one line. `&#FF8800` writes any colour at all, and `&z` starts
-      chroma part-way through. Codes compose with the switches above rather than fighting them.
-    + **Every title colour goes through the universal colour picker**, chroma included — palettes, the shared recent
-      colours, hex and RGB entry, all of it.
+    + **You write a title rather than configuring one.** The screen is a live editor like the notebook's: two text
+      boxes, a formatting toolbar over them, and the title itself drawn above and updating as you type. The preview is
+      built by the same code that draws the real thing, so colours, styles and flowing chroma all look there exactly as
+      they will in play.
+    + **The toolbar writes the `&` codes for you.** **B**, **I**, **U**, **S** and **K** put bold, italic, underline,
+      strikethrough and obfuscated at the cursor; **&** opens a palette with Minecraft's sixteen colours, chroma, a
+      reset, the colours you picked recently anywhere in the mod, and a field for any `#RRGGBB`. A code applies from
+      where you put it, so one line can carry several colours — `&fBOSS &c&lINCOMING` is white, then bold red.
+    + **The big line usually needs no words.** The alert already has a message, so a line of nothing but codes *styles*
+      that message: `&c&l` means "my message, in bold red". Type words and they replace it instead. The box shows the
+      alert's own message as its hint, so which one you have written is visible before you leave.
     + **Chroma titles actually flow.** A title used to be drawn once from a fixed component, so a flowing colour in one
       could not move; it re-renders itself every frame now, and both lines can flow.
     + **All three fade timings, not just one.** Fade in, time on screen and fade out are set separately, from instant
       up to thirty seconds of dwell — enough for a warning you want up until you have dealt with it.
     + **A sound of its own**, with a sound id, pitch and volume, played the moment the title appears. Separate from the
       alert's own sound action, so an alert can have both, either, or neither.
-    + **Presets** — Info, Success, Warning, Alert and Chroma — fill the colours, the switches and the sound in one
-      click. A starting point rather than a mode: your text and timings are left alone, and the row reads **Custom**
-      again the moment you change anything it wrote.
-    + **Preview** shows the title for real behind the open menu — same colours, same fades, same sound — so a title no
-      longer has to be judged by walking into a region.
+    + **Presets** — Info, Success, Warning, Alert and Chroma — write a ready-made set of codes at the front of both
+      lines and set a sound, in one click. A starting point rather than a mode: the codes are then ordinary text you
+      can edit, your words and timings are left alone, and the row reads **Custom** again once they no longer match.
+    + **Preview** fires the title for real behind the open menu, so the fades and the sound can be judged too.
 + Added the **Titles** tab to `/hexa config`, for what is true of every title at once: a master switch, a master switch
-  for title sounds, fallback colours for the two lines, the shared chroma speed and width, and the timings a newly
-  created title starts with. The fallback colours are read every time a title appears, so changing one restyles every
-  title that never chose a colour of its own.
+  for title sounds, the colour each line starts from when its own codes do not set one (through the universal colour
+  picker, chroma included), the shared chroma speed and width, and the timings a newly created title starts with. The
+  default colours are read every time a title appears, so changing one restyles every title that never set its own.
 
 ### Technical Details
 
 #### Titles
 
 + `net.trilleo.title` replaces `net.trilleo.util.Titles`. `TitleSpec` is the single model for "what a title looks and
-  sounds like", `Titles.show` is the only thing in the mod that calls `Gui.setTitle`, and `TitleEditScreen` is the only
-  place its settings are spelled out — so a knob added to titles is one field and one row rather than four of each.
+  sounds like" — two lines of source, three timings and a sound — `Titles.show` is the only thing in the mod that calls
+  `Gui.setTitle`, and `TitleEditScreen` is the only place a title's settings are spelled out.
++ A title line is one string of `&` codes and words rather than a colour field and five style flags. The codes already
+  said all of it and said it *per segment*, which no arrangement of switches can: `&c&lBOSS &einbound` is one line in
+  two colours. `TitleFormat` is the shared reading of that string, over a new public `Chroma.codeLengthAt` so what it
+  calls a code is exactly what the parser will.
 + Chroma in a title needs no mixin: `Gui.setTitle` takes the `Component` *interface* and `Gui.extractTitle` re-reads the
   field every frame, so `Titles` hands it a component that rebuilds itself when asked. A title with nothing to animate
-  still gets a plain component and pays nothing.
+  still gets a plain component and pays nothing. The editor's preview calls the same builder.
 + Existing titles are migrated on load. `ReminderAction`'s `subtitle`, `titleColor` and `titleSeconds` are folded into
   the new `title` block and then dropped from the file, so `reminders.json`, `regions.json`, `highlights.json` and
-  `chathighlights.json` come out clean on the next write. A hand-edited file still naming an old key goes on working.
+  `chathighlights.json` come out clean on the next write. The old colour becomes a leading `&#RRGGBB` code, which is
+  what it always meant — it could only tint the alert's message, never replace it. A hand-edited file still naming an
+  old key goes on working.
 
 ## Version 1.11.1
 

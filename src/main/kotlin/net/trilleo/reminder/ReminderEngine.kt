@@ -181,8 +181,9 @@ object ReminderEngine {
         state.phase = Phase.ARMED
         state.firesAtEpochMs = now + (reminder.trigger.seconds * 1000.0).toLong()
         state.resolvedText = ChatMatcher.substitute(reminder.text, groups)
-        // The title's second line gets the same treatment, so a captured number can go on either line.
+        // Both of the title's lines get the same treatment, so a captured number can go on either of them.
         state.resolvedSubtitle = ChatMatcher.substitute(ReminderActions.subtitleOf(reminder.actions), groups)
+        state.resolvedTitle = ChatMatcher.substitute(ReminderActions.titleOf(reminder.actions), groups)
         ReminderState.markDirty()
     }
 

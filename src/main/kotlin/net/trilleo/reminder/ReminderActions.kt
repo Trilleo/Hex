@@ -5,6 +5,7 @@ import net.trilleo.reminder.model.ActionKind
 import net.trilleo.reminder.model.Reminder
 import net.trilleo.reminder.model.ReminderAction
 import net.trilleo.title.Titles
+import net.trilleo.title.model.TitleFormat
 
 /**
  * Runs what a reminder does when it fires.
@@ -22,10 +23,22 @@ object ReminderActions {
     /**
      * Runs every action in [actions], using [text] and [subtitle] for anything that shows a message.
      *
+     * @param text the alert's own message. A title line made of nothing but `&` codes styles *this* rather
+     *   than replacing it — see [net.trilleo.title.model.TitleFormat.merge].
+     * @param titleText the title's own big line with capture groups already substituted, for the one caller
+     *   that has any: [run]'s reminder overload. Blank takes the line straight off the action, which is right
+     *   everywhere else — a region and a highlight are armed by a place or a mob, and have nothing to capture.
+     *
      * Never throws — one bad action must not strand the caller's phase transition, and the caller is the
      * engine's [ReminderEngine.fire], which still has state to write afterwards.
      */
-    fun run(client: Minecraft, actions: List<ReminderAction>, text: String, subtitle: String = "") {
+    fun run(
+        client: Minecraft,
+        actions: List<ReminderAction>,
+        text: String,
+        subtitle: String = "",
+        titleText: String = "",
+    ) {
         actions.forEach { action ->
             runCatching {
                 when (action.kind) {
@@ -34,7 +47,7 @@ object ReminderActions {
                     // panel row, which is why it never offers this kind.
                     ActionKind.HUD -> Unit
                     ActionKind.SOUND -> playSound(client, action.value, action.pitch, action.volume)
-                    ActionKind.TITLE -> showTitle(client, action, text, subtitle)
+                    ActionKind.TITLE -> showTitle(client, action, text, subtitle, titleText)
                 }
             }
         }
@@ -53,25 +66,48 @@ object ReminderActions {
             reminder.actions,
             state.resolvedText.ifEmpty { reminder.text },
             state.resolvedSubtitle.ifEmpty { subtitleOf(reminder.actions) },
+            state.resolvedTitle.ifEmpty { titleOf(reminder.actions) },
         )
     }
 
     /**
-     * The subtitle text the title action in [actions] carries, or `""`.
+     * The big line the title action in [actions] carries, or `""`.
+     *
+     * Usually nothing but `&` codes, which is the point: the words come from the alert's message, and this is
+     * how it is dressed. See [net.trilleo.title.model.TitleFormat].
+     */
+    fun titleOf(actions: List<ReminderAction>): String =
+        actions.firstOrNull { it.kind == ActionKind.TITLE }?.title?.title.orEmpty()
+
+    /**
+     * The subtitle the title action in [actions] carries, or `""`.
      *
      * Here rather than repeated at each caller: reminders, regions, entity highlights and chat highlights all
      * need the same answer, and three of them were spelling it out inline.
      */
     fun subtitleOf(actions: List<ReminderAction>): String =
-        actions.firstOrNull { it.kind == ActionKind.TITLE }?.title?.subtitle?.text.orEmpty()
+        actions.firstOrNull { it.kind == ActionKind.TITLE }?.title?.subtitle.orEmpty()
 
     /**
-     * Shows the title, letting the owner's already-resolved [text] and [subtitle] stand in for whatever the
-     * spec carries. Everything else about how it looks — colours, styles, chroma, timings, its sound — is
-     * [Titles]' business, not this one's.
+     * Shows the title.
+     *
+     * **The one place a title line is merged with the alert's message**, which is why it is here rather than in
+     * [Titles]: an alert's message is this object's business, and a renderer that had to know about one would
+     * have to be told by every caller anyway.
      */
-    private fun showTitle(client: Minecraft, action: ReminderAction, text: String, subtitle: String) {
-        Titles.show(client, action.title, text = text, subtitle = subtitle)
+    private fun showTitle(
+        client: Minecraft,
+        action: ReminderAction,
+        text: String,
+        subtitle: String,
+        titleText: String,
+    ) {
+        Titles.show(
+            client,
+            action.title,
+            title = TitleFormat.merge(titleText.ifEmpty { action.title.title }, text),
+            subtitle = subtitle.ifEmpty { action.title.subtitle },
+        )
     }
 
     private fun playSound(client: Minecraft, id: String, pitch: Double, volume: Double) {
