@@ -17,6 +17,7 @@ import net.trilleo.config.gui.ConfigEntryList
 import net.trilleo.reminder.model.ActionKind
 import net.trilleo.reminder.model.ReminderAction
 import net.trilleo.skyblock.SkyblockLocation
+import net.trilleo.title.gui.TitleEditScreen
 import net.trilleo.util.Notify
 import java.util.*
 
@@ -260,29 +261,17 @@ class ChatHighlightEditScreen(
                 get = { rule.actions.any { it.kind == ActionKind.TITLE } },
                 set = { setAction(ActionKind.TITLE, it); rebuild() },
             )
-            actionOf(ActionKind.TITLE)?.let { title ->
-                text(
-                    "title_subtitle",
-                    default = "",
-                    get = { title.subtitle },
-                    set = { title.subtitle = it; touch() },
-                )
-                color(
-                    "title_color",
-                    default = DEFAULT_TITLE_COLOR,
-                    get = { title.titleColor.ifBlank { DEFAULT_TITLE_COLOR } },
-                    set = { title.titleColor = it; touch() },
-                )
-                slider(
-                    "title_seconds",
-                    min = ReminderAction.TITLE_SECONDS_MIN,
-                    max = ReminderAction.TITLE_SECONDS_MAX,
-                    step = 0.5,
-                    default = ReminderAction.DEFAULT_TITLE_SECONDS,
-                    get = { title.titleSeconds },
-                    set = { title.titleSeconds = it; touch() },
-                    format = { String.format(Locale.ROOT, "%.1fs", it) },
-                )
+            actionOf(ActionKind.TITLE)?.let { titleAction ->
+                action("title_style") { screen ->
+                    Minecraft.getInstance().setScreen(
+                        TitleEditScreen(
+                            screen,
+                            titleAction.title,
+                                ownerText = { rule.notifyText.ifBlank { rule.name } },
+                            onChange = this@ChatHighlightEditScreen::touch,
+                        ),
+                    )
+                }
             }
 
             toggle(
@@ -344,14 +333,18 @@ class ChatHighlightEditScreen(
     private fun setAction(kind: ActionKind, on: Boolean) {
         if (on) {
             if (rule.actions.none { it.kind == kind }) {
-                rule.actions.add(ReminderAction().apply { this.kind = kind })
+                // Through the factory for a title, so a new one is timed the way the Titles tab says.
+                val action = if (kind == ActionKind.TITLE) {
+                    ReminderAction.title()
+                } else {
+                    ReminderAction().apply { this.kind = kind }
+                }
+                rule.actions.add(action)
             }
         } else {
             rule.actions.removeAll { it.kind == kind }
             // Never leave a notifying rule that fires and does nothing — it reads exactly like a broken one.
-            if (rule.notify && rule.actions.isEmpty()) {
-                rule.actions.add(ReminderAction().apply { this.kind = ActionKind.TITLE })
-            }
+            if (rule.notify && rule.actions.isEmpty()) rule.actions.add(ReminderAction.title())
         }
         touch()
     }
@@ -385,7 +378,5 @@ class ChatHighlightEditScreen(
 
         /** Only the *unhighlighted* part of the preview uses this; the rest is whatever the rule paints. */
         const val PREVIEW_COLOR = 0xFFA0A0A0.toInt()
-
-        const val DEFAULT_TITLE_COLOR = "#FFFFFF"
     }
 }

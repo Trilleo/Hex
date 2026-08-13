@@ -39,8 +39,11 @@ Every reminder counts down; the trigger decides when the countdown begins.
 
 ### 3. What it does
 
-Show on the panel, play a sound, show the message as a big centred title, or any combination. The title has its own
-colour, an optional smaller subtitle, and a time it holds before fading.
+Show on the panel, play a sound, show the message as a big centred title, or any combination.
+
+With **Show as a title** on, **Title style…** opens the full [title editor](Titles) — colours and styles on both
+lines, a subtitle, the three fade timings and a sound of the title's own. It is the same editor
+[regions](Regions), [entity highlight](Entity-Highlight) and [chat highlight](Chat-Highlight) use.
 
 **Test** in the editor fires it immediately, so you can see and hear it before committing to it.
 

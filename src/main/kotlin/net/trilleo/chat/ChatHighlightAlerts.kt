@@ -3,7 +3,6 @@ package net.trilleo.chat
 import net.minecraft.client.Minecraft
 import net.trilleo.chat.model.ChatHighlight
 import net.trilleo.reminder.ReminderActions
-import net.trilleo.reminder.model.ActionKind
 
 /**
  * Fires a chat highlight's title and sound.
@@ -40,6 +39,5 @@ object ChatHighlightAlerts {
     /** What the notification says. Falls back to the rule's name — a blank title draws as nothing at all. */
     private fun messageOf(rule: ChatHighlight): String = rule.notifyText.ifBlank { rule.name }
 
-    private fun subtitleOf(rule: ChatHighlight): String =
-        rule.actions.firstOrNull { it.kind == ActionKind.TITLE }?.subtitle.orEmpty()
+    private fun subtitleOf(rule: ChatHighlight): String = ReminderActions.subtitleOf(rule.actions)
 }

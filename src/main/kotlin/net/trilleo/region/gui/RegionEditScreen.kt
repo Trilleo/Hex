@@ -17,6 +17,7 @@ import net.trilleo.reminder.ReminderConfig
 import net.trilleo.reminder.gui.ReminderEditScreen
 import net.trilleo.reminder.gui.RemindersScreen
 import net.trilleo.reminder.model.*
+import net.trilleo.title.gui.TitleEditScreen
 import net.trilleo.util.Notify
 import java.util.*
 
@@ -162,29 +163,17 @@ class RegionEditScreen(
             get = { region.actions.any { it.kind == ActionKind.TITLE } },
             set = { setAction(ActionKind.TITLE, it); rebuild() },
         )
-        actionOf(ActionKind.TITLE)?.let { title ->
-            text(
-                "title_subtitle",
-                default = "",
-                get = { title.subtitle },
-                set = { title.subtitle = it; touch() },
-            )
-            color(
-                "title_color",
-                default = "#FFFFFF",
-                get = { title.titleColor.ifBlank { "#FFFFFF" } },
-                set = { title.titleColor = it; touch() },
-            )
-            slider(
-                "title_seconds",
-                min = ReminderAction.TITLE_SECONDS_MIN,
-                max = ReminderAction.TITLE_SECONDS_MAX,
-                step = 0.5,
-                default = ReminderAction.DEFAULT_TITLE_SECONDS,
-                get = { title.titleSeconds },
-                set = { title.titleSeconds = it; touch() },
-                format = { String.format(Locale.ROOT, "%.1fs", it) },
-            )
+        actionOf(ActionKind.TITLE)?.let { titleAction ->
+            action("title_style") { screen ->
+                Minecraft.getInstance().setScreen(
+                    TitleEditScreen(
+                        screen,
+                        titleAction.title,
+                        ownerText = { region.text },
+                        onChange = this@RegionEditScreen::touch,
+                    ),
+                )
+            }
         }
 
         toggle(
@@ -353,14 +342,18 @@ class RegionEditScreen(
     private fun setAction(kind: ActionKind, on: Boolean) {
         if (on) {
             if (region.actions.none { it.kind == kind }) {
-                region.actions.add(ReminderAction().apply { this.kind = kind })
+                // Through the factory for a title, so a new one is timed the way the Titles tab says.
+                val action = if (kind == ActionKind.TITLE) {
+                    ReminderAction.title()
+                } else {
+                    ReminderAction().apply { this.kind = kind }
+                }
+                region.actions.add(action)
             }
         } else {
             region.actions.removeAll { it.kind == kind }
             // Never leave a region that fires and does nothing — it reads exactly like a broken one.
-            if (region.actions.isEmpty()) {
-                region.actions.add(ReminderAction().apply { this.kind = ActionKind.TITLE })
-            }
+            if (region.actions.isEmpty()) region.actions.add(ReminderAction.title())
         }
         touch()
     }

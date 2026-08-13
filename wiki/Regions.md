@@ -60,8 +60,9 @@ Switching shape never asks you to draw the region again. A cylinder and a sphere
 
 ## What it says
 
-- **Message** is the title. Turn on **Show as a title** for the big centred text, with its own colour, an optional
-  smaller **Subtitle** beneath, and how long it holds before fading.
+- **Message** is the title. Turn on **Show as a title** for the big centred text, then **Title style…** for the full
+  [title editor](Titles) — colours and styles on both lines, a subtitle, the three fade timings and a sound of the
+  title's own.
 - **Play a sound** adds one, with the same sound id, pitch and volume that [reminders](Reminders) have. **Test** in the
   editor fires both, so you can judge them without leaving the menu.
 - **Announce leaving** fires again on the way out, with its own message if you want a different one.

@@ -239,7 +239,7 @@ object HighlightConfig {
         highlight.actions.removeAll { it.kind == ActionKind.HUD }
         // A rule that announces itself and makes no sign of it is indistinguishable from one that never fired.
         if (highlight.notify && highlight.actions.isEmpty()) {
-            highlight.actions.add(ReminderAction().apply { kind = ActionKind.TITLE })
+            highlight.actions.add(ReminderAction.title())
         }
 
         if (highlight.notifyText.isBlank()) highlight.notifyText = highlight.name

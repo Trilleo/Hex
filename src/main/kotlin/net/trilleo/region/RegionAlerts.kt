@@ -48,6 +48,5 @@ object RegionAlerts {
      * Unlike a reminder's, this needs no capture substitution: a region is armed by a position, and there is
      * no chat line behind it to have captured anything from.
      */
-    private fun subtitleOf(region: Region): String =
-        region.actions.firstOrNull { it.kind == net.trilleo.reminder.model.ActionKind.TITLE }?.subtitle.orEmpty()
+    private fun subtitleOf(region: Region): String = ReminderActions.subtitleOf(region.actions)
 }

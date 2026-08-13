@@ -3,7 +3,6 @@ package net.trilleo.highlight
 import net.minecraft.client.Minecraft
 import net.trilleo.highlight.model.Highlight
 import net.trilleo.reminder.ReminderActions
-import net.trilleo.reminder.model.ActionKind
 
 /**
  * Announces a newly found entity with the rule's title and sound.
@@ -43,6 +42,5 @@ object HighlightAlerts {
      * Unlike a reminder's, this needs no capture substitution: a highlight is armed by an entity appearing, and
      * there is no chat line behind it to have captured anything from.
      */
-    private fun subtitleOf(highlight: Highlight): String =
-        highlight.actions.firstOrNull { it.kind == ActionKind.TITLE }?.subtitle.orEmpty()
+    private fun subtitleOf(highlight: Highlight): String = ReminderActions.subtitleOf(highlight.actions)
 }

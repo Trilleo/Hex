@@ -4,8 +4,7 @@ import net.minecraft.client.Minecraft
 import net.trilleo.reminder.model.ActionKind
 import net.trilleo.reminder.model.Reminder
 import net.trilleo.reminder.model.ReminderAction
-import net.trilleo.util.HexColor
-import net.trilleo.util.Titles
+import net.trilleo.title.Titles
 
 /**
  * Runs what a reminder does when it fires.
@@ -53,23 +52,27 @@ object ReminderActions {
             client,
             reminder.actions,
             state.resolvedText.ifEmpty { reminder.text },
-            state.resolvedSubtitle.ifEmpty { reminder.actions.firstOrNull { it.kind == ActionKind.TITLE }?.subtitle.orEmpty() },
+            state.resolvedSubtitle.ifEmpty { subtitleOf(reminder.actions) },
         )
     }
 
+    /**
+     * The subtitle text the title action in [actions] carries, or `""`.
+     *
+     * Here rather than repeated at each caller: reminders, regions, entity highlights and chat highlights all
+     * need the same answer, and three of them were spelling it out inline.
+     */
+    fun subtitleOf(actions: List<ReminderAction>): String =
+        actions.firstOrNull { it.kind == ActionKind.TITLE }?.title?.subtitle?.text.orEmpty()
+
+    /**
+     * Shows the title, letting the owner's already-resolved [text] and [subtitle] stand in for whatever the
+     * spec carries. Everything else about how it looks — colours, styles, chroma, timings, its sound — is
+     * [Titles]' business, not this one's.
+     */
     private fun showTitle(client: Minecraft, action: ReminderAction, text: String, subtitle: String) {
-        Titles.show(
-            client,
-            text,
-            subtitle,
-            // A blank colour means "leave it vanilla white" rather than "black", so the absent case has to be
-            // distinguished before parsing rather than defaulted through it.
-            color = action.titleColor.takeIf { it.isNotBlank() }?.let { HexColor.parse(it) },
-            stay = (action.titleSeconds * TICKS_PER_SECOND).toInt(),
-        )
+        Titles.show(client, action.title, text = text, subtitle = subtitle)
     }
-
-    private const val TICKS_PER_SECOND = 20.0
 
     private fun playSound(client: Minecraft, id: String, pitch: Double, volume: Double) {
         // The master sound switch is checked here rather than at the call site so it covers every path that

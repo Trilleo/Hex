@@ -128,7 +128,7 @@ Turn on **Announce new ones** and the rule speaks up the first time it sees each
 | Setting             | Notes                                                                 |
 |---------------------|-----------------------------------------------------------------------|
 | **Message**         | The title's text. Blank uses the rule's name                          |
-| **Show as a title** | Subtitle, colour and how long it holds                                |
+| **Show as a title** | Opens the full [title editor](Titles): colours, styles, subtitle, timings, sound |
 | **Play a sound**    | Any sound id, with pitch and volume. A bad id is reported as you type |
 | **Cooldown**        | How long the rule stays quiet afterwards                              |
 

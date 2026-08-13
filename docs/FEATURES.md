@@ -64,8 +64,9 @@ for:
 - [region](#regions) boxes;
 - the [reminder](#reminders) panel's background, text and flash colours.
 
-Each of those tabs has its own **Chroma speed** slider. Alert titles are not on the list: Minecraft draws a title once
-from a fixed component, so a colour written into one cannot move.
+- alert [titles](#titles), both lines.
+
+Each of those tabs has its own **Chroma speed** slider.
 
 ### None
 
@@ -269,10 +270,12 @@ Chroma is colour that flows through the rainbow, the same effect other Skyblock 
 same way any other colour is chosen: open the swatch and press **Chroma**.
 
 Hex can flow [item names](#item-customization), [chat highlights](#chat-highlight), the
-[entity highlight](#entity-highlight) glow, [region](#regions) boxes and the [reminder](#reminders) panel.
+[entity highlight](#entity-highlight) glow, [region](#regions) boxes, the [reminder](#reminders) panel and both lines of
+an alert [title](#titles).
 
-For text there is a second, finer way in: write **`&z`** in the **Name** field of an item, or in a
-[note](#notebook), and chroma starts at that point — `&7Old &zHyperion` leaves the first word grey and flows the second.
+For text there is a second, finer way in: write **`&z`** in the **Name** field of an item, in a [title](#titles), or in
+a [note](#notebook), and chroma starts at that point — `&7Old &zHyperion` leaves the first word grey and flows the
+second.
 Any colour code, or `&r`, ends it. This is the same code NotEnoughUpdates and SkyHanni use, so a name copied from either
 works here unchanged.
 
@@ -281,14 +284,67 @@ that feature at once — one item flowing at a different rate from the item besi
 choice:
 
 - **Chroma speed** — how long one full trip through the rainbow takes, from half a second to twenty. Lower is faster.
-- **Chroma width** — how many characters one full rainbow spans, on the two tabs that colour *text* (Item Customization
-  and Chat Highlight). Set it low and a short name holds every colour at once; set it high and the name drifts through
-  one colour at a time. A glow, a box and a panel are one colour rather than a run of characters, so those tabs have no
-  width to set.
+- **Chroma width** — how many characters one full rainbow spans, on the three tabs that colour *text* (Item
+  Customization, Chat Highlight and Titles). Set it low and a short name holds every colour at once; set it high and the
+  name drifts through one colour at a time. A glow, a box and a panel are one colour rather than a run of characters, so
+  those tabs have no width to set.
 
 The colours move on their own, so a chroma name animates wherever it appears: in a tooltip, on a container slot, and in
 the item-name popup above the hotbar. It costs a little more to draw than a plain colour, which is why it is off by
 default and set per item, per rule or per region rather than applied to everything.
+
+## Titles
+
+A **title** is the big line of text across the middle of the screen, the way the game announces a boss or a new
+advancement. Four features can show one — [reminders](#reminders), [regions](#regions),
+[entity highlight](#entity-highlight) and [chat highlight](#chat-highlight) — and all four configure it in the same
+place, through one **Title style…** button in their editor.
+
+### The style screen
+
+Every title setting lives on that one screen, so what you learn setting up a region applies unchanged to a chat rule.
+
+**The big line and the subtitle are configured identically.** Each has a colour, chosen through the
+[colour picker](#colour-picker), and five switches: bold, italic, underline, strikethrough and obfuscated. Leave the
+colour on **None** and the title falls back to the default on the **Titles** tab. Choose **Chroma** and it flows
+through the rainbow while it is on screen.
+
+**A line can carry more than one colour.** The text takes the same `&` codes item names and notes do, so
+`&fBOSS &c&lINCOMING` is white, then bold red, on one line. `&#FF8800` writes any colour at all, and `&z` starts
+[chroma](#chroma-text) part-way through. Codes and the switches above compose: the switches are the line's baseline, and
+a code overrides it from where it appears.
+
+**Three timings, not one.** **Fade in**, **Time on screen** and **Fade out** are set separately, from instant up to
+thirty seconds of dwell — enough for a warning you want up until you have dealt with it.
+
+**A sound of its own.** Turn on **Play a sound** and give it a sound id, a pitch and a volume, and it plays the moment
+the title appears. This is separate from the alert's own **Play a sound** action, so an alert can have both, either, or
+neither.
+
+**Presets.** The **Preset** row fills the colours, the switches and the sound in one click — **Info**, **Success**,
+**Warning**, **Alert** or **Chroma**. It is a starting point rather than a mode: your text and your timings are left
+alone, and the row reads **Custom** again the moment you change anything it wrote.
+
+**Preview** shows the title for real, behind the open menu — same colours, same fades, same sound — so nothing has to be
+imagined and nothing has to be tested by walking into a region.
+
+### The Titles tab
+
+`/hexa config` → **Titles** holds what is true of every title at once.
+
+- **Enabled** — master switch. With it off, reminders, regions and highlights still fire; they just say nothing in the
+  middle of the screen.
+- **Sounds** — master switch for the sound a title plays.
+- **Default colour** and **Default subtitle colour** — used by any title that has not chosen one. These are read every
+  time a title appears, so changing one restyles every such title at once.
+- **Chroma speed** and **Chroma width** — shared by every chroma title, because two alerts flowing at different rates
+  read as a glitch rather than a choice.
+- **New title fade in / time / fade out** — the timings a *newly created* title starts with. Titles you have already set
+  up keep their own, so tuning these never silently retimes an alert you had got right.
+- **Preview** — a sample title with nothing but these defaults on it.
+
+Settings are stored in `config/hex/titles.json`. Each title's own style is stored with the alert that owns it, so it
+travels with that reminder, region or rule.
 
 ## Reminders
 
@@ -316,9 +372,10 @@ quiet everywhere else; conditions are checked at the moment it fires, not when i
 its reminders rather than losing them. A condition can test a [region](#regions) as well as an island, so a reminder can
 be limited to one room.
 
-**What it does.** Show on the panel, play a sound, show the message as a big centred title, or any combination. The
-title has its own colour, an optional smaller subtitle, and a time it holds before fading. Press **Test** in the editor
-to see and hear it before committing to it.
+**What it does.** Show on the panel, play a sound, show the message as a big centred title, or any combination. With
+**Show as a title** on, **Title style…** opens the full [title](#titles) editor — colours, bold and italic on both
+lines, a subtitle, the three fade timings and a sound of its own. Press **Test** in the reminder editor to see and hear
+the whole thing before committing to it.
 
 Countdowns are real time, not game time. They keep running while you are logged out, so a four-day cookie is still
 counting when you come back — and anything that came due while you were away fires once, marked overdue, rather than
@@ -414,9 +471,10 @@ Switching shape never asks you to draw the region again. A cylinder and a sphere
 
 ### What it says
 
-**Message** is the title. Turn on **Show as a title** for the big centred text, with its own colour, an optional smaller
-**Subtitle** beneath, and how long it holds before fading. **Play a sound** adds one, with the same sound id, pitch and
-volume the reminders have — **Test** in the editor fires both so you can judge them without leaving the menu.
+**Message** is the title. Turn on **Show as a title** for the big centred text, then **Title style…** for the full
+[title](#titles) editor — colours, styles, a subtitle, the fade timings and a sound of its own. **Play a sound** adds a
+separate one, with the same sound id, pitch and volume the reminders have — **Test** in the editor fires both so you can
+judge them without leaving the menu.
 
 **Announce leaving** fires again on the way out, with its own message if you want a different one.
 
@@ -527,8 +585,8 @@ shows its own name rather than the rule's.
 ### Being told
 
 Turn on **Announce new ones** and the rule speaks up the first time it sees each matching entity — a title, a sound, or
-both, with the same colour, subtitle, duration, pitch and volume controls reminders and regions have. **Test** fires it
-on the spot so you can judge the sound without waiting for a mob.
+both. **Title style…** opens the same [title](#titles) editor reminders and regions use, and the sound has the same id,
+pitch and volume controls. **Test** fires it on the spot so you can judge the sound without waiting for a mob.
 
 "New" means an entity Hex has not seen before, not one that has merely come back into range: a mob that wanders behind a
 hill and returns stays quiet. Leaving the world forgets everything, so arriving somewhere is always announced.
@@ -576,9 +634,9 @@ either side of the match, which stays visible in a screenshot and to a colour-bl
 **Hide the message** drops a matching line from chat. It still counts as a match, so a rule can silence spam and keep
 its sound, and a hidden line still reaches reminders and command suggestions.
 
-**Announce matches** fires a title and a sound, with the same message, subtitle, colour, sound and cooldown settings
-reminders, regions and entity highlights use. The cooldown matters more here: a chat line has no identity to remember,
-so without one a rule watching a busy channel would fire on every message that mentions its word.
+**Announce matches** fires a title and a sound, with the same message, [title style](#titles), sound and cooldown
+settings reminders, regions and entity highlights use. The cooldown matters more here: a chat line has no identity to
+remember, so without one a rule watching a busy channel would fire on every message that mentions its word.
 
 The editor previews the rule on a sample line as it is written, chroma and all, and `/hexa chat test <line>` runs a line
 of the player's own past every rule and prints what they made of it. Between them they replace the crosshair an entity

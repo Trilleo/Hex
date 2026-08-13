@@ -13,6 +13,7 @@ import net.trilleo.highlight.model.Highlight
 import net.trilleo.highlight.model.HighlightMatch
 import net.trilleo.reminder.model.ActionKind
 import net.trilleo.reminder.model.ReminderAction
+import net.trilleo.title.gui.TitleEditScreen
 import net.trilleo.util.Notify
 import java.util.*
 
@@ -207,29 +208,17 @@ class HighlightEditScreen(
                 get = { highlight.actions.any { it.kind == ActionKind.TITLE } },
                 set = { setAction(ActionKind.TITLE, it); rebuild() },
             )
-            actionOf(ActionKind.TITLE)?.let { title ->
-                text(
-                    "title_subtitle",
-                    default = "",
-                    get = { title.subtitle },
-                    set = { title.subtitle = it; touch() },
-                )
-                color(
-                    "title_color",
-                    default = "#FFFFFF",
-                    get = { title.titleColor.ifBlank { "#FFFFFF" } },
-                    set = { title.titleColor = it; touch() },
-                )
-                slider(
-                    "title_seconds",
-                    min = ReminderAction.TITLE_SECONDS_MIN,
-                    max = ReminderAction.TITLE_SECONDS_MAX,
-                    step = 0.5,
-                    default = ReminderAction.DEFAULT_TITLE_SECONDS,
-                    get = { title.titleSeconds },
-                    set = { title.titleSeconds = it; touch() },
-                    format = { String.format(Locale.ROOT, "%.1fs", it) },
-                )
+            actionOf(ActionKind.TITLE)?.let { titleAction ->
+                action("title_style") { screen ->
+                    Minecraft.getInstance().setScreen(
+                        TitleEditScreen(
+                            screen,
+                            titleAction.title,
+                                ownerText = { highlight.notifyText.ifBlank { highlight.name } },
+                            onChange = this@HighlightEditScreen::touch,
+                        ),
+                    )
+                }
             }
 
             toggle(
@@ -302,13 +291,19 @@ class HighlightEditScreen(
     private fun setAction(kind: ActionKind, on: Boolean) {
         if (on) {
             if (highlight.actions.none { it.kind == kind }) {
-                highlight.actions.add(ReminderAction().apply { this.kind = kind })
+                // Through the factory for a title, so a new one is timed the way the Titles tab says.
+                val action = if (kind == ActionKind.TITLE) {
+                    ReminderAction.title()
+                } else {
+                    ReminderAction().apply { this.kind = kind }
+                }
+                highlight.actions.add(action)
             }
         } else {
             highlight.actions.removeAll { it.kind == kind }
             // Never leave a notifying rule that fires and does nothing — it reads exactly like a broken one.
             if (highlight.notify && highlight.actions.isEmpty()) {
-                highlight.actions.add(ReminderAction().apply { this.kind = ActionKind.TITLE })
+                highlight.actions.add(ReminderAction.title())
             }
         }
         touch()

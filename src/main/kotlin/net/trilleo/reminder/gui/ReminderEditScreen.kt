@@ -17,6 +17,7 @@ import net.trilleo.reminder.model.ActionKind
 import net.trilleo.reminder.model.Reminder
 import net.trilleo.reminder.model.ReminderAction
 import net.trilleo.reminder.model.TriggerKind
+import net.trilleo.title.gui.TitleEditScreen
 import net.trilleo.util.Duration
 import net.trilleo.util.Notify
 import java.util.*
@@ -194,29 +195,19 @@ class ReminderEditScreen(
             set = { setAction(ActionKind.TITLE, it); rebuild() },
         )
 
-        titleAction()?.let { title ->
-            text(
-                "title_subtitle",
-                default = "",
-                get = { title.subtitle },
-                set = { title.subtitle = it; touch() },
-            )
-            color(
-                "title_color",
-                default = "#FFFFFF",
-                get = { title.titleColor.ifBlank { "#FFFFFF" } },
-                set = { title.titleColor = it; touch() },
-            )
-            slider(
-                "title_seconds",
-                min = ReminderAction.TITLE_SECONDS_MIN,
-                max = ReminderAction.TITLE_SECONDS_MAX,
-                step = 0.5,
-                default = ReminderAction.DEFAULT_TITLE_SECONDS,
-                get = { title.titleSeconds },
-                set = { title.titleSeconds = it; touch() },
-                format = { String.format(Locale.ROOT, "%.1fs", it) },
-            )
+        titleAction()?.let { titleAction ->
+            // One button rather than the colour, subtitle and duration rows this used to carry: every setting a
+            // title has now lives in one screen that all four title-firing features share.
+            action("title_style") { screen ->
+                Minecraft.getInstance().setScreen(
+                    TitleEditScreen(
+                        screen,
+                        titleAction.title,
+                        ownerText = { reminder.text },
+                        onChange = this@ReminderEditScreen::touch,
+                    ),
+                )
+            }
         }
 
         soundAction()?.let { sound ->
@@ -285,7 +276,13 @@ class ReminderEditScreen(
     private fun setAction(kind: ActionKind, on: Boolean) {
         if (on) {
             if (reminder.actions.none { it.kind == kind }) {
-                reminder.actions.add(ReminderAction().apply { this.kind = kind })
+                // Through the factory for a title, so a new one is timed the way the Titles tab says.
+                val action = if (kind == ActionKind.TITLE) {
+                    ReminderAction.title()
+                } else {
+                    ReminderAction().apply { this.kind = kind }
+                }
+                reminder.actions.add(action)
             }
         } else {
             reminder.actions.removeAll { it.kind == kind }

@@ -231,7 +231,7 @@ object RegionConfig {
         region.actions.removeAll { it.kind == ActionKind.HUD }
         // A region that fires and does nothing is indistinguishable from one that never fired.
         if (region.actions.isEmpty()) {
-            region.actions.add(ReminderAction().apply { kind = ActionKind.TITLE })
+            region.actions.add(ReminderAction.title())
         }
 
         // An unnamed message renders as an empty title, which vanilla draws as a silent flash of nothing.

@@ -24,6 +24,7 @@
 - [Per-item swing](Per-Item-Swing)
 - [Item customization](Item-Customization)
 - [Chroma text](Chroma-Text)
+- [Titles](Titles)
 - [Reminders](Reminders)
 - [Regions](Regions)
 - [Entity highlight](Entity-Highlight)

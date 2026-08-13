@@ -80,9 +80,7 @@ Chroma is available for:
 | [Entity highlight](Entity-Highlight)     | The glow outline                 | Entity Highlight tab   |
 | [Regions](Regions)                       | The box, cylinder or sphere      | Regions tab            |
 | [Reminders](Reminders)                   | Panel background, text and flash | Reminders tab          |
-
-Alert **titles** are not on the list. Minecraft draws a title once from a fixed component, so a colour written into one
-has nothing to animate it.
+| [Titles](Titles)                         | Both lines of an alert title     | Titles tab             |
 
 > **Upgrading from 1.10.3 or earlier?** Chroma used to be a separate on/off row on a chat rule and on an item
 > customization. Those rows are gone and the setting moved into the colour; your existing rules and items are converted
@@ -126,5 +124,7 @@ ask for a colour, so a feature added next year is consistent with this one witho
 
 Set `chroma = true` only where whatever draws the colour re-reads it every frame or every tick — a colour baked into a
 component that is then cached cannot animate, and offering chroma there would ship a setting that visibly does nothing.
+Where a render path cannot be made to re-read a value, hand it a component that re-renders *itself*: that is how
+[titles](Titles) flow, since the game draws a title from a field it re-reads every frame.
 Set `alpha = true` when the value carries an opacity byte. `optional` defaults to true exactly when the setting's own
 default is blank, which is what a blank default already meant.

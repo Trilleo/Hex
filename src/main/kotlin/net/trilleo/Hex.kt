@@ -16,6 +16,7 @@ import net.trilleo.region.RegionFeature
 import net.trilleo.reminder.ReminderFeature
 import net.trilleo.sensitivity.SensitivityFeature
 import net.trilleo.suggest.SuggestFeature
+import net.trilleo.title.TitleFeature
 import net.trilleo.update.UpdateFeature
 import org.slf4j.LoggerFactory
 
@@ -44,6 +45,10 @@ object Hex : ClientModInitializer {
         Features.register(HandFeature)
         Features.register(AttackModeFeature)
         Features.register(ItemCustomizeFeature)
+        // Ahead of every feature that pops a title — regions, entity highlights, reminders and chat highlights
+        // are all below. Each of them normalizes its own config during onInit, and that is where a title
+        // action is migrated and seeded from the shared settings, so `titles.json` has to be loaded first.
+        Features.register(TitleFeature)
         // Ahead of reminders: a region crossing detected on this tick is drained by ReminderTriggers during
         // the same tick's reminder dispatch, so a region-armed reminder starts counting without a tick's lag.
         Features.register(RegionFeature)

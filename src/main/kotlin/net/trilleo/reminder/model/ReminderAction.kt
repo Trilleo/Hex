@@ -1,5 +1,8 @@
 package net.trilleo.reminder.model
 
+import net.trilleo.title.TitleConfig
+import net.trilleo.title.model.TitleSpec
+
 /**
  * What a reminder does when it fires.
  *
@@ -39,7 +42,8 @@ class ReminderAction {
 
     /**
      * For [ActionKind.SOUND], the sound event id, e.g. `"minecraft:block.note_block.pling"`. Unused by
-     * [ActionKind.HUD] and [ActionKind.TITLE].
+     * [ActionKind.HUD] and [ActionKind.TITLE] — a title's own sound lives in [title], because it is part of
+     * how that title lands rather than a separate alert, and the two are set independently.
      *
      * Deliberately not validated by the normalizer: the sound registry is not necessarily populated when
      * configs load at feature init, so an id is resolved when it is played (falling back to the standard UI
@@ -51,50 +55,68 @@ class ReminderAction {
     var volume: Double = 1.0
 
     /**
-     * [ActionKind.TITLE] only: the smaller line beneath the title, or `""` for none.
+     * [ActionKind.TITLE] only: everything about how the title looks and sounds.
      *
-     * Carries the same `$0`–`$9` capture substitution the message does, so a chat-armed reminder can put the
-     * number it matched on either line.
+     * One object rather than the handful of loose fields this used to carry, because four features fire titles
+     * through [net.trilleo.title.Titles] and each new knob would otherwise have to be added to all of them.
+     * The big line's own text is left empty and unused: the message comes from whatever owns this action —
+     * a reminder's resolved text, a region's name — and is passed to `Titles.show`. The *subtitle's* text does
+     * live here, and carries the same `$0`–`$9` capture substitution the message does, so a chat-armed
+     * reminder can put the number it matched on either line.
      */
-    var subtitle: String = ""
+    var title: TitleSpec = TitleSpec()
 
-    /** [ActionKind.TITLE] only: `"#RRGGBB"` for the title's colour, or `""` to leave it vanilla white. */
-    var titleColor: String = ""
+    // ---- legacy fields, folded into [title] by [normalize] and then dropped ------------------------------
 
     /**
-     * [ActionKind.TITLE] only: how long the title holds at full opacity, in seconds.
-     *
-     * Per action rather than a shared setting, for the same reason [pitch] and [volume] are: a region warning
-     * you off a boss and a reminder noting your potion ran out want different dwell times, and one global
-     * value would force the two features that fire titles to agree. The fade in and out either side stay at
-     * vanilla's own lengths — see [net.trilleo.util.Titles].
+     * Nullable, and null is what a file written by this build holds — [normalize] moves the value into
+     * [title] and clears the field, so GSON leaves the key out of the next write entirely. Reading one is
+     * still supported indefinitely: a config carried back from an older install, or hand-edited from a wiki
+     * page that predates the title helper, still means what it said.
      */
-    var titleSeconds: Double = DEFAULT_TITLE_SECONDS
+    @Deprecated("Folded into title.subtitle.text by normalize()")
+    var subtitle: String? = null
+
+    @Deprecated("Folded into title.title.color by normalize()")
+    var titleColor: String? = null
+
+    @Deprecated("Folded into title.staySeconds by normalize()")
+    var titleSeconds: Double? = null
 
     /**
      * Repairs this action in place, covering GSON's reflection gaps and bounding every number.
      *
      * A member rather than a step inside one config's normalizer — the same shape
-     * [net.trilleo.skyblock.item.ItemRule.normalizeValue] takes — because two configs now hold action lists
-     * (`reminders.json` and `regions.json`) and a repair that lived in one of them would silently not apply to
-     * the other.
+     * [net.trilleo.skyblock.item.ItemRule.normalizeValue] takes — because four configs now hold action lists
+     * (`reminders.json`, `regions.json`, `highlights.json`, `chathighlights.json`) and a repair that lived in
+     * one of them would silently not apply to the others. It is also where the legacy title fields are
+     * migrated, which is the same argument twice over.
      */
+    @Suppress("DEPRECATION")
     fun normalize() {
         @Suppress("SENSELESS_COMPARISON")
         if (kind == null) kind = ActionKind.HUD
         @Suppress("SENSELESS_COMPARISON")
         if (value == null) value = DEFAULT_SOUND
         @Suppress("SENSELESS_COMPARISON")
-        if (subtitle == null) subtitle = ""
-        @Suppress("SENSELESS_COMPARISON")
-        if (titleColor == null) titleColor = ""
+        if (title == null) title = TitleConfig.newSpec()
+
+        // Migration, before the spec is normalized so the folded values are bounded like any other. A legacy
+        // field wins over the new block on the rare occasion a hand-edited file carries both: the old key is
+        // the one such a file was written to use, and this build's own writes never leave one behind.
+        subtitle?.let { title.subtitle.text = it }
+        titleColor?.let { if (it.isNotBlank()) title.title.color = it }
+        titleSeconds?.let { title.staySeconds = it }
+        subtitle = null
+        titleColor = null
+        titleSeconds = null
+
+        title.normalize()
 
         if (kind == ActionKind.SOUND && value.isBlank()) value = DEFAULT_SOUND
 
         pitch = pitch.sane(1.0).coerceIn(PITCH_MIN, PITCH_MAX)
         volume = volume.sane(1.0).coerceIn(VOLUME_MIN, VOLUME_MAX)
-        titleSeconds = titleSeconds.sane(DEFAULT_TITLE_SECONDS)
-            .coerceIn(TITLE_SECONDS_MIN, TITLE_SECONDS_MAX)
     }
 
     /** A field-for-field copy of this action, for duplicating whatever owns it. */
@@ -103,9 +125,7 @@ class ReminderAction {
         it.value = value
         it.pitch = pitch
         it.volume = volume
-        it.subtitle = subtitle
-        it.titleColor = titleColor
-        it.titleSeconds = titleSeconds
+        it.title = title.copy()
     }
 
     /** Replaces a NaN or infinite value — which no slider can produce but a hand-edited file can. */
@@ -120,10 +140,17 @@ class ReminderAction {
         const val VOLUME_MIN: Double = 0.0
         const val VOLUME_MAX: Double = 1.0
 
-        /** Vanilla's own stay time, 70 ticks. */
-        const val DEFAULT_TITLE_SECONDS: Double = 3.5
-
-        const val TITLE_SECONDS_MIN: Double = 0.5
-        const val TITLE_SECONDS_MAX: Double = 10.0
+        /**
+         * A title action, timed the way this installation likes its titles.
+         *
+         * Every place that switches a title on goes through this rather than a bare [ReminderAction], so the
+         * seed timings in the Titles tab reach a newly created title. A plain `ReminderAction()` — which GSON
+         * and the normalizer still produce — falls back to vanilla's own lengths, which is the right answer
+         * for a value that is about to be overwritten by a file anyway.
+         */
+        fun title(): ReminderAction = ReminderAction().also {
+            it.kind = ActionKind.TITLE
+            it.title = TitleConfig.newSpec()
+        }
     }
 }

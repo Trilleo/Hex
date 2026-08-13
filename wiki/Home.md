@@ -25,6 +25,7 @@ anywhere, and it has no server-side half — there is nothing to install for you
 | [Per-item swing](Per-Item-Swing)           | Hide the swing animation only while holding chosen Skyblock items       |
 | [Item customization](Item-Customization)   | Rename, recolour, reskin or de-glint one specific item, client-side     |
 | [Chroma text](Chroma-Text)                 | Flowing rainbow colour, chosen wherever a colour is                     |
+| [Titles](Titles)                           | One editor for every alert title: colours, styles, timings and a sound  |
 | [Reminders](Reminders)                     | Timers, chat triggers and location alerts on a movable HUD panel        |
 | [Regions](Regions)                         | Areas you draw that announce themselves when you walk in                |
 | [Entity highlight](Entity-Highlight)       | Mobs you pick, lit up in your colour, announcing themselves when new    |
