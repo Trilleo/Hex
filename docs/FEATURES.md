@@ -24,6 +24,11 @@ it, does not bundle it, and behaves the same whether or not it is there.
 switch. It asks first, and it only changes your live settings — your saved profile is untouched, so **Discard** on the
 Profiles screen brings them back.
 
+Settings live as plain JSON under `config/hex/` and can be edited by hand with the game closed. **A file Hex cannot read
+is kept rather than thrown away**: it is renamed to `<name>.json.broken` and that config starts from its defaults for
+the session, so a typo — or a file written by a build that stored something differently — costs you those settings
+until you fix it rather than costing you the rules, regions or reminders inside.
+
 ## Colour picker
 
 Every colour in Hex is chosen the same way. Any setting that holds a colour shows the value as text with a **swatch**

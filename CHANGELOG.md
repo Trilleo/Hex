@@ -36,6 +36,24 @@
   picker, chroma included), the shared chroma speed and width, and the timings a newly created title starts with. The
   default colours are read every time a title appears, so changing one restyles every title that never set its own.
 
+### Fixes
+
+#### Config
+
++ **A config file Hex cannot read is no longer destroyed.** It fell back to defaults and logged the failure, and then
+  the next save wrote those defaults straight over the file — so a single bad field cost you every rule, region or
+  reminder in it, seconds later, without anyone touching anything. The unreadable file is now renamed to
+  `<name>.json.broken` first, so the session starts from defaults but the data is still there to be corrected and
+  renamed back. An existing `.broken` file is never replaced: it is the copy that holds your data.
+
+### Improvements
+
+#### Config
+
++ Config files no longer escape `&` as `&`. It was always valid JSON and always unreadable, and a title line is
+  mostly `&` codes — so the field you are most likely to open the file to edit is now the one that reads plainly.
+  Files already carrying the escapes load unchanged and come out plain on the next save.
+
 ### Technical Details
 
 #### Titles

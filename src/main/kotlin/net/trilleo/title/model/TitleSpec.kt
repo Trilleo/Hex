@@ -1,5 +1,7 @@
 package net.trilleo.title.model
 
+import com.google.gson.annotations.JsonAdapter
+
 /**
  * One fully described title: two lines of source, how long it holds, and what it sounds like.
  *
@@ -27,8 +29,11 @@ package net.trilleo.title.model
  * the conversion happens once, in [net.trilleo.title.Titles].
  *
  * Plain, `var`-only and no-arg constructible for the same GSON reasons
- * [net.trilleo.reminder.model.ReminderAction] is.
+ * [net.trilleo.reminder.model.ReminderAction] is. [TitleSpecCompat] sits in front of that so a file written
+ * while the two lines were objects still reads — the annotation is here rather than a registration in
+ * [net.trilleo.config.JsonConfig] so the generic config core stays free of any one feature's types.
  */
+@JsonAdapter(TitleSpecCompat::class)
 class TitleSpec {
 
     /** The big line: `&` codes, words, or both. Codes alone style the alert's own message. */

@@ -66,5 +66,9 @@ Whole settings setups can be saved, named, switched, shared and auto-applied per
 ## Editing by hand
 
 Settings are plain JSON under `config/hex/` — see [Config files](Config-Files) for the map. Hex writes those files as
-you play, so edit them with the game closed, and note that a corrupt or unreadable file is silently replaced with
-defaults rather than crashing your client.
+you play, so edit them with the game closed.
+
+**A file Hex cannot read is kept, not thrown away.** It is renamed to `<name>.json.broken` and that config starts from
+its defaults for the session, so a typo costs you those settings until you fix it rather than costing you the data —
+the rules, regions or reminders in the file are still there, in the `.broken` copy, to be corrected and renamed back.
+Nothing is ever written over it: if a `.broken` file is already there, the older one is the one kept.
