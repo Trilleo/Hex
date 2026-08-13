@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+## Version 1.11.1
+
 ### New Features
 
 #### Mouse Sensitivity
