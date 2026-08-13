@@ -43,9 +43,9 @@ object SensitivityFeature : Feature {
         // Screens are excluded on purpose: the wheel belongs to whatever is open, and a value borrowed while
         // an inventory is up could not be handed back by a key release nobody sees.
         val held = SensitivityConfig.settings.enabled &&
-            client.screen == null &&
-            client.player != null &&
-            adjustKey.isDown
+                client.screen == null &&
+                client.player != null &&
+                adjustKey.isDown
 
         if (held) SensitivityState.begin(client) else SensitivityState.end(client)
     }
