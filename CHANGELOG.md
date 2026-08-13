@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+## Version 1.11.2
+
 ### New Features
 
 #### Titles
