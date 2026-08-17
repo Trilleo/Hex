@@ -70,13 +70,13 @@
       alert's own message as its hint, so which one you have written is visible before you leave.
     + **Chroma titles actually flow.** A title used to be drawn once from a fixed component, so a flowing colour in one
       could not move; it re-renders itself every frame now, and both lines can flow.
-    + **All three fade timings, not just one.** Fade in, time on screen and fade out are set separately, from instant
-      up to thirty seconds of dwell — enough for a warning you want up until you have dealt with it.
+    + **All three fade timings, not just one.** Fade in, time on screen and fade out are set separately, from instant up
+      to thirty seconds of dwell — enough for a warning you want up until you have dealt with it.
     + **A sound of its own**, with a sound id, pitch and volume, played the moment the title appears. Separate from the
       alert's own sound action, so an alert can have both, either, or neither.
     + **Presets** — Info, Success, Warning, Alert and Chroma — write a ready-made set of codes at the front of both
-      lines and set a sound, in one click. A starting point rather than a mode: the codes are then ordinary text you
-      can edit, your words and timings are left alone, and the row reads **Custom** again once they no longer match.
+      lines and set a sound, in one click. A starting point rather than a mode: the codes are then ordinary text you can
+      edit, your words and timings are left alone, and the row reads **Custom** again once they no longer match.
     + **Preview** fires the title for real behind the open menu, so the fades and the sound can be judged too.
 + Added the **Titles** tab to `/hexa config`, for what is true of every title at once: a master switch, a master switch
   for title sounds, the colour each line starts from when its own codes do not set one (through the universal colour
@@ -97,9 +97,9 @@
 
 #### Config
 
-+ Config files no longer escape `&` as `&`. It was always valid JSON and always unreadable, and a title line is
-  mostly `&` codes — so the field you are most likely to open the file to edit is now the one that reads plainly.
-  Files already carrying the escapes load unchanged and come out plain on the next save.
++ Config files no longer escape `&` as `&`. It was always valid JSON and always unreadable, and a title line is mostly
+  `&` codes — so the field you are most likely to open the file to edit is now the one that reads plainly. Files already
+  carrying the escapes load unchanged and come out plain on the next save.
 
 ### Technical Details
 

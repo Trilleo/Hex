@@ -27,9 +27,9 @@ Hex runs entirely on your client — it never needs to be installed on a server.
   colours, presets, and the colours you picked recently shared across every feature.
 - **Chroma text** — flowing rainbow colour, chosen like any other colour: item names, chat highlights, entity glows,
   region boxes, the reminder panel and alert titles, whole or from a `&z` part-way through.
-- **Titles** — one live editor for every alert title: type the two lines, style them from a toolbar, and watch the
-  real title update as you go. Chroma, three fade timings, a sound of its own, and ready-made presets. Shared by
-  reminders, regions and both highlights.
+- **Titles** — one live editor for every alert title: type the two lines, style them from a toolbar, and watch the real
+  title update as you go. Chroma, three fade timings, a sound of its own, and ready-made presets. Shared by reminders,
+  regions and both highlights.
 - **Reminders** — timers, chat triggers and location alerts on a movable HUD panel, with ready-made presets.
 - **Regions** — draw areas on an island that announce themselves with a title and a sound when you walk in.
 - **Entity highlight** — light up the mobs you care about in a colour you pick, matched by name or by type, with a title

@@ -26,8 +26,8 @@ Profiles screen brings them back.
 
 Settings live as plain JSON under `config/hex/` and can be edited by hand with the game closed. **A file Hex cannot read
 is kept rather than thrown away**: it is renamed to `<name>.json.broken` and that config starts from its defaults for
-the session, so a typo — or a file written by a build that stored something differently — costs you those settings
-until you fix it rather than costing you the rules, regions or reminders inside.
+the session, so a typo — or a file written by a build that stored something differently — costs you those settings until
+you fix it rather than costing you the rules, regions or reminders inside.
 
 ## Colour picker
 
@@ -311,9 +311,8 @@ an alert [title](#titles).
 
 For text there is a second, finer way in: write **`&z`** in the **Name** field of an item, in a [title](#titles), or in
 a [note](#notebook), and chroma starts at that point — `&7Old &zHyperion` leaves the first word grey and flows the
-second.
-Any colour code, or `&r`, ends it. This is the same code NotEnoughUpdates and SkyHanni use, so a name copied from either
-works here unchanged.
+second. Any colour code, or `&r`, ends it. This is the same code NotEnoughUpdates and SkyHanni use, so a name copied
+from either works here unchanged.
 
 Each feature that can flow has its own **Chroma speed** on its tab of `/hexa config`, applying to every chroma value in
 that feature at once — one item flowing at a different rate from the item beside it reads as a glitch rather than a
@@ -346,14 +345,14 @@ as you type.
 every frame, so colours, styles and flowing [chroma](#chroma-text) all look here exactly as they will in play.
 
 **The toolbar writes `&` codes for you.** **B**, **I**, **U**, **S** and **K** put bold, italic, underline,
-strikethrough and obfuscated at the cursor; **&** opens a palette with Minecraft's sixteen colours, chroma, a reset,
-the colours you have picked recently anywhere in the mod, and a field for any `#RRGGBB` you like. A code applies from
-where you put it, so one line can carry several colours: `&fBOSS &c&lINCOMING` is white, then bold red. You can type
-the codes by hand instead — the boxes are just text.
+strikethrough and obfuscated at the cursor; **&** opens a palette with Minecraft's sixteen colours, chroma, a reset, the
+colours you have picked recently anywhere in the mod, and a field for any `#RRGGBB` you like. A code applies from where
+you put it, so one line can carry several colours: `&fBOSS &c&lINCOMING` is white, then bold red. You can type the codes
+by hand instead — the boxes are just text.
 
-**The big line usually needs no words.** The alert already has a message, so a title line of nothing but codes
-*styles* that message: `&c&l` means "my message, in bold red". Type words and they replace it instead. The box shows
-the alert's own message as its hint, so which one you have written is visible before you leave the screen.
+**The big line usually needs no words.** The alert already has a message, so a title line of nothing but codes *styles*
+that message: `&c&l` means "my message, in bold red". Type words and they replace it instead. The box shows the alert's
+own message as its hint, so which one you have written is visible before you leave the screen.
 
 **Three timings, not one.** **Fade in**, **Time on screen** and **Fade out** are set separately, from instant up to
 thirty seconds of dwell — enough for a warning you want up until you have dealt with it.
@@ -376,9 +375,9 @@ they no longer match.
 - **Enabled** — master switch. With it off, reminders, regions and highlights still fire; they just say nothing in the
   middle of the screen.
 - **Sounds** — master switch for the sound a title plays.
-- **Default colour** and **Default subtitle colour** — the colour a line starts from when its own codes do not set
-  one, chosen through the [colour picker](#colour-picker). Read every time a title appears, so changing one restyles
-  every such title at once.
+- **Default colour** and **Default subtitle colour** — the colour a line starts from when its own codes do not set one,
+  chosen through the [colour picker](#colour-picker). Read every time a title appears, so changing one restyles every
+  such title at once.
 - **Chroma speed** and **Chroma width** — shared by every chroma title, because two alerts flowing at different rates
   read as a glitch rather than a choice.
 - **New title fade in / time / fade out** — the timings a *newly created* title starts with. Titles you have already set
