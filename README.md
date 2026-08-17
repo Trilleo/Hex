@@ -18,6 +18,8 @@ Hex runs entirely on your client — it never needs to be installed on a server.
 - **Attack mode switch** — a keybind that flips Minecraft's Attack/Destroy between hold and toggle in-game.
 - **Freecam** — detach the camera and fly it around while your character stays put.
 - **Mouse sensitivity** — hold a key and scroll to change how fast you turn; let go and your normal sensitivity is back.
+- **Sticky angles** — while that key is held, the view settles exactly onto round angles it comes near, plus any of your
+  own.
 - **Hand display** — reposition and restyle your held item in first person, cosmetically.
 - **Per-item swing** — hide the swing animation only while holding chosen Skyblock items, by ID or UUID.
 - **Item customization** — rename, recolour, reskin or de-glint one specific Skyblock item, on your client only.

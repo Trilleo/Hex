@@ -2,11 +2,14 @@ package net.trilleo.sensitivity
 
 import com.mojang.blaze3d.platform.InputConstants
 import net.fabricmc.fabric.api.client.keymapping.v1.KeyMappingHelper
+import net.minecraft.client.DeltaTracker
 import net.minecraft.client.KeyMapping
 import net.minecraft.client.Minecraft
+import net.minecraft.client.gui.GuiGraphicsExtractor
 import net.trilleo.Hex
 import net.trilleo.config.ConfigCategory
 import net.trilleo.feature.Feature
+import net.trilleo.sensitivity.gui.StickyAnglesScreen
 import java.util.*
 
 /**
@@ -14,6 +17,9 @@ import java.util.*
  * go puts your own sensitivity back. Aiming a bow at something far away, lining up a click on a small NPC and
  * spinning to face a mob behind you all want different sensitivities, and the vanilla answer is three trips
  * into Options → Controls → Mouse Settings.
+ *
+ * The same hold also arms [StickyAim], which pulls the view onto round angles it comes near — the other half
+ * of aiming precisely, and one no amount of slowing the mouse down can do on its own.
  *
  * The hold itself lives in [SensitivityState], which the mouse mixin feeds; this drives it from the key.
  *
@@ -48,6 +54,10 @@ object SensitivityFeature : Feature {
                 adjustKey.isDown
 
         if (held) SensitivityState.begin(client) else SensitivityState.end(client)
+    }
+
+    override fun onHudRender(extractor: GuiGraphicsExtractor, delta: DeltaTracker) {
+        SensitivityHud.draw(extractor)
     }
 
     override fun onWorldLeave(client: Minecraft) {
@@ -99,6 +109,67 @@ object SensitivityFeature : Feature {
             set = { SensitivityConfig.settings.snapPercent = it; SensitivityConfig.markDirty() },
             format = { String.format(Locale.ROOT, "%.0f%%", it) },
         )
+        toggle(
+            "hud",
+            // The nullable settings default to "absent means on", so the row's own default is `true` rather
+            // than the null the field starts at — see SensitivitySettings.
+            default = true,
+            get = { SensitivityConfig.hud },
+            set = { SensitivityConfig.settings.hud = it; SensitivityConfig.save() },
+        )
+
+        toggle(
+            "sticky",
+            default = true,
+            get = { SensitivityConfig.sticky },
+            set = {
+                SensitivityConfig.settings.sticky = it
+                SensitivityConfig.save()
+                // The readout draws whatever lock the magnet last reported, and switching it off stops it
+                // reporting rather than clearing what it said.
+                if (!it) StickyAim.clear()
+            },
+        )
+        enum(
+            "sticky_yaw",
+            default = defaults.stickyYaw,
+            get = { SensitivityConfig.settings.stickyYaw },
+            set = { SensitivityConfig.settings.stickyYaw = it; SensitivityConfig.save() },
+        )
+        enum(
+            "sticky_pitch",
+            default = defaults.stickyPitch,
+            get = { SensitivityConfig.settings.stickyPitch },
+            set = { SensitivityConfig.settings.stickyPitch = it; SensitivityConfig.save() },
+        )
+        slider(
+            "sticky_zone",
+            min = SensitivityConfig.ZONE_MIN,
+            max = SensitivityConfig.ZONE_MAX,
+            step = 1.0,
+            default = defaults.stickyZone,
+            get = { SensitivityConfig.settings.stickyZone },
+            set = { SensitivityConfig.settings.stickyZone = it; SensitivityConfig.markDirty() },
+            format = { String.format(Locale.ROOT, "%.0f°", it) },
+        )
+        slider(
+            "sticky_strength",
+            min = SensitivityConfig.STRENGTH_MIN,
+            max = SensitivityConfig.STRENGTH_MAX,
+            step = 5.0,
+            default = defaults.stickyStrength,
+            get = { SensitivityConfig.settings.stickyStrength },
+            set = { SensitivityConfig.settings.stickyStrength = it; SensitivityConfig.markDirty() },
+            format = { String.format(Locale.ROOT, "%.0f%%", it) },
+        )
+        toggle(
+            "sticky_scale",
+            default = true,
+            get = { SensitivityConfig.stickyScale },
+            set = { SensitivityConfig.settings.stickyScale = it; SensitivityConfig.save() },
+        )
+        action("sticky_angles") { screen -> Minecraft.getInstance().setScreen(StickyAnglesScreen(screen)) }
+
         resetsTo(SensitivityConfig.handle)
     }
 }

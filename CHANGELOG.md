@@ -2,6 +2,51 @@
 
 ## Unreleased
 
+### New Features
+
+#### Mouse Sensitivity
+
++ Added **sticky angles** to the sensitivity hold: while the keybind is held, your view is drawn onto round angles it
+  comes near and settles on them exactly. Yaw is a decimal, so "facing south" is 180.000 and there is no landing on it
+  by hand — which is a problem, because a wall, a portal or a row you want to build along is almost always on one of
+  those angles.
+    + **It pulls, it does not snap.** The pull exists only near an angle, fades to nothing at the edge of its reach, and
+      is zero again once you are on the angle — so nothing ever jumps, and an angle you are turning past lets go as you
+      leave it. What breaks you free is *speed*, not distance: at the default settings a deliberate turn passes an angle
+      without noticing it, and slowing down to place a shot hands the angle control.
+    + **Both axes, every 45° by default** — the four block faces and the diagonals for yaw, and level, straight up,
+      straight down and the halfway looks for pitch. **Yaw angles** and **Pitch angles** each choose between every 90°,
+      45°, 30°, 15°, or off.
+    + **Reach** and **Pull strength** set how close an angle has to be before it pulls at all (6° by default) and how
+      hard it pulls once you are inside that (50%).
+    + **Stickier as you slow down** grows both as the wheel takes you further below your own sensitivity, so scrolling
+      down to aim carefully also makes the angles easier to land on. On by default.
+    + **Only while the key is held.** Let go and your aim is vanilla's, untouched, in every respect — and nothing sticks
+      at all while the freecam is flying.
++ Added **Custom angles…**, an editor for angles of your own on top of the regular intervals — for the dungeon wall that
+  runs off true, or the direction one particular NPC stands in.
+    + **Capture yaw** and **Capture pitch** record the direction you are facing *right now*, which is the only practical
+      way to name such an angle: the world is still behind the open screen and you have not turned. **Add** gives an
+      empty row to type one into instead.
+    + Each row carries a switch, a Yaw/Pitch button, the number and delete, and names the direction it points ("south",
+      "level", "straight up") beside the angles that have one. A row switched off stays in the list without catching,
+      which is how you find out which of several angles is the one getting in your way.
++ Added a **readout under the crosshair** while the key is held, showing where the wheel has taken your sensitivity as a
+  percentage of your normal one — the hold was otherwise invisible, and there was no way back to a value you liked
+  except by letting go and starting again. When the view settles on a sticky angle, the readout names it, which is how
+  you tell "close to south" from "on south". Turned off with **Show readout**.
+
+### Technical Details
+
+#### Mouse Sensitivity
+
++ The magnet runs at the tail of `MouseHandler.turnPlayer`, on the rotation the mouse has just produced, and applies
+  itself through `LocalPlayer.turn` — the one path that carries the previous-tick rotation along, so the camera never
+  interpolates from where the view no longer is. It uses the real-time delta that method is already handed, so the pull
+  is the same at 30 fps and at 300.
++ The three new switches are stored nullable and read as "absent means on", so a `sensitivity.json` written before this
+  release does not load as a silently disabled feature.
+
 ## Version 1.11.2
 
 ### New Features

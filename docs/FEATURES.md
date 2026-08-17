@@ -176,6 +176,9 @@ Bind **Hold To Adjust Sensitivity** under Options → Controls → **Hex** (unbo
 up is faster, down is slower. The hotbar does not scroll while the key is held. Nothing is written to your Minecraft
 options — the sensitivity you had before the key went down is the one you get back.
 
+While you hold the key, a small panel under the crosshair shows where the wheel has taken you, as a percentage of your
+normal sensitivity. **Show readout** turns it off.
+
 The **Sensitivity** tab of `/hexa config` has two numbers:
 
 - **Wheel step** — how much one notch changes the sensitivity, as a percentage of its current value (10% by default).
@@ -187,6 +190,35 @@ The **Sensitivity** tab of `/hexa config` has two numbers:
 
 The key is only read while you are in the world with no screen open, so the wheel still belongs to your inventory and to
 Hypixel's menus. While the [freecam](#freecam) is flying it keeps the wheel for its own fly speed.
+
+### Sticky angles
+
+Holding the key also sticks your view to round angles. Yaw is a decimal — "facing south" is exactly 180.000, and no
+amount of slowing the mouse down lets you land on it by hand — so while the key is held, each of yaw and pitch is drawn
+towards the nearest round angle it is *already close to*, and settles on it exactly.
+
+It never redirects you. The pull exists only near an angle, fades to nothing at the edge of its reach, and a turn faster
+than it carries straight on through; it is speed that breaks you free, not distance. At the defaults a deliberate turn
+passes an angle without noticing it, and slowing down to place a shot hands the angle control.
+
+By default the view sticks every 45° on both axes. Everything about it is in the same **Sensitivity** tab:
+
+- **Sticky angles** — the master switch. Off leaves the sensitivity hold exactly as it was.
+- **Yaw angles** / **Pitch angles** — which angles catch: every 90°, 45°, 30° or 15°, or **Off** for none but your own.
+  For pitch, every 90° means level, straight up and straight down.
+- **Reach** — how close you have to come, in degrees, before an angle pulls at all (6° by default).
+- **Pull strength** — how hard it pulls once you are inside that reach (50% by default).
+- **Stickier as you slow down** — grows both as the wheel takes you further below your normal sensitivity, so scrolling
+  down to aim carefully also makes the angles easier to land on. On by default.
+- **Custom angles…** — opens a list for angles of your own, on top of the regular ones.
+
+When the view settles on an angle, the readout under the crosshair names it (`Yaw 180°`, `Pitch 0°`) — which is how you
+tell "close to south" from "on south".
+
+Custom angles are for what the intervals cannot cover: the dungeon wall that runs off true, the direction one NPC stands
+in. The editor's **Capture yaw** and **Capture pitch** buttons record the direction you are facing right now, which is
+the only practical way to name such an angle; **Add** gives you an empty row to type one into instead. Each row can be
+switched off without being deleted, and angles are written in Minecraft's own units — the ones F3 shows.
 
 ## Hand display
 

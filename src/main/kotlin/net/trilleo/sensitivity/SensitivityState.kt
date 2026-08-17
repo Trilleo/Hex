@@ -25,6 +25,25 @@ object SensitivityState {
     private var current: Double = 0.0
 
     /**
+     * Where the hold currently sits as a percentage of the player's own sensitivity, ready to draw.
+     *
+     * Kept here rather than computed by [SensitivityHud] because the readout is a frame callback and this
+     * changes only on a scroll — a handful of times a hold, against a few hundred frames.
+     */
+    var percentText: String = ""
+        private set
+
+    /**
+     * How far below the player's own sensitivity the wheel has taken things, as a multiplier of at least 1.
+     *
+     * This is what [StickyAim] scales the magnet by: the further you have slowed down, the more you meant to
+     * aim rather than to turn. Capped, because the wheel can reach a hundredth of where it started and a
+     * magnet a hundred times its size would be a magnet that never lets go.
+     */
+    val slowdown: Double
+        get() = if (!active || current <= 0.0) 1.0 else (base.coerceAtLeast(MIN) / current).coerceIn(1.0, 4.0)
+
+    /**
      * Take over the sensitivity, applying the snap multiplier if one is configured. Safe to call every tick;
      * only the first call while the key is down does anything.
      */
@@ -42,6 +61,8 @@ object SensitivityState {
         if (!active) return
         active = false
         client.options.sensitivity().set(base)
+        // The magnet only runs during a hold, and its lock is what the readout draws — neither may outlive it.
+        StickyAim.clear()
     }
 
     /**
@@ -63,6 +84,9 @@ object SensitivityState {
         // has no idea a mod is writing to it, so the clamp has to happen here.
         current = value.coerceIn(MIN, MAX)
         client.options.sensitivity().set(current)
+        // Against the player's own sensitivity rather than against vanilla's 0..1 scale: every other number
+        // this feature shows is a percentage of "normal", and so is the one worth knowing mid-hold.
+        percentText = "${Math.round(current / base.coerceAtLeast(MIN) * 100.0)}%"
     }
 
     /** Not 0: a sensitivity of zero cannot be scrolled back off, since every step multiplies. */

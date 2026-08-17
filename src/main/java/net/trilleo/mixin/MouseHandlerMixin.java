@@ -4,6 +4,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.MouseHandler;
 import net.trilleo.freecam.FreecamState;
 import net.trilleo.sensitivity.SensitivityState;
+import net.trilleo.sensitivity.StickyAim;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
@@ -19,7 +20,8 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
  * {@link FreecamState#applyLook}, so the feel matches the vanilla camera exactly.
  *
  * <p>Also lends the scroll wheel to the {@linkplain SensitivityState sensitivity hold} while its key is
- * down, cancelling vanilla's handling so the hotbar slot does not change underneath it.
+ * down, cancelling vanilla's handling so the hotbar slot does not change underneath it, and gives
+ * {@link StickyAim} the last word on each frame's rotation while that hold is running.
  */
 @Mixin(MouseHandler.class)
 public abstract class MouseHandlerMixin {
@@ -42,6 +44,21 @@ public abstract class MouseHandlerMixin {
         this.accumulatedDX = 0.0;
         this.accumulatedDY = 0.0;
         ci.cancel();
+    }
+
+    /**
+     * Lets the {@linkplain StickyAim sticky-angle magnet} nudge the view after vanilla has finished turning it.
+     *
+     * At {@code TAIL} rather than {@code HEAD} because the magnet works on where the mouse has just put you,
+     * not on where you were. The {@code d} parameter is the real time since the last look update, which is
+     * what keeps the pull frame-rate independent.
+     *
+     * <p>No freecam check is needed: {@link #hex$freecamTurn} cancels this method at {@code HEAD} while the
+     * freecam is flying, and a cancelled method never reaches its tail.
+     */
+    @Inject(method = "turnPlayer", at = @At("TAIL"))
+    private void hex$stickyAim(double d, CallbackInfo ci) {
+        StickyAim.INSTANCE.apply(Minecraft.getInstance(), d);
     }
 
     @Inject(method = "onScroll", at = @At("HEAD"), cancellable = true)
