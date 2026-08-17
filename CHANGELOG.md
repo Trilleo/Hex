@@ -75,6 +75,10 @@
   `chathighlights.json` come out clean on the next write. The old colour becomes a leading `&#RRGGBB` code, which is
   what it always meant — it could only tint the alert's message, never replace it. A hand-edited file still naming an
   old key goes on working.
++ `TitleSpecCompat` also reads the brief shape in which a title line was an object of a colour and five style flags —
+  one that existed between two commits on `master` and never in a release. It is carried because the failure was not a
+  title falling back to plain: GSON meets it as a type mismatch, so the *whole config file* failed to parse and took a
+  set of rules with it.
 
 ## Version 1.11.1
 

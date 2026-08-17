@@ -30,6 +30,17 @@ touch these — the [config menu](Configuration) covers everything — but they 
 | `notebook/index.json` | A summary of your [notes](Notebook), so the list opens without reading them all    | ❌ per installation              |
 | `notebook/notes/`     | One `.md` file per note — **the notes themselves**                                 | ❌ per installation              |
 | `update/`             | A downloaded jar waiting to be applied on exit                                     | ❌ transient                     |
+| `*.json.broken`       | A file Hex could not read, kept so nothing overwrites it — see below               | ❌ never                         |
+
+## When a file cannot be read
+
+A config Hex fails to parse is **renamed to `<name>.json.broken`** rather than left in place, and that config starts
+from its defaults for the session. The rename is the point: without it the fallback defaults would be written straight
+back over the file, and the rules, regions or reminders inside would be gone before you had read the error.
+
+So a typo in a hand-edit — or a file written by a build that stored something differently — costs you those settings
+until you fix it, never the data. Correct the `.broken` copy and rename it back with the game closed. An existing
+`.broken` file is never replaced, since it is the copy that holds your data.
 
 ## Why some files stay out of profiles
 
