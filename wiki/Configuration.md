@@ -19,8 +19,8 @@ title screen it is the only way in, since the command needs a chat box and the k
 ## How the menu is laid out
 
 - **Tabs down the side**, one per feature: Keybinds, Freecam, Hand, Item Customization, Titles, Reminders, Regions,
-  Entity Highlight, Command Suggestions, Updates. Each feature contributes its own tab, so the sidebar reflects what the mod
-  actually has.
+  Entity Highlight, Command Suggestions, Updates. Each feature contributes its own tab, so the sidebar reflects what the
+  mod actually has.
 - **A search box** filters settings across *all* tabs at once, so you can find a setting without knowing which feature
   owns it.
 - **A reset button on every row**, restoring that one setting to its default.
@@ -50,7 +50,7 @@ A few lists are deliberately not caught by a tab reset, because they are data ra
 | **Sensitivity**         | Wheel step and snap-on-press for the [sensitivity hold](Mouse-Sensitivity)                                     |
 | **Hand**                | First-person [hand position, scale, rotation and swing](Hand-Display), plus the per-item swing list            |
 | **Item Customization**  | The [customized items](Item-Customization) list, the ✎ slot marker, and [chroma](Chroma-Text) speed and width |
-| **Titles**              | Masters, fallback colours and chroma for every alert [title](Titles); the timings a new one starts with       |
+| **Titles**              | Masters, fallback colours and chroma for every alert [title](Titles); the timings a new one starts with        |
 | **Reminders**           | The [reminder](Reminders) panel's position, scale, colours and row count; chroma speed; snooze length          |
 | **Regions**             | [Region](Regions) drawing, names, through-walls, colours and chroma speed, default radius, exit margin         |
 | **Entity Highlight**    | The [highlight rules](Entity-Highlight) list, scan interval, default glow colour, chroma speed                 |
@@ -69,6 +69,6 @@ Settings are plain JSON under `config/hex/` — see [Config files](Config-Files)
 you play, so edit them with the game closed.
 
 **A file Hex cannot read is kept, not thrown away.** It is renamed to `<name>.json.broken` and that config starts from
-its defaults for the session, so a typo costs you those settings until you fix it rather than costing you the data —
-the rules, regions or reminders in the file are still there, in the `.broken` copy, to be corrected and renamed back.
+its defaults for the session, so a typo costs you those settings until you fix it rather than costing you the data — the
+rules, regions or reminders in the file are still there, in the `.broken` copy, to be corrected and renamed back.
 Nothing is ever written over it: if a `.broken` file is already there, the older one is the one kept.

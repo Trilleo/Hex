@@ -41,8 +41,8 @@ leaves the first word grey and flows the second. Any colour code, or `&r`, ends 
 
 `&#RRGGBB` sets a colour Minecraft has no code for — `&#FF8800 Sunset` is orange, and it ends the same way any colour
 does, at the next code or `&r`. It works wherever `&` codes do: item names, [title](Titles) text, [note](Notebook)
-text, note titles. The
-notebook's colour palette writes it for you, and the [colour picker](Colour-Picker) is where you find the digits.
+text, note titles. The notebook's colour palette writes it for you, and the [colour picker](Colour-Picker) is where you
+find the digits.
 
 ## Settings
 
@@ -56,8 +56,8 @@ choice.
 | **Chroma width** | 2 – 80           | How many characters one full rainbow spans. Low: a short name holds every colour at once. High: it drifts through one colour at a time. |
 
 **Chroma width** exists only on the three tabs that colour *text* — Item Customization, Chat Highlight and Titles. A
-glow, a box and a panel are a single colour rather than a run of characters, so there is nothing for a rainbow to
-spread along and those tabs simply change colour over time.
+glow, a box and a panel are a single colour rather than a run of characters, so there is nothing for a rainbow to spread
+along and those tabs simply change colour over time.
 
 ## Where it shows
 

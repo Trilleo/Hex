@@ -43,14 +43,14 @@ in play.
 Each button writes a `&` code **at the cursor**, in whichever of the two boxes you were last typing in. A code applies
 from where you put it onward, so one line can carry several colours.
 
-| Button   | Writes | Effect                                                       |
-|----------|--------|--------------------------------------------------------------|
-| **B**    | `&l`   | Bold                                                         |
-| **I**    | `&o`   | Italic                                                       |
-| **U**    | `&n`   | Underline                                                    |
-| **S**    | `&m`   | Strikethrough                                                |
-| **K**    | `&k`   | Obfuscated — scrambles the letters, as an enchantment table  |
-| **&**    | —      | Opens the colour palette                                     |
+| Button | Writes | Effect                                                      |
+|--------|--------|-------------------------------------------------------------|
+| **B**  | `&l`   | Bold                                                        |
+| **I**  | `&o`   | Italic                                                      |
+| **U**  | `&n`   | Underline                                                   |
+| **S**  | `&m`   | Strikethrough                                               |
+| **K**  | `&k`   | Obfuscated — scrambles the letters, as an enchantment table |
+| **&**  | —      | Opens the colour palette                                    |
 
 The palette holds Minecraft's sixteen colours, **chroma**, a **reset** back to plain, the colours you have picked
 recently *anywhere in the mod*, and a `#RRGGBB` field for any other colour. It opens over the rows below rather than
@@ -70,11 +70,11 @@ is white, then bold red.
 The alert already has a message — a reminder's, a region's, a rule's — and the title shows it. So a title line of
 **nothing but codes styles that message** rather than replacing it:
 
-| You type      | You get                                     |
-|---------------|---------------------------------------------|
-| *(nothing)*   | The alert's message, plain                  |
-| `&c&l`        | The alert's message, in bold red            |
-| `&c&lBOSS`    | The word **BOSS**, in bold red              |
+| You type    | You get                          |
+|-------------|----------------------------------|
+| *(nothing)* | The alert's message, plain       |
+| `&c&l`      | The alert's message, in bold red |
+| `&c&lBOSS`  | The word **BOSS**, in bold red   |
 
 The Title box shows the alert's own message as its hint, so which of those you have written is visible before you leave
 the screen.
@@ -89,10 +89,10 @@ Both boxes understand `$0`–`$9` [capture groups](Reminders) on a chat-triggere
 Three separate timings, rather than the one Hex used to offer.
 
 | Setting            | Range            | Effect                                                     |
-|--------------------|------------------|-------------------------------------------------------------|
-| **Fade in**        | 0 – 5 seconds    | How long the title takes to appear. Zero is instant         |
-| **Time on screen** | 0.5 – 30 seconds | How long it holds at full brightness, once it has faded in  |
-| **Fade out**       | 0 – 5 seconds    | How long it takes to disappear again                        |
+|--------------------|------------------|------------------------------------------------------------|
+| **Fade in**        | 0 – 5 seconds    | How long the title takes to appear. Zero is instant        |
+| **Time on screen** | 0.5 – 30 seconds | How long it holds at full brightness, once it has faded in |
+| **Fade out**       | 0 – 5 seconds    | How long it takes to disappear again                       |
 
 Thirty seconds of dwell is deliberate: "hold this until I have dealt with it" is a real thing to want from a boss
 warning.
@@ -130,15 +130,15 @@ the top shows you the *look*; this button is how you judge the *timing*.
 
 `/hexa config` → **Titles** holds what is true of every title at once.
 
-| Setting                                          | Effect                                                                         |
+| Setting                                          | Effect                                                                          |
 |--------------------------------------------------|---------------------------------------------------------------------------------|
 | **Enabled**                                      | Master switch. With it off, alerts still fire — they just say nothing on screen |
-| **Sounds**                                       | Master switch for the sound a title plays                                      |
+| **Sounds**                                       | Master switch for the sound a title plays                                       |
 | **Default colour** / **Default subtitle colour** | The colour a line starts from when its own codes do not set one                 |
-| **Chroma speed**                                 | How long one full trip through the rainbow takes. Lower is faster              |
-| **Chroma width**                                 | How many characters one full rainbow spans                                     |
-| **New title fade in** / **time** / **fade out**  | The timings a *newly created* title starts with                                |
-| **Preview**                                      | A sample title with nothing but these defaults on it                           |
+| **Chroma speed**                                 | How long one full trip through the rainbow takes. Lower is faster               |
+| **Chroma width**                                 | How many characters one full rainbow spans                                      |
+| **New title fade in** / **time** / **fade out**  | The timings a *newly created* title starts with                                 |
+| **Preview**                                      | A sample title with nothing but these defaults on it                            |
 
 The two default colours are chosen through the [colour picker](Colour-Picker), chroma included — set one to chroma and
 every title that has not coloured itself will flow.

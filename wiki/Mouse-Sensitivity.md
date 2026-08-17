@@ -11,12 +11,12 @@ is not somewhere you go mid-fight.
 
 Bind **Hold To Adjust Sensitivity** under Options → Controls → **Hex** (unbound by default), then hold it.
 
-| Input                | Does                                              |
-|----------------------|---------------------------------------------------|
-| **Hold the key**     | Takes over the sensitivity — and the scroll wheel |
-| **Scroll up**        | Faster                                            |
-| **Scroll down**      | Slower                                            |
-| **Release the key**  | Back to your normal sensitivity                   |
+| Input               | Does                                              |
+|---------------------|---------------------------------------------------|
+| **Hold the key**    | Takes over the sensitivity — and the scroll wheel |
+| **Scroll up**       | Faster                                            |
+| **Scroll down**     | Slower                                            |
+| **Release the key** | Back to your normal sensitivity                   |
 
 Your hotbar does **not** scroll while the key is held, so your slot is where you left it when you let go.
 
@@ -24,10 +24,10 @@ Your hotbar does **not** scroll while the key is held, so your slot is where you
 
 The **Sensitivity** tab of `/hexa config`:
 
-| Setting           | Notes                                                                                                            |
+| Setting           | Notes                                                                                                             |
 |-------------------|-------------------------------------------------------------------------------------------------------------------|
-| **Enabled**       | Master switch. With it off, the keybind is inert and the wheel always belongs to the hotbar.                     |
-| **Wheel step**    | How much one notch changes the sensitivity, as a percentage of its current value. 10% by default.                |
+| **Enabled**       | Master switch. With it off, the keybind is inert and the wheel always belongs to the hotbar.                      |
+| **Wheel step**    | How much one notch changes the sensitivity, as a percentage of its current value. 10% by default.                 |
 | **Snap on press** | Applied the instant the key goes down, before you scroll, as a percentage of your normal sensitivity. 100% = off. |
 
 Both live in `config/hex/sensitivity.json` and travel with a [config profile](Config-Profiles), so a Dungeons setup can

@@ -121,12 +121,12 @@ it. Hiding it from your chat window does not hide it from Hex.
 
 Turn on **Announce matches** and the rule speaks up when a message matches.
 
-| Setting             | Notes                                                                 |
-|---------------------|-----------------------------------------------------------------------|
-| **Message**         | The title's text. Blank uses the rule's name                          |
-| **Show as a title** | Opens the live [title editor](Titles): both lines, a toolbar, timings and a sound   |
-| **Play a sound**    | Any sound id, with pitch and volume. A bad id is reported as you type |
-| **Cooldown**        | How long the rule stays quiet afterwards                              |
+| Setting             | Notes                                                                             |
+|---------------------|-----------------------------------------------------------------------------------|
+| **Message**         | The title's text. Blank uses the rule's name                                      |
+| **Show as a title** | Opens the live [title editor](Titles): both lines, a toolbar, timings and a sound |
+| **Play a sound**    | Any sound id, with pitch and volume. A bad id is reported as you type             |
+| **Cooldown**        | How long the rule stays quiet afterwards                                          |
 
 **Test** fires the actions on the spot, ignoring the cooldown, so a sound and a title can be judged without waiting for
 a message.
