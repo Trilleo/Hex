@@ -1,5 +1,8 @@
 package net.trilleo.title.model
 
+import net.trilleo.title.model.TitlePreset.Companion.of
+
+
 /**
  * A ready-made look for a title — a starting point, not a mode.
  *
@@ -62,10 +65,10 @@ enum class TitlePreset(
     /** Whether [spec] currently starts the way this preset would have started it. */
     private fun matches(spec: TitleSpec): Boolean =
         TitleFormat.leadingCodes(spec.title).equals(titleCodes, ignoreCase = true) &&
-            TitleFormat.leadingCodes(spec.subtitle).equals(subtitleCodes, ignoreCase = true) &&
-            spec.sound == sound &&
-            spec.pitch == pitch &&
-            spec.volume == volume
+                TitleFormat.leadingCodes(spec.subtitle).equals(subtitleCodes, ignoreCase = true) &&
+                spec.sound == sound &&
+                spec.pitch == pitch &&
+                spec.volume == volume
 
     companion object {
         /**

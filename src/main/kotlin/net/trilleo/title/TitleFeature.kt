@@ -83,11 +83,14 @@ object TitleFeature : Feature {
 
         // Seeds: copied into a title when it is created and never read again, so an alert whose pacing has
         // already been tuned is not silently retimed by a change here.
-        seconds("default_fade_in", TitleSpec.FADE_MIN, TitleSpec.FADE_MAX, TitleSpec.DEFAULT_FADE_IN,
+        seconds(
+            "default_fade_in", TitleSpec.FADE_MIN, TitleSpec.FADE_MAX, TitleSpec.DEFAULT_FADE_IN,
             { TitleConfig.settings.defaultFadeInSeconds }, { TitleConfig.settings.defaultFadeInSeconds = it })
-        seconds("default_stay", TitleSpec.STAY_MIN, TitleSpec.STAY_MAX, TitleSpec.DEFAULT_STAY,
+        seconds(
+            "default_stay", TitleSpec.STAY_MIN, TitleSpec.STAY_MAX, TitleSpec.DEFAULT_STAY,
             { TitleConfig.settings.defaultStaySeconds }, { TitleConfig.settings.defaultStaySeconds = it })
-        seconds("default_fade_out", TitleSpec.FADE_MIN, TitleSpec.FADE_MAX, TitleSpec.DEFAULT_FADE_OUT,
+        seconds(
+            "default_fade_out", TitleSpec.FADE_MIN, TitleSpec.FADE_MAX, TitleSpec.DEFAULT_FADE_OUT,
             { TitleConfig.settings.defaultFadeOutSeconds }, { TitleConfig.settings.defaultFadeOutSeconds = it })
 
         action("preview") { _ -> preview() }

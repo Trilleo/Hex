@@ -48,7 +48,7 @@ public abstract class MouseHandlerMixin {
 
     /**
      * Lets the {@linkplain StickyAim sticky-angle magnet} nudge the view after vanilla has finished turning it.
-     *
+     * <p>
      * At {@code TAIL} rather than {@code HEAD} because the magnet works on where the mouse has just put you,
      * not on where you were. The {@code d} parameter is the real time since the last look update, which is
      * what keeps the pull frame-rate independent.

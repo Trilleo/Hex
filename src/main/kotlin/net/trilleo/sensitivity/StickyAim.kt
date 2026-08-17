@@ -3,6 +3,7 @@ package net.trilleo.sensitivity
 import net.minecraft.client.Minecraft
 import net.minecraft.client.player.LocalPlayer
 import net.minecraft.util.Mth
+import net.trilleo.sensitivity.StickyAim.SETTLED
 import net.trilleo.sensitivity.model.StickyAxis
 import kotlin.math.abs
 import kotlin.math.exp

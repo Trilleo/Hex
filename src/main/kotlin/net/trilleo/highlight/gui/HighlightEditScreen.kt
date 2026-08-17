@@ -214,7 +214,7 @@ class HighlightEditScreen(
                         TitleEditScreen(
                             screen,
                             titleAction.title,
-                                ownerText = { highlight.notifyText.ifBlank { highlight.name } },
+                            ownerText = { highlight.notifyText.ifBlank { highlight.name } },
                             onChange = this@HighlightEditScreen::touch,
                         ),
                     )

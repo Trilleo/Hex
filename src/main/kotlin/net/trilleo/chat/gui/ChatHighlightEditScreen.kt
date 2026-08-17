@@ -267,7 +267,7 @@ class ChatHighlightEditScreen(
                         TitleEditScreen(
                             screen,
                             titleAction.title,
-                                ownerText = { rule.notifyText.ifBlank { rule.name } },
+                            ownerText = { rule.notifyText.ifBlank { rule.name } },
                             onChange = this@ChatHighlightEditScreen::touch,
                         ),
                     )

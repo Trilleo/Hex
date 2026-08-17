@@ -1,11 +1,7 @@
 package net.trilleo.title.gui
 
 import net.minecraft.client.gui.GuiGraphicsExtractor
-import net.minecraft.client.gui.components.AbstractWidget
-import net.minecraft.client.gui.components.Button
-import net.minecraft.client.gui.components.EditBox
-import net.minecraft.client.gui.components.StringWidget
-import net.minecraft.client.gui.components.Tooltip
+import net.minecraft.client.gui.components.*
 import net.minecraft.client.gui.screens.Screen
 import net.minecraft.client.input.MouseButtonEvent
 import net.minecraft.network.chat.Component
@@ -369,11 +365,14 @@ class TitleEditScreen(
             },
         )
 
-        seconds("fade_in", TitleSpec.FADE_MIN, TitleSpec.FADE_MAX, TitleSpec.DEFAULT_FADE_IN,
+        seconds(
+            "fade_in", TitleSpec.FADE_MIN, TitleSpec.FADE_MAX, TitleSpec.DEFAULT_FADE_IN,
             { spec.fadeInSeconds }, { spec.fadeInSeconds = it })
-        seconds("stay", TitleSpec.STAY_MIN, TitleSpec.STAY_MAX, TitleSpec.DEFAULT_STAY,
+        seconds(
+            "stay", TitleSpec.STAY_MIN, TitleSpec.STAY_MAX, TitleSpec.DEFAULT_STAY,
             { spec.staySeconds }, { spec.staySeconds = it })
-        seconds("fade_out", TitleSpec.FADE_MIN, TitleSpec.FADE_MAX, TitleSpec.DEFAULT_FADE_OUT,
+        seconds(
+            "fade_out", TitleSpec.FADE_MIN, TitleSpec.FADE_MAX, TitleSpec.DEFAULT_FADE_OUT,
             { spec.fadeOutSeconds }, { spec.fadeOutSeconds = it })
 
         // A blank id is what "silent" is stored as, but a blank text field reads as a field nobody has filled
@@ -464,7 +463,13 @@ class TitleEditScreen(
         // which are registered for events only and so are not drawn by super.
         if (paletteOpen) {
             extractor.fill(0, paletteTop() - SWATCH_GAP, width, paletteBottom(), PANEL_COLOR)
-            extractor.outline(0, paletteTop() - SWATCH_GAP, width, paletteBottom() - paletteTop() + SWATCH_GAP, DIVIDER_COLOR)
+            extractor.outline(
+                0,
+                paletteTop() - SWATCH_GAP,
+                width,
+                paletteBottom() - paletteTop() + SWATCH_GAP,
+                DIVIDER_COLOR
+            )
             paletteWidgets.forEach { it.extractRenderState(extractor, mouseX, mouseY, delta) }
         }
     }
