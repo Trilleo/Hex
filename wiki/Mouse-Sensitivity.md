@@ -34,18 +34,18 @@ the view is drawn towards the nearest round angle it is *already close to*, and 
 faster than it carries straight on through. At the default settings a deliberate turn passes an angle without noticing
 it; slow down to place a shot and the angle takes over.
 
-By default the view sticks **every 45°** on both axes — the four block faces and the diagonals between them for yaw,
-and level, straight up, straight down and the halfway looks for pitch.
+By default the view sticks **every 45°** on both axes — the four block faces and the diagonals between them for yaw, and
+level, straight up, straight down and the halfway looks for pitch.
 
-| Setting                       | Notes                                                                                                                                    |
-|-------------------------------|------------------------------------------------------------------------------------------------------------------------------------------|
-| **Sticky angles**             | Master switch for the whole magnet. Off leaves the sensitivity hold exactly as it was.                                                    |
-| **Yaw angles**                | Which left/right angles catch: every 90°, 45°, 30° or 15°, or **Off** for none but your own.                                              |
-| **Pitch angles**              | The same up/down. Every 90° is level, straight up and straight down.                                                                      |
-| **Reach**                     | How close you have to come, in degrees, before an angle pulls at all. 6° by default. Longer is stickier.                                  |
-| **Pull strength**             | How hard it pulls once you are inside the reach. 50% by default.                                                                          |
-| **Stickier as you slow down** | Grows the reach and the pull as the wheel takes you further below your normal sensitivity. On by default.                                 |
-| **Custom angles…**            | Opens the editor below.                                                                                                                  |
+| Setting                       | Notes                                                                                                     |
+|-------------------------------|-----------------------------------------------------------------------------------------------------------|
+| **Sticky angles**             | Master switch for the whole magnet. Off leaves the sensitivity hold exactly as it was.                    |
+| **Yaw angles**                | Which left/right angles catch: every 90°, 45°, 30° or 15°, or **Off** for none but your own.              |
+| **Pitch angles**              | The same up/down. Every 90° is level, straight up and straight down.                                      |
+| **Reach**                     | How close you have to come, in degrees, before an angle pulls at all. 6° by default. Longer is stickier.  |
+| **Pull strength**             | How hard it pulls once you are inside the reach. 50% by default.                                          |
+| **Stickier as you slow down** | Grows the reach and the pull as the wheel takes you further below your normal sensitivity. On by default. |
+| **Custom angles…**            | Opens the editor below.                                                                                   |
 
 When the view has settled on an angle, the readout under the crosshair says which one — `Yaw 180°`, `Pitch 0°`. That
 line is how you tell "I am close to south" from "I am on south".
@@ -66,19 +66,19 @@ The intervals cover everything the world is built square to, which is most of it
 runs off true, or the direction one particular NPC stands in. **Custom angles…** in the Sensitivity tab opens a list you
 can add those to.
 
-| Button            | Does                                                            |
-|-------------------|-----------------------------------------------------------------|
-| **Add**           | An empty row to type an angle into                              |
-| **Capture yaw**   | Adds the direction you are facing *right now* as a yaw angle    |
-| **Capture pitch** | Adds how far up or down you are looking right now as a pitch    |
+| Button            | Does                                                         |
+|-------------------|--------------------------------------------------------------|
+| **Add**           | An empty row to type an angle into                           |
+| **Capture yaw**   | Adds the direction you are facing *right now* as a yaw angle |
+| **Capture pitch** | Adds how far up or down you are looking right now as a pitch |
 
 Capture is the way in. You look at the thing, open the menu, and press the button — the world is still behind the screen
 and you have not turned, so the angle you came to record is the one you are still holding.
 
-Each row has a switch, a **Yaw**/**Pitch** button, the number, and delete. Angles are written in Minecraft's own units —
-the ones F3 shows — so yaw runs −180 to 180 with 0 south and −90 east, and pitch runs −90 (straight up) to 90 (straight
-down). Rows are folded into those ranges when you leave the screen, and the ones that name a direction say which
-("south", "level", "straight up") beside the number.
+Each row has a switch, a **Yaw**/ **Pitch** button, the number, and delete. Angles are written in Minecraft's own
+units — the ones F3 shows — so yaw runs −180 to 180 with 0 south and −90 east, and pitch runs −90 (straight up) to 90
+(straight down). Rows are folded into those ranges when you leave the screen, and the ones that name a direction say
+which ("south", "level", "straight up") beside the number.
 
 Switching a row off keeps it in the list without letting it catch, which is how you find out which of several angles is
 the one getting in your way. A file holds at most 32.
