@@ -5,7 +5,6 @@ import net.trilleo.config.ConfigHandle
 import net.trilleo.config.ConfigRegistry
 import net.trilleo.config.JsonConfig
 import net.trilleo.sound.model.SoundSequence
-import java.util.*
 
 /**
  * One feedback slot's sound — what a named piece of mod feedback plays.

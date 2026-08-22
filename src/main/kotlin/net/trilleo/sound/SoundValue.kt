@@ -138,6 +138,7 @@ object SoundValue {
             val id = sequenceId(spec).orEmpty()
             Component.literal(SoundConfig.byId(id)?.name?.ifBlank { id } ?: id)
         }
+
         else -> Component.literal(SoundIds.shortName(spec))
     }
 

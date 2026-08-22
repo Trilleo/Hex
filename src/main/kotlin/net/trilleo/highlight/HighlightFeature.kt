@@ -14,9 +14,9 @@ import net.trilleo.config.ConfigCategory
 import net.trilleo.feature.Feature
 import net.trilleo.highlight.gui.HighlightsScreen
 import net.trilleo.highlight.model.Highlight
-import net.trilleo.util.Chroma
 import net.trilleo.sound.SoundPlayer
 import net.trilleo.sound.SoundSlot
+import net.trilleo.util.Chroma
 import net.trilleo.util.Notify
 import java.util.*
 

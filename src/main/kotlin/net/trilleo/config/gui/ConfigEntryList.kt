@@ -710,7 +710,7 @@ class ConfigEntryList(
         entry.tooltip,
         isDefault = {
             entry.get() == entry.default &&
-                (!entry.tunable || (entry.getPitch() == entry.defaultPitch && entry.getVolume() == entry.defaultVolume))
+                    (!entry.tunable || (entry.getPitch() == entry.defaultPitch && entry.getVolume() == entry.defaultVolume))
         },
         onReset = {
             entry.set(entry.default)

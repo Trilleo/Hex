@@ -19,11 +19,7 @@ import net.trilleo.sound.model.NoteNames
 import net.trilleo.sound.model.SoundSequence
 import net.trilleo.sound.model.SoundStep
 import java.util.*
-import kotlin.math.abs
-import kotlin.math.max
-import kotlin.math.min
-import kotlin.math.pow
-import kotlin.math.roundToInt
+import kotlin.math.*
 
 /**
  * The sequence timeline — a multitrack editor for the sounds in one [SoundSequence].
@@ -381,7 +377,7 @@ class SoundSequenceEditScreen(
     private fun controlHeld(): Boolean {
         val window = minecraft.window
         return InputConstants.isKeyDown(window, InputConstants.KEY_LCONTROL) ||
-            InputConstants.isKeyDown(window, InputConstants.KEY_RCONTROL)
+                InputConstants.isKeyDown(window, InputConstants.KEY_RCONTROL)
     }
 
     override fun keyPressed(event: KeyEvent): Boolean {
@@ -392,20 +388,47 @@ class SoundSequenceEditScreen(
 
         if (event.hasControlDownWithQuirk()) {
             return when (event.key()) {
-                InputConstants.KEY_Z -> { undo(); true }
-                InputConstants.KEY_D -> { duplicateSelection(); true }
-                InputConstants.KEY_A -> { selectAll(); true }
+                InputConstants.KEY_Z -> {
+                    undo(); true
+                }
+
+                InputConstants.KEY_D -> {
+                    duplicateSelection(); true
+                }
+
+                InputConstants.KEY_A -> {
+                    selectAll(); true
+                }
+
                 else -> false
             }
         }
 
         return when {
-            event.key() == InputConstants.KEY_SPACE -> { togglePlay(); true }
-            event.key() == InputConstants.KEY_DELETE -> { deleteSelection(); true }
-            event.isLeft -> { nudge(-nudgeStep()); true }
-            event.isRight -> { nudge(nudgeStep()); true }
-            event.isUp -> { nudgeLane(-1); true }
-            event.isDown -> { nudgeLane(1); true }
+            event.key() == InputConstants.KEY_SPACE -> {
+                togglePlay(); true
+            }
+
+            event.key() == InputConstants.KEY_DELETE -> {
+                deleteSelection(); true
+            }
+
+            event.isLeft -> {
+                nudge(-nudgeStep()); true
+            }
+
+            event.isRight -> {
+                nudge(nudgeStep()); true
+            }
+
+            event.isUp -> {
+                nudgeLane(-1); true
+            }
+
+            event.isDown -> {
+                nudgeLane(1); true
+            }
+
             else -> false
         }
     }
@@ -510,7 +533,7 @@ class SoundSequenceEditScreen(
             val clipLeft = xOf(step.atMillis).toDouble()
             val clipTop = (lanesTop + step.lane * LANE_H).toDouble()
             val overlaps = clipLeft + CLIP_W >= left && clipLeft <= right &&
-                clipTop + LANE_H >= top && clipTop <= bottom
+                    clipTop + LANE_H >= top && clipTop <= bottom
             if (overlaps) selection.add(step)
         }
     }
@@ -661,6 +684,7 @@ class SoundSequenceEditScreen(
                     seconds == null -> Component.translatable("hex.sounds.edit.at.invalid")
                     seconds < 0.0 || seconds * MILLIS_PER_SECOND > SoundStep.MAX_MILLIS ->
                         Component.translatable("hex.sounds.edit.at.range")
+
                     else -> null
                 }
             },

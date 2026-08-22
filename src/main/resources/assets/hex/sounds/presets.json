@@ -35,10 +35,34 @@
         "loop": false,
         "loopCount": 1,
         "steps": [
-          { "sound": "minecraft:block.note_block.pling", "atMillis": 0.0, "pitch": 1.0, "volume": 1.0, "lane": 0 },
-          { "sound": "minecraft:block.note_block.pling", "atMillis": 250.0, "pitch": 1.414214, "volume": 1.0, "lane": 0 },
-          { "sound": "minecraft:block.note_block.pling", "atMillis": 500.0, "pitch": 1.0, "volume": 1.0, "lane": 0 },
-          { "sound": "minecraft:block.note_block.pling", "atMillis": 750.0, "pitch": 1.414214, "volume": 1.0, "lane": 0 }
+          {
+            "sound": "minecraft:block.note_block.pling",
+            "atMillis": 0.0,
+            "pitch": 1.0,
+            "volume": 1.0,
+            "lane": 0
+          },
+          {
+            "sound": "minecraft:block.note_block.pling",
+            "atMillis": 250.0,
+            "pitch": 1.414214,
+            "volume": 1.0,
+            "lane": 0
+          },
+          {
+            "sound": "minecraft:block.note_block.pling",
+            "atMillis": 500.0,
+            "pitch": 1.0,
+            "volume": 1.0,
+            "lane": 0
+          },
+          {
+            "sound": "minecraft:block.note_block.pling",
+            "atMillis": 750.0,
+            "pitch": 1.414214,
+            "volume": 1.0,
+            "lane": 0
+          }
         ]
       }
     },
@@ -52,9 +76,27 @@
         "loop": false,
         "loopCount": 1,
         "steps": [
-          { "sound": "minecraft:block.amethyst_block.chime", "atMillis": 0.0, "pitch": 1.0, "volume": 0.8, "lane": 0 },
-          { "sound": "minecraft:block.amethyst_block.chime", "atMillis": 125.0, "pitch": 1.259921, "volume": 0.7, "lane": 0 },
-          { "sound": "minecraft:block.amethyst_block.chime", "atMillis": 250.0, "pitch": 1.498307, "volume": 0.6, "lane": 0 }
+          {
+            "sound": "minecraft:block.amethyst_block.chime",
+            "atMillis": 0.0,
+            "pitch": 1.0,
+            "volume": 0.8,
+            "lane": 0
+          },
+          {
+            "sound": "minecraft:block.amethyst_block.chime",
+            "atMillis": 125.0,
+            "pitch": 1.259921,
+            "volume": 0.7,
+            "lane": 0
+          },
+          {
+            "sound": "minecraft:block.amethyst_block.chime",
+            "atMillis": 250.0,
+            "pitch": 1.498307,
+            "volume": 0.6,
+            "lane": 0
+          }
         ]
       }
     },
@@ -68,12 +110,48 @@
         "loop": false,
         "loopCount": 1,
         "steps": [
-          { "sound": "minecraft:block.note_block.bell", "atMillis": 0.0, "pitch": 0.707107, "volume": 0.9, "lane": 0 },
-          { "sound": "minecraft:block.note_block.bass", "atMillis": 0.0, "pitch": 0.707107, "volume": 0.6, "lane": 1 },
-          { "sound": "minecraft:block.note_block.bell", "atMillis": 125.0, "pitch": 0.890899, "volume": 0.9, "lane": 0 },
-          { "sound": "minecraft:block.note_block.bell", "atMillis": 250.0, "pitch": 1.059463, "volume": 0.9, "lane": 0 },
-          { "sound": "minecraft:block.note_block.bell", "atMillis": 500.0, "pitch": 1.414214, "volume": 1.0, "lane": 0 },
-          { "sound": "minecraft:block.note_block.bass", "atMillis": 500.0, "pitch": 1.0, "volume": 0.6, "lane": 1 }
+          {
+            "sound": "minecraft:block.note_block.bell",
+            "atMillis": 0.0,
+            "pitch": 0.707107,
+            "volume": 0.9,
+            "lane": 0
+          },
+          {
+            "sound": "minecraft:block.note_block.bass",
+            "atMillis": 0.0,
+            "pitch": 0.707107,
+            "volume": 0.6,
+            "lane": 1
+          },
+          {
+            "sound": "minecraft:block.note_block.bell",
+            "atMillis": 125.0,
+            "pitch": 0.890899,
+            "volume": 0.9,
+            "lane": 0
+          },
+          {
+            "sound": "minecraft:block.note_block.bell",
+            "atMillis": 250.0,
+            "pitch": 1.059463,
+            "volume": 0.9,
+            "lane": 0
+          },
+          {
+            "sound": "minecraft:block.note_block.bell",
+            "atMillis": 500.0,
+            "pitch": 1.414214,
+            "volume": 1.0,
+            "lane": 0
+          },
+          {
+            "sound": "minecraft:block.note_block.bass",
+            "atMillis": 500.0,
+            "pitch": 1.0,
+            "volume": 0.6,
+            "lane": 1
+          }
         ]
       }
     },
@@ -87,10 +165,34 @@
         "loop": false,
         "loopCount": 1,
         "steps": [
-          { "sound": "minecraft:block.note_block.hat", "atMillis": 0.0, "pitch": 1.0, "volume": 0.7, "lane": 0 },
-          { "sound": "minecraft:block.note_block.hat", "atMillis": 500.0, "pitch": 1.0, "volume": 0.7, "lane": 0 },
-          { "sound": "minecraft:block.note_block.hat", "atMillis": 1000.0, "pitch": 1.0, "volume": 0.7, "lane": 0 },
-          { "sound": "minecraft:block.note_block.pling", "atMillis": 1500.0, "pitch": 1.414214, "volume": 1.0, "lane": 0 }
+          {
+            "sound": "minecraft:block.note_block.hat",
+            "atMillis": 0.0,
+            "pitch": 1.0,
+            "volume": 0.7,
+            "lane": 0
+          },
+          {
+            "sound": "minecraft:block.note_block.hat",
+            "atMillis": 500.0,
+            "pitch": 1.0,
+            "volume": 0.7,
+            "lane": 0
+          },
+          {
+            "sound": "minecraft:block.note_block.hat",
+            "atMillis": 1000.0,
+            "pitch": 1.0,
+            "volume": 0.7,
+            "lane": 0
+          },
+          {
+            "sound": "minecraft:block.note_block.pling",
+            "atMillis": 1500.0,
+            "pitch": 1.414214,
+            "volume": 1.0,
+            "lane": 0
+          }
         ]
       }
     },
@@ -104,8 +206,20 @@
         "loop": false,
         "loopCount": 1,
         "steps": [
-          { "sound": "minecraft:block.note_block.bell", "atMillis": 0.0, "pitch": 1.681793, "volume": 0.8, "lane": 0 },
-          { "sound": "minecraft:block.note_block.bell", "atMillis": 80.0, "pitch": 2.0, "volume": 0.8, "lane": 0 }
+          {
+            "sound": "minecraft:block.note_block.bell",
+            "atMillis": 0.0,
+            "pitch": 1.681793,
+            "volume": 0.8,
+            "lane": 0
+          },
+          {
+            "sound": "minecraft:block.note_block.bell",
+            "atMillis": 80.0,
+            "pitch": 2.0,
+            "volume": 0.8,
+            "lane": 0
+          }
         ]
       }
     }
