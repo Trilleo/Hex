@@ -14,6 +14,7 @@ touch these — the [config menu](Configuration) covers everything — but they 
 | `sensitivity.json`    | [Mouse sensitivity](Mouse-Sensitivity) settings and sticky angles                  | ✅                               |
 | `hand.json`           | [Hand display](Hand-Display) settings                                              | ✅                               |
 | `swing_items.json`    | The [per-item swing](Per-Item-Swing) list                                          | ✅                               |
+| `sounds.json`         | [Sound sequences](Sound-Sequences), the feedback sounds, and the sound settings    | ✅                               |
 | `titles.json`         | The shared [title](Titles) settings — masters, fallback colours, new-title timings | ✅                               |
 | `reminders.json`      | [Reminders](Reminders) and their panel settings                                    | ✅                               |
 | `regions.json`        | [Regions](Regions) and their settings                                              | ✅                               |

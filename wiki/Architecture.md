@@ -148,6 +148,20 @@ There is deliberately **one** way to ask for a colour, so a feature added later 
 colours and chroma without doing anything. `chroma = true` belongs only on settings whose render path re-reads the value
 every frame or every tick: a colour written into a component that is then cached cannot animate.
 
+### Sounds
+
+`net.trilleo.sound` is the one place audio lives, and `SoundPlayer` is the **only** object in the mod that builds a
+sound instance. `SoundValue` defines what a sound setting may hold — a sound id, `"@a-sequence"`, or nothing — in the
+same one-field, three-cases shape `ColorValue` uses, which is what let sequences be added without any config file
+changing shape. `SoundScheduler` holds steps that are due later against a monotonic clock, advanced from the client
+tick, the HUD frame callback and the sequence editor's own render, because no one of the three fires in every case.
+`gui.SoundPickerScreen` is the [picker](Sound-Picker) that every `sound(...)` row opens.
+
+There is deliberately **one** way to ask for a sound, exactly as there is for a colour, so a feature added later
+inherits browsing, search, preview and sequences without doing anything. The per-feature master switches stay at their
+own call sites rather than moving into `SoundPlayer`: the Reminders switch is named for reminders and must not silence
+the rest of the mod.
+
 ## Shared Skyblock readers
 
 `net.trilleo.skyblock` is state that belongs to no single feature, ticked centrally so it stays live regardless of which
@@ -186,6 +200,8 @@ screen and leaves vanilla input handling alone.
 - `gradle.properties` is the **single source of truth** for versions; `fabric.mod.json` gets them expanded at build
   time.
 - Mod code is Kotlin; mixins are Java.
+- Every colour goes through the [colour picker](Colour-Picker), and every sound through the
+  [sound picker](Sound-Picker). Neither has a second way in.
 - Every user-visible string goes through a translation key — see [Translating](Translating).
 - Commit messages follow `<tag>: <message>` — see [Contributing](Contributing).
 

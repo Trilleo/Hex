@@ -99,8 +99,10 @@ warning.
 
 ## Its own sound
 
-Turn on **Play a sound** for a sound played the moment the title appears, with a **Sound** id, a **Pitch** and a
-**Volume**. A bad id is reported as you type it.
+Turn on **Play a sound** for a sound played the moment the title appears, then choose it with the
+[sound picker](Sound-Picker) — one row that opens a screen where every sound in the game can be browsed, searched,
+heard, and set to a pitch and volume. It can also be a whole [sound sequence](Sound-Sequences), so a title's sting
+can be a phrase rather than a beep.
 
 **This is separate from the alert's own Play a sound action**, which exists so an alert can beep *without* showing
 anything. An alert can have both, either, or neither.

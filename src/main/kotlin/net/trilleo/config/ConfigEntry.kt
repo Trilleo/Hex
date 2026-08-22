@@ -125,6 +125,48 @@ class ColorEntry(
 ) : ConfigEntry
 
 /**
+ * A sound setting, carried as text rather than a registry reference so the JSON stays readable for anyone
+ * editing a config file by hand. What the text may say — a sound id, `"@a-sequence"`, or nothing — is
+ * [net.trilleo.sound.SoundValue]'s to define; [optional] and [sequences] say which of those this particular
+ * setting accepts.
+ *
+ * The renderer turns this into a preview button plus a button that opens
+ * [net.trilleo.sound.gui.SoundPickerScreen], so every sound in the mod is chosen the same way. A feature
+ * never builds a sound field of its own.
+ *
+ * Pitch and volume ride along on the same entry rather than sitting in two sliders beside it. They are not
+ * separate settings — they are how the chosen sound is played — and keeping them here is what lets one row
+ * replace the three that every sound-carrying editor used to repeat. A setting with no pitch of its own
+ * simply leaves the lambdas at their defaults, and the picker hides those controls.
+ *
+ * @param optional whether an empty value is meaningful here, i.e. "make no sound". False wherever the owning
+ *   model would rewrite a blank back to a default on the next load.
+ * @param sequences whether this setting may name a saved sequence as well as a single sound.
+ */
+class SoundEntry(
+    override val label: Component,
+    override val tooltip: Component?,
+    val default: String,
+    val optional: Boolean,
+    val sequences: Boolean,
+    val get: () -> String,
+    val set: (String) -> Unit,
+    /**
+     * Whether this setting carries a pitch and a volume of its own.
+     *
+     * False for a setting that only names a sound, and the picker then hides those two controls rather than
+     * offering sliders that write nowhere.
+     */
+    val tunable: Boolean,
+    val defaultPitch: Double,
+    val getPitch: () -> Double,
+    val setPitch: (Double) -> Unit,
+    val defaultVolume: Double,
+    val getVolume: () -> Double,
+    val setVolume: (Double) -> Unit,
+) : ConfigEntry
+
+/**
  * A single key combination, expressed in the mod's own [KeyCombo] vocabulary so that no GUI-toolkit type
  * leaks into the settings model.
  */

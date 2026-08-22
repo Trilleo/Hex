@@ -71,6 +71,18 @@ Before finishing any task that changes the mod, do all of the following:
       `alpha = true` when the value carries an opacity byte.
     - Read stored values back with `ColorValue.resolve`, which folds all three cases into one packed ARGB and never
       fails.
+- **Every sound goes through the universal sound picker.** A feature asks for a sound with
+  `ConfigCategory.Builder.sound(...)` and gets the whole picker — browsing the registry by group, search, click-to-hear,
+  pitch and volume, and the saved sequences — for free. Never hand-roll a sound field, a bare id text box, or a second
+  pair of pitch/volume sliders beside it. See [wiki/Sound-Picker.md](wiki/Sound-Picker.md).
+    - **`net.trilleo.sound.SoundPlayer` is the only thing in the mod that makes a noise.** Never construct a
+      `SimpleSoundInstance` anywhere else, and never add a second audio path — that is what `Notify` losing its
+      `uiSound` overloads was for.
+    - **A sequence is a value, not a field.** A sound setting holds one string, and `"@my-sequence"` is a third thing it
+      can say alongside a sound id and `""` — see `net.trilleo.sound.SoundValue`, which mirrors `ColorValue`. Never add
+      a parallel "sequence" field beside a sound one.
+    - Pass `optional = true` only where a blank value genuinely survives the owning model's normalizer.
+      `ReminderAction.normalize` rewrites a blank sound back to its default, so `optional = false` there.
 - `gradle.properties` is the single source of truth for all versions (`mod_version`, `minecraft_version`,
   `loader_version`, …). `fabric.mod.json` gets these expanded at build time via `processResources` — never hardcode
   versions there.

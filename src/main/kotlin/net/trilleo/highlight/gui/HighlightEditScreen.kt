@@ -14,7 +14,6 @@ import net.trilleo.highlight.model.HighlightMatch
 import net.trilleo.reminder.model.ActionKind
 import net.trilleo.reminder.model.ReminderAction
 import net.trilleo.title.gui.TitleEditScreen
-import net.trilleo.util.Notify
 import java.util.*
 
 /**
@@ -227,39 +226,22 @@ class HighlightEditScreen(
                 get = { highlight.actions.any { it.kind == ActionKind.SOUND } },
                 set = { setAction(ActionKind.SOUND, it); rebuild() },
             )
-            actionOf(ActionKind.SOUND)?.let { sound ->
-                text(
-                    "sound_id",
+            actionOf(ActionKind.SOUND)?.let { action ->
+                sound(
+                    "sound",
                     default = ReminderAction.DEFAULT_SOUND,
-                    get = { sound.value },
-                    set = { sound.value = it; touch() },
-                    validate = { id ->
-                        if (Notify.soundFor(id) == null) {
-                            Component.translatable("hex.highlights.edit.sound.unknown")
-                        } else {
-                            null
-                        }
-                    },
-                )
-                slider(
-                    "sound_pitch",
-                    min = ReminderAction.PITCH_MIN,
-                    max = ReminderAction.PITCH_MAX,
-                    step = 0.05,
-                    default = 1.0,
-                    get = { sound.pitch },
-                    set = { sound.pitch = it; touch() },
-                    format = { String.format(Locale.ROOT, "%.2f", it) },
-                )
-                slider(
-                    "sound_volume",
-                    min = ReminderAction.VOLUME_MIN,
-                    max = ReminderAction.VOLUME_MAX,
-                    step = 0.05,
-                    default = 1.0,
-                    get = { sound.volume },
-                    set = { sound.volume = it; touch() },
-                    format = { String.format(Locale.ROOT, "%.0f%%", it * 100) },
+                    // Silence is not a value this can hold: ReminderAction.normalize rewrites a blank sound
+                    // back to its default on the next load, so offering None would ship a control that
+                    // appears to work and reverts on restart. Switch the action off instead.
+                    optional = false,
+                    get = { action.value },
+                    set = { action.value = it; touch() },
+                    defaultPitch = 1.0,
+                    getPitch = { action.pitch },
+                    setPitch = { action.pitch = it; touch() },
+                    defaultVolume = 1.0,
+                    getVolume = { action.volume },
+                    setVolume = { action.volume = it; touch() },
                 )
             }
         }

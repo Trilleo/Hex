@@ -18,6 +18,8 @@ import net.trilleo.feature.Feature
 import net.trilleo.region.gui.RegionsScreen
 import net.trilleo.region.model.Region
 import net.trilleo.util.Chroma
+import net.trilleo.sound.SoundPlayer
+import net.trilleo.sound.SoundSlot
 import net.trilleo.util.Notify
 import java.util.*
 
@@ -119,7 +121,7 @@ object RegionFeature : Feature {
         val point = RegionCapture.markPoint(client) ?: return
         if (!RegionCapture.addCorner(point)) {
             Notify.chat(client, "Corner set. Mark the opposite one to finish the region.")
-            Notify.uiSound(client, 1.4f)
+            SoundPlayer.feedback(client, SoundSlot.TOGGLE_ON)
             return
         }
 
@@ -149,7 +151,7 @@ object RegionFeature : Feature {
         val player = client.player ?: return
         RegionCapture.beginWalk(player.position())
         Notify.chat(client, "Recording — walk the outline, then press the key again to finish.")
-        Notify.uiSound(client, 1.4f)
+        SoundPlayer.feedback(client, SoundSlot.TOGGLE_ON)
     }
 
     /** Adds a freshly captured region, reports it, and opens it for a name and a message. */
@@ -159,7 +161,7 @@ object RegionFeature : Feature {
         RegionConfig.save()
 
         Notify.chat(client, "Added region \"${region.name}\" — ${region.summary()}.")
-        Notify.uiSound(client, 1.8f)
+        SoundPlayer.feedback(client, SoundSlot.CAPTURED)
         // Deferred: a screen opened from inside the tick would be replaced the moment anything else sets one.
         client.execute { client.setScreen(net.trilleo.region.gui.RegionEditScreen(null, region)) }
     }

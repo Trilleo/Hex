@@ -6,6 +6,8 @@ import net.trilleo.skyblock.item.HeldItem
 import net.trilleo.skyblock.item.ItemRule
 import net.trilleo.skyblock.item.ItemRuleKind
 import net.trilleo.skyblock.item.SkyblockItem
+import net.trilleo.sound.SoundPlayer
+import net.trilleo.sound.SoundSlot
 import net.trilleo.util.Notify
 
 /**
@@ -72,14 +74,14 @@ object SwingItems {
         if (rules.removeAll { it.matches(id, uuid) }) {
             SwingItemsConfig.save()
             Notify.chat(client, "Removed $name — swing restored.")
-            Notify.uiSound(client, PITCH_REMOVED)
+            SoundPlayer.feedback(client, SoundSlot.TOGGLE_OFF)
             return
         }
 
         rules.add(ruleFor(id, uuid, name))
         SwingItemsConfig.save()
         Notify.chat(client, "Added $name — swing hidden.")
-        Notify.uiSound(client, PITCH_ADDED)
+        SoundPlayer.feedback(client, SoundSlot.TOGGLE_ON)
     }
 
     /**
@@ -123,12 +125,6 @@ object SwingItems {
 
     private fun deny(client: Minecraft, message: String) {
         Notify.chat(client, message, ChatFormatting.RED)
-        Notify.uiSound(client, PITCH_DENIED)
+        SoundPlayer.feedback(client, SoundSlot.DENIED)
     }
-
-    // Matching AttackModeFeature's convention: pitch alone tells you which way a toggle went, so the chat
-    // line is confirmation rather than the only signal.
-    private const val PITCH_ADDED = 1.4f
-    private const val PITCH_REMOVED = 0.8f
-    private const val PITCH_DENIED = 0.7f
 }

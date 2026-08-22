@@ -6,6 +6,8 @@ import net.minecraft.client.KeyMapping
 import net.minecraft.client.Minecraft
 import net.minecraft.network.chat.Component
 import net.trilleo.keybind.ControlSwitch.MIN_KEYS
+import net.trilleo.sound.SoundPlayer
+import net.trilleo.sound.SoundSlot
 import net.trilleo.util.Notify
 
 /**
@@ -24,9 +26,6 @@ object ControlSwitch {
 
     /** A switch needs at least this many keys to have somewhere to cycle to. */
     private const val MIN_KEYS = 2
-
-    /** Pitch for the confirmation click — above a normal button press so the switch is audibly distinct. */
-    private const val SOUND_PITCH = 1.2f
 
     /**
      * Advance [kb]'s target control to its next key, then notify the player.
@@ -64,7 +63,7 @@ object ControlSwitch {
                 .append(Component.literal(" → ").withStyle(ChatFormatting.GRAY))
                 .append(next.displayName.copy().withStyle(ChatFormatting.GREEN)),
         )
-        Notify.uiSound(client, SOUND_PITCH)
+        SoundPlayer.feedback(client, SoundSlot.SWITCHED)
     }
 
     /** The target [KeyMapping], or null when unset or no longer registered (e.g. its mod was removed). */

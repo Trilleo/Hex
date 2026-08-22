@@ -15,6 +15,8 @@ import net.trilleo.feature.Feature
 import net.trilleo.highlight.gui.HighlightsScreen
 import net.trilleo.highlight.model.Highlight
 import net.trilleo.util.Chroma
+import net.trilleo.sound.SoundPlayer
+import net.trilleo.sound.SoundSlot
 import net.trilleo.util.Notify
 import java.util.*
 
@@ -97,7 +99,7 @@ object HighlightFeature : Feature {
             client,
             Component.translatable("hex.highlights.added", highlight.name, highlight.summary()),
         )
-        Notify.uiSound(client, 1.8f)
+        SoundPlayer.feedback(client, SoundSlot.CAPTURED)
         // Deferred: a screen opened from inside the tick would be replaced the moment anything else sets one.
         client.execute {
             client.setScreen(net.trilleo.highlight.gui.HighlightEditScreen(null, highlight))

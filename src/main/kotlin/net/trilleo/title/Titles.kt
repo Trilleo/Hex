@@ -7,6 +7,7 @@ import net.minecraft.network.chat.MutableComponent
 import net.minecraft.network.chat.Style
 import net.minecraft.util.FormattedCharSequence
 import net.trilleo.color.ColorValue
+import net.trilleo.sound.SoundPlayer
 import net.trilleo.title.model.TitleSpec
 import net.trilleo.util.Chroma
 import net.trilleo.util.Notify
@@ -104,10 +105,17 @@ object Titles {
             build(raw, fallbackColor)
         }
 
-    /** Plays the title's own sound, if it has one and the master switch allows it. */
+    /**
+     * Plays the title's own sound, if it has one and the master switch allows it.
+     *
+     * [net.trilleo.title.model.TitleSpec.sound] is a [net.trilleo.sound.SoundValue], so a title's sting can
+     * be a saved sequence as well as a single sound — and a blank still means a title that only appears.
+     */
     private fun playSound(client: Minecraft, spec: TitleSpec) {
+        // The Titles switch is checked here rather than inside SoundPlayer, so turning title sounds off does
+        // not also silence the rest of the mod. It is named for titles, and it does what it says.
         if (!TitleConfig.soundsOn || spec.sound.isBlank()) return
-        Notify.uiSound(client, spec.sound, spec.pitch.toFloat(), spec.volume.toFloat())
+        SoundPlayer.play(client, spec.sound, spec.pitch, spec.volume)
     }
 
     private fun ticks(seconds: Double): Int =

@@ -14,6 +14,8 @@
 **Features**
 
 - [Colour picker](Colour-Picker)
+- [Sound picker](Sound-Picker)
+- [Sound sequences](Sound-Sequences)
 - [Config profiles](Config-Profiles)
 - [Keybind shortcuts](Keybind-Shortcuts)
 - [Control switches](Control-Switches)

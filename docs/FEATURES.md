@@ -84,6 +84,112 @@ reminder panel's colours. There is no transparency slider — type the value in 
 carried through everything else you change. A chroma region or panel takes the stock transparency for that setting,
 since a flowing colour has none of its own.
 
+## Sound picker
+
+Every sound in Hex is chosen the same way, exactly as every colour is. Any setting that holds a sound shows a **▶**
+preview button and a button naming the current choice; click the name and the sound picker opens.
+
+- **Browse or search every sound the game has**, including any another mod added. The filter button narrows the list to
+  one kind — `block`, `entity`, `ui`, `music` and so on — or to your own sequences.
+- **Search understands sound ids.** Nobody types `minecraft:`, so a search matches the part after the colon first:
+  `note_block.pl` finds the pling.
+- **Every row plays.** Press **▶** on a row to hear it without choosing it; choosing one plays it too.
+- **Pitch** and **Volume** are on the same screen, so nudging a pitch and hearing the result is one action rather than
+  two rows apart.
+- **Sequences…** goes straight to the [sound sequence](#sound-sequences) library and back, keeping your choice while you
+  are away.
+- **None** is offered where making no sound is a real answer — a title that only appears, or a feedback click you would
+  rather not hear.
+
+**Done** keeps what you chose. **Cancel**, Escape, or closing the screen any other way leaves the setting exactly as it
+was.
+
+If a setting names a sound this client does not have, or a sequence that has since been deleted, the row says so
+underneath and the mod falls back to a plain click rather than going silent — a missed alert is a worse failure than a
+wrong one.
+
+## Sound sequences
+
+A sequence is a sound made of several of the game's sounds, with an order and a delay: four insistent notes, a rising
+chime, a two-note coin flick. Anywhere Hex can play a sound it can play a sequence instead, so a reminder, a region, an
+entity highlight, a chat highlight, a title, or one of the mod's own feedback clicks can be a phrase rather than a beep.
+
+Open them from the **Sounds** tab of the config menu with **Sound sequences**, or from the **Sequences…** button in the
+sound picker. **Add** builds one from scratch; **Presets** offers five ready-made ones.
+
+### The editor
+
+The editor is a timeline. A ruler runs along the top, eight tracks sit under it, and each sound in the sequence is a
+**clip** placed where its time puts it.
+
+- **Drag a clip** sideways to change when it plays, or up and down to move it to another track. Tracks are only a way of
+  arranging the picture — two sounds at the same moment play together whichever tracks they are on.
+- **Drag on empty space** to select several clips at once, or **Ctrl+click** to add one to the selection. Everything
+  selected moves together.
+- **Drag on the ruler** to move the playhead. **Play** starts from wherever it is.
+- **A clip's fill height is its volume**, so a quiet sound reads as a short block without having to select it.
+
+### The grid
+
+The ruler is marked in seconds, because that is what the times are, and ruled in beats at a **tempo** you set — so
+anything rhythmic lands where you want it. **Snap** chooses 1/4, 1/8 or 1/16 of a beat, or off. Hold **Alt** while
+dragging to ignore snapping for that drag.
+
+Changing the tempo re-rules the grid and never moves a sound you have already placed.
+
+### Notes instead of numbers
+
+Note block sounds are tuned instruments, so when a step uses one its pitch is set as a **note** — F#3 up to F#5, the
+twenty-five notes a note block actually has — and the clip labels itself with the note. Every other sound in the game is
+a recording rather than an instrument, and keeps a plain pitch number.
+
+### Keyboard
+
+| Key | Does |
+| --- | --- |
+| Space | Play / stop |
+| Delete | Remove the selection |
+| Ctrl+D | Duplicate the selection one grid step later |
+| Ctrl+A | Select everything |
+| Ctrl+Z | Undo |
+| ← → | Nudge the selection by one grid step |
+| ↑ ↓ | Move the selection between tracks |
+| Ctrl+scroll | Zoom about the pointer |
+| scroll | Scroll along the timeline |
+
+### The panel on the right
+
+Selecting one clip shows its settings: its **sound** (chosen with the [sound picker](#sound-picker)), its **note** or
+**pitch**, its **volume**, its **time** in seconds, and its **track**. With nothing selected — or several things — the
+panel shows the sequence itself instead: its **name**, its **tempo**, and whether it **loops** and how many times.
+
+A step cannot name another sequence. A sequence containing itself would play forever, so the picker inside the editor
+offers sounds only.
+
+### Presets
+
+Five sequences ship with the mod and can be added and then edited freely:
+
+| Preset | What it is |
+| --- | --- |
+| **Alarm** | Four insistent notes. Hard to miss. |
+| **Chime** | A soft rising triad, for something you want noticed rather than shouted. |
+| **Fanfare** | A short rising run with a bass note under it. |
+| **Countdown** | Three ticks and a chime, one every half second. |
+| **Coin** | Two quick high notes. |
+
+As with reminder presets, a later version of the mod can improve a preset you have not edited without touching one you
+have.
+
+### Feedback sounds
+
+The short clicks Hex makes as you use it are settings too, on the same **Sounds** tab: **Switched on**, **Switched
+off**, **Refused**, **Captured** and **Control switched**. Each is a full sound setting, so any of them can be a
+sequence. They start on exactly the sounds and pitches the mod always made, so nothing changes until you change it.
+
+**Master volume** on that tab scales everything Hex plays, and **Enabled** silences all of it at once — alerts still
+fire and titles still appear, they just do it quietly.
+
 ## Config profiles
 
 A profile is a complete set of Hex settings under a name. Open **Profiles…** from the config menu footer to see them
@@ -357,9 +463,9 @@ own message as its hint, so which one you have written is visible before you lea
 **Three timings, not one.** **Fade in**, **Time on screen** and **Fade out** are set separately, from instant up to
 thirty seconds of dwell — enough for a warning you want up until you have dealt with it.
 
-**A sound of its own.** Turn on **Play a sound** and give it a sound id, a pitch and a volume, and it plays the moment
-the title appears. This is separate from the alert's own **Play a sound** action, so an alert can have both, either, or
-neither.
+**A sound of its own.** Turn on **Play a sound**, then choose one from the [sound picker](#sound-picker) — a single
+sound or a whole [sequence](#sound-sequences) — and it plays the moment the title appears. This is separate from the
+alert's own **Play a sound** action, so an alert can have both, either, or neither.
 
 **Presets.** The **Preset** row writes a ready-made set of codes at the front of both lines and sets a sound, in one
 click — **Info**, **Success**, **Warning**, **Alert** or **Chroma**. A starting point rather than a mode: the codes it
@@ -514,8 +620,8 @@ Switching shape never asks you to draw the region again. A cylinder and a sphere
 
 **Message** is the title. Turn on **Show as a title** for the big centred text, then **Title style…** for the
 [title](#titles) editor — the two lines, a formatting toolbar, the fade timings and a sound of its own. **Play a sound**
-adds a separate one, with the same sound id, pitch and volume the reminders have — **Test** in the editor fires both so
-you can judge them without leaving the menu.
+adds a separate one, chosen from the [sound picker](#sound-picker) exactly as a reminder's is — **Test** in the editor
+fires both so you can judge them without leaving the menu.
 
 **Announce leaving** fires again on the way out, with its own message if you want a different one.
 
@@ -626,8 +732,9 @@ shows its own name rather than the rule's.
 ### Being told
 
 Turn on **Announce new ones** and the rule speaks up the first time it sees each matching entity — a title, a sound, or
-both. **Title style…** opens the same [title](#titles) editor reminders and regions use, and the sound has the same id,
-pitch and volume controls. **Test** fires it on the spot so you can judge the sound without waiting for a mob.
+both. **Title style…** opens the same [title](#titles) editor reminders and regions use, and the sound is chosen from the
+same [sound picker](#sound-picker). **Test** fires it on the spot so you can judge the sound without waiting for a
+mob.
 
 "New" means an entity Hex has not seen before, not one that has merely come back into range: a mob that wanders behind a
 hill and returns stays quiet. Leaving the world forgets everything, so arriving somewhere is always announced.

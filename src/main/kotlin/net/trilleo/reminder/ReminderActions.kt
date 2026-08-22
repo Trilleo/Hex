@@ -4,6 +4,7 @@ import net.minecraft.client.Minecraft
 import net.trilleo.reminder.model.ActionKind
 import net.trilleo.reminder.model.Reminder
 import net.trilleo.reminder.model.ReminderAction
+import net.trilleo.sound.SoundPlayer
 import net.trilleo.title.Titles
 import net.trilleo.title.model.TitleFormat
 
@@ -110,10 +111,15 @@ object ReminderActions {
         )
     }
 
-    private fun playSound(client: Minecraft, id: String, pitch: Double, volume: Double) {
-        // The master sound switch is checked here rather than at the call site so it covers every path that
-        // fires a reminder — the tick, the catch-up on load, and the test button in the editor.
+    /**
+     * @param spec a [net.trilleo.sound.SoundValue] — a sound id, or `"@a-sequence"`, so an alert can be a
+     *   whole phrase rather than one note. Pitch and volume multiply every step of a sequence.
+     */
+    private fun playSound(client: Minecraft, spec: String, pitch: Double, volume: Double) {
+        // The master sound switch is checked here rather than inside SoundPlayer so it covers every path that
+        // fires a reminder — the tick, the catch-up on load, and the test button in the editor — without also
+        // silencing the rest of the mod. It is the *Reminders* switch, and it says so.
         if (!ReminderConfig.settings.soundEnabled) return
-        net.trilleo.util.Notify.uiSound(client, id, pitch.toFloat(), volume.toFloat())
+        SoundPlayer.play(client, spec, pitch, volume)
     }
 }

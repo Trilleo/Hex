@@ -8,6 +8,8 @@ import net.minecraft.client.Minecraft
 import net.minecraft.network.chat.Component
 import net.trilleo.Hex
 import net.trilleo.feature.Feature
+import net.trilleo.sound.SoundPlayer
+import net.trilleo.sound.SoundSlot
 import net.trilleo.util.Notify
 
 /**
@@ -33,13 +35,6 @@ object AttackModeFeature : Feature {
     /** Vanilla's own wording for the two modes — reused so this localises with the game. */
     private const val MODE_TOGGLE_KEY = "options.key.toggle"
     private const val MODE_HOLD_KEY = "options.key.hold"
-
-    /**
-     * Confirmation pitches. Two distinct values rather than one, so the mode you landed on is audible
-     * without reading chat: rising for toggle, falling for hold.
-     */
-    private const val PITCH_TOGGLE = 1.4f
-    private const val PITCH_HOLD = 0.8f
 
     /** The rebindable key that cycles the mode. Unbound by default. */
     private lateinit var cycleKey: KeyMapping
@@ -77,6 +72,6 @@ object AttackModeFeature : Feature {
                 .append(Component.literal(" → ").withStyle(ChatFormatting.GRAY))
                 .append(Component.translatable(mode).withStyle(ChatFormatting.GREEN)),
         )
-        Notify.uiSound(client, if (toggle) PITCH_TOGGLE else PITCH_HOLD)
+        SoundPlayer.feedback(client, if (toggle) SoundSlot.TOGGLE_ON else SoundSlot.TOGGLE_OFF)
     }
 }

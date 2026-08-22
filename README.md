@@ -25,6 +25,10 @@ Hex runs entirely on your client — it never needs to be installed on a server.
 - **Item customization** — rename, recolour, reskin or de-glint one specific Skyblock item, on your client only.
 - **Colour picker** — one picker for every colour in the mod: a hue/shade field, hex and RGB entry, Minecraft's sixteen
   colours, presets, and the colours you picked recently shared across every feature.
+- **Sound picker** — one picker for every sound in the mod: browse or search every sound the game has, hear any of
+  them before you keep it, and set pitch and volume where you can hear them.
+- **Sound sequences** — build a sound out of several of the game's own, with an order and a delay, on a multitrack
+  timeline with a beat grid and note-block notes. Usable anywhere a single sound is.
 - **Chroma text** — flowing rainbow colour, chosen like any other colour: item names, chat highlights, entity glows,
   region boxes, the reminder panel and alert titles, whole or from a `&z` part-way through.
 - **Titles** — one live editor for every alert title: type the two lines, style them from a toolbar, and watch the real

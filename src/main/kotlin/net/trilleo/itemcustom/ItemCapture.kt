@@ -7,6 +7,8 @@ import net.minecraft.network.chat.Component
 import net.minecraft.world.item.ItemStack
 import net.trilleo.itemcustom.gui.ItemCustomizeScreen
 import net.trilleo.skyblock.item.SkyblockItem
+import net.trilleo.sound.SoundPlayer
+import net.trilleo.sound.SoundSlot
 import net.trilleo.util.Notify
 
 /**
@@ -64,9 +66,6 @@ object ItemCapture {
 
     private fun deny(client: Minecraft, key: String) {
         Notify.chat(client, Component.translatable(key), ChatFormatting.RED)
-        Notify.uiSound(client, PITCH_DENIED)
+        SoundPlayer.feedback(client, SoundSlot.DENIED)
     }
-
-    /** Matching the convention elsewhere in the mod: pitch alone says a keypress was refused. */
-    private const val PITCH_DENIED = 0.7f
 }

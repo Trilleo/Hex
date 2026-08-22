@@ -16,7 +16,6 @@ import net.trilleo.title.model.TitleFormat
 import net.trilleo.title.model.TitlePreset
 import net.trilleo.title.model.TitleSpec
 import net.trilleo.util.Chroma
-import net.trilleo.util.Notify
 import java.util.*
 
 /**
@@ -375,8 +374,9 @@ class TitleEditScreen(
             "fade_out", TitleSpec.FADE_MIN, TitleSpec.FADE_MAX, TitleSpec.DEFAULT_FADE_OUT,
             { spec.fadeOutSeconds }, { spec.fadeOutSeconds = it })
 
-        // A blank id is what "silent" is stored as, but a blank text field reads as a field nobody has filled
-        // in yet rather than as a decision — so the decision gets a switch of its own.
+        // A blank id is what "silent" is stored as, but a row showing "None" reads as a setting nobody has
+        // got to yet rather than as a decision — so the decision gets a switch of its own, and the row below
+        // only appears once it has been made.
         toggle(
             "sound",
             default = false,
@@ -388,39 +388,22 @@ class TitleEditScreen(
             },
         )
         if (spec.sound.isNotBlank()) {
-            text(
-                "sound_id",
+            sound(
+                "sound_choice",
                 default = DEFAULT_SOUND,
+                // Unlike the four alert editors, silence genuinely is a value here — a blank sound is
+                // exactly how "a title that only appears" is stored, and nothing normalizes it away. The
+                // switch above and this row say the same thing two ways, which is deliberate: the switch is
+                // the decision, and this is the choice.
+                optional = true,
                 get = { spec.sound },
-                set = { spec.sound = it; onChange() },
-                validate = { id ->
-                    // Blank is accepted on its way to being retyped; the switch above is what turns sound off.
-                    if (id.isBlank() || Notify.soundFor(id) != null) {
-                        null
-                    } else {
-                        Component.translatable("hex.titles.edit.sound.unknown")
-                    }
-                },
-            )
-            slider(
-                "sound_pitch",
-                min = TitleSpec.PITCH_MIN,
-                max = TitleSpec.PITCH_MAX,
-                step = 0.05,
-                default = 1.0,
-                get = { spec.pitch },
-                set = { spec.pitch = it; onChange() },
-                format = { String.format(Locale.ROOT, "%.2f", it) },
-            )
-            slider(
-                "sound_volume",
-                min = TitleSpec.VOLUME_MIN,
-                max = TitleSpec.VOLUME_MAX,
-                step = 0.05,
-                default = 1.0,
-                get = { spec.volume },
-                set = { spec.volume = it; onChange() },
-                format = { String.format(Locale.ROOT, "%.0f%%", it * 100) },
+                set = { spec.sound = it; onChange(); rebuild() },
+                defaultPitch = 1.0,
+                getPitch = { spec.pitch },
+                setPitch = { spec.pitch = it; onChange() },
+                defaultVolume = 1.0,
+                getVolume = { spec.volume },
+                setVolume = { spec.volume = it; onChange() },
             )
         }
     }

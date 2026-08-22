@@ -2,6 +2,92 @@
 
 ## Unreleased
 
+### New Features
+
+#### Sound Sequences
+
++ Added **sound sequences** — sounds made of several of the game's own sounds, with an order and a delay, built on a
+  timeline. Anywhere the mod could play one sound, it can now play a whole phrase.
+    + **A multitrack editor.** A ruler along the top, eight tracks under it, and one clip per sound sitting where its
+      time puts it. Drag a clip to retime it, drag it up or down to move it between tracks, drag on empty space to
+      select a group, and drag on the ruler to scrub. Each clip shows its volume as its fill height, so a quiet step
+      reads as a short block without selecting anything.
+    + **A grid you can build a rhythm on.** The ruler is marked in seconds and ruled in beats at a tempo you set, with
+      snapping to 1/4, 1/8 or 1/16 of a beat — or off. Hold **Alt** while dragging to ignore it. Changing the tempo
+      re-rules the grid and never moves a sound you have already placed.
+    + **Note block sounds are set by note, not by number.** Choose a note block sound and its pitch row becomes
+      F#3 to F#5, which is the range a note block actually has, and the clip labels itself with the note.
+    + **Keyboard throughout** — Space plays and stops, Delete removes, Ctrl+D duplicates, Ctrl+A selects everything,
+      Ctrl+Z undoes, the arrow keys nudge by one grid step, and Ctrl+scroll zooms about the pointer.
+    + **The playhead tracks the audio** rather than approximating it, so a sixteenth-note pattern sounds even and looks
+      even at the same time.
+    + Sequences are reached from the new **Sounds** tab of the settings menu, and from the sound picker itself.
+
+#### Sound Picker
+
++ Added the **sound picker** — one screen for choosing every sound in the mod, the way the colour picker is one screen
+  for every colour.
+    + **Browse or search every sound the game has**, including any another mod added, grouped by kind. Searching
+      understands that nobody types the namespace, so `note_block.pl` finds the pling.
+    + **Hear it before you keep it.** Every row has a play button, choosing a sound previews it, and the pitch and
+      volume sliders are on the same screen — so setting a pitch and hearing it is one workflow instead of two.
+    + **Choose a sequence instead**, or **None** where making no sound is a real answer.
+
+#### Feedback Sounds
+
++ The short clicks the mod makes when you toggle something, capture something, or press a key that could not do anything
+  are now **settings** rather than fixed. Five of them — switched on, switched off, refused, captured, control switched
+  — each on the **Sounds** tab, and each able to hold a sequence like anything else. They start on exactly the sounds
+  and pitches they made before, so nothing changes until you change it.
+
+#### Sequence Presets
+
++ Added five ready-made sequences — **Alarm**, **Chime**, **Fanfare**, **Countdown** and **Coin** — that can be added
+  and then edited freely. As with reminder presets, a later version can improve one you have not touched without
+  overwriting one you have.
+
+### Improvements
+
+#### Reminders
+
++ The sound id, pitch and volume rows are now one **Sound** row that opens the sound picker. The id no longer has to be
+  typed from memory, and a reminder can now play a sequence.
+
+#### Regions
+
++ The sound id, pitch and volume rows are now one **Sound** row that opens the sound picker.
+
+#### Entity Highlight
+
++ The sound id, pitch and volume rows are now one **Sound** row that opens the sound picker.
+
+#### Chat Highlight
+
++ The sound id, pitch and volume rows are now one **Sound** row that opens the sound picker.
+
+#### Titles
+
++ The sound id, pitch and volume rows are now one **Sound** row that opens the sound picker, so a title's sting can be a
+  sequence.
+
+### Technical Details
+
++ All audio now goes through one path, `net.trilleo.sound.SoundPlayer`. `Notify` no longer plays sounds at all and its
+  `uiSound` overloads were deleted rather than deprecated, so the compiler named every remaining caller.
++ A sequence is named by a value rather than by a new field: a sound setting still holds one string, and `"@my-sequence"`
+  is a third thing it can say alongside a sound id and an empty value — `net.trilleo.sound.SoundValue`, modelled on
+  `ColorValue`. No config file changed shape, and an older build reading a newer config falls back to a click rather
+  than failing.
++ Steps are scheduled against a monotonic clock and advanced from the client tick, the HUD frame callback and the
+  editor's own render, because no one of the three fires in every case. A tick alone is 50 ms, which cannot express a
+  sixteenth note at 120 BPM.
++ New `SoundEntry` config row type and `ConfigCategory.Builder.sound`, mirroring the colour row. The inspector in the
+  sequence editor is a `ConfigEntryList` fed a throwaway category, the same way the other object editors work.
++ The sound picker commits on **Done** rather than applying live. It opens a sub-screen, and Minecraft calls `removed()`
+  on every hand-off, so the colour picker's revert-on-removed idiom would have discarded the player's choice the moment
+  they went to edit a sequence.
++ Sequences live in `config/hex/sounds.json` and travel with config profiles.
+
 ## Version 1.11.3
 
 ### New Features

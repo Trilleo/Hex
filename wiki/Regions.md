@@ -63,7 +63,8 @@ Switching shape never asks you to draw the region again. A cylinder and a sphere
 - **Message** is the title. Turn on **Show as a title** for the big centred text, then **Title style…** for the full
   [title editor](Titles) — a live editor for the two lines, with a formatting toolbar and the title drawn as you type,
   plus the three fade timings and a sound of the title's own.
-- **Play a sound** adds one, with the same sound id, pitch and volume that [reminders](Reminders) have. **Test** in the
+- **Play a sound** adds one, chosen with the [sound picker](Sound-Picker) exactly as a [reminder](Reminders)'s is —
+  a single sound or a whole [sequence](Sound-Sequences). **Test** in the
   editor fires both, so you can judge them without leaving the menu.
 - **Announce leaving** fires again on the way out, with its own message if you want a different one.
 - **Cooldown** is how long a region stays quiet after firing. It matters more than it sounds: without it, a region

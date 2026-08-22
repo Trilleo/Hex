@@ -11,6 +11,9 @@ import net.minecraft.network.chat.Component
 import net.trilleo.color.ColorValue
 import net.trilleo.color.gui.ColorPickerScreen
 import net.trilleo.config.*
+import net.trilleo.sound.SoundPlayer
+import net.trilleo.sound.SoundValue
+import net.trilleo.sound.gui.SoundPickerScreen
 import java.util.*
 import kotlin.math.roundToInt
 import kotlin.math.roundToLong
@@ -193,6 +196,7 @@ class ConfigEntryList(
         is ActionEntry -> ActionRow(entry, screen)
         is TextEntry -> TextRow(entry)
         is ColorEntry -> ColorRow(entry, screen)
+        is SoundEntry -> SoundRow(entry, screen)
         is KeybindEntry -> KeybindRow(entry)
     }
 
@@ -684,6 +688,91 @@ class ConfigEntryList(
 
             /** What "no colour" and an unreadable value both draw as: a dark, obviously-empty square. */
             const val EMPTY_SWATCH = 0xFF2A2A2A.toInt()
+        }
+    }
+
+    /**
+     * A sound: a preview button, plus a button naming the current choice that opens the mod's sound picker.
+     *
+     * Both are real [Button]s rather than rectangles this row hit-tests itself, so they inherit click
+     * routing, keyboard focus and tooltips from the list for nothing — the same reasoning [ColorRow] gives
+     * for its swatch.
+     *
+     * **There is deliberately no text field here, and that is the difference from [ColorRow].** A colour
+     * arrives as text: someone reads `#FF5555` off a wiki page and types it. A sound id does not — it comes
+     * out of the registry, it is thirty characters long, and getting one character wrong produces a setting
+     * that silently plays the wrong thing. Searching a list you can hear is strictly the better way in, so
+     * the field is gone and with it the two sliders that used to sit beside it: pitch and volume are in the
+     * picker, where they can be heard while they are set. That is what turns three rows into one.
+     */
+    private class SoundRow(private val entry: SoundEntry, private val screen: Screen) : ResettableRow(
+        entry.label,
+        entry.tooltip,
+        isDefault = {
+            entry.get() == entry.default &&
+                (!entry.tunable || (entry.getPitch() == entry.defaultPitch && entry.getVolume() == entry.defaultVolume))
+        },
+        onReset = {
+            entry.set(entry.default)
+            entry.setPitch(entry.defaultPitch)
+            entry.setVolume(entry.defaultVolume)
+        },
+    ) {
+        private val preview: Button = Button.builder(Component.literal("▶")) {
+            SoundPlayer.preview(Minecraft.getInstance(), entry.get(), entry.getPitch(), entry.getVolume())
+        }
+            .bounds(0, 0, PREVIEW, WIDGET_HEIGHT)
+            .tooltip(Tooltip.create(Component.translatable("hex.sound.preview.tooltip")))
+            .build()
+
+        private val choose: Button = Button.builder(SoundValue.describe(entry.get())) { open() }
+            .bounds(0, 0, CONTROL_WIDTH - PREVIEW - GAP, WIDGET_HEIGHT)
+            .build()
+            .apply { this@SoundRow.rowTooltip?.let(::setTooltip) }
+
+        override val widgets: List<AbstractWidget> = listOf(preview, choose, resetButton)
+
+        private fun open() {
+            Minecraft.getInstance().setScreen(
+                SoundPickerScreen(
+                    parent = screen,
+                    subject = entry.label,
+                    initial = entry.get(),
+                    initialPitch = entry.getPitch(),
+                    initialVolume = entry.getVolume(),
+                    allowNone = entry.optional,
+                    allowSequences = entry.sequences,
+                    tunable = entry.tunable,
+                    apply = entry.set,
+                    applyPitch = entry.setPitch,
+                    applyVolume = entry.setVolume,
+                ),
+            )
+        }
+
+        override fun layout(extractor: GuiGraphicsExtractor, mouseX: Int, mouseY: Int, delta: Float) {
+            // Re-read every frame: a profile switch, a reset, or renaming the sequence this names can all
+            // change what this button should say from outside the row.
+            choose.message = SoundValue.describe(entry.get())
+
+            place(preview, controlX(), PREVIEW)
+            draw(preview, extractor, mouseX, mouseY, delta)
+
+            place(choose, controlX() + PREVIEW + GAP, CONTROL_WIDTH - PREVIEW - GAP)
+            draw(choose, extractor, mouseX, mouseY, delta)
+
+            // A broken value is flagged in place rather than blocking the row, as [TextRow] does: the value
+            // is already stored, and the player needs to be told which of the two things went wrong — an id
+            // this client does not have, or a sequence that has been deleted.
+            SoundValue.problem(entry.get(), entry.optional)?.let { error ->
+                val font = Minecraft.getInstance().font
+                extractor.text(font, error, contentX, contentYMiddle + font.lineHeight / 2 + 1, ERROR_COLOR)
+            }
+            drawReset(extractor, mouseX, mouseY, delta)
+        }
+
+        private companion object {
+            const val PREVIEW = 20
         }
     }
 

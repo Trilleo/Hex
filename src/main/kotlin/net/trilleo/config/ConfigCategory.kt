@@ -196,6 +196,59 @@ class ConfigCategory(
             entries += ColorEntry(label(key), tooltip(key), default, alpha, chroma, optional, get, set)
         }
 
+        /**
+         * Add a sound row — a preview button plus a button that opens the mod's sound picker.
+         *
+         * This is the only way a feature should ask for a sound. Everything the picker offers (browsing the
+         * registry by group, search, click-to-preview, and the saved sequences) comes with the row, so a new
+         * setting is consistent with the rest of the mod without doing anything to be.
+         *
+         * The pitch and volume lambdas are part of this row rather than two sliders beside it, because they
+         * are how the chosen sound is played rather than settings of their own. Leave them out for a setting
+         * that has no pitch to give, and the picker hides those controls.
+         *
+         * @param optional an empty value means "make no sound", which the picker offers as **None**. Pass
+         *   false wherever the owning model rewrites a blank value back to a default when it loads — offering
+         *   silence there would ship a control that appears to work and reverts on restart.
+         * @param sequences this setting may name a saved sequence. False for anything a sequence would
+         *   recurse through, such as a step inside one.
+         */
+        fun sound(
+            key: String,
+            default: String,
+            optional: Boolean = false,
+            sequences: Boolean = true,
+            get: () -> String,
+            set: (String) -> Unit,
+            defaultPitch: Double = 1.0,
+            getPitch: (() -> Double)? = null,
+            setPitch: ((Double) -> Unit)? = null,
+            defaultVolume: Double = 1.0,
+            getVolume: (() -> Double)? = null,
+            setVolume: ((Double) -> Unit)? = null,
+        ) {
+            // Nullable rather than defaulted lambdas, so "this setting has no pitch" is a thing the entry can
+            // actually say. A no-op setter would be indistinguishable from a working one, and the picker
+            // would offer a slider that writes nowhere.
+            val tunable = getPitch != null && setPitch != null
+            entries += SoundEntry(
+                label(key),
+                tooltip(key),
+                default,
+                optional,
+                sequences,
+                get,
+                set,
+                tunable,
+                defaultPitch,
+                getPitch ?: { 1.0 },
+                setPitch ?: {},
+                defaultVolume,
+                getVolume ?: { 1.0 },
+                setVolume ?: {},
+            )
+        }
+
         /** Add a key-combination capture row. */
         fun keybind(key: String, default: KeyCombo, get: () -> KeyCombo, set: (KeyCombo) -> Unit) {
             entries += KeybindEntry(label(key), tooltip(key), default, get, set)

@@ -15,6 +15,8 @@ anywhere, and it has no server-side half — there is nothing to install for you
 |--------------------------------------------|-------------------------------------------------------------------------|
 | [Config menu](Configuration)               | One categorized settings menu, opened four different ways               |
 | [Colour picker](Colour-Picker)             | One picker for every colour in the mod, with shared recent colours      |
+| [Sound picker](Sound-Picker)               | One picker for every sound in the mod, browsable and previewable        |
+| [Sound sequences](Sound-Sequences)         | Build multi-note alert sounds on a timeline, then use them anywhere     |
 | [Config profiles](Config-Profiles)         | Named setups you switch by hand or automatically per server or island   |
 | [Keybind shortcuts](Keybind-Shortcuts)     | A key combo runs a delayed sequence of commands or chat messages        |
 | [Control switches](Control-Switches)       | Cycle one of Minecraft's own controls between two or more keys, in-game |

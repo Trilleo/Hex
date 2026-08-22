@@ -1,0 +1,113 @@
+{
+  "_format": [
+    "The bundled sound sequence catalogue. Each entry is copied into config/hex/sounds.json when the player",
+    "adds it, so `sequence` is exactly the shape that file uses and can be pasted straight into it.",
+    "",
+    "presetId  stable identity, never reused for a different preset. Names two lang keys:",
+    "          hex.sound.preset.<presetId>.name and .desc. It is also the id an installed copy is given, so",
+    "          a freshly added Alarm is referenced as \"@alarm\" everywhere a sound can be chosen.",
+    "revision  bump whenever the definition below changes. An installed copy the player has NOT edited is",
+    "          updated in place on the next launch; an edited one is left alone and offered the update. The",
+    "          id is never changed by an update, so every \"@id\" pointing at it keeps working.",
+    "category  grouping in the browser. Names hex.sounds.presets.category.<category>",
+    "",
+    "sequence.bpm        the editor's grid only. Playback reads atMillis, which is already absolute, so",
+    "                    changing this re-rules the grid without moving a single step.",
+    "sequence.loop       whether the whole thing repeats; loopCount is how many passes in total (1-8).",
+    "sequence.steps[]    sound    a sound event id. Never a \"@ref\" - a step may not name another sequence.",
+    "                    atMillis when it plays, in milliseconds from the start. Absolute, not a delay.",
+    "                    pitch    0.5-2.0. For a note_block sound this is a note: pitch = 2^((n-12)/12),",
+    "                             so 0.5 is F#3, 1.0 is F#4 and 2.0 is F#5. The editor shows the note name.",
+    "                    volume   0.0-1.0. Drawn as the clip's fill height in the editor.",
+    "                    lane     0-7. Presentational only - two steps at the same time play together",
+    "                             whatever lanes they are on.",
+    "",
+    "Keep these short. They are alert sounds, and one that outlasts the thing it is announcing is a nuisance."
+  ],
+  "presets": [
+    {
+      "presetId": "alarm",
+      "revision": 1,
+      "category": "alert",
+      "sequence": {
+        "name": "Alarm",
+        "bpm": 120.0,
+        "loop": false,
+        "loopCount": 1,
+        "steps": [
+          { "sound": "minecraft:block.note_block.pling", "atMillis": 0.0, "pitch": 1.0, "volume": 1.0, "lane": 0 },
+          { "sound": "minecraft:block.note_block.pling", "atMillis": 250.0, "pitch": 1.414214, "volume": 1.0, "lane": 0 },
+          { "sound": "minecraft:block.note_block.pling", "atMillis": 500.0, "pitch": 1.0, "volume": 1.0, "lane": 0 },
+          { "sound": "minecraft:block.note_block.pling", "atMillis": 750.0, "pitch": 1.414214, "volume": 1.0, "lane": 0 }
+        ]
+      }
+    },
+    {
+      "presetId": "chime",
+      "revision": 1,
+      "category": "alert",
+      "sequence": {
+        "name": "Chime",
+        "bpm": 120.0,
+        "loop": false,
+        "loopCount": 1,
+        "steps": [
+          { "sound": "minecraft:block.amethyst_block.chime", "atMillis": 0.0, "pitch": 1.0, "volume": 0.8, "lane": 0 },
+          { "sound": "minecraft:block.amethyst_block.chime", "atMillis": 125.0, "pitch": 1.259921, "volume": 0.7, "lane": 0 },
+          { "sound": "minecraft:block.amethyst_block.chime", "atMillis": 250.0, "pitch": 1.498307, "volume": 0.6, "lane": 0 }
+        ]
+      }
+    },
+    {
+      "presetId": "fanfare",
+      "revision": 1,
+      "category": "celebration",
+      "sequence": {
+        "name": "Fanfare",
+        "bpm": 120.0,
+        "loop": false,
+        "loopCount": 1,
+        "steps": [
+          { "sound": "minecraft:block.note_block.bell", "atMillis": 0.0, "pitch": 0.707107, "volume": 0.9, "lane": 0 },
+          { "sound": "minecraft:block.note_block.bass", "atMillis": 0.0, "pitch": 0.707107, "volume": 0.6, "lane": 1 },
+          { "sound": "minecraft:block.note_block.bell", "atMillis": 125.0, "pitch": 0.890899, "volume": 0.9, "lane": 0 },
+          { "sound": "minecraft:block.note_block.bell", "atMillis": 250.0, "pitch": 1.059463, "volume": 0.9, "lane": 0 },
+          { "sound": "minecraft:block.note_block.bell", "atMillis": 500.0, "pitch": 1.414214, "volume": 1.0, "lane": 0 },
+          { "sound": "minecraft:block.note_block.bass", "atMillis": 500.0, "pitch": 1.0, "volume": 0.6, "lane": 1 }
+        ]
+      }
+    },
+    {
+      "presetId": "countdown",
+      "revision": 1,
+      "category": "utility",
+      "sequence": {
+        "name": "Countdown",
+        "bpm": 120.0,
+        "loop": false,
+        "loopCount": 1,
+        "steps": [
+          { "sound": "minecraft:block.note_block.hat", "atMillis": 0.0, "pitch": 1.0, "volume": 0.7, "lane": 0 },
+          { "sound": "minecraft:block.note_block.hat", "atMillis": 500.0, "pitch": 1.0, "volume": 0.7, "lane": 0 },
+          { "sound": "minecraft:block.note_block.hat", "atMillis": 1000.0, "pitch": 1.0, "volume": 0.7, "lane": 0 },
+          { "sound": "minecraft:block.note_block.pling", "atMillis": 1500.0, "pitch": 1.414214, "volume": 1.0, "lane": 0 }
+        ]
+      }
+    },
+    {
+      "presetId": "coin",
+      "revision": 1,
+      "category": "utility",
+      "sequence": {
+        "name": "Coin",
+        "bpm": 120.0,
+        "loop": false,
+        "loopCount": 1,
+        "steps": [
+          { "sound": "minecraft:block.note_block.bell", "atMillis": 0.0, "pitch": 1.681793, "volume": 0.8, "lane": 0 },
+          { "sound": "minecraft:block.note_block.bell", "atMillis": 80.0, "pitch": 2.0, "volume": 0.8, "lane": 0 }
+        ]
+      }
+    }
+  ]
+}

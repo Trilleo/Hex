@@ -18,9 +18,9 @@ title screen it is the only way in, since the command needs a chat box and the k
 
 ## How the menu is laid out
 
-- **Tabs down the side**, one per feature: Keybinds, Freecam, Hand, Item Customization, Titles, Reminders, Regions,
-  Entity Highlight, Command Suggestions, Updates. Each feature contributes its own tab, so the sidebar reflects what the
-  mod actually has.
+- **Tabs down the side**, one per feature: Keybinds, Freecam, Hand, Item Customization, Sounds, Titles, Reminders,
+  Regions, Entity Highlight, Command Suggestions, Updates. Each feature contributes its own tab, so the sidebar reflects
+  what the mod actually has.
 - **A search box** filters settings across *all* tabs at once, so you can find a setting without knowing which feature
   owns it.
 - **A reset button on every row**, restoring that one setting to its default.
@@ -50,6 +50,7 @@ A few lists are deliberately not caught by a tab reset, because they are data ra
 | **Sensitivity**         | Wheel step and snap-on-press for the [sensitivity hold](Mouse-Sensitivity)                                     |
 | **Hand**                | First-person [hand position, scale, rotation and swing](Hand-Display), plus the per-item swing list            |
 | **Item Customization**  | The [customized items](Item-Customization) list, the ✎ slot marker, and [chroma](Chroma-Text) speed and width |
+| **Sounds**              | Master switch and volume, the [feedback sounds](Sound-Picker), and the way into [sound sequences](Sound-Sequences) |
 | **Titles**              | Masters, fallback colours and chroma for every alert [title](Titles); the timings a new one starts with        |
 | **Reminders**           | The [reminder](Reminders) panel's position, scale, colours and row count; chroma speed; snooze length          |
 | **Regions**             | [Region](Regions) drawing, names, through-walls, colours and chroma speed, default radius, exit margin         |

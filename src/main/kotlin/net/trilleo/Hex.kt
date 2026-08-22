@@ -15,6 +15,7 @@ import net.trilleo.notebook.NotebookFeature
 import net.trilleo.region.RegionFeature
 import net.trilleo.reminder.ReminderFeature
 import net.trilleo.sensitivity.SensitivityFeature
+import net.trilleo.sound.SoundFeature
 import net.trilleo.suggest.SuggestFeature
 import net.trilleo.title.TitleFeature
 import net.trilleo.update.UpdateFeature
@@ -45,6 +46,9 @@ object Hex : ClientModInitializer {
         Features.register(HandFeature)
         Features.register(AttackModeFeature)
         Features.register(ItemCustomizeFeature)
+        // Ahead of everything that makes a noise, which by now is most of the mod: a feedback slot read
+        // before sounds.json has loaded would fall back to stock rather than to what the player chose.
+        Features.register(SoundFeature)
         // Ahead of every feature that pops a title — regions, entity highlights, reminders and chat highlights
         // are all below. Each of them normalizes its own config during onInit, and that is where a title
         // action is migrated and seeded from the shared settings, so `titles.json` has to be loaded first.
