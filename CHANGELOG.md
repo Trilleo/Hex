@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+## Version 1.12.0
+
 ### New Features
 
 #### Sound Sequences
