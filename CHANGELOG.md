@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+## Version 1.12.1
+
 ### Improvements
 
 #### Minecraft 26.2
