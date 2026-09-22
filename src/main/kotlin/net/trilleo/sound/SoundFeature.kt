@@ -71,7 +71,7 @@ object SoundFeature : Feature {
         )
 
         action("sequences") { screen ->
-            Minecraft.getInstance().setScreen(SoundSequencesScreen(screen))
+            Minecraft.getInstance().gui.setScreen(SoundSequencesScreen(screen))
         }
 
         slider(

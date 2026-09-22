@@ -43,7 +43,7 @@ class RemindersScreen(private val parent: Screen?) :
 
         addRenderableWidget(
             Button.builder(Component.translatable("hex.reminders.presets")) {
-                minecraft.setScreen(PresetsScreen(this))
+                minecraft.gui.setScreen(PresetsScreen(this))
             }.bounds(x, y, BUTTON_WIDTH, BUTTON_HEIGHT)
                 .tooltip(Tooltip.create(Component.translatable("hex.reminders.presets.tooltip")))
                 .build(),
@@ -52,7 +52,7 @@ class RemindersScreen(private val parent: Screen?) :
 
         addRenderableWidget(
             Button.builder(Component.translatable("hex.reminders.hud_position")) {
-                minecraft.setScreen(ReminderHudScreen(this))
+                minecraft.gui.setScreen(ReminderHudScreen(this))
             }.bounds(x, y, BUTTON_WIDTH, BUTTON_HEIGHT).build(),
         )
         x += BUTTON_WIDTH + GAP
@@ -82,11 +82,11 @@ class RemindersScreen(private val parent: Screen?) :
         // Scroll to it: a row appended out of sight looks like the button did nothing.
         list?.scrollToBottom()
         // Straight into the editor — a blank reminder is never what anyone actually wanted.
-        minecraft.setScreen(ReminderEditScreen(this, reminder))
+        minecraft.gui.setScreen(ReminderEditScreen(this, reminder))
     }
 
     override fun onClose() {
-        minecraft.setScreen(parent)
+        minecraft.gui.setScreen(parent)
     }
 
     override fun removed() {

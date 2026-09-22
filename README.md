@@ -3,7 +3,7 @@
 ![build](https://github.com/Trilleo/Hex/actions/workflows/build.yml/badge.svg)
 
 A client-side utility mod for [Hypixel Skyblock](https://hypixel.net/), built on [Fabric](https://fabricmc.net/) for
-Minecraft 26.1.2.
+Minecraft 26.2.
 
 Hex runs entirely on your client — it never needs to be installed on a server.
 
@@ -53,7 +53,7 @@ does and how to configure it, and the [change log](CHANGELOG.md) for what's new 
 
 ## Installation
 
-1. Install the [Fabric Loader](https://fabricmc.net/use/installer/) for Minecraft 26.1.2.
+1. Install the [Fabric Loader](https://fabricmc.net/use/installer/) for Minecraft 26.2.
 2. Download the following mods and drop them into your `mods` folder:
     - [Fabric API](https://modrinth.com/mod/fabric-api)
     - [Fabric Language Kotlin](https://modrinth.com/mod/fabric-language-kotlin)

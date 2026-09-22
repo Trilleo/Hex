@@ -68,11 +68,11 @@ Current values:
 
 | Property                | Value                        |
 |-------------------------|------------------------------|
-| `minecraft_version`     | 26.1.2                       |
+| `minecraft_version`     | 26.2                         |
 | `loader_version`        | 0.19.3                       |
-| `fabric_api_version`    | 0.155.0+26.1.2               |
+| `fabric_api_version`    | 0.161.0+26.2                 |
 | `fabric_kotlin_version` | 1.13.13+kotlin.2.4.10        |
-| `modmenu_version`       | 18.0.0-beta.1 (compile-only) |
+| `modmenu_version`       | 20.0.2 (compile-only)        |
 
 Mod Menu is `compileOnly`: it is never bundled, never listed in `depends`, and the only class that touches its API is
 the entrypoint — which Fabric loads lazily, so nothing resolves those types unless Mod Menu is actually installed.

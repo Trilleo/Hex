@@ -111,7 +111,7 @@ class RegionsScreen(private val parent: Screen?) :
         refreshRows()
         list?.scrollToBottom()
         // Straight into the editor — a region with a placeholder message is never what anyone wanted.
-        minecraft.setScreen(RegionEditScreen(this, region))
+        minecraft.gui.setScreen(RegionEditScreen(this, region))
     }
 
     /**
@@ -123,7 +123,7 @@ class RegionsScreen(private val parent: Screen?) :
     private fun startWalk() {
         val player = minecraft.player ?: return
         RegionCapture.beginWalk(player.position())
-        minecraft.setScreen(null)
+        minecraft.gui.setScreen(null)
     }
 
     private fun togglePreview() {
@@ -146,7 +146,7 @@ class RegionsScreen(private val parent: Screen?) :
     )
 
     override fun onClose() {
-        minecraft.setScreen(parent)
+        minecraft.gui.setScreen(parent)
     }
 
     override fun removed() {

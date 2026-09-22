@@ -50,7 +50,7 @@ object ItemCapture {
         val label = SkyblockItem.displayName(stack)
         val customization = ItemCustomizeConfig.findOrCreate(uuid, label)
         val snapshot = stack.copy()
-        client.execute { client.setScreen(ItemCustomizeScreen(parent, customization, snapshot)) }
+        client.execute { client.gui.setScreen(ItemCustomizeScreen(parent, customization, snapshot)) }
         return true
     }
 

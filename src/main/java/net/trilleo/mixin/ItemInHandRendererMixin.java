@@ -17,7 +17,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 /**
  * Applies the user's first-person hand settings.
  *
- * <p>{@code renderHandsWithItems} calls {@code renderArmWithItem} once per hand, so hooking the latter is
+ * <p>{@code submitHandsWithItems} calls {@code submitArmWithItem} once per hand, so hooking the latter is
  * the single point that covers both. The pose is pushed at {@code HEAD} and popped at {@code RETURN};
  * {@code RETURN} injects at every return site, so the stack stays balanced on the method's early-outs.
  *
@@ -36,7 +36,7 @@ public abstract class ItemInHandRendererMixin {
      */
     private boolean hex$transformPushed;
 
-    @Inject(method = "renderArmWithItem", at = @At("HEAD"))
+    @Inject(method = "submitArmWithItem", at = @At("HEAD"))
     private void hex$pushHandTransform(
             AbstractClientPlayer player,
             float partialTick,
@@ -65,7 +65,7 @@ public abstract class ItemInHandRendererMixin {
         poseStack.scale(state.getScale(), state.getScale(), state.getScale());
     }
 
-    @Inject(method = "renderArmWithItem", at = @At("RETURN"))
+    @Inject(method = "submitArmWithItem", at = @At("RETURN"))
     private void hex$popHandTransform(
             AbstractClientPlayer player,
             float partialTick,
@@ -89,7 +89,7 @@ public abstract class ItemInHandRendererMixin {
      * Holds the swing animation at rest. Index 5 is the {@code swingProgress} parameter's LVT slot — slot
      * 0 is {@code this}, so the fifth argument lands at 5.
      */
-    @ModifyVariable(method = "renderArmWithItem", at = @At("HEAD"), argsOnly = true, index = 5)
+    @ModifyVariable(method = "submitArmWithItem", at = @At("HEAD"), argsOnly = true, index = 5)
     private float hex$suppressSwing(float swingProgress) {
         return HandState.INSTANCE.shouldSuppressSwing() ? 0.0F : swingProgress;
     }

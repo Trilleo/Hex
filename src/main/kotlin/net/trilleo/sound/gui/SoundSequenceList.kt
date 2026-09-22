@@ -91,7 +91,7 @@ class SoundSequenceList(
             .build()
 
         private val editButton: Button = Button.builder(Component.translatable("hex.sounds.edit")) {
-            Minecraft.getInstance().setScreen(SoundSequenceEditScreen(screen, sequence))
+            Minecraft.getInstance().gui.setScreen(SoundSequenceEditScreen(screen, sequence))
         }.bounds(0, 0, EDIT_WIDTH, WIDGET_HEIGHT).build()
 
         private val deleteButton: Button = Button.builder(Component.literal("✕")) {

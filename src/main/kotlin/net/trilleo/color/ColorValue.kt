@@ -2,6 +2,7 @@ package net.trilleo.color
 
 import net.minecraft.ChatFormatting
 import net.minecraft.network.chat.Component
+import net.minecraft.network.chat.TextColor
 import net.trilleo.util.Chroma
 import net.trilleo.util.HexColor
 import java.util.*
@@ -152,18 +153,20 @@ object ColorValue {
      * and only partly overlapping set.
      */
     val VANILLA: List<Swatch> by lazy {
+        // Since 26.2 a format code carries no colour of its own; TextColor maps the sixteen colour codes to
+        // theirs and answers null for the styles (bold, reset, ...), which is what drops them here.
         ChatFormatting.values()
-            .filter { it.isColor }
-            .map { formatting ->
+            .mapNotNull { formatting -> TextColor.fromLegacyFormat(formatting)?.let { formatting to it.value } }
+            .map { (formatting, rgb) ->
                 // Enum.name rather than ChatFormatting.getName(): the two agree for every constant, and
                 // Kotlin resolves the bare `name` to the enum's own property regardless.
                 val id = formatting.name.lowercase(Locale.ROOT)
-                val rgb = formatting.color ?: 0
                 Swatch(
                     format(rgb, alpha = false),
                     rgb,
                     Component.translatable("hex.color.vanilla.$id"),
-                    formatting.char,
+                    // toString() is the section sign followed by the code, and the code is all that is wanted.
+                    formatting.toString().last(),
                 )
             }
     }

@@ -171,7 +171,7 @@ class ReminderHudScreen(private val parent: Screen?) :
         x >= rect[0] && x <= rect[0] + rect[2] && y >= rect[1] && y <= rect[1] + rect[3]
 
     override fun onClose() {
-        minecraft.setScreen(parent)
+        minecraft.gui.setScreen(parent)
     }
 
     override fun removed() {

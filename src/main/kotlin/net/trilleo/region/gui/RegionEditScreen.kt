@@ -164,7 +164,7 @@ class RegionEditScreen(
         )
         actionOf(ActionKind.TITLE)?.let { titleAction ->
             action("title_style") { screen ->
-                Minecraft.getInstance().setScreen(
+                Minecraft.getInstance().gui.setScreen(
                     TitleEditScreen(
                         screen,
                         titleAction.title,
@@ -380,7 +380,7 @@ class RegionEditScreen(
 
         // Opened through the reminder list, so Done walks back here rather than dumping the player into the
         // world from a screen they reached three levels deep.
-        minecraft.setScreen(ReminderEditScreen(RemindersScreen(this), reminder))
+        minecraft.gui.setScreen(ReminderEditScreen(RemindersScreen(this), reminder))
     }
 
     /**
@@ -392,7 +392,7 @@ class RegionEditScreen(
      */
     override fun onClose() {
         RegionRenderer.focused = null
-        minecraft.setScreen(parent)
+        minecraft.gui.setScreen(parent)
     }
 
     override fun removed() {

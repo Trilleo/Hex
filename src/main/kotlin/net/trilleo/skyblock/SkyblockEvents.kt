@@ -285,7 +285,7 @@ object SkyblockEvents {
     }
 
     private fun readBossBars(client: Minecraft) {
-        val bars = (client.gui.bossOverlay as BossHealthOverlayAccessor).`hex$events`()
+        val bars = (client.gui.hud.bossOverlay as BossHealthOverlayAccessor).`hex$events`()
         if (bars.isEmpty()) return
 
         val now = System.currentTimeMillis()

@@ -7,10 +7,10 @@ do not need it.
 
 | Requirement                                                               | Version                                      |
 |---------------------------------------------------------------------------|----------------------------------------------|
-| Minecraft                                                                 | **26.1.2**                                   |
+| Minecraft                                                                 | **26.2**                                     |
 | Java                                                                      | **25** or newer                              |
 | Fabric Loader                                                             | **0.19.3** or newer                          |
-| [Fabric API](https://modrinth.com/mod/fabric-api)                         | Built for 26.1.2 (`0.155.0+26.1.2` or newer) |
+| [Fabric API](https://modrinth.com/mod/fabric-api)                         | Built for 26.2 (`0.161.0+26.2` or newer)     |
 | [Fabric Language Kotlin](https://modrinth.com/mod/fabric-language-kotlin) | `1.13.13+kotlin.2.4.10` or newer             |
 
 [Mod Menu](https://modrinth.com/mod/modmenu) is **optional**. With it installed, its settings button on Hex's entry in
@@ -18,8 +18,8 @@ the mod list opens Hex's config menu. Without it, Hex behaves identically — it
 
 ## Steps
 
-1. **Install Fabric Loader** for Minecraft 26.1.2 with the [Fabric installer](https://fabricmc.net/use/installer/).
-2. **Download the dependencies** — Fabric API and Fabric Language Kotlin, both for 26.1.2.
+1. **Install Fabric Loader** for Minecraft 26.2 with the [Fabric installer](https://fabricmc.net/use/installer/).
+2. **Download the dependencies** — Fabric API and Fabric Language Kotlin, both for 26.2.
 3. **Download Hex** from the [releases page](https://github.com/Trilleo/Hex/releases). Take the file named
    `hex-<version>.jar`; ignore the `-sources` jar, which is for developers.
 4. **Drop all three jars into your `mods` folder.**

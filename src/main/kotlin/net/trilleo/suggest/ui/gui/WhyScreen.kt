@@ -121,7 +121,7 @@ class WhyScreen(private val parent: Screen?, private val key: String) :
     }
 
     override fun onClose() {
-        minecraft.setScreen(parent)
+        minecraft.gui.setScreen(parent)
     }
 
     private companion object {

@@ -73,7 +73,7 @@ object ReminderFeature : Feature {
             }
         }
         while (openKey.consumeClick()) {
-            if (client.screen == null) client.setScreen(RemindersScreen(null))
+            if (client.gui.screen() == null) client.gui.setScreen(RemindersScreen(null))
         }
 
         if (!ReminderConfig.active) return
@@ -169,7 +169,7 @@ object ReminderFeature : Feature {
         screen: () -> net.minecraft.client.gui.screens.Screen
     ): Int {
         val client = source.client
-        client.execute { client.setScreen(screen()) }
+        client.execute { client.gui.setScreen(screen()) }
         return 1
     }
 
@@ -232,9 +232,9 @@ object ReminderFeature : Feature {
             set = { ReminderConfig.settings.enabled = it; ReminderConfig.save() },
         )
 
-        action("edit_list") { screen -> Minecraft.getInstance().setScreen(RemindersScreen(screen)) }
-        action("presets") { screen -> Minecraft.getInstance().setScreen(PresetsScreen(screen)) }
-        action("hud_position") { screen -> Minecraft.getInstance().setScreen(ReminderHudScreen(screen)) }
+        action("edit_list") { screen -> Minecraft.getInstance().gui.setScreen(RemindersScreen(screen)) }
+        action("presets") { screen -> Minecraft.getInstance().gui.setScreen(PresetsScreen(screen)) }
+        action("hud_position") { screen -> Minecraft.getInstance().gui.setScreen(ReminderHudScreen(screen)) }
 
         enum(
             "hud_corner",

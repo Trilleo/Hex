@@ -1,7 +1,7 @@
 # Hex
 
 **Hex** is a client-side utility mod for [Hypixel Skyblock](https://hypixel.net/), built on
-[Fabric](https://fabricmc.net/) for Minecraft **26.1.2**.
+[Fabric](https://fabricmc.net/) for Minecraft **26.2**.
 
 Everything Hex does happens on your own machine. It never needs to be installed on a server, it never sends your data
 anywhere, and it has no server-side half — there is nothing to install for your friends, your guild, or Hypixel.

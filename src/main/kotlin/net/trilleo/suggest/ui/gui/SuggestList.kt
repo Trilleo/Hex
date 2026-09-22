@@ -93,7 +93,7 @@ class SuggestList(
     ) : Row() {
 
         private val whyButton: Button = Button.builder(Component.literal("?")) {
-            Minecraft.getInstance().setScreen(WhyScreen(screen, entry.key))
+            Minecraft.getInstance().gui.setScreen(WhyScreen(screen, entry.key))
         }.bounds(0, 0, SMALL_WIDTH, WIDGET_HEIGHT)
             .tooltip(Tooltip.create(Component.translatable("hex.suggest.why.tooltip")))
             .build()

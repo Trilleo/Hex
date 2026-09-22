@@ -73,7 +73,7 @@ class ControlSwitchScreen(private val parent: Screen, private val kb: Keybind) :
             StringWidget(margin, 34, contentW, 12, Component.literal("Control to switch:"), font)
         )
         addRenderableWidget(Button.builder(Component.literal(ControlSwitch.targetLabel(kb))) { _ ->
-            minecraft.setScreen(ControlPickerScreen(this, kb))
+            minecraft.gui.setScreen(ControlPickerScreen(this, kb))
         }.bounds(margin, 48, contentW, 20).tooltip(TIP_TARGET).build())
     }
 
@@ -181,7 +181,7 @@ class ControlSwitchScreen(private val parent: Screen, private val kb: Keybind) :
     override fun onClose() {
         // An abandoned unbound slot would just be dropped at runtime; clear it so the list stays honest.
         keys().removeAll { it == InputConstants.UNKNOWN.name }
-        minecraft.setScreen(parent)
+        minecraft.gui.setScreen(parent)
     }
 
     private companion object {

@@ -203,7 +203,7 @@ class ProfileEditScreen(
             else -> AutoSwitchRule(kind, rulePattern.trim().lowercase())
         }
 
-        minecraft.setScreen(parent)
+        minecraft.gui.setScreen(parent)
         onAccept(name, descriptionText.trim(), rule)
     }
 
@@ -229,7 +229,7 @@ class ProfileEditScreen(
         if (acceptButton.active) MUTED_COLOR else ERROR_COLOR
 
     override fun onClose() {
-        minecraft.setScreen(parent)
+        minecraft.gui.setScreen(parent)
     }
 
     private companion object {

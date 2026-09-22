@@ -294,7 +294,7 @@ class SoundPickerScreen(
      * on Done rather than applying live — see the class comment.
      */
     private fun openSequences() {
-        minecraft.setScreen(SoundSequencesScreen(this))
+        minecraft.gui.setScreen(SoundSequencesScreen(this))
     }
 
     private fun done() {
@@ -303,7 +303,7 @@ class SoundPickerScreen(
             applyPitch(pitch)
             applyVolume(volume)
         }
-        minecraft.setScreen(parent)
+        minecraft.gui.setScreen(parent)
     }
 
     // ---- rendering ---------------------------------------------------------------------------------------
@@ -317,7 +317,7 @@ class SoundPickerScreen(
     override fun onClose() {
         // Cancel and Escape both land here, and both leave the setting exactly as it was found.
         SoundPlayer.stopAll()
-        minecraft.setScreen(parent)
+        minecraft.gui.setScreen(parent)
     }
 
     override fun removed() {

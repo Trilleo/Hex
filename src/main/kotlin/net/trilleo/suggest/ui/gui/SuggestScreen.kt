@@ -123,11 +123,11 @@ class SuggestScreen(private val parent: Screen?) :
 
     /** Shares the settings tab's prompt, so "forget everything" cannot mean two subtly different things. */
     private fun confirmWipe() {
-        minecraft.setScreen(SuggestFeature.wipePrompt(this))
+        minecraft.gui.setScreen(SuggestFeature.wipePrompt(this))
     }
 
     override fun onClose() {
-        minecraft.setScreen(parent)
+        minecraft.gui.setScreen(parent)
     }
 
     override fun removed() {

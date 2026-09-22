@@ -71,7 +71,7 @@ object FreecamState {
      */
     fun tick(client: Minecraft) {
         prevPos = pos
-        if (client.screen != null) return
+        if (client.gui.screen() != null) return
 
         val options = client.options
         var strafe = 0.0 // +left, -right (matches Minecraft leftImpulse)

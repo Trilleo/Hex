@@ -94,7 +94,7 @@ class ChatHighlightList(
             .build()
 
         private val editButton: Button = Button.builder(Component.translatable("hex.chat_highlights.edit")) {
-            Minecraft.getInstance().setScreen(ChatHighlightEditScreen(screen, rule))
+            Minecraft.getInstance().gui.setScreen(ChatHighlightEditScreen(screen, rule))
         }.bounds(0, 0, EDIT_WIDTH, WIDGET_HEIGHT).build()
 
         private val deleteButton: Button = Button.builder(Component.literal("✕")) {

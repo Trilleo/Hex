@@ -4,8 +4,9 @@ import net.minecraft.client.Minecraft
 import net.minecraft.client.gui.components.Button
 import net.minecraft.client.gui.components.StringWidget
 import net.minecraft.client.gui.screens.Screen
+import net.minecraft.core.registries.BuiltInRegistries
 import net.minecraft.network.chat.Component
-import net.minecraft.world.entity.EntityType
+import net.minecraft.resources.Identifier
 import net.trilleo.config.ConfigCategory
 import net.trilleo.config.gui.ConfigEntryList
 import net.trilleo.highlight.*
@@ -209,7 +210,7 @@ class HighlightEditScreen(
             )
             actionOf(ActionKind.TITLE)?.let { titleAction ->
                 action("title_style") { screen ->
-                    Minecraft.getInstance().setScreen(
+                    Minecraft.getInstance().gui.setScreen(
                         TitleEditScreen(
                             screen,
                             titleAction.title,
@@ -263,7 +264,8 @@ class HighlightEditScreen(
     private fun validateValue(typed: String): Component? {
         if (typed.isBlank()) return Component.translatable("hex.highlights.edit.value.blank")
         if (highlight.kind != HighlightMatch.ENTITY_TYPE) return null
-        return if (EntityType.byString(typed.trim().lowercase(Locale.ROOT)).isPresent) {
+        val id = Identifier.tryParse(typed.trim().lowercase(Locale.ROOT))
+        return if (id != null && BuiltInRegistries.ENTITY_TYPE.containsKey(id)) {
             null
         } else {
             Component.translatable("hex.highlights.edit.value.unknown_type")
@@ -313,7 +315,7 @@ class HighlightEditScreen(
     }
 
     override fun onClose() {
-        minecraft.setScreen(parent)
+        minecraft.gui.setScreen(parent)
     }
 
     override fun removed() {

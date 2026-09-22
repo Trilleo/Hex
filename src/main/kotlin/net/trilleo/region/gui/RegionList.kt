@@ -90,7 +90,7 @@ class RegionList(
             .build()
 
         private val editButton: Button = Button.builder(Component.translatable("hex.regions.edit")) {
-            Minecraft.getInstance().setScreen(RegionEditScreen(screen, region))
+            Minecraft.getInstance().gui.setScreen(RegionEditScreen(screen, region))
         }.bounds(0, 0, EDIT_WIDTH, WIDGET_HEIGHT).build()
 
         private val deleteButton: Button = Button.builder(Component.literal("✕")) {

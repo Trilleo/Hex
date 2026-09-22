@@ -551,7 +551,7 @@ class TitleEditScreen(
     override fun onClose() {
         // The title from a preview belongs to this screen, not to the world behind it.
         Titles.clear(minecraft)
-        minecraft.setScreen(parent)
+        minecraft.gui.setScreen(parent)
     }
 
     /** One colour the palette offers: the code it writes, and the swatch that stands for it. */

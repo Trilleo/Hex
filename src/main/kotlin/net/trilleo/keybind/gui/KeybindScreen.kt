@@ -82,7 +82,7 @@ class KeybindScreen(private val parent: Screen?) : Screen(Component.literal("Hex
 
             val editTip = if (kb.type == KeybindType.CONTROL_SWITCH) TIP_EDIT_SWITCH else TIP_EDIT
             addRenderableWidget(Button.builder(Component.literal("Edit")) { _ ->
-                minecraft.setScreen(
+                minecraft.gui.setScreen(
                     when (kb.type) {
                         KeybindType.COMMAND -> KeybindActionScreen(this, kb)
                         KeybindType.CONTROL_SWITCH -> ControlSwitchScreen(this, kb)
@@ -177,7 +177,7 @@ class KeybindScreen(private val parent: Screen?) : Screen(Component.literal("Hex
     }
 
     override fun onClose() {
-        minecraft.setScreen(parent)
+        minecraft.gui.setScreen(parent)
     }
 
     override fun removed() {

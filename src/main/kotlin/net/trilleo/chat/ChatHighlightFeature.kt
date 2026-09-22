@@ -46,7 +46,7 @@ object ChatHighlightFeature : Feature {
         // Outside the master switch on purpose, exactly as the entity highlight's own open key is: a player who
         // has switched chat highlights off still has to be able to reach the screen that switches them back on.
         while (openKey.consumeClick()) {
-            if (client.screen == null) client.setScreen(ChatHighlightsScreen(null))
+            if (client.gui.screen() == null) client.gui.setScreen(ChatHighlightsScreen(null))
         }
     }
 
@@ -103,7 +103,7 @@ object ChatHighlightFeature : Feature {
                 .then(
                     Commands.literal("edit").executes { ctx ->
                         val client = ctx.source.client
-                        client.execute { client.setScreen(ChatHighlightsScreen(null)) }
+                        client.execute { client.gui.setScreen(ChatHighlightsScreen(null)) }
                         1
                     },
                 ),
@@ -123,7 +123,7 @@ object ChatHighlightFeature : Feature {
         ChatHighlightConfig.save()
         // Straight into the editor. A rule with no text matches nothing, so leaving the player in chat with a
         // "created it" message would only mean telling them to go and open it themselves.
-        client.execute { client.setScreen(ChatHighlightEditScreen(null, rule)) }
+        client.execute { client.gui.setScreen(ChatHighlightEditScreen(null, rule)) }
         return 1
     }
 
@@ -183,7 +183,7 @@ object ChatHighlightFeature : Feature {
             },
         )
 
-        action("edit_list") { screen -> Minecraft.getInstance().setScreen(ChatHighlightsScreen(screen)) }
+        action("edit_list") { screen -> Minecraft.getInstance().gui.setScreen(ChatHighlightsScreen(screen)) }
 
         color(
             "default_color",

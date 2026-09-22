@@ -2,6 +2,28 @@
 
 ## Unreleased
 
+### Improvements
+
+#### Minecraft 26.2
+
++ Hex now runs on **Minecraft 26.2**. It needs Fabric API built for 26.2 (`0.161.0+26.2` or newer). This build no
+  longer loads on 26.1.2. Your settings, keybinds and profiles carry over unchanged.
+
+### Technical Details
+
+#### Minecraft 26.2
+
++ Moved to Minecraft 26.2 and Fabric API 0.161.0+26.2. The compile-only Mod Menu dependency moves to 20.0.2, which is
+  the 26.2 line. The Gradle wrapper moves to 9.7.1. Fabric Loader, Kotlin and Fabric Language Kotlin are unchanged.
++ Screens now live on `Gui`: `minecraft.screen` / `minecraft.setScreen(...)` became `minecraft.gui.screen()` /
+  `minecraft.gui.setScreen(...)`, and `Screen.minecraft` is non-null. Titles and the boss bar overlay moved to the new
+  `Gui.hud`.
++ `ChatFormatting` no longer carries colours. The colour picker's vanilla palette and legacy `&` codes in chroma text
+  read them from `TextColor.fromLegacyFormat`. The highlight editor checks entity types against the entity registry
+  now that `EntityType.byString` is gone.
++ `ItemInHandRenderer.renderArmWithItem` was renamed `submitArmWithItem` with the same parameters, so the hand display
+  mixin now targets that name.
+
 ## Version 1.12.0
 
 ### New Features

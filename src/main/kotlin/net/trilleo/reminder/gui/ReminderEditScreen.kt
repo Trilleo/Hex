@@ -170,7 +170,7 @@ class ReminderEditScreen(
 
         action("conditions") { screen ->
             Minecraft.getInstance()
-                .setScreen(ReminderConditionsScreen(screen, reminder, this@ReminderEditScreen::touch))
+                .gui.setScreen(ReminderConditionsScreen(screen, reminder, this@ReminderEditScreen::touch))
         }
 
         // Actions are expressed as switches rather than as a list, because there are only two of them and a
@@ -198,7 +198,7 @@ class ReminderEditScreen(
             // One button rather than the colour, subtitle and duration rows this used to carry: every setting a
             // title has now lives in one screen that all four title-firing features share.
             action("title_style") { screen ->
-                Minecraft.getInstance().setScreen(
+                Minecraft.getInstance().gui.setScreen(
                     TitleEditScreen(
                         screen,
                         titleAction.title,
@@ -295,7 +295,7 @@ class ReminderEditScreen(
     }
 
     override fun onClose() {
-        minecraft.setScreen(parent)
+        minecraft.gui.setScreen(parent)
     }
 
     override fun removed() {

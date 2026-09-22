@@ -1,6 +1,6 @@
 # Hex — Agent Instructions
 
-Hex is a client-side Fabric utility mod for Hypixel Skyblock (Kotlin, Minecraft 26.1.2, Java 25). It must work entirely
+Hex is a client-side Fabric utility mod for Hypixel Skyblock (Kotlin, Minecraft 26.2, Java 25). It must work entirely
 client side — never add server-side logic or a `main` entrypoint.
 
 ## After every change: keep translations, docs, wiki and changelog in sync

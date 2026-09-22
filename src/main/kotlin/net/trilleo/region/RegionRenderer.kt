@@ -60,7 +60,7 @@ object RegionRenderer {
         // The editor drops its own focus when it closes, but a screen can also go away without that — the
         // game closing every screen at once, say. Being back in the world with no screen open is the moment
         // that becomes visible, so it is the moment to let go of a region nobody is editing any more.
-        if (focused != null && client.screen == null) focused = null
+        if (focused != null && client.gui.screen() == null) focused = null
 
         val draft = RegionCapture.draftBox()
         val regions = previewed()

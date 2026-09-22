@@ -64,7 +64,7 @@ object HandFeature : Feature {
                         // Deferred: opening a screen mid-command is undone when the chat screen that ran the
                         // command closes.
                         val client = ctx.source.client
-                        client.execute { client.setScreen(SwingItemsScreen(null)) }
+                        client.execute { client.gui.setScreen(SwingItemsScreen(null)) }
                         1
                     },
                 )
@@ -131,7 +131,7 @@ object HandFeature : Feature {
             set = { SwingItemsConfig.settings.enabled = it; SwingItemsConfig.save() },
         )
 
-        action("swing_items") { screen -> Minecraft.getInstance().setScreen(SwingItemsScreen(screen)) }
+        action("swing_items") { screen -> Minecraft.getInstance().gui.setScreen(SwingItemsScreen(screen)) }
 
         slider(
             "swing_speed",

@@ -229,7 +229,7 @@ class KeybindActionScreen(private val parent: Screen, private val kb: Keybind) :
     }
 
     override fun onClose() {
-        minecraft.setScreen(parent)
+        minecraft.gui.setScreen(parent)
     }
 
     private companion object {

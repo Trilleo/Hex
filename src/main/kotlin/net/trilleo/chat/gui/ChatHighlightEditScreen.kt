@@ -262,7 +262,7 @@ class ChatHighlightEditScreen(
             )
             actionOf(ActionKind.TITLE)?.let { titleAction ->
                 action("title_style") { screen ->
-                    Minecraft.getInstance().setScreen(
+                    Minecraft.getInstance().gui.setScreen(
                         TitleEditScreen(
                             screen,
                             titleAction.title,
@@ -339,7 +339,7 @@ class ChatHighlightEditScreen(
     }
 
     override fun onClose() {
-        minecraft.setScreen(parent)
+        minecraft.gui.setScreen(parent)
     }
 
     override fun removed() {

@@ -82,7 +82,7 @@ class NoteEditorScreen(
 
         addRenderableWidget(
             Button.builder(Component.translatable("hex.notebook.meta")) {
-                minecraft.setScreen(NoteMetaScreen(this, document))
+                minecraft.gui.setScreen(NoteMetaScreen(this, document))
             }.bounds(width - MARGIN - META_WIDTH, MARGIN + 4, META_WIDTH, TITLE_HEIGHT)
                 .tooltip(Tooltip.create(Component.translatable("hex.notebook.meta.tooltip")))
                 .build(),
@@ -460,7 +460,7 @@ class NoteEditorScreen(
         // Flushed first: the copy is made from this note's current text, which may only be in the box.
         Notebook.saveNow(document)
         val copy = Notebook.duplicate(document)
-        minecraft.setScreen(NoteEditorScreen(parent, copy))
+        minecraft.gui.setScreen(NoteEditorScreen(parent, copy))
     }
 
     /** Hands the confirmation to the browser, which owns the notebook-level actions and the refresh after. */
@@ -471,11 +471,11 @@ class NoteEditorScreen(
             // player looking at the world with no confirmation that anything happened, so send them to the
             // browser and let it ask there.
             val screen = NotebookScreen(null)
-            minecraft.setScreen(screen)
+            minecraft.gui.setScreen(screen)
             screen.confirmDelete(document)
             return
         }
-        minecraft.setScreen(browser)
+        minecraft.gui.setScreen(browser)
         browser.confirmDelete(document)
     }
 
@@ -567,7 +567,7 @@ class NoteEditorScreen(
     }
 
     override fun onClose() {
-        minecraft.setScreen(parent)
+        minecraft.gui.setScreen(parent)
     }
 
     override fun removed() {

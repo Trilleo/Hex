@@ -42,7 +42,7 @@ class HexConfigScreen(private val parent: Screen?) : Screen(Component.translatab
         tabButtons.clear()
 
         val listX = SIDEBAR_WIDTH
-        list = ConfigEntryList(minecraft!!, width - listX, height - HEADER_HEIGHT - FOOTER_HEIGHT, HEADER_HEIGHT, this)
+        list = ConfigEntryList(minecraft, width - listX, height - HEADER_HEIGHT - FOOTER_HEIGHT, HEADER_HEIGHT, this)
         list.setX(listX)
         addWidget(list)
 
@@ -84,7 +84,7 @@ class HexConfigScreen(private val parent: Screen?) : Screen(Component.translatab
         // per-row actions and confirmations, which is not something the settings-row model can express.
         addRenderableWidget(
             Button.builder(PROFILES_LABEL) {
-                minecraft?.setScreen(ProfilesScreen(this))
+                minecraft.gui.setScreen(ProfilesScreen(this))
             }.bounds(MARGIN, footerY, PROFILES_WIDTH, 20).tooltip(PROFILES_TIP).build(),
         )
 
@@ -110,7 +110,7 @@ class HexConfigScreen(private val parent: Screen?) : Screen(Component.translatab
     private fun confirmResetTab() {
         val category = categories.getOrNull(selected) ?: return
         val reset = category.reset ?: return
-        minecraft?.setScreen(
+        minecraft.gui.setScreen(
             ConfirmActionScreen(
                 parent = this,
                 title = Component.translatable("hex.config.reset_tab.title"),
@@ -195,7 +195,7 @@ class HexConfigScreen(private val parent: Screen?) : Screen(Component.translatab
     }
 
     override fun onClose() {
-        minecraft?.setScreen(parent)
+        minecraft.gui.setScreen(parent)
     }
 
     override fun removed() {

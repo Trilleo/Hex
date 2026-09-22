@@ -51,7 +51,7 @@ object NotebookFeature : Feature {
 
         if (!NotebookConfig.active) return
         while (openKey.consumeClick()) {
-            if (client.screen == null) client.setScreen(NotebookScreen(null))
+            if (client.gui.screen() == null) client.gui.setScreen(NotebookScreen(null))
         }
     }
 
@@ -122,7 +122,7 @@ object NotebookFeature : Feature {
 
     private fun openScreen(source: FabricClientCommandSource, screen: () -> Screen): Int {
         val client = source.client
-        client.execute { client.setScreen(screen()) }
+        client.execute { client.gui.setScreen(screen()) }
         return 1
     }
 
@@ -198,7 +198,7 @@ object NotebookFeature : Feature {
             set = { NotebookConfig.settings.enabled = it; NotebookConfig.save() },
         )
 
-        action("open") { screen -> Minecraft.getInstance().setScreen(NotebookScreen(screen)) }
+        action("open") { screen -> Minecraft.getInstance().gui.setScreen(NotebookScreen(screen)) }
 
         enum(
             "sort",

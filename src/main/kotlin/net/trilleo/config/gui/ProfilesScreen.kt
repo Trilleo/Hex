@@ -152,7 +152,7 @@ class ProfilesScreen(private val parent: Screen?) : Screen(Component.translatabl
 
     private fun discardActive() {
         val name = ConfigProfiles.settings.active
-        minecraft.setScreen(
+        minecraft.gui.setScreen(
             ConfirmActionScreen(
                 parent = this,
                 title = Component.translatable("hex.profiles.discard.title"),
@@ -186,7 +186,7 @@ class ProfilesScreen(private val parent: Screen?) : Screen(Component.translatabl
             return
         }
         val leaving = ConfigProfiles.settings.active
-        minecraft.setScreen(
+        minecraft.gui.setScreen(
             ConfirmActionScreen(
                 parent = this,
                 title = Component.translatable("hex.profiles.switch_prompt.title"),
@@ -218,7 +218,7 @@ class ProfilesScreen(private val parent: Screen?) : Screen(Component.translatabl
     }
 
     private fun requestNew() {
-        minecraft.setScreen(
+        minecraft.gui.setScreen(
             ProfileEditScreen(
                 parent = this,
                 title = Component.translatable("hex.profiles.new.title"),
@@ -242,7 +242,7 @@ class ProfilesScreen(private val parent: Screen?) : Screen(Component.translatabl
 
     fun requestEdit(name: String) {
         val entry = ConfigProfiles.entryFor(name) ?: return
-        minecraft.setScreen(
+        minecraft.gui.setScreen(
             ProfileEditScreen(
                 parent = this,
                 title = Component.translatable("hex.profiles.edit.title"),
@@ -266,7 +266,7 @@ class ProfilesScreen(private val parent: Screen?) : Screen(Component.translatabl
     }
 
     fun requestDuplicate(name: String) {
-        minecraft.setScreen(
+        minecraft.gui.setScreen(
             ProfileEditScreen(
                 parent = this,
                 title = Component.translatable("hex.profiles.duplicate.title"),
@@ -300,7 +300,7 @@ class ProfilesScreen(private val parent: Screen?) : Screen(Component.translatabl
     }
 
     fun requestDelete(name: String) {
-        minecraft.setScreen(
+        minecraft.gui.setScreen(
             ConfirmActionScreen(
                 parent = this,
                 title = Component.translatable("hex.profiles.delete.title"),
@@ -338,7 +338,7 @@ class ProfilesScreen(private val parent: Screen?) : Screen(Component.translatabl
         val text = Minecraft.getInstance().keyboardHandler.clipboard
         val suggested = ConfigProfiles.importedProfileName(text)?.let { ConfigProfiles.sanitize(it) }
 
-        minecraft.setScreen(
+        minecraft.gui.setScreen(
             ConfirmActionScreen(
                 parent = this,
                 title = Component.translatable("hex.profiles.import.title"),
@@ -354,7 +354,7 @@ class ProfilesScreen(private val parent: Screen?) : Screen(Component.translatabl
     }
 
     private fun importAsNew(text: String, suggested: String?) {
-        minecraft.setScreen(
+        minecraft.gui.setScreen(
             ProfileEditScreen(
                 parent = this,
                 title = Component.translatable("hex.profiles.import.new_title"),
@@ -416,7 +416,7 @@ class ProfilesScreen(private val parent: Screen?) : Screen(Component.translatabl
     }
 
     private fun requestResetAll() {
-        minecraft.setScreen(
+        minecraft.gui.setScreen(
             ConfirmActionScreen(
                 parent = this,
                 title = Component.translatable("hex.profiles.reset_all.title"),
@@ -472,7 +472,7 @@ class ProfilesScreen(private val parent: Screen?) : Screen(Component.translatabl
     }
 
     override fun onClose() {
-        minecraft.setScreen(parent)
+        minecraft.gui.setScreen(parent)
     }
 
     override fun removed() {

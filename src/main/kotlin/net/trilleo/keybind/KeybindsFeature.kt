@@ -38,7 +38,7 @@ object KeybindsFeature : Feature {
 
     override fun onClientTick(client: Minecraft) {
         while (openMenuKey.consumeClick()) {
-            client.setScreen(KeybindScreen(client.screen))
+            client.gui.setScreen(KeybindScreen(client.gui.screen()))
         }
         KeybindManager.onEndTick(client)
     }
@@ -49,7 +49,7 @@ object KeybindsFeature : Feature {
                 // Defer to the next tick: opening a screen mid-command would be overridden when the chat
                 // screen that ran the command closes.
                 val client = ctx.source.client
-                client.execute { client.setScreen(KeybindScreen(null)) }
+                client.execute { client.gui.setScreen(KeybindScreen(null)) }
                 1
             },
         )
@@ -61,7 +61,7 @@ object KeybindsFeature : Feature {
      * door and the editor stays its own screen.
      */
     override fun settingsCategory(): ConfigCategory = ConfigCategory.build("keybinds") {
-        action("open_screen") { screen -> Minecraft.getInstance().setScreen(KeybindScreen(screen)) }
+        action("open_screen") { screen -> Minecraft.getInstance().gui.setScreen(KeybindScreen(screen)) }
         // Resetting here removes every custom shortcut, which is drastic but is what "reset this tab" has to
         // mean when the tab's only content is the shortcut list.
         resetsTo(KeybindConfig.handle)

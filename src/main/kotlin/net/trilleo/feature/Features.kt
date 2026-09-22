@@ -127,7 +127,7 @@ object Features {
             HeldItem.tick(client)
 
             while (openConfigKey.consumeClick()) {
-                client.setScreen(HexConfigScreens.create(client.screen))
+                client.gui.setScreen(HexConfigScreens.create(client.gui.screen()))
             }
             features.forEach { if (it.enabled) it.onClientTick(client) }
         }

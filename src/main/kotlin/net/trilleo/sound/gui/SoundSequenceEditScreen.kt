@@ -894,7 +894,7 @@ class SoundSequenceEditScreen(
     override fun onClose() {
         stopPlaying()
         SoundPlayer.stopAll()
-        minecraft.setScreen(parent)
+        minecraft.gui.setScreen(parent)
     }
 
     override fun removed() {

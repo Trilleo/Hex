@@ -97,7 +97,7 @@ class ReminderList(
             .build()
 
         private val editButton: Button = Button.builder(Component.translatable("hex.reminders.edit")) {
-            Minecraft.getInstance().setScreen(ReminderEditScreen(screen, reminder))
+            Minecraft.getInstance().gui.setScreen(ReminderEditScreen(screen, reminder))
         }.bounds(0, 0, EDIT_WIDTH, WIDGET_HEIGHT).build()
 
         private val deleteButton: Button = Button.builder(Component.literal("✕")) {

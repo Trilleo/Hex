@@ -34,7 +34,7 @@ object KeybindManager {
     private fun detect(client: Minecraft) {
         // Don't fire while typing, in a menu, or not in a world. Clear held so re-entering the world
         // with a key still down doesn't immediately re-fire.
-        if (client.player == null || client.screen != null) {
+        if (client.player == null || client.gui.screen() != null) {
             held.clear()
             return
         }

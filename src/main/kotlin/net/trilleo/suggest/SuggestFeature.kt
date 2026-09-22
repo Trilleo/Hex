@@ -182,7 +182,7 @@ object SuggestFeature : Feature {
                 .then(
                     Commands.literal("dashboard").executes { ctx ->
                         val client = ctx.source.client
-                        client.execute { client.setScreen(SuggestScreen(null)) }
+                        client.execute { client.gui.setScreen(SuggestScreen(null)) }
                         1
                     },
                 ),
@@ -319,7 +319,7 @@ object SuggestFeature : Feature {
             set = { SuggestConfig.settings.learning = it; SuggestConfig.save() },
         )
 
-        action("dashboard") { screen -> Minecraft.getInstance().setScreen(SuggestScreen(screen)) }
+        action("dashboard") { screen -> Minecraft.getInstance().gui.setScreen(SuggestScreen(screen)) }
 
         toggle(
             "popup",
@@ -390,7 +390,7 @@ object SuggestFeature : Feature {
         // Separate from the tab's reset button, and necessarily so: the reset below restores these settings,
         // which live in a config profile, while this wipes the learned model, which deliberately does not.
         // One button doing both would mean switching profiles could silently erase what has been learned.
-        action("forget_all") { screen -> Minecraft.getInstance().setScreen(wipePrompt(screen)) }
+        action("forget_all") { screen -> Minecraft.getInstance().gui.setScreen(wipePrompt(screen)) }
 
         resetsTo(SuggestConfig.handle)
     }

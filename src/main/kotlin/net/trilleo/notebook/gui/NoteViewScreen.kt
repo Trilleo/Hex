@@ -44,7 +44,7 @@ class NoteViewScreen(
 
         addRenderableWidget(
             Button.builder(Component.translatable("hex.notebook.edit")) {
-                minecraft.setScreen(NoteEditorScreen(parent as? NotebookScreen, document))
+                minecraft.gui.setScreen(NoteEditorScreen(parent as? NotebookScreen, document))
             }.bounds(MARGIN, y, ACTION_WIDTH, BUTTON_HEIGHT)
                 .tooltip(Tooltip.create(Component.translatable("hex.notebook.view.edit.tooltip")))
                 .build(),
@@ -112,7 +112,7 @@ class NoteViewScreen(
     private fun bodyHeight(): Int = height - HEADER_HEIGHT - FOOTER_HEIGHT - MARGIN
 
     override fun onClose() {
-        minecraft.setScreen(parent)
+        minecraft.gui.setScreen(parent)
     }
 
     override fun removed() {

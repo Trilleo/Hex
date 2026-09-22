@@ -40,7 +40,7 @@ class SoundSequencesScreen(private val parent: Screen?) :
 
         addRenderableWidget(
             Button.builder(Component.translatable("hex.sounds.presets")) {
-                minecraft.setScreen(SoundPresetsScreen(this))
+                minecraft.gui.setScreen(SoundPresetsScreen(this))
             }
                 .bounds(x, y, BUTTON_WIDTH, BUTTON_HEIGHT)
                 .tooltip(Tooltip.create(Component.translatable("hex.sounds.presets.tooltip")))
@@ -79,12 +79,12 @@ class SoundSequencesScreen(private val parent: Screen?) :
         SoundConfig.save()
         refreshRows()
         list?.scrollToBottom()
-        minecraft.setScreen(SoundSequenceEditScreen(this, sequence))
+        minecraft.gui.setScreen(SoundSequenceEditScreen(this, sequence))
     }
 
     override fun onClose() {
         SoundPlayer.stopAll()
-        minecraft.setScreen(parent)
+        minecraft.gui.setScreen(parent)
     }
 
     override fun removed() {

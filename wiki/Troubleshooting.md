@@ -6,10 +6,10 @@ Work top to bottom: most problems are one of the first three.
 
 `/hexa` does not exist, and there is no **□** button on the Options screen.
 
-1. **Check the versions.** Hex needs **Minecraft 26.1.2**, **Java 25**, and **Fabric Loader 0.19.3+**. A jar built for a
+1. **Check the versions.** Hex needs **Minecraft 26.2**, **Java 25**, and **Fabric Loader 0.19.3+**. A jar built for a
    different Minecraft version will not load.
 2. **Check the dependencies.** Both [Fabric API](https://modrinth.com/mod/fabric-api) and
-   [Fabric Language Kotlin](https://modrinth.com/mod/fabric-language-kotlin) must be in `mods`, both built for 26.1.2.
+   [Fabric Language Kotlin](https://modrinth.com/mod/fabric-language-kotlin) must be in `mods`, both built for 26.2.
    Missing Kotlin is the single most common cause — Hex is written in Kotlin and cannot start without it.
 3. **Check you are launching the Fabric profile**, not vanilla or Forge.
 4. **Read `logs/latest.log`.** Fabric says plainly which dependency is missing or which version it wanted.

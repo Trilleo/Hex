@@ -135,7 +135,7 @@ class ItemCustomizeScreen(
     }
 
     private fun confirmDelete() {
-        minecraft.setScreen(
+        minecraft.gui.setScreen(
             ConfirmActionScreen(
                 this,
                 Component.translatable("hex.item_custom.delete.title"),
@@ -144,7 +144,7 @@ class ItemCustomizeScreen(
                 listOf(
                     ConfirmActionScreen.Choice(Component.translatable("hex.item_custom.delete.confirm")) {
                         ItemCustomizeConfig.remove(customization)
-                        minecraft.setScreen(parent)
+                        minecraft.gui.setScreen(parent)
                     },
                     ConfirmActionScreen.Choice(Component.translatable("hex.item_custom.delete.cancel"), null),
                 ),
@@ -153,7 +153,7 @@ class ItemCustomizeScreen(
     }
 
     override fun onClose() {
-        minecraft.setScreen(parent)
+        minecraft.gui.setScreen(parent)
     }
 
     override fun removed() {

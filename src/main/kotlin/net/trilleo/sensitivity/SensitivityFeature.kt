@@ -49,7 +49,7 @@ object SensitivityFeature : Feature {
         // Screens are excluded on purpose: the wheel belongs to whatever is open, and a value borrowed while
         // an inventory is up could not be handed back by a key release nobody sees.
         val held = SensitivityConfig.settings.enabled &&
-                client.screen == null &&
+                client.gui.screen() == null &&
                 client.player != null &&
                 adjustKey.isDown
 
@@ -168,7 +168,7 @@ object SensitivityFeature : Feature {
             get = { SensitivityConfig.stickyScale },
             set = { SensitivityConfig.settings.stickyScale = it; SensitivityConfig.save() },
         )
-        action("sticky_angles") { screen -> Minecraft.getInstance().setScreen(StickyAnglesScreen(screen)) }
+        action("sticky_angles") { screen -> Minecraft.getInstance().gui.setScreen(StickyAnglesScreen(screen)) }
 
         resetsTo(SensitivityConfig.handle)
     }

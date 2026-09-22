@@ -57,7 +57,7 @@ object OptionsMenuShortcut {
 
     /** Builds the button, returning to [parent] — the Options screen it was pressed on — when the menu closes. */
     fun create(parent: Screen): Button =
-        Button.builder(LABEL) { Minecraft.getInstance().setScreen(HexConfigScreens.create(parent)) }
+        Button.builder(LABEL) { Minecraft.getInstance().gui.setScreen(HexConfigScreens.create(parent)) }
             .size(SIZE, SIZE)
             .tooltip(TOOLTIP)
             .build()

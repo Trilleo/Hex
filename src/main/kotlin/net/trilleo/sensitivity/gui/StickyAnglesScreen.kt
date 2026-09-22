@@ -100,7 +100,7 @@ class StickyAnglesScreen(private val parent: Screen?) :
     }
 
     override fun onClose() {
-        minecraft.setScreen(parent)
+        minecraft.gui.setScreen(parent)
     }
 
     override fun removed() {

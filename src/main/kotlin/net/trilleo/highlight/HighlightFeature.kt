@@ -55,7 +55,7 @@ object HighlightFeature : Feature {
         // Outside the master switch on purpose, and the only key that is: a player who has switched highlights
         // off still has to be able to reach the screen that switches them back on.
         while (openKey.consumeClick()) {
-            if (client.screen == null) client.setScreen(HighlightsScreen(null))
+            if (client.gui.screen() == null) client.gui.setScreen(HighlightsScreen(null))
         }
 
         if (!HighlightConfig.active) return
@@ -102,7 +102,7 @@ object HighlightFeature : Feature {
         SoundPlayer.feedback(client, SoundSlot.CAPTURED)
         // Deferred: a screen opened from inside the tick would be replaced the moment anything else sets one.
         client.execute {
-            client.setScreen(net.trilleo.highlight.gui.HighlightEditScreen(null, highlight))
+            client.gui.setScreen(net.trilleo.highlight.gui.HighlightEditScreen(null, highlight))
         }
     }
 
@@ -133,7 +133,7 @@ object HighlightFeature : Feature {
                 .then(
                     Commands.literal("edit").executes { ctx ->
                         val client = ctx.source.client
-                        client.execute { client.setScreen(HighlightsScreen(null)) }
+                        client.execute { client.gui.setScreen(HighlightsScreen(null)) }
                         1
                     },
                 ),
@@ -231,7 +231,7 @@ object HighlightFeature : Feature {
             },
         )
 
-        action("edit_list") { screen -> Minecraft.getInstance().setScreen(HighlightsScreen(screen)) }
+        action("edit_list") { screen -> Minecraft.getInstance().gui.setScreen(HighlightsScreen(screen)) }
 
         slider(
             "scan_interval",

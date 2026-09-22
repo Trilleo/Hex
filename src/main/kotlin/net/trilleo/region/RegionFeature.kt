@@ -74,7 +74,7 @@ object RegionFeature : Feature {
         // Outside the master switch on purpose, and the only key that is: a player who has switched regions
         // off still has to be able to reach the screen that switches them back on.
         while (openKey.consumeClick()) {
-            if (client.screen == null) client.setScreen(RegionsScreen(null))
+            if (client.gui.screen() == null) client.gui.setScreen(RegionsScreen(null))
         }
 
         if (!RegionConfig.active) return
@@ -163,7 +163,7 @@ object RegionFeature : Feature {
         Notify.chat(client, "Added region \"${region.name}\" — ${region.summary()}.")
         SoundPlayer.feedback(client, SoundSlot.CAPTURED)
         // Deferred: a screen opened from inside the tick would be replaced the moment anything else sets one.
-        client.execute { client.setScreen(net.trilleo.region.gui.RegionEditScreen(null, region)) }
+        client.execute { client.gui.setScreen(net.trilleo.region.gui.RegionEditScreen(null, region)) }
     }
 
     /** A distinct default name, so two quick captures do not both land on "region". */
@@ -247,7 +247,7 @@ object RegionFeature : Feature {
                 .then(
                     Commands.literal("edit").executes { ctx ->
                         val client = ctx.source.client
-                        client.execute { client.setScreen(RegionsScreen(null)) }
+                        client.execute { client.gui.setScreen(RegionsScreen(null)) }
                         1
                     },
                 ),
@@ -303,7 +303,7 @@ object RegionFeature : Feature {
             },
         )
 
-        action("edit_list") { screen -> Minecraft.getInstance().setScreen(RegionsScreen(screen)) }
+        action("edit_list") { screen -> Minecraft.getInstance().gui.setScreen(RegionsScreen(screen)) }
 
         slider(
             "default_radius",

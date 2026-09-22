@@ -112,7 +112,7 @@ class HighlightsScreen(private val parent: Screen?) :
         refreshRows()
         list?.scrollToBottom()
         // Straight into the editor — a rule with no colour and no message is never what anyone wanted.
-        minecraft.setScreen(HighlightEditScreen(this, highlight))
+        minecraft.gui.setScreen(HighlightEditScreen(this, highlight))
     }
 
     private fun toggleFilter() {
@@ -126,7 +126,7 @@ class HighlightsScreen(private val parent: Screen?) :
     )
 
     override fun onClose() {
-        minecraft.setScreen(parent)
+        minecraft.gui.setScreen(parent)
     }
 
     override fun removed() {

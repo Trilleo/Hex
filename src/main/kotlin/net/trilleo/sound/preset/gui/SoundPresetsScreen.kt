@@ -44,7 +44,7 @@ class SoundPresetsScreen(private val parent: SoundSequencesScreen?) :
 
     override fun onClose() {
         SoundPlayer.stopAll()
-        minecraft.setScreen(parent)
+        minecraft.gui.setScreen(parent)
     }
 
     override fun removed() {

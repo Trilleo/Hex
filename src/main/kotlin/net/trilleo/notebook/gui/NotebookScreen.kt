@@ -188,7 +188,7 @@ class NotebookScreen(private val parent: Screen?) : Screen(Component.translatabl
     private fun createNote() {
         val folder = (filter as? Filter.Folder)?.name.orEmpty()
         val document = Notebook.create(Component.translatable("hex.notebook.new_title").string, folder = folder)
-        minecraft.setScreen(NoteEditorScreen(this, document))
+        minecraft.gui.setScreen(NoteEditorScreen(this, document))
     }
 
     /** Takes whatever is on the clipboard as a new note, and says what happened either way. */
@@ -214,7 +214,7 @@ class NotebookScreen(private val parent: Screen?) : Screen(Component.translatabl
 
     /** Asks before deleting: a note is text the player wrote, and there is no undo once the file is gone. */
     fun confirmDelete(document: NoteDocument) {
-        minecraft.setScreen(
+        minecraft.gui.setScreen(
             ConfirmActionScreen(
                 parent = this,
                 title = Component.translatable("hex.notebook.delete.title"),
@@ -262,7 +262,7 @@ class NotebookScreen(private val parent: Screen?) : Screen(Component.translatabl
     }
 
     override fun onClose() {
-        minecraft.setScreen(parent)
+        minecraft.gui.setScreen(parent)
     }
 
     override fun removed() {

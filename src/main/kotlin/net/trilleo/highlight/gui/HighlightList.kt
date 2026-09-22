@@ -92,7 +92,7 @@ class HighlightList(
             .build()
 
         private val editButton: Button = Button.builder(Component.translatable("hex.highlights.edit")) {
-            Minecraft.getInstance().setScreen(HighlightEditScreen(screen, highlight))
+            Minecraft.getInstance().gui.setScreen(HighlightEditScreen(screen, highlight))
         }.bounds(0, 0, EDIT_WIDTH, WIDGET_HEIGHT).build()
 
         private val deleteButton: Button = Button.builder(Component.literal("✕")) {

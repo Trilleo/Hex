@@ -640,7 +640,7 @@ class ConfigEntryList(
         }
 
         private fun open() {
-            Minecraft.getInstance().setScreen(
+            Minecraft.getInstance().gui.setScreen(
                 ColorPickerScreen(
                     parent = screen,
                     subject = entry.label,
@@ -733,7 +733,7 @@ class ConfigEntryList(
         override val widgets: List<AbstractWidget> = listOf(preview, choose, resetButton)
 
         private fun open() {
-            Minecraft.getInstance().setScreen(
+            Minecraft.getInstance().gui.setScreen(
                 SoundPickerScreen(
                     parent = screen,
                     subject = entry.label,

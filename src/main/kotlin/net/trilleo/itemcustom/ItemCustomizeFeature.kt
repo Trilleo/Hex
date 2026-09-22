@@ -77,7 +77,7 @@ object ItemCustomizeFeature : Feature {
                         // Deferred: opening a screen mid-command is undone when the chat screen that ran the
                         // command closes.
                         val client = ctx.source.client
-                        client.execute { client.setScreen(ItemCustomizeListScreen(null)) }
+                        client.execute { client.gui.setScreen(ItemCustomizeListScreen(null)) }
                         1
                     },
                 ),
@@ -91,7 +91,7 @@ object ItemCustomizeFeature : Feature {
             get = { ItemCustomizeConfig.active },
             set = { ItemCustomizeConfig.settings.enabled = it; ItemCustomizeConfig.save() },
         )
-        action("manage") { screen -> Minecraft.getInstance().setScreen(ItemCustomizeListScreen(screen)) }
+        action("manage") { screen -> Minecraft.getInstance().gui.setScreen(ItemCustomizeListScreen(screen)) }
         toggle(
             "mark_slots",
             default = true,

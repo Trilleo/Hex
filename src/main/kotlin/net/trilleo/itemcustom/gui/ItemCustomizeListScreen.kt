@@ -66,7 +66,7 @@ class ItemCustomizeListScreen(private val parent: Screen?) :
     fun edit(customization: ItemCustomization) {
         val held = ItemCapture.heldStack(minecraft)
         val stack = if (ItemCapture.uuidOf(held) == customization.uuid) held else ItemStack.EMPTY
-        minecraft.setScreen(ItemCustomizeScreen(this, customization, stack))
+        minecraft.gui.setScreen(ItemCustomizeScreen(this, customization, stack))
     }
 
     override fun tick() {
@@ -97,7 +97,7 @@ class ItemCustomizeListScreen(private val parent: Screen?) :
     }
 
     override fun onClose() {
-        minecraft.setScreen(parent)
+        minecraft.gui.setScreen(parent)
     }
 
     override fun removed() {

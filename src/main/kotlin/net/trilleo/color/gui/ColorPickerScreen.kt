@@ -355,7 +355,7 @@ class ColorPickerScreen(
     // ---- clipboard ----------------------------------------------------------------------------------------
 
     private fun copy() {
-        minecraft?.keyboardHandler?.setClipboard(currentValue())
+        minecraft.keyboardHandler.setClipboard(currentValue())
         notice = Component.translatable("hex.color.copied", currentValue())
     }
 
@@ -366,7 +366,7 @@ class ColorPickerScreen(
      * real, and a picker that accepted only one of them would send the player back to edit the text by hand.
      */
     private fun paste() {
-        val text = minecraft?.keyboardHandler?.clipboard.orEmpty().trim()
+        val text = minecraft.keyboardHandler.clipboard.orEmpty().trim()
         val cleaned = text.removePrefix("0x").removePrefix("0X")
         when {
             allowChroma && ColorValue.isChroma(cleaned) -> choose(Mode.CHROMA)
@@ -578,7 +578,7 @@ class ColorPickerScreen(
     }
 
     override fun onClose() {
-        minecraft?.setScreen(parent)
+        minecraft.gui.setScreen(parent)
     }
 
     private fun done() {

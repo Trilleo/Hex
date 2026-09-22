@@ -98,13 +98,13 @@ class NoteList(
             .build()
 
         private val viewButton: Button = Button.builder(Component.translatable("hex.notebook.view")) {
-            Minecraft.getInstance().setScreen(NoteViewScreen(screen, document))
+            Minecraft.getInstance().gui.setScreen(NoteViewScreen(screen, document))
         }.bounds(0, 0, EDIT_WIDTH, WIDGET_HEIGHT)
             .tooltip(Tooltip.create(Component.translatable("hex.notebook.view.tooltip")))
             .build()
 
         private val editButton: Button = Button.builder(Component.translatable("hex.notebook.edit")) {
-            Minecraft.getInstance().setScreen(NoteEditorScreen(screen, document))
+            Minecraft.getInstance().gui.setScreen(NoteEditorScreen(screen, document))
         }.bounds(0, 0, EDIT_WIDTH, WIDGET_HEIGHT).build()
 
         private val duplicateButton: Button = Button.builder(Component.literal("⧉")) {

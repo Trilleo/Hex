@@ -90,7 +90,7 @@ class ChatHighlightsScreen(private val parent: Screen?) :
         refreshRows()
         list?.scrollToBottom()
         // Straight into the editor — a rule with no text to look for matches nothing at all.
-        minecraft.setScreen(ChatHighlightEditScreen(this, rule))
+        minecraft.gui.setScreen(ChatHighlightEditScreen(this, rule))
     }
 
     private fun toggleFilter() {
@@ -104,7 +104,7 @@ class ChatHighlightsScreen(private val parent: Screen?) :
     )
 
     override fun onClose() {
-        minecraft.setScreen(parent)
+        minecraft.gui.setScreen(parent)
     }
 
     override fun removed() {

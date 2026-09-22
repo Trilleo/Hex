@@ -41,7 +41,7 @@ class ConfirmActionScreen(
                 Button.builder(choice.label) {
                     // Dismiss first: an action that opens its own screen must not be undone by this one
                     // closing afterwards.
-                    minecraft.setScreen(parent)
+                    minecraft.gui.setScreen(parent)
                     choice.action?.invoke()
                 }.bounds(x, y, BUTTON_WIDTH, BUTTON_HEIGHT).build(),
             )
@@ -58,7 +58,7 @@ class ConfirmActionScreen(
 
     /** Escape means "no", which is the last choice — the cancel slot by convention here. */
     override fun onClose() {
-        minecraft.setScreen(parent)
+        minecraft.gui.setScreen(parent)
     }
 
     private companion object {

@@ -72,13 +72,13 @@ object Titles {
             else componentFor(subtitle, settings.defaultSubtitleColor)
 
         client.execute {
-            val gui = client.gui
-            gui.setTimes(ticks(spec.fadeInSeconds), ticks(spec.staySeconds), ticks(spec.fadeOutSeconds))
-            // Always set, even to nothing: the gui holds the subtitle until something replaces it, so an alert
+            val hud = client.gui.hud
+            hud.setTimes(ticks(spec.fadeInSeconds), ticks(spec.staySeconds), ticks(spec.fadeOutSeconds))
+            // Always set, even to nothing: the HUD holds the subtitle until something replaces it, so an alert
             // with no subtitle would otherwise inherit the last one that had one.
-            gui.setSubtitle(subtitleText)
+            hud.setSubtitle(subtitleText)
             // Last, because this is the call that starts the countdown the two are drawn for.
-            gui.setTitle(titleText)
+            hud.setTitle(titleText)
         }
 
         playSound(client, spec)
@@ -86,7 +86,7 @@ object Titles {
 
     /** Clears whatever title is on screen. */
     fun clear(client: Minecraft) {
-        client.execute { client.gui.clearTitles() }
+        client.execute { client.gui.hud.clearTitles() }
     }
 
     /**

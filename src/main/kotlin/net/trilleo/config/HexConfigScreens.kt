@@ -35,7 +35,7 @@ object HexConfigScreens {
      * would otherwise overwrite whatever was set here.
      */
     fun open(client: Minecraft, parent: Screen?) {
-        client.execute { client.setScreen(create(parent)) }
+        client.execute { client.gui.setScreen(create(parent)) }
     }
 
     /**
@@ -53,8 +53,8 @@ object HexConfigScreens {
     fun rebuild() {
         val client = Minecraft.getInstance()
         client.execute {
-            val open = client.screen
-            if (open is HexConfigScreen) open.refresh() else client.setScreen(create(lastParent))
+            val open = client.gui.screen()
+            if (open is HexConfigScreen) open.refresh() else client.gui.setScreen(create(lastParent))
         }
     }
 }

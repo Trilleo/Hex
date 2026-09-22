@@ -4,6 +4,7 @@ import net.minecraft.ChatFormatting
 import net.minecraft.network.chat.Component
 import net.minecraft.network.chat.MutableComponent
 import net.minecraft.network.chat.Style
+import net.minecraft.network.chat.TextColor
 import net.minecraft.util.Mth
 
 /**
@@ -261,8 +262,9 @@ object Chroma {
                 return
             }
             val formatting = ChatFormatting.getByCode(code) ?: return
-            if (formatting.isColor) {
-                applyColor(formatting.color)
+            val legacyColor = TextColor.fromLegacyFormat(formatting)
+            if (legacyColor != null) {
+                applyColor(legacyColor.value)
                 return
             }
             when (formatting) {
