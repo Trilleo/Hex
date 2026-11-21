@@ -26,6 +26,8 @@ touch these — the [config menu](Configuration) covers everything — but they 
 | `item_custom.json`    | [Item customizations](Item-Customization)                                          | ❌ per installation              |
 | `colors.json`         | The [colour picker](Colour-Picker)'s recent colours                                | ❌ per installation              |
 | `update.json`         | [Auto-updater](Updating) settings                                                  | ❌ per installation              |
+| `trilleo-sync.json`   | [trilleo.net sync](Trilleo-Sync) settings                                          | ❌ per installation              |
+| `trilleo-account.json` | Your trilleo.net link token — **keep it private**, never share this file           | ❌ never                         |
 | `reminder_state.json` | Every reminder's live countdown                                                    | ❌ per installation              |
 | `suggest/model.json`  | What command suggestions has learned                                               | ❌ per installation              |
 | `notebook/index.json` | A summary of your [notes](Notebook), so the list opens without reading them all    | ❌ per installation              |

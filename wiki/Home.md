@@ -34,6 +34,7 @@ anywhere, and it has no server-side half — there is nothing to install for you
 | [Chat highlight](Chat-Highlight)           | Words you pick, repainted in chat, optionally announced or hidden       |
 | [Notebook](Notebook)                       | Markdown notes with folders, tags and search, kept between sessions     |
 | [Command suggestions](Command-Suggestions) | Learns the commands you use and completes them, ranked by context       |
+| [trilleo.net sync](Trilleo-Sync)           | Uploads your attribute levels and Hunting Box to trilleo.net            |
 | [Auto-update](Updating)                    | Hex downloads new releases itself and applies them on exit              |
 | [Languages](Languages)                     | English and 简体中文, following Minecraft's own language setting        |
 

@@ -22,6 +22,7 @@ Run `/hexa` on its own to see the mod version and which subcommands exist. Runni
 | `/hexa chat …`      | [Chat highlight](Chat-Highlight)              |
 | `/hexa note …`      | [Notebook](Notebook)                          |
 | `/hexa suggest …`   | [Command suggestions](Command-Suggestions)    |
+| `/hexa sync …`      | [trilleo.net sync](Trilleo-Sync)              |
 | `/hexa update`      | Check for a [mod update](Updating) now        |
 
 ## Config and keybinds
@@ -173,6 +174,18 @@ then by prefix — so `/hexa note open mining` finds "Mining routes":
 
 `/hexa suggest clear` without `confirm` refuses and tells you what it would have done — it is not undoable. See
 [Command suggestions](Command-Suggestions).
+
+## trilleo.net sync
+
+```
+/hexa sync          — which account is linked, which profile Hex sees, when it last synced
+/hexa sync status   — the same
+/hexa sync link     — link an account (shows a code in chat), or show the code again
+/hexa sync unlink   — revoke the token and stop uploading
+/hexa sync now      — upload what was read from the menus right away
+```
+
+See [trilleo.net sync](Trilleo-Sync).
 
 ## Update
 

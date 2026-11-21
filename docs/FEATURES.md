@@ -1012,6 +1012,45 @@ All in the **Command Suggestions** tab of `/hexa config`:
 
 Turn the feature off and the chat box behaves exactly as vanilla again, server tab-completion included.
 
+## trilleo.net sync
+
+Hex can upload your **attribute levels** and your **Hunting Box** to your [trilleo.net](https://www.trilleo.net)
+account, where the shard collection, fusion calculator and hunting planner use them. Each Skyblock profile gets its own
+collection on the site.
+
+**Linking.** Run `/hexa sync link`, or press **Link trilleo.net account** in the **trilleo.net Sync** tab of
+`/hexa config`. A code and a link appear in chat. Click the link, sign in on the site and confirm the code. Hex then says
+which account it is linked to. You never type a password into Minecraft, and you can revoke the link from the site's
+Apps page or with `/hexa sync unlink`.
+
+**Syncing.** Open `/attributemenu` or `/huntingbox` and page through it. A few seconds after you close the menu, Hex
+uploads what it read, at most once a minute. A chat line says how many levels and Hunting Box counts changed. Hover over
+it to see each one.
+
+- If you looked at **every page** and did not search, Hex sends the whole list, and anything not shown is set to 0 on
+  the site (for example a shard you have fused away).
+- If you **skipped a page or searched**, Hex sends only the shards you saw, and leaves the rest on the site alone.
+- Disabled attributes are sent at their real level.
+
+**Settings** (in the **trilleo.net Sync** tab):
+
+- **Read attribute menus** — off stops reading and syncing entirely.
+- **Sync automatically** — off means nothing is uploaded until you run `/hexa sync now`.
+- **Show changes in chat** — the summary line after each sync.
+- **API address** — leave this alone. It exists only for testing against a local copy of the site.
+
+`/hexa sync` shows which account you are linked to, which profile Hex sees, and when it last synced.
+
+**Limitations.**
+
+- Hex learns the profile's ID from the `Profile ID:` line Hypixel sends when you join Skyblock. A menu read before that
+  line arrives waits for it. If another mod hides that chat line before Hex sees it, syncing cannot work.
+- Nothing is read until you have linked an account.
+- A trilleo.net account holds up to 10 profiles. Hex tells you if you hit that limit; delete a profile on the site to
+  make room.
+- These settings, and the link itself, belong to your installation: profiles never switch them, and **Copy to
+  clipboard** never contains your token.
+
 ## Auto-update
 
 Hex checks its [GitHub releases](https://github.com/Trilleo/Hex/releases) on startup and, when a newer version is out,

@@ -33,6 +33,7 @@
 - [Chat highlight](Chat-Highlight)
 - [Notebook](Notebook)
 - [Command suggestions](Command-Suggestions)
+- [trilleo.net sync](Trilleo-Sync)
 - [Languages](Languages)
 
 **Help**

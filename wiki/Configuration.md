@@ -19,8 +19,8 @@ title screen it is the only way in, since the command needs a chat box and the k
 ## How the menu is laid out
 
 - **Tabs down the side**, one per feature: Keybinds, Freecam, Hand, Item Customization, Sounds, Titles, Reminders,
-  Regions, Entity Highlight, Command Suggestions, Updates. Each feature contributes its own tab, so the sidebar reflects
-  what the mod actually has.
+  Regions, Entity Highlight, Command Suggestions, trilleo.net Sync, Updates. Each feature contributes its own tab, so the
+  sidebar reflects what the mod actually has.
 - **A search box** filters settings across *all* tabs at once, so you can find a setting without knowing which feature
   owns it.
 - **A reset button on every row**, restoring that one setting to its default.
@@ -57,6 +57,7 @@ A few lists are deliberately not caught by a tab reset, because they are data ra
 | **Entity Highlight**    | The [highlight rules](Entity-Highlight) list, scan interval, default glow colour, chroma speed                 |
 | **Chat Highlight**      | The [chat highlight rules](Chat-Highlight) list, default colour, and its [chroma](Chroma-Text) speed and width |
 | **Command Suggestions** | Everything about [command suggestions](Command-Suggestions), and the dashboard                                 |
+| **trilleo.net Sync**    | [trilleo.net sync](Trilleo-Sync): linking and uploads — per installation, never part of a profile              |
 | **Updates**             | The [auto-updater](Updating) — per installation, never part of a profile                                       |
 
 ## Profiles

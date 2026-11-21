@@ -17,6 +17,7 @@ import net.trilleo.reminder.ReminderFeature
 import net.trilleo.sensitivity.SensitivityFeature
 import net.trilleo.sound.SoundFeature
 import net.trilleo.suggest.SuggestFeature
+import net.trilleo.sync.SyncFeature
 import net.trilleo.title.TitleFeature
 import net.trilleo.update.UpdateFeature
 import org.slf4j.LoggerFactory
@@ -66,6 +67,7 @@ object Hex : ClientModInitializer {
         // reminders or command suggestions. Hiding a message from the chat window should not hide it from the
         // rest of the mod.
         Features.register(ChatHighlightFeature)
+        Features.register(SyncFeature)
         Features.register(UpdateFeature)
         Features.bootstrap()
 

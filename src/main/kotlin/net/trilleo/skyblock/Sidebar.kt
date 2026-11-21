@@ -54,12 +54,21 @@ object Sidebar {
     var lines: List<String> = emptyList()
         private set
 
+    /**
+     * The sidebar's title, cleaned, or empty when there is no sidebar. Skyblock marks the game mode here — the
+     * `♲`, `☀` and `Ⓑ` beside `SKYBLOCK` — which is what [SkyblockProfile] reads it for.
+     */
+    @Volatile
+    var title: String = ""
+        private set
+
     private var ticksUntilPoll = 0
 
     /** Forgets everything, here and in every reader, so a stale read cannot survive into the next server. */
     fun reset() {
         onSkyblock = false
         lines = emptyList()
+        title = ""
         ticksUntilPoll = 0
         SkyblockLocation.reset()
         SkyblockCalendar.reset()
@@ -87,7 +96,7 @@ object Sidebar {
         val scoreboard: Scoreboard = client.level?.scoreboard ?: return clear()
         val objective: Objective = scoreboard.getDisplayObjective(DisplaySlot.SIDEBAR) ?: return clear()
 
-        val title = TextClean.strip(objective.displayName.string)
+        title = TextClean.strip(objective.displayName.string)
         onSkyblock = title.uppercase(Locale.ROOT).contains("SKYBLOCK")
         if (!onSkyblock) return clear(keepFlag = true)
 
@@ -113,7 +122,10 @@ object Sidebar {
 
     private fun clear(keepFlag: Boolean = false) {
         lines = emptyList()
-        if (!keepFlag) onSkyblock = false
+        if (!keepFlag) {
+            onSkyblock = false
+            title = ""
+        }
         SkyblockLocation.reset()
         SkyblockCalendar.reset()
         // No sidebar means no Skyblock — every event claim goes, including the ones chat and the boss bar

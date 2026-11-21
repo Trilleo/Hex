@@ -44,6 +44,8 @@ Hex runs entirely on your client — it never needs to be installed on a server.
   as plain `.md` files you can edit, share and drop in from anywhere.
 - **Command suggestions** — learns the commands you use and completes them in chat, ranked by where you are, what you
   are holding and what you just ran. All on your machine; message text is never recorded.
+- **trilleo.net sync** — uploads your attribute levels and Hunting Box to your
+  [trilleo.net](https://www.trilleo.net) account, per profile, after you close the menu.
 - **Auto-update** — Hex downloads new [releases](https://github.com/Trilleo/Hex/releases) itself and applies them on
   exit. See [Updating](#updating).
 - **Languages** — English and 简体中文, following Minecraft's own language setting.

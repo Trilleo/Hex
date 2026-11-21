@@ -19,6 +19,7 @@ import net.trilleo.config.*
 import net.trilleo.skyblock.IslandResolver
 import net.trilleo.skyblock.Sidebar
 import net.trilleo.skyblock.SkyblockEvents
+import net.trilleo.skyblock.SkyblockProfile
 import net.trilleo.skyblock.TabList
 import net.trilleo.skyblock.item.HeldItem
 import org.slf4j.LoggerFactory
@@ -117,6 +118,8 @@ object Features {
             // Last of the three, so a claim made by the sidebar or the player list this tick is already in
             // when the boss bar is read alongside them.
             SkyblockEvents.tick(client)
+            // After the sidebar and the player list, both of which it reads for the profile's name and mode.
+            SkyblockProfile.tick(client)
             // Between the sidebar and its readers: the sidebar gives the area, the resolver turns that server
             // into an island, and ProfileAutoSwitch (and the region tracker) read the island it produces.
             IslandResolver.tick(client)
@@ -164,6 +167,8 @@ object Features {
             // views over it — the resolver's own request state and the player list's cached lines.
             IslandResolver.reset()
             TabList.reset()
+            // The next server may be another account, and a profile ID must never carry across to it.
+            SkyblockProfile.reset()
             features.forEach { if (it.enabled) it.onWorldLeave(client) }
         }
 
@@ -176,6 +181,8 @@ object Features {
             // the sidebar is ticked centrally: an event broadcast is shared state, not one feature's. It only
             // observes and never swallows.
             SkyblockEvents.onChatReceive(message)
+            // Likewise shared and observe-only: the profile ID and name arrive in chat.
+            SkyblockProfile.onChatReceive(message)
             features.all { !it.enabled || it.onChatReceive(message) }
         }
 

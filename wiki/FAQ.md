@@ -14,9 +14,14 @@ your item exactly as it was.
 
 ### Does Hex send my data anywhere?
 
-The only network traffic Hex makes is to **GitHub**, to check for and download a new release ([auto-update](Updating)) —
-and you can turn that off. Everything else, including everything
-[command suggestions](Command-Suggestions) learns, stays in `config/hex/` on your machine.
+Hex makes network requests in two cases:
+
+- to **GitHub**, to check for and download a new release ([auto-update](Updating)), which you can turn off;
+- to **trilleo.net**, but only after you link an account there. It then uploads your attribute levels and Hunting Box
+  for each profile ([trilleo.net sync](Trilleo-Sync)).
+
+Everything else, including everything [command suggestions](Command-Suggestions) learns, stays in `config/hex/` on your
+machine.
 
 ### Does it work outside Skyblock?
 

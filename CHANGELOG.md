@@ -2,6 +2,37 @@
 
 ## Unreleased
 
+### New Features
+
+#### trilleo.net Sync
+
++ Added **trilleo.net sync**: Hex reads your attribute levels and Hunting Box in game and uploads them to your
+  [trilleo.net](https://www.trilleo.net) account, one collection per Skyblock profile.
+    + Link once with `/hexa sync link`: Hex shows a code in chat and a link to confirm it on the site. No password is
+      ever typed into Minecraft.
+    + Open `/attributemenu` or `/huntingbox` and page through it. A few seconds after you close it, the changes go up,
+      at most once a minute. A chat line says how many levels and counts changed; hover it for the list.
+    + Reading every page sends the whole list. Skipping a page, or searching the Hunting Box, sends only the shards you
+      saw, so nothing you did not look at is touched.
+    + `/hexa sync` shows the link and the profile Hex sees, `/hexa sync now` uploads at once, and `/hexa sync unlink`
+      revokes the token. All of it is also in the new **trilleo.net Sync** tab of `/hexa config`.
+
+### Technical Details
+
+#### trilleo.net Sync
+
++ New `net.trilleo.sync` package: `ShardReader` polls open container screens, `MenuSession` decides between the API's
+  `replace` and `merge` modes, `SyncQueue` debounces, batches and retries on one background thread, and
+  `TrilleoAccount` runs the device-code link flow.
++ The token is stored in `config/hex/trilleo-account.json`, keyed by API address. That file is deliberately not
+  registered with `ConfigRegistry`, so profiles and the clipboard export never contain it. It is written owner-readable
+  only where the filesystem supports that, and never logged.
++ Shard names are resolved to Hypixel item IDs with the site's `GET /v1/skyblock/shards` list, because 17 shards are
+  named differently from their IDs. `SHARD_<NAME>` is the fallback.
++ New shared `skyblock.SkyblockProfile` reader: profile ID from the `Profile ID:` chat line, name from the profile chat
+  messages or the tab list, game mode from the sidebar or tab list symbols. `Sidebar` now exposes its title.
++ Retries reuse the request's `syncKey`, so a sync whose answer was lost is never applied twice.
+
 ## Version 1.12.1
 
 ### Improvements
