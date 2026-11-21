@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+## Version 1.12.2
+
 ### New Features
 
 #### trilleo.net Sync
